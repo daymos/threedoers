@@ -1,0 +1,28 @@
+html
+  head
+    title Upload Files
+    script(src='/siofu/client.js')
+    script(src='/socket.io/socket.io.js')
+    script(type='text/javascript')
+      document.addEventListener("DOMContentLoaded", function(){
+      // Initialize instances:
+      var socket = io.connect();
+      var siofu = new SocketIOFileUpload(socket);
+      // Configure the three ways that SocketIOFileUpload can read files:
+      document.getElementById("upload_btn").addEventListener("click", siofu.prompt, false);
+      siofu.listenOnInput(document.getElementById("upload_input"));
+      siofu.listenOnDrop(document.getElementById("file_drop"));
+      // Do something when a file is uploaded:
+      siofu.addEventListener("complete", function(event){
+      console.log(event.success);
+      console.log(event.file);
+      });
+      }, false);
+  body
+    p
+      button#upload_btn Prompt for File
+    p
+      label
+        | Choose File:
+        input#upload_input(type='file')
+    #file_drop(dropzone='copy', title='drop files for upload') Drop File

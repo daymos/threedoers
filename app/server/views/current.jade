@@ -1,0 +1,52 @@
+ 
+extends layout
+
+block content
+  .container
+   .header
+    ul.nav.nav-pills.pull-right
+          li
+            a(href='/') Home
+          li
+            a(href='upload') upload a project
+          li
+            a(href='become') become a printer
+          li.active
+            a(href='account') you profile
+          li
+            button#btn-logout.btn
+                 | Sign Out
+        h3.text-muted iMake
+    .header
+       ul.nav.nav-pills.pull-left
+         li.active
+           a(href='current') Current project
+         li
+           a(href='old') old project
+         li
+           a(href='profile_details') settings
+       
+    
+    .jumbotron
+
+
+        
+        
+      
+      
+    // /container
+   
+
+    include modals/alert
+    include modals/confirm
+       .footer
+       p © Company 2013
+
+block scripts
+    script(src='/vendor/jquery.min.js')
+    script(src='/vendor/jquery.form.js')
+    script(src='/vendor/bootstrap-modal.js')
+    script(src='/vendor/bootstrap-transition.js')
+    script(src='/js/views/home.js')
+    script(src='/js/controllers/homeController.js')
+    script(src='/js/form-validators/accountValidator.js')
