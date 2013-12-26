@@ -23,7 +23,7 @@ module.exports = function(app) {
 			});
 		}
 	});
-	
+
 	app.post('/', function(req, res){
 		AM.manualLogin(req.param('user'), req.param('pass'), function(e, o){
 			if (!o){
@@ -38,11 +38,11 @@ module.exports = function(app) {
 			}
 		});
 	});
-	
 
-	
+
+
 // logged-in user homepage //
-	
+
 	app.get('/home', function(req, res) {
 	    if (req.session.user == null){
 	// if user is not logged-in redirect back to login page //
@@ -55,7 +55,7 @@ module.exports = function(app) {
 			});
 	    }
 	});
-	
+
 	app.post('/home', function(req, res){
 		if (req.param('user') != undefined) {
 			AM.updateAccount({
@@ -72,7 +72,7 @@ module.exports = function(app) {
 			// update the user's login cookies if they exists //
 					if (req.cookies.user != undefined && req.cookies.pass != undefined){
 						res.cookie('user', o.user, { maxAge: 900000 });
-						res.cookie('pass', o.pass, { maxAge: 900000 });	
+						res.cookie('pass', o.pass, { maxAge: 900000 });
 					}
 					res.send('ok', 200);
 				}
@@ -83,7 +83,7 @@ module.exports = function(app) {
 			req.session.destroy(function(e){ res.send('ok', 200); });
 		}
 	});
-	
+
 // uploading a file //
 
 app.get('/upload', function(req, res) {
@@ -97,7 +97,7 @@ app.get('/upload', function(req, res) {
 				udata : req.session.user
 			});
 	    }
-	});	
+	});
 
 app.get('/upload_1', function(req, res) {
 	    if (req.session.user == null){
@@ -110,29 +110,29 @@ app.get('/upload_1', function(req, res) {
 				udata : req.session.user
 			});
 	    }
-	});	
-	
+	});
+
 	app.post('/upload', function(req, res){
 console.log(JSON.stringify(req.files)); // this will let you see what you're getting in the files
 
 app.post('upload', function(req, res){
         var temp_path = req.files.uploadfile.path;
      var save_path = './public/upload/' + req.files.uploadfile.name;
-     
+
      fs.rename(temp_path, save_path, function(error){
      	if(error) throw error;
-     	
+
      	fs.unlink(temp_path, function(){
      		if(error) throw error;
      		res.send("File uploaded to: " + save_path);
      	});
-     	
-     });        
+
+     });
 });
 
 
 });
-	
+
 // user profile ""
 app.get('/profile', function(req, res) {
 	    if (req.session.user == null){
@@ -145,8 +145,8 @@ app.get('/profile', function(req, res) {
 				udata : req.session.user
 			});
 	    }
-	});	
-	
+	});
+
 // lavori correnti ""
 app.get('/current', function(req, res) {
 	    if (req.session.user == null){
@@ -159,7 +159,7 @@ app.get('/current', function(req, res) {
 				udata : req.session.user
 			});
 	    }
-	});	
+	});
 
 // cevvhi progetti ""
 app.get('/old', function(req, res) {
@@ -187,11 +187,11 @@ app.get('/profile_details', function(req, res) {
 				udata : req.session.user
 			});
 	    }
-	});	
-	
-	
-	
-	
+	});
+
+
+
+
 // diventa uno stampatore //
 
 app.get('/become', function(req, res) {
@@ -205,15 +205,15 @@ app.get('/become', function(req, res) {
 				udata : req.session.user
 			});
 	    }
-	});	
-
-	
-// creating new accounts //
-	
-	app.get('/signup', function(req, res) {
-		res.render('signup', {  title: 'Signup', countries : CT });
 	});
-	
+
+
+// creating new accounts //
+
+	app.get('/signup', function(req, res) {
+		res.render('signup', {  title: 'Signup', countries : CT, user: {} });
+	});
+
 	app.post('/signup', function(req, res){
 		AM.addNewAccount({
 			name 	: req.param('name'),
@@ -266,7 +266,7 @@ app.get('/become', function(req, res) {
 			}
 		})
 	});
-	
+
 	app.post('/reset-password', function(req, res) {
 		var nPass = req.param('pass');
 	// retrieve the user's email from the session to lookup their account and reset password //
@@ -281,15 +281,15 @@ app.get('/become', function(req, res) {
 			}
 		})
 	});
-	
+
 // view & delete accounts //
-	
+
 	app.get('/print', function(req, res) {
 		AM.getAllRecords( function(e, accounts){
 			res.render('print', { title : 'Account List', accts : accounts });
 		})
 	});
-	
+
 	app.post('/delete', function(req, res){
 		AM.deleteAccount(req.body.id, function(e, obj){
 			if (!e){
@@ -301,13 +301,13 @@ app.get('/become', function(req, res) {
 			}
 	    });
 	});
-	
+
 	app.get('/reset', function(req, res) {
 		AM.delAllRecords(function(){
-			res.redirect('/print');	
+			res.redirect('/print');
 		});
 	});
-	
+
 	app.get('*', function(req, res) { res.render('404', { title: 'Page Not Found'}); });
 
 };
