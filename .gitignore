@@ -1,0 +1,11 @@
+
+# Sublime Text
+imake.sublime-*
+
+# Vagrant
+Cheffile
+Cheffile.lock
+Vagrantfile
+cookbooks/
+.vagrant/
+tmp/
