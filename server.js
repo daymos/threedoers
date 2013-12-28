@@ -1,92 +1,101 @@
+(function() {
+  var HTTPStatus, MongoStore, app, appName, db, engines, env, express, gzippo, http, https, logger, mongoose, server, settings, ssl_options, _app, _i, _len, _ref;
 
+  HTTPStatus = require("http-status");
 
-/**
-	* Node.js Login Boilerplate
-	* More Info : http://bit.ly/LsODY8
-	* Copyright (c) 2013 Stephen Braitsch
-**/
+  express = require("express");
 
-var express = require('express');
-var http = require('http');
-var fs = require('fs');
+  gzippo = require("gzippo");
 
-var path = require('path')
-var exec = require('child_process').exec;
+  MongoStore = require("connect-mongodb");
 
+  mongoose = require("mongoose");
 
-viewer = require('jsc3d.min.js')
-app = express();
+  engines = require('consolidate');
 
-target_path="ciao";
+  logger = require("./lib/logger");
 
+  settings = require('./config');
 
-app.configure(function(){
-	app.set('port', 3000);
-	app.set('views', __dirname + '/app/server/views');
-	app.set('view engine', 'jade');
-	app.locals.pretty = true;
-//	app.use(express.favicon());
-//	app.use(express.logger('dev'));
-	
-	app.use(express.bodyParser({ keepExtensions: true, uploadDir: 'C:/imake_0.2/app/public/uploads/' }));
-	app.use(express.cookieParser());
-	app.use(express.session({ secret: 'super-duper-secret-secret' }));
-	app.use(express.methodOverride());
-	//app.use(require('stylus').middleware({ src: __dirname + '/app/public' }));
-	app.use(express.static(__dirname + '/app/public'));
-	app.use(express.static(__dirname + '/app/public/uploads'));
-	
-	
-	// Give Views/Layouts direct access to session data.
-  app.use(function(req, res, next){
-    res.locals.session = req.session;
-	
-    next();
+  env = process.env.NODE_ENV || 'development';
+
+  global.env = env;
+
+  global.root = __dirname;
+
+  logger.info('');
+
+  logger.info('***********************************************************************');
+
+  logger.info('* Starting iMake server:');
+
+  logger.info('*');
+
+  app = express();
+
+  app.on('mount', function(parent) {
+    return console.log(parent);
   });
-  app.use(app.router);
-});
 
+  app.set('port', settings.host.port);
 
+  app.engine('jade', engines.jade);
 
-app.configure('development', function(){
-	app.use(express.errorHandler());
-});
+  app.set('view engine', 'jade');
 
-app.post('/file-upload', function(req, res) {
-    console.log(target_path);
-	//set volume variable
-	
-    // get the temporary location of the file
-    var tmp_path = req.files.thumbnail.path;
-	var parts;
-	vol=' ';
-    // set where the file should actually exists - in this case it is in the "images" directory
-    target_path = 'C:/imake_0.2/app/public/uploads/' + req.files.thumbnail.name;
-    // move the file from the temporary location to the intended location
-    fs.rename(tmp_path, target_path, function(err) {
-        if (err) throw err;
-        // delete the temporary file, so that the explicitly set temporary upload dir does not get filled with unwanted files
-        fs.unlink(tmp_path, function() {
-            if (err) throw err;
-            //res.send('File uploaded to: ' + target_path + ' - ' + req.files.thumbnail.size + ' bytes');
-             console.log(target_path);
-             exec('c:/gnu/wget/bin/wget -q -O - http://	127.0.0.1:8081/imake/live_preview.php'+ '?x='+ target_path , function (error, stdout, stderr) {console.log(stdout); vol = stdout; });			 
-             setTimeout(function() {
-			 parts = vol.split('Volume');
-			 console.log(parts);
-			 res.render('upload_1',{tg:req.files.thumbnail.name, vol:parts[1]});		
-             },2000);
-});
-			
-        });
+  app.set('views', "" + global.root + "/views");
+
+  app.use(express["static"]("" + global.root + "/public"));
+
+  app.use(express.bodyParser({
+    keepExtensions: true,
+    uploadDir: settings.mediaRoot
+  }));
+
+  app.use(express.cookieParser());
+
+  app.use(express.methodOverride());
+
+  app.use(gzippo.compress());
+
+  app.disable("x-powered-by");
+
+  db = mongoose.connect("" + settings.db.host + settings.db.name);
+
+  _ref = ['core', 'auth'];
+  for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+    appName = _ref[_i];
+    _app = require("./lib/" + appName);
+    _app.once('mount', function(parent) {
+      _app.engines = parent.engines;
+      return _app.set('views', parent.get('views'));
     });
-	
+    app.use(_app);
+  }
 
+  if (settings.protocol === 'https') {
+    https = require('https');
+    ssl_options = {
+      key: fs.readFileSync(settings.ssl_key),
+      cert: fs.readFileSync(settings.ssl_pem),
+      ca: fs.readFileSync(settings.ssl_crt)
+    };
+    server = https.createServer(ssl_options, app).listen(settings.host.port, settings.host.ip, function() {
+      logger.info("*   Visit page: " + settings.host.protocol + "://" + settings.host.ip + ":" + settings.host.port);
+      logger.info('*   Mongo Database:', settings.db.name);
+      logger.info('*   Pid File:', process.pid);
+      logger.info('*');
+      return logger.info('***********************************************************************');
+    });
+  } else {
+    http = require('http');
+    server = http.createServer(app).listen(settings.host.port, settings.host.ip, function() {
+      logger.info("*   Visit page: " + settings.host.protocol + "://" + settings.host.ip + ":" + settings.host.port);
+      logger.info('*   Mongo Database:', settings.db.name);
+      logger.info('*   Pid File:', process.pid);
+      logger.info('*');
+      return logger.info('***********************************************************************');
+    });
+  }
 
-	
-
-require('./app/server/router')(app);
-
-http.createServer(app).listen(app.get('port'), function(){
-	console.log("Express server listening on port " + app.get('port'));
-})
+}).call(this);

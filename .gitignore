@@ -9,3 +9,9 @@ Vagrantfile
 cookbooks/
 .vagrant/
 tmp/
+
+# some files
+src/locals.coffee
+locals.coffee
+
+node_modules
