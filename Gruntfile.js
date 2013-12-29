@@ -20,11 +20,17 @@ module.exports = function(grunt) {
       }
     },
     copy: {
-      files: {
+      assets: {
         expand: true,
         cwd: 'src/public/',
         src: ['**'],
         dest: 'public/'
+      },
+      views: {
+        expand: true,
+        cwd: 'src/views/',
+        src: ['**'],
+        dest: 'views/'
       }
     },
     // concat: {
