@@ -26,8 +26,8 @@ log = logger:
 
 loggers = [new (winston.transports.Console)(level: settings.logLevel, colorize: true)]
 
-unless settings.debug
-  loggers.push(new (winston.transports.File)(filename: settings.logFile))
+# unless settings.debug
+#   loggers.push(new (winston.transports.File)(filename: settings.logFile))
 
 logger = new (winston.Logger)(transports: loggers)
 
