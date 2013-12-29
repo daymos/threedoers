@@ -10,8 +10,8 @@ config =
   logFile: __dirname + '/log/error.log'
 
   host:
-    ip: 'localhost'
-    port: 3000
+    ip: process.env.OPENSHIFT_INTERNAL_IP
+    port: process.env.OPENSHIFT_INTERNAL_PORT
     protocol: 'http'
 
   db:

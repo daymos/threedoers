@@ -8,13 +8,13 @@
     rootDir: __dirname,
     logFile: __dirname + '/log/error.log',
     host: {
-      ip: 'localhost',
-      port: 3000,
+      ip: process.env.OPENSHIFT_INTERNAL_IP,
+      port: process.env.OPENSHIFT_INTERNAL_PORT,
       protocol: 'http'
     },
     db: {
       name: 'iMake',
-      host: 'mongodb://localhost/'
+      host: 'mongodb://imake:3m1k2M4ng4@ds061198.mongolab.com:61198/'
     }
   };
 
