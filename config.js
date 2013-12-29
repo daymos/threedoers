@@ -8,8 +8,8 @@
     rootDir: __dirname,
     logFile: __dirname + '/log/error.log',
     host: {
-      ip: process.env.OPENSHIFT_INTERNAL_IP,
-      port: process.env.OPENSHIFT_INTERNAL_PORT,
+      ip: process.env.OPENSHIFT_NODEJS_IP,
+      port: process.env.OPENSHIFT_NODEJS_PORT,
       protocol: 'http'
     },
     db: {
