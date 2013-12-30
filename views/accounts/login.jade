@@ -1,34 +1,43 @@
 extends base
 
 block content
-	#login-container.login-container
-		form( method="post")#login-form.well.span4
-			h1 Hello!
-			p.subheading Please Login To Your Account
-			label Username
-			input(type="text", name="username", id='user-tf').span4.required
-			label Password
-			input(type="password", name="password", id='pass-tf').span4.required
-			button(type="submit")#btn-login.btn.btn-primary
-				i.icon-lock.icon-white
-				| Sign in
-			label#remember-me.checkbox Remember Me
-				input(type="checkbox", checked='checked')
-			div.clear-fix
-			hr
-			div.btm-links
-				a(href='#')#forgot-password Forgot Your Password?
-				a(href='/signup')#create-account Create An Account
+  .row
+    div.well.col-md-5.center-block
+      form(method="post", action="/accounts/login", role="form")
+        h2 Please Login
+        br
 
-	include ../modals/alert
-	include ../modals/lost-password
+        .form-group
+          label(for="username") Username
+          input(type="text", name="username", id='username', placeholder="Enter your username").form-control
+
+        .form-group
+          label(for="password") Password
+          input(type="password", name="password", id='password', placeholder="Enter your password").form-control
+
+        button(type="submit").btn.btn-primary.btn-lg.btn-block
+          span.glyphicon.glyphicon-lock
+          | &nbsp;&nbsp;&nbsp;Sign in
+
+        .checkbox
+          label
+            input(type="checkbox", checked='checked')
+            | Remember Me
+
+        div.btm-links
+          a(href='#')#forgot-password Forgot Your Password?
+          br
+          a(href='/signup')#create-account Create An Account
+
+  include ../modals/alert
+  include ../modals/lost-password
 
 block scripts
-	script(src='/vendor/jquery.min.js')
-	script(src='/vendor/jquery.form.js')
-	script(src='/vendor/bootstrap-modal.js')
-	script(src='/vendor/bootstrap-transition.js')
-	script(src='/js/views/login.js')
-	script(src='/js/controllers/loginController.js')
-	script(src='/js/form-validators/loginValidator.js')
-	script(src='/js/form-validators/emailValidator.js')
+  script(src='/vendor/jquery.min.js')
+  script(src='/vendor/jquery.form.js')
+  script(src='/vendor/bootstrap-modal.js')
+  script(src='/vendor/bootstrap-transition.js')
+  script(src='/js/views/login.js')
+  script(src='/js/controllers/loginController.js')
+  script(src='/js/form-validators/loginValidator.js')
+  script(src='/js/form-validators/emailValidator.js')

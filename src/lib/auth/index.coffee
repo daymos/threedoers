@@ -39,11 +39,11 @@ passport.use new LocalStrategy {
       return done(null, user)
 
 
-app.get '/accounts/login/local', (req, res, next) ->
+app.get '/accounts/login', (req, res, next) ->
   res.render 'accounts/login'
 
 
-app.post '/accounts/login/local', passport.authenticate('local'), (req, res, next) ->
+app.post '/accounts/login', passport.authenticate('local'), (req, res, next) ->
   # stay login for 3 weeks
   logger.debug "post /auth/local auth local : ", req.isAuthenticated()
   logger.debug "stay_login : ", req.user

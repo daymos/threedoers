@@ -51,6 +51,12 @@ app.use gzippo.compress()
 app.disable "x-powered-by"
 db = mongoose.connect "#{settings.db.host}#{settings.db.name}"
 
+app.use (req, res, next) ->
+  res.locals
+    user: req.user
+    nav: req.path
+  next()
+
 # loading modules
 for appName in ['core', 'auth']
   _app = require "./lib/#{appName}"

@@ -1,13 +1,28 @@
 !!! 5
 html
-    head
+  head
 
-        link(rel='stylesheet', href='/css/bootstrap.css')
-        link(rel='stylesheet', href='/css/bootstrap-select.css')
-        link(href='/css/narrow_jumbo.css', rel='stylesheet')
-        link(src='/public/js/uploadController,js')
-        script(src='/js/highlight.js')
+    link(rel='stylesheet', href='//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css')
+    link(rel='stylesheet', href='//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css')
+    link(rel='stylesheet', href='/css/bootstrap-select.css')
+    link(href='/css/narrow_jumbo.css', rel='stylesheet')
+    link(href='/css/app.css', rel='stylesheet')
+    // link(src='/public/js/uploadController,js')
+    // script(src='/js/highlight.js')
+    script(src='http://code.jquery.com/jquery-1.10.2.min.js')
 
-    block content
-    block scripts
-    script(src='/js/GL3.js')
+    script.
+      $(document).ready(
+        function(event) {
+          $(".header a[href='#{ nav }']").parent().addClass('active');
+        }
+      );
+
+  body
+    .container
+      include includes/header
+      block content
+      include includes/footer
+      block scripts
+  script(src='//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js')
+  script(src='/js/GL3.js')

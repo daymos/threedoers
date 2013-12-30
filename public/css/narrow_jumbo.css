@@ -32,7 +32,7 @@ body {
 }
 
 /* Customize container */
-@media (min-width: 730px) {
+@media (min-width: 768px) {
   .container {
     max-width: 730px;
   }
@@ -45,13 +45,6 @@ body {
 .jumbotron {
   text-align: center;
   border-bottom: 1px solid #e5e5e5;
-  padding: 30px;
-  margin-bottom: 30px;
-  font-size: 21px;
-  font-weight: 200;
-  line-height: 2.1428571435;
-  color: inherit;
-  background-color: #eeeeee;
 }
 .jumbotron .btn {
   font-size: 21px;
@@ -80,28 +73,7 @@ body {
     margin-bottom: 30px;
   }
   /* Remove the bottom border on the jumbotron for visual effect */
-  
-}
-
-.login-container{
-width: 400px;
-    margin: 0 auto;
-}
-
-.signup-container{
-width: 400px;
-    margin-left: 30%;
-}
-
-#upload{
-position: absolute;
-	top: 0;
-	right: 0;
-	margin: 0;
-	padding: 0;
-	font-size: 20px;
-	cursor: pointer;
-	opacity: 0;
-	filter: alpha(opacity=0)
-
+  .jumbotron {
+    border-bottom: 0;
+  }
 }

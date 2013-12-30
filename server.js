@@ -62,6 +62,14 @@
 
   db = mongoose.connect("" + settings.db.host + settings.db.name);
 
+  app.use(function(req, res, next) {
+    res.locals({
+      user: req.user,
+      nav: req.path
+    });
+    return next();
+  });
+
   _ref = ['core', 'auth'];
   for (_i = 0, _len = _ref.length; _i < _len; _i++) {
     appName = _ref[_i];

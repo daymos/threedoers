@@ -1,0 +1,18 @@
+.header
+  ul.nav.nav-pills.pull-right
+    li
+      a(href='/') Home
+    if user
+      li
+        a(href='upload') Upload a Project
+      li
+        a(href='become') Become a Printer
+      li
+        a(href='profile') Your Profile
+      li
+        button#btn-logout.btn Sign Out
+    else
+      li
+        a(href='/accounts/login') Login
+
+  h3.text-muted iMake

@@ -3,8 +3,8 @@ express = require 'express'
 app = module.exports = express()
 
 app.get '/', (req, res) ->
-  unless req.user
-    res.redirect '/accounts/login/local'
+  res.render 'core/index'
+
 
 # app.get "/", (req, res) ->
 
