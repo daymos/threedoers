@@ -27,7 +27,7 @@ logger.info '*'
 
 app = express()
 validator = expressValidator()
-db = mongoose.connect "#{settings.db.host}#{settings.db.name}", db: {safe: true}, server: {auto_reconnect: true}
+db = mongoose.connect "#{settings.db.host}#{settings.db.name}", db: {safe: true, autoIndex: false}, server: {auto_reconnect: true}
 
 app.on 'mount', (parent) ->
   console.log parent
