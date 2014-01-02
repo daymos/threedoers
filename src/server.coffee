@@ -27,7 +27,7 @@ logger.info '*'
 
 app = express()
 validator = expressValidator()
-db = mongoose.connect "#{settings.db.host}#{settings.db.name}", db: {safe: true, ensureIndexes: false}, server: {auto_reconnect: true}
+db = mongoose.connect "#{settings.db.host}#{settings.db.name}", db: {safe: true, autoIndex: false}, server: {auto_reconnect: true}
 
 app.on 'mount', (parent) ->
   console.log parent
@@ -48,7 +48,7 @@ app.use validator
 
 app.use express.session(
   secret: settings.cookieSecret
-  store: new MongoStore(url: "#{settings.db.host}#{settings.db.name}")
+  store: new MongoStore(db: mongoose.connection.db)
 )
 
 app.use express.csrf()

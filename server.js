@@ -39,7 +39,11 @@
 
   db = mongoose.connect("" + settings.db.host + settings.db.name, {
     db: {
-      safe: true
+      safe: true,
+      autoIndex: false
+    },
+    server: {
+      auto_reconnect: true
     }
   });
 
@@ -71,7 +75,7 @@
   app.use(express.session({
     secret: settings.cookieSecret,
     store: new MongoStore({
-      url: "" + settings.db.host + settings.db.name
+      db: mongoose.connection.db
     })
   }));
 
