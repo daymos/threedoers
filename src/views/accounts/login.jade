@@ -9,14 +9,25 @@ block content
       form(method="post", action="/accounts/login", role="form")
         h2 Please Login
         br
+        - if (locals.error)
+          div(class="alert alert-danger")
+            = error
 
-        .form-group
+        input(type='hidden', name='_csrf', value=csrfToken)
+
+        .form-group(class=(locals.errors && errors.username)?"has-error":"")
           label(for="username") Username
-          input(type="text", name="username", id='username', placeholder="Enter your username").form-control
+          input(type="text", name="username", id='username', placeholder="Enter your username", value=(locals.username)?"#{username}":"").form-control
+          - if (locals.errors && errors.username)
+            span(class="help-block")
+              = errors.username.msg
 
-        .form-group
+        .form-group(class=(locals.errors && errors.password)?"has-error":"")
           label(for="password") Password
-          input(type="password", name="password", id='password', placeholder="Enter your password").form-control
+          input(type="password", name="password", id='password', placeholder="Enter your password", value=(locals.password)?"#{password}":"").form-control
+          - if (locals.errors && errors.password)
+            span(class="help-block")
+              = errors.password.msg
 
         button(type="submit").btn.btn-primary.btn-lg.btn-block
           span.glyphicon.glyphicon-lock
@@ -34,13 +45,3 @@ block content
 
   include ../modals/alert
   include ../modals/lost-password
-
-block scripts
-  script(src='/vendor/jquery.min.js')
-  script(src='/vendor/jquery.form.js')
-  script(src='/vendor/bootstrap-modal.js')
-  script(src='/vendor/bootstrap-transition.js')
-  script(src='/js/views/login.js')
-  script(src='/js/controllers/loginController.js')
-  script(src='/js/form-validators/loginValidator.js')
-  script(src='/js/form-validators/emailValidator.js')

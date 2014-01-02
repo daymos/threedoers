@@ -2,8 +2,8 @@ function UploadController()
 {
 
 // handle design upload
-	
-	$(document)addEventListener("DOMContentLoaded", function(){
+
+	$(document).addEventListener("DOMContentLoaded", function(){
 
     // Initialize instances:
     var socket = io.connect();
@@ -21,6 +21,5 @@ function UploadController()
     });
 
 }, false);
-</script>
-	
+
 }

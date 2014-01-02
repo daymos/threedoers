@@ -1,5 +1,5 @@
 (function() {
-  var HTTPStatus, MongoStore, app, appName, db, engines, env, express, gzippo, http, https, logger, mongoose, server, settings, ssl_options, _app, _i, _len, _ref;
+  var HTTPStatus, MongoStore, app, appName, db, engines, env, express, expressValidator, gzippo, http, https, logger, mongoose, server, settings, ssl_options, validator, _app, _i, _len, _ref;
 
   HTTPStatus = require("http-status");
 
@@ -7,11 +7,13 @@
 
   gzippo = require("gzippo");
 
-  MongoStore = require("connect-mongodb");
+  MongoStore = require('connect-mongo')(express);
 
   mongoose = require("mongoose");
 
   engines = require('consolidate');
+
+  expressValidator = require('express-validator');
 
   logger = require("./lib/logger");
 
@@ -32,6 +34,14 @@
   logger.info('*');
 
   app = express();
+
+  validator = expressValidator();
+
+  db = mongoose.connect("" + settings.db.host + settings.db.name, {
+    db: {
+      safe: true
+    }
+  });
 
   app.on('mount', function(parent) {
     return console.log(parent);
@@ -56,16 +66,30 @@
 
   app.use(express.methodOverride());
 
+  app.use(validator);
+
+  app.use(express.session({
+    secret: settings.cookieSecret,
+    store: new MongoStore({
+      url: "" + settings.db.host + settings.db.name
+    })
+  }));
+
+  app.use(express.csrf());
+
   app.use(gzippo.compress());
 
   app.disable("x-powered-by");
 
-  db = mongoose.connect("" + settings.db.host + settings.db.name);
+  app.configure('development', function() {
+    return app.locals.pretty = true;
+  });
 
   app.use(function(req, res, next) {
     res.locals({
       user: req.user,
-      nav: req.path
+      nav: req.path,
+      csrfToken: req.session._csrf
     });
     return next();
   });
@@ -74,6 +98,7 @@
   for (_i = 0, _len = _ref.length; _i < _len; _i++) {
     appName = _ref[_i];
     _app = require("./lib/" + appName);
+    _app.use(validator);
     _app.once('mount', function(parent) {
       _app.engines = parent.engines;
       return _app.set('views', parent.get('views'));

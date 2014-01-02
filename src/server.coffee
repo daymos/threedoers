@@ -6,9 +6,10 @@
 HTTPStatus = require "http-status"
 express = require "express"
 gzippo = require "gzippo"
-MongoStore = require "connect-mongodb"
+MongoStore = require('connect-mongo')(express)
 mongoose = require "mongoose"
 engines = require 'consolidate'
+expressValidator = require 'express-validator'
 
 logger = require "./lib/logger"
 settings = require './config'
@@ -25,6 +26,8 @@ logger.info '*'
 
 
 app = express()
+validator = expressValidator()
+db = mongoose.connect "#{settings.db.host}#{settings.db.name}", db: {safe: true}
 
 app.on 'mount', (parent) ->
   console.log parent
@@ -41,25 +44,31 @@ app.use express.static "#{global.root}/public"
 app.use express.bodyParser({keepExtensions: true, uploadDir: settings.mediaRoot})
 app.use express.cookieParser()
 app.use express.methodOverride()
+app.use validator
 
-# app.use express.session(
-#   secret: settings.cookieSecret
-#   store: new MongoStore(db: settings.db.name)
-# )
+app.use express.session(
+  secret: settings.cookieSecret
+  store: new MongoStore(url: "#{settings.db.host}#{settings.db.name}")
+)
 
+app.use express.csrf()
 app.use gzippo.compress()
 app.disable "x-powered-by"
-db = mongoose.connect "#{settings.db.host}#{settings.db.name}"
+
+app.configure 'development', ->
+  app.locals.pretty = true
 
 app.use (req, res, next) ->
   res.locals
     user: req.user
     nav: req.path
+    csrfToken: req.session._csrf
   next()
 
 # loading modules
 for appName in ['core', 'auth']
   _app = require "./lib/#{appName}"
+  _app.use validator
   _app.once 'mount', (parent) ->
     _app.engines = parent.engines
     _app.set 'views', parent.get('views')

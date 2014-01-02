@@ -27,9 +27,7 @@ passport.use new LocalStrategy {
   },
   (username, password, done) ->
     User = models.User
-    console.log User
     User.findOne {username: username}, (err, user) ->
-      console.log user
       if err
         return done(err)
       if not user
@@ -43,14 +41,29 @@ app.get '/accounts/login', (req, res, next) ->
   res.render 'accounts/login'
 
 
-app.post '/accounts/login', passport.authenticate('local'), (req, res, next) ->
-  # stay login for 3 weeks
-  logger.debug "post /auth/local auth local : ", req.isAuthenticated()
-  logger.debug "stay_login : ", req.user
-  if req.param('remember-me')
-    req.session.cookie.expires = false
-    req.session.cookie.maxAge = 86400000*21
-  res.redirect '/'
+app.post '/accounts/login', (req, res, next) ->
+
+  req.assert('username', 'Invalid username').isAlpha()
+  req.assert('password', len: 'Should have between 6 - 20 characters.').len(6, 20)
+
+  errors = req.validationErrors(true)
+
+  if errors
+    res.render 'accounts/login', { errors: errors, username: req.param('username'), password: req.param('password')}
+  else
+    passport.authenticate('local', (err, user, info) ->
+      if err
+        logger.error err
+        res.send(500)
+      else
+        if user
+          if req.param('remember-me')
+            req.session.cookie.expires = false
+            req.session.cookie.maxAge = 86400000*21
+          res.redirect '/'
+        else
+          res.render 'accounts/login', { error: "Invalid username or password", username: req.param('username'), password: req.param('password') }
+    )(req, res, next)
 
 
 app.get '/logout', (req, res) ->

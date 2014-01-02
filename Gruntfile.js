@@ -3,6 +3,7 @@ module.exports = function(grunt) {
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
+
     coffee: {
       backend: {
         expand: true,
@@ -15,15 +16,47 @@ module.exports = function(grunt) {
         expand: true,
         cwd: 'src/',
         src: ['public/**/*.coffee'],
-        dest: 'public/',
+        dest: 'tmp/assets',
         ext: '.js'
       }
     },
+
+    sass: {
+      dev: {
+        expand: true,
+        cwd: 'src/',
+        src: ['public/css/**/*.scss'],
+        dest: 'tmp/assets',
+        ext: '.css'
+      },
+      prod: {
+          expand: true,
+          cwd: 'src/',
+          src: ['public/css/**/*.scss'],
+          dest: 'tmp/assets',
+          ext: '.css'
+      }
+    },
+
+    concat: {
+      js: {
+        options: {
+          separator: ';',
+        },
+        src: ['src/public/js/**/*.js', '!src/public/js/application.js', 'tmp/assets/public/js/**/*.js'],
+        dest: 'src/public/js/application.js',
+      },
+      css: {
+        src: ['src/public/css/**/*.css', '!src/public/css/application.css', 'tmp/assets/public/css/**/*.css'],
+        dest: 'src/public/css/application.css',
+      },
+    },
+
     copy: {
       assets: {
         expand: true,
         cwd: 'src/public/',
-        src: ['**'],
+        src: ['**/application.css', '**/application.js'],
         dest: 'public/'
       },
       views: {
@@ -33,6 +66,27 @@ module.exports = function(grunt) {
         dest: 'views/'
       }
     },
+
+    uglify : {
+      prod: {
+        files: {
+          'src/public/js/application.js': ['src/public/js/application.js']
+        }
+      }
+    },
+
+    watch: {
+      coffee: {
+        files: ['src/public/js/**/*.coffee'],
+        tasks: ['coffee:frontend', 'concat:js']
+      },
+
+      sass: {
+        files: ['src/public/css/**/*.scss', 'src/public/css/**/*.css'],
+        tasks: ['sass:dev', 'concat:css']
+      }
+    }
+
     // concat: {
     //   app_js: {
     //     src: [SRC_VENDOR + 'js/modernizr.js', SRC_VENDOR + 'js/moment.js', SRC_VENDOR + 'js/socket_io.js', SRC_VENDOR + 'js/lodash.js', SRC_VENDOR + 'js/jquery.js', SRC_VENDOR + 'js/jquery_easing.js', SRC_VENDOR + 'js/jquery_ui.js', SRC_VENDOR + 'js/jquery_layout.js', SRC_VENDOR + 'js/jquery_blockui.js', SRC_VENDOR + 'js/jquery_validate.js', SRC_VENDOR + 'js/jquery_jcrop.js', SRC_VENDOR + 'js/jquery_form.js', SRC_VENDOR + 'js/jquery_chosen.js', SRC_VENDOR + 'js/jquery_ajax_chosen.js', SRC_VENDOR + 'js/jquery_icheck.js', SRC_VENDOR + 'js/jquery_maskedinput.js', SRC_VENDOR + 'js/jquery_nicescroll.js', SRC_VENDOR + 'js/jquery_pnotify.js', SRC_VENDOR + 'js/backbone.js', SRC_VENDOR + 'js/bootstrap.js', SRC_VENDOR + 'js/bootstrap_datepicker.js', SRC_VENDOR + 'js/bootstrap_timepicker.js', SRC_VENDOR + 'js/holder.js', SRC_COMPILED + 'js/jst.js', '<%= coffee.app.dest %>'],
@@ -64,19 +118,19 @@ module.exports = function(grunt) {
     //     dest: SRC_PUBLIC + 'js/login.min.js'
     //   }
     // },
-    cssmin: {
-      options: {
-        banner: '/*! <%= pkg.name %> - v<%= pkg.version %> - <%= grunt.template.today("yyyy-mm-dd") %> */'
-      },
-      app: {
-        src: '<%= concat.app_css.dest %>',
-        // dest: SRC_PUBLIC + 'css/app.min.css'
-      },
-      login: {
-        src: '<%= concat.login_css.dest %>',
-        // dest: SRC_PUBLIC + 'css/login.min.css'
-      }
-    }
+    // cssmin: {
+    //   options: {
+    //     banner: '/*! <%= pkg.name %> - v<%= pkg.version %> - <%= grunt.template.today("yyyy-mm-dd") %> */'
+    //   },
+    //   app: {
+    //     src: '<%= concat.app_css.dest %>',
+    //     // dest: SRC_PUBLIC + 'css/app.min.css'
+    //   },
+    //   login: {
+    //     src: '<%= concat.login_css.dest %>',
+    //     // dest: SRC_PUBLIC + 'css/login.min.css'
+    //   }
+    // }
   });
   grunt.event.on('watch', function(action, filepath) {
     return grunt.log.writeln(filepath + ' has ' + action);
@@ -85,8 +139,9 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-coffee');
   grunt.loadNpmTasks('grunt-contrib-uglify');
-  grunt.loadNpmTasks('grunt-contrib-cssmin');
+  grunt.loadNpmTasks('grunt-contrib-sass');
   grunt.loadNpmTasks('grunt-contrib-copy');
-  // grunt.registerTask('default', ['coffee', 'jst', 'less', 'concat']);
-  grunt.registerTask('build', ['coffee:backend', 'copy']);
+
+  grunt.registerTask('default', ['coffee:frontend', 'sass:dev', 'concat', 'watch']);
+  grunt.registerTask('build', ['coffee', 'sass:prod', 'concat', 'uglify', 'copy']);
 };
