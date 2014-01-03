@@ -48,7 +48,7 @@ app.use validator
 
 app.use express.session(
   secret: settings.cookieSecret
-  store: new SessionStore(db: "#{settings.db.host}#{settings.db.name}")
+  store: new SessionStore(url: "#{settings.db.host}#{settings.db.name}")
 )
 
 app.use express.csrf()

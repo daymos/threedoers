@@ -75,7 +75,7 @@
   app.use(express.session({
     secret: settings.cookieSecret,
     store: new SessionStore({
-      db: "" + settings.db.host + settings.db.name
+      url: "" + settings.db.host + settings.db.name
     })
   }));
 
