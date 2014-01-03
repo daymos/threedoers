@@ -48,7 +48,7 @@ app.use validator
 
 app.use express.session(
   secret: settings.cookieSecret
-  store: new SessionStore(connection: mongoose.connection)
+  store: new SessionStore(db: "#{settings.db.host}#{settings.db.name}")
 )
 
 app.use express.csrf()

@@ -75,7 +75,7 @@
   app.use(express.session({
     secret: settings.cookieSecret,
     store: new SessionStore({
-      connection: mongoose.connection
+      db: "" + settings.db.host + settings.db.name
     })
   }));
 
