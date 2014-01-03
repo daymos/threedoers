@@ -6,7 +6,7 @@
 HTTPStatus = require "http-status"
 express = require "express"
 gzippo = require "gzippo"
-MongoStore = require('connect-mongo')(express)
+SessionStore = require('session-mongoose')(express)
 mongoose = require "mongoose"
 engines = require 'consolidate'
 expressValidator = require 'express-validator'
@@ -48,7 +48,7 @@ app.use validator
 
 app.use express.session(
   secret: settings.cookieSecret
-  store: new MongoStore(db: mongoose.connection.db)
+  store: new SessionStore(connection: mongoose.connection)
 )
 
 app.use express.csrf()
