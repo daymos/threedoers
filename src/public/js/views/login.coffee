@@ -13,7 +13,7 @@ $(document).ready ->
     $('.modal-alert').modal('show')
 
     # improving error fields
-    element.siblings('.block-help').remove()  # previous messages remove
+    element.siblings('.help-block').remove()  # previous messages remove
     element.after $('<span>').addClass('help-block').text(formMessage)
     element.parent().addClass('has-error')
 
