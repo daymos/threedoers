@@ -46,10 +46,10 @@ app.use express.cookieParser()
 app.use express.methodOverride()
 app.use validator
 
-app.use express.session(
-  secret: settings.cookieSecret
-  store: new SessionStore(url: "#{settings.db.host}#{settings.db.name}")
-)
+# app.use express.session(
+#   secret: settings.cookieSecret
+#   store: new SessionStore(url: "#{settings.db.host}#{settings.db.name}")
+# )
 
 app.use express.csrf()
 app.use gzippo.compress()
