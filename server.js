@@ -48,10 +48,6 @@
     }
   });
 
-  app.on('mount', function(parent) {
-    return console.log(parent);
-  });
-
   app.set('port', settings.host.port);
 
   app.engine('jade', engines.jade);

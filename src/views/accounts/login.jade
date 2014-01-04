@@ -6,7 +6,7 @@ block title
 block content
   .row
     div.well.col-md-5.center-block
-      form(method="post", action="/accounts/login", role="form")
+      form(method="post", action="/accounts/login", role="form", id="loginForm")
         h2 Please Login
         br
         - if (locals.error)
@@ -41,7 +41,10 @@ block content
         div.btm-links
           a(href='#')#forgot-password Forgot Your Password?
           br
-          a(href='/signup')#create-account Create An Account
+          a(href='/accounts/signup')#create-account Create An Account
 
   include ../modals/alert
   include ../modals/lost-password
+
+block scripts
+  script(src='/js/views/login.js')

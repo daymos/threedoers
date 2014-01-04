@@ -12,10 +12,19 @@ module.exports = function(grunt) {
         dest: '.',
         ext: '.js'
       },
+
+      frontendStandalone: {
+        expand: true,
+        cwd: 'src/',
+        src: ['public/js/views/*.coffee'],
+        dest: 'src',
+        ext: '.js'
+      },
+
       frontend: {
         expand: true,
         cwd: 'src/',
-        src: ['public/**/*.coffee'],
+        src: ['public/**/*.coffee', '!public/js/views/*.coffee'],
         dest: 'tmp/assets',
         ext: '.js'
       }
@@ -43,11 +52,18 @@ module.exports = function(grunt) {
         options: {
           separator: ';',
         },
-        src: ['src/public/js/**/*.js', '!src/public/js/application.js', 'tmp/assets/public/js/**/*.js'],
-        dest: 'src/public/js/application.js',
+        src: ['src/public/js/lib/**/*.js'],
+        dest: 'src/public/js/lib.js',
+      },
+      commonJS: {
+        options: {
+          separator: ';',
+        },
+        src: ['tmp/assets/public/js/common/**/*.js'],
+        dest: 'src/public/js/common.js',
       },
       css: {
-        src: ['src/public/css/**/*.css', '!src/public/css/application.css', 'tmp/assets/public/css/**/*.css'],
+        src: ['src/public/css/**/*.css', '!src/public/css/application.css', 'tmp/assets/public/css/**/*.css', 'tmp/assets/public/js/views/*.js'],
         dest: 'src/public/css/application.css',
       },
     },
@@ -55,8 +71,7 @@ module.exports = function(grunt) {
     copy: {
       assets: {
         expand: true,
-        cwd: 'src/public/',
-        src: ['**/application.css', '**/application.js'],
+        src: ['src/public/css/application.css', 'src/public/js/application.js', 'src/public/js/common.js', 'src/public/js/views/*.js'],
         dest: 'public/'
       },
       views: {
@@ -70,7 +85,8 @@ module.exports = function(grunt) {
     uglify : {
       prod: {
         files: {
-          'src/public/js/application.js': ['src/public/js/application.js']
+          'src/public/js/lib.js': ['src/public/js/lib.js'],
+          'src/public/js/common.js': ['src/public/js/common.js']
         }
       }
     },
@@ -78,7 +94,7 @@ module.exports = function(grunt) {
     watch: {
       coffee: {
         files: ['src/public/js/**/*.coffee'],
-        tasks: ['coffee:frontend', 'concat:js']
+        tasks: ['coffee:frontend', 'coffee:frontendStandalone', 'concat:js', 'concat:commonJS']
       },
 
       sass: {
@@ -142,6 +158,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-sass');
   grunt.loadNpmTasks('grunt-contrib-copy');
 
-  grunt.registerTask('default', ['coffee:frontend', 'sass:dev', 'concat', 'watch']);
+  grunt.registerTask('default', ['coffee:frontend', 'coffee:frontendStandalone', 'sass:dev', 'concat', 'watch']);
   grunt.registerTask('build', ['coffee', 'sass:prod', 'concat', 'uglify', 'copy']);
 };

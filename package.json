@@ -1,20 +1,20 @@
 {
-	"name": "iMake",
-	"version": "0.0.1",
-	"description": "Website for designers",
-	"author": {
-		"name": "Luis Carlos Cruz",
-		"email": "lcruzc@linkux-it.com"
-	},
-	"website": {
-		"url": "imake.co"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git@github.com:daymos/imake_0.2.git"
-	},
-	"private": true,
-	"dependencies": {
+  "name": "iMake",
+  "version": "0.0.1",
+  "description": "Website for designers",
+  "author": {
+    "name": "Luis Carlos Cruz",
+    "email": "lcruzc@linkux-it.com"
+  },
+  "website": {
+    "url": "imake.co"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:daymos/imake_0.2.git"
+  },
+  "private": true,
+  "dependencies": {
     "express": "3.0.4",
     "mongoose": "3.8.x",
     "session-mongoose": "0.4.1",
@@ -29,9 +29,9 @@
     "coffee-script": "*",
     "winston": "*",
     "q": "*",
-    "express-validator": "1.0.1"
+    "express-validator": "1.0.1",
+    "nodemailer": "~0.6.0"
   },
-
   "devDependencies": {
     "mocha": "*",
     "should": "*",
@@ -46,11 +46,9 @@
     "grunt-contrib-uglify": "~0.1.2",
     "grunt-contrib-copy": "*"
   },
-
   "engines": {
     "node": "0.10"
   },
-
   "subdomain": "me3doers",
   "scripts": {
     "start": "node server.js"

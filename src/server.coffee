@@ -30,8 +30,6 @@ validator = expressValidator()
 db = mongoose.connect "#{settings.db.host}#{settings.db.name}", db: {safe: true, autoIndex: false}, (err) ->
   logger.error err if err
 
-app.on 'mount', (parent) ->
-  console.log parent
 
 app.set 'port', settings.host.port
 

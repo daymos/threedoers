@@ -15,6 +15,11 @@
     db: {
       name: 'imake',
       host: 'mongodb://imake:3m1k2M4ng4@ds033617.mongolab.com:33617/'
+    },
+    mailer: {
+      service: 'Mandrill',
+      username: '3doers@gmail.com',
+      password: 'tYhdoBQgtOtpeYn4ZSlyXg'
     }
   };
 

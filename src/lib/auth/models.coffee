@@ -38,11 +38,8 @@ User = new Schema
 User
   .virtual('password')
   .set (password) ->
-    @_password = password
     @salt = @makeSalt()
     @hashed_password = @encryptPassword(password)
-  .get () ->
-    @_password
 
 
 User
