@@ -13,7 +13,7 @@
       protocol: 'http'
     },
     db: {
-      name: 'iMake',
+      name: 'imake',
       host: 'mongodb://imake:3m1k2M4ng4@ds061198.mongolab.com:61198/'
     }
   };
