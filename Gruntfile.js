@@ -71,7 +71,8 @@ module.exports = function(grunt) {
     copy: {
       assets: {
         expand: true,
-        src: ['src/public/css/application.css', 'src/public/js/application.js', 'src/public/js/common.js', 'src/public/js/views/*.js'],
+        cwd: 'src/public/',
+        src: ['css/application.css', 'js/application.js', 'js/common.js', 'js/lib.js', 'js/views/*.js'],
         dest: 'public/'
       },
       views: {
@@ -88,6 +89,12 @@ module.exports = function(grunt) {
           'src/public/js/lib.js': ['src/public/js/lib.js'],
           'src/public/js/common.js': ['src/public/js/common.js']
         }
+      },
+      views: {
+        expand: true,
+        cwd: 'src/public/js/views',
+        src: ['**/*.js'],
+        dest: 'src/public/js/views'
       }
     },
 
