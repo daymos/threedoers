@@ -27,7 +27,8 @@ logger.info '*'
 
 app = express()
 validator = expressValidator()
-db = mongoose.connect "#{settings.db.host}#{settings.db.name}", db: {safe: true, autoIndex: false}, server: {auto_reconnect: true}
+db = mongoose.connect "#{settings.db.host}#{settings.db.name}", db: {safe: true, autoIndex: false}, server: {auto_reconnect: true}, ->
+  logger.error arguments
 
 app.on 'mount', (parent) ->
   console.log parent
@@ -46,10 +47,10 @@ app.use express.cookieParser()
 app.use express.methodOverride()
 app.use validator
 
-# app.use express.session(
-#   secret: settings.cookieSecret
-#   store: new SessionStore(url: "#{settings.db.host}#{settings.db.name}")
-# )
+app.use express.session(
+  secret: settings.cookieSecret
+  store: new SessionStore(url: "#{settings.db.host}#{settings.db.name}")
+)
 
 app.use express.csrf()
 app.use gzippo.compress()

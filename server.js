@@ -45,6 +45,8 @@
     server: {
       auto_reconnect: true
     }
+  }, function() {
+    return logger.error(arguments);
   });
 
   app.on('mount', function(parent) {
@@ -71,6 +73,13 @@
   app.use(express.methodOverride());
 
   app.use(validator);
+
+  app.use(express.session({
+    secret: settings.cookieSecret,
+    store: new SessionStore({
+      url: "" + settings.db.host + settings.db.name
+    })
+  }));
 
   app.use(express.csrf());
 
