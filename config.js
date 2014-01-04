@@ -14,7 +14,7 @@
     },
     db: {
       name: 'imake',
-      host: 'mongodb://imake:3m1k2M4ng4@ds061198.mongolab.com:61198/'
+      host: 'mongodb://imake:3m1k2M4ng4@ds033617.mongolab.com:33617/'
     }
   };
 
