@@ -41,12 +41,11 @@
     db: {
       safe: true,
       autoIndex: false
-    },
-    server: {
-      auto_reconnect: true
     }
-  }, function() {
-    return logger.error(arguments);
+  }, function(err) {
+    if (err) {
+      return logger.error(err);
+    }
   });
 
   app.on('mount', function(parent) {
