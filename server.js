@@ -83,7 +83,8 @@
   app.disable("x-powered-by");
 
   app.configure('development', function() {
-    return app.locals.pretty = true;
+    app.locals.pretty = true;
+    return app.use(express.errorHandler());
   });
 
   app.use(function(req, res, next) {
@@ -95,7 +96,7 @@
     return next();
   });
 
-  _ref = ['core', 'auth'];
+  _ref = ['core', 'auth', 'registration'];
   for (_i = 0, _len = _ref.length; _i < _len; _i++) {
     appName = _ref[_i];
     _app = require("./lib/" + appName);

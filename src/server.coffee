@@ -56,6 +56,7 @@ app.disable "x-powered-by"
 
 app.configure 'development', ->
   app.locals.pretty = true
+  app.use express.errorHandler()
 
 app.use (req, res, next) ->
   res.locals
@@ -65,7 +66,7 @@ app.use (req, res, next) ->
   next()
 
 # loading modules
-for appName in ['core', 'auth']
+for appName in ['core', 'auth', 'registration']
   _app = require "./lib/#{appName}"
   _app.use validator
   _app.once 'mount', (parent) ->

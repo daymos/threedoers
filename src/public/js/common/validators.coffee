@@ -35,16 +35,18 @@ class Validator
   #############
 
   validate: ->
+    result = true
     for selector of @validations
       $element = @form.find selector
       for method of @validations[selector]
         if @["_#{method}"]
           unless @["_#{method}"]($element, @validations[selector][method])
             @form.trigger 'error', [$element, @message, @formMessage]
-            return false
+            result = false
+            break
         else
           @form.trigger 'error', [$element, "Validator '#{method}' is not implemented"]
-          return false
-    return true
+          result = false
+    return result
 
 this.Validator = Validator

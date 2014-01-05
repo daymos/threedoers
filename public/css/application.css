@@ -347,6 +347,26 @@ body {
 .center-block {
   float: none !important; }
 
+.ui-autocomplete {
+  padding: 0;
+  list-style: none;
+  background-color: #fff;
+  width: 218px;
+  border: 1px solid #BBB;
+  max-height: 350px;
+  overflow-y: scroll; }
+  .ui-autocomplete .ui-menu-item a {
+    border-top: 1px solid #CCC;
+    display: block;
+    padding: 4px 6px;
+    color: #353D44;
+    cursor: pointer; }
+  .ui-autocomplete .ui-menu-item:first-child a {
+    border-top: none; }
+  .ui-autocomplete .ui-menu-item a.ui-state-hover {
+    background-color: #eee;
+    color: #161A1C; }
+
 (function() {
 
 

@@ -6,19 +6,17 @@ $(document).ready ->
       required: true
     '#password':
       required: true
+      min: 6
+      max: 20
 
   loginForm.on 'error', (form, element, message, formMessage) ->
-    $('.modal-alert .modal-title').text("Error");
-    $('.modal-alert .modal-body p').text(message);
-    $('.modal-alert').modal('show')
-
     # improving error fields
     element.siblings('.help-block').remove()  # previous messages remove
     element.after $('<span>').addClass('help-block').text(formMessage)
     element.parent().addClass('has-error')
 
-  $("#loginForm #forgot-password").click ->
-    $("#get-credentials").modal "show"
+  # $("#loginForm #forgot-password").click ->
+  #   $("#get-credentials").modal "show"
 
 
   # lv = new LoginValidator()

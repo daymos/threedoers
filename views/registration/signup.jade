@@ -1,0 +1,60 @@
+
+extends ../layout
+
+block content
+  .row
+    div.well.col-md-10.center-block
+      form(method="post", action="/accounts/signup", role="form", id="registration", class="form-horizontal")
+        fieldset
+          legend Registration Form
+
+          input(type='hidden', name='_csrf', value=csrfToken)
+
+          .form-group(class=(locals.errors && errors.username)?"has-error":"")
+            label(for="username", class="control-label col-md-3") Username
+            .col-md-8
+              input(type="text", class="form-control", name="username", id='username', placeholder="Enter your username", value=(locals.username)?"#{username}":"")
+              - if (locals.errors && errors.username)
+                span(class="help-block")
+                  = errors.username.msg
+
+          .form-group(class=(locals.errors && errors.email)?"has-error":"")
+            label(for="email", class="control-label col-md-3") Email
+            .col-md-8
+              input(type="email", class="form-control", name="email", id='email', placeholder="Enter your email", value=(locals.email)?"#{email}":"")
+              - if (locals.errors && errors.email)
+                span(class="help-block")
+                  = errors.email.msg
+
+          .form-group(class=(locals.errors && errors.password)?"has-error":"")
+            label(for="password", class="control-label col-md-3") Password
+            .col-md-8
+              input(type="password", class="form-control", name="password", id='password', placeholder="Enter your password", value=(locals.password)?"#{password}":"")
+              - if (locals.errors && errors.password)
+                span(class="help-block")
+                  = errors.password.msg
+
+          .form-group(class=(locals.errors && errors.passwordConfirm)?"has-error":"")
+            label(for="passwordConfirm", class="control-label col-md-3") Confirm Password
+            .col-md-8
+              input(type="password", class="form-control", name="passwordConfirm", id='passwordConfirm', placeholder="Confirm Password", value=(locals.passwordConfirm)?"#{passwordConfirm}":"")
+              - if (locals.errors && errors.passwordConfirm)
+                span(class="help-block")
+                  = errors.passwordConfirm.msg
+
+          .form-group(class=(locals.errors && errors.country)?"has-error":"")
+            label(for="passwordConfirm", class="control-label col-md-3") Country
+            .col-md-8
+              select(class="form-control", name="country", id='country-list', autofocus="autofocus", autocorrect="off", autocomplete="off")
+                != countries
+              - if (locals.errors && errors.country)
+                span(class="help-block")
+                  = errors.country.msg
+
+          button(type="submit").btn.btn-primary.btn-lg.center-block
+            span.glyphicon.glyphicon-hand-right
+            | &nbsp;&nbsp;&nbsp;Register me
+
+
+block scripts
+  script(src='/js/views/signup.js')

@@ -52,7 +52,7 @@ module.exports = function(grunt) {
         options: {
           separator: ';',
         },
-        src: ['src/public/js/lib/**/*.js'],
+        src: ['src/public/js/lib/modernizr.js', 'src/public/js/lib/**/*.js'],
         dest: 'src/public/js/lib.js',
       },
       commonJS: {

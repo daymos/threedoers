@@ -5,7 +5,7 @@ crypto = require 'crypto'
 SALT_WORK_FACTOR = 10
 
 # Activation Schema
-Activation = mongoose.Schema(
+Activation = mongoose.Schema
   email:
     type: String
     required: true
@@ -21,7 +21,6 @@ Activation = mongoose.Schema(
   createdAt:
     type: Date
     expires: "1.5h"
-)
 
 
 Activation

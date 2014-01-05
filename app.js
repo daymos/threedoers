@@ -14,7 +14,7 @@ var path = require('path')
 var exec = require('child_process').exec;
 
 
-viewer = require('jsc3d.min.js')
+// viewer = require('jsc3d.min.js')
 app = express();
 
 target_path="ciao";
@@ -27,7 +27,7 @@ app.configure(function(){
 	app.locals.pretty = true;
 //	app.use(express.favicon());
 //	app.use(express.logger('dev'));
-	
+
 	app.use(express.bodyParser({ keepExtensions: true, uploadDir: 'C:/imake_0.2/app/public/uploads/' }));
 	app.use(express.cookieParser());
 	app.use(express.session({ secret: 'super-duper-secret-secret' }));
@@ -35,12 +35,12 @@ app.configure(function(){
 	//app.use(require('stylus').middleware({ src: __dirname + '/app/public' }));
 	app.use(express.static(__dirname + '/app/public'));
 	app.use(express.static(__dirname + '/app/public/uploads'));
-	
-	
+
+
 	// Give Views/Layouts direct access to session data.
   app.use(function(req, res, next){
     res.locals.session = req.session;
-	
+
     next();
   });
   app.use(app.router);
@@ -55,7 +55,7 @@ app.configure('development', function(){
 app.post('/file-upload', function(req, res) {
     console.log(target_path);
 	//set volume variable
-	
+
     // get the temporary location of the file
     var tmp_path = req.files.thumbnail.path;
 	var parts;
@@ -70,20 +70,20 @@ app.post('/file-upload', function(req, res) {
             if (err) throw err;
             //res.send('File uploaded to: ' + target_path + ' - ' + req.files.thumbnail.size + ' bytes');
              console.log(target_path);
-             exec('c:/gnu/wget/bin/wget -q -O - http://	127.0.0.1:8081/imake/live_preview.php'+ '?x='+ target_path , function (error, stdout, stderr) {console.log(stdout); vol = stdout; });			 
+             exec('c:/gnu/wget/bin/wget -q -O - http://	127.0.0.1:8081/imake/live_preview.php'+ '?x='+ target_path , function (error, stdout, stderr) {console.log(stdout); vol = stdout; });
              setTimeout(function() {
 			 parts = vol.split('Volume');
 			 console.log(parts);
-			 res.render('upload_1',{tg:req.files.thumbnail.name, vol:parts[1]});		
+			 res.render('upload_1',{tg:req.files.thumbnail.name, vol:parts[1]});
              },2000);
 });
-			
+
         });
     });
-	
 
 
-	
+
+
 
 require('./app/server/router')(app);
 

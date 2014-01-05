@@ -16,15 +16,15 @@ block content
         input(type='hidden', name='_csrf', value=csrfToken)
 
         .form-group(class=(locals.errors && errors.username)?"has-error":"")
-          label(for="username") Username
-          input(type="text", name="username", id='username', placeholder="Enter your username", value=(locals.username)?"#{username}":"").form-control
+          label(for="username", class="control-label") Username
+          input(type="text", class="form-control", name="username", id='username', placeholder="Enter your username", value=(locals.username)?"#{username}":"").form-control
           - if (locals.errors && errors.username)
             span(class="help-block")
               = errors.username.msg
 
         .form-group(class=(locals.errors && errors.password)?"has-error":"")
-          label(for="password") Password
-          input(type="password", name="password", id='password', placeholder="Enter your password", value=(locals.password)?"#{password}":"").form-control
+          label(for="password", class="control-label") Password
+          input(type="password", class="form-control", name="password", id='password', placeholder="Enter your password", value=(locals.password)?"#{password}":"").form-control
           - if (locals.errors && errors.password)
             span(class="help-block")
               = errors.password.msg
@@ -38,7 +38,7 @@ block content
             input(type="checkbox", checked='checked')
             | Remember Me
 
-        div.btm-links
+        div.btn-links
           a(href='#')#forgot-password Forgot Your Password?
           br
           a(href='/accounts/signup')#create-account Create An Account
