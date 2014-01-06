@@ -1,9 +1,7 @@
-express = require 'express'
+module.exports = (app) ->
 
-app = module.exports = express()
-
-app.get '/', (req, res) ->
-  res.render 'core/index'
+  app.get '/', (req, res) ->
+    res.render 'core/index'
 
 
 # app.get "/", (req, res) ->

@@ -11,6 +11,7 @@ mongoose = require "mongoose"
 engines = require 'consolidate'
 expressValidator = require 'express-validator'
 q = require 'q'
+passport = require "passport"
 
 logger = require "./lib/logger"
 settings = require './config'
@@ -30,7 +31,6 @@ mongoose.Promise::then = (fulfilled, rejected) ->
 ##
 # End mongoose with q promises
 ##
-
 
 env = process.env.NODE_ENV || 'development'
 global.env = env
@@ -67,6 +67,10 @@ app.use express.session(
   store: new SessionStore(url: "#{settings.db.host}#{settings.db.name}")
 )
 
+# initialize passport itself and passport sessions
+app.use passport.initialize()
+app.use passport.session()
+
 app.use express.csrf()
 app.use gzippo.compress()
 app.disable "x-powered-by"
@@ -84,12 +88,7 @@ app.use (req, res, next) ->
 
 # loading modules
 for appName in ['core', 'auth', 'registration']
-  _app = require "./lib/#{appName}"
-  _app.use validator
-  _app.once 'mount', (parent) ->
-    _app.engines = parent.engines
-    _app.set 'views', parent.get('views')
-  app.use _app
+  require("./lib/#{appName}")(app)
 
 # start server
 if settings.protocol is 'https'

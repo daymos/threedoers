@@ -1,5 +1,5 @@
 (function() {
-  var HTTPStatus, SessionStore, app, appName, db, engines, env, express, expressValidator, gzippo, http, https, logger, mongoose, q, server, settings, ssl_options, validator, _app, _i, _len, _ref;
+  var HTTPStatus, SessionStore, app, appName, db, engines, env, express, expressValidator, gzippo, http, https, logger, mongoose, passport, q, server, settings, ssl_options, validator, _i, _len, _ref;
 
   HTTPStatus = require("http-status");
 
@@ -16,6 +16,8 @@
   expressValidator = require('express-validator');
 
   q = require('q');
+
+  passport = require("passport");
 
   logger = require("./lib/logger");
 
@@ -86,6 +88,10 @@
     })
   }));
 
+  app.use(passport.initialize());
+
+  app.use(passport.session());
+
   app.use(express.csrf());
 
   app.use(gzippo.compress());
@@ -109,13 +115,7 @@
   _ref = ['core', 'auth', 'registration'];
   for (_i = 0, _len = _ref.length; _i < _len; _i++) {
     appName = _ref[_i];
-    _app = require("./lib/" + appName);
-    _app.use(validator);
-    _app.once('mount', function(parent) {
-      _app.engines = parent.engines;
-      return _app.set('views', parent.get('views'));
-    });
-    app.use(_app);
+    require("./lib/" + appName)(app);
   }
 
   if (settings.protocol === 'https') {
