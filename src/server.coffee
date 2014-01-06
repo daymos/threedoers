@@ -10,9 +10,26 @@ SessionStore = require('session-mongoose')(express)
 mongoose = require "mongoose"
 engines = require 'consolidate'
 expressValidator = require 'express-validator'
+q = require 'q'
 
 logger = require "./lib/logger"
 settings = require './config'
+
+
+##
+# mongoose with q promises
+##
+
+mongoose.Promise::then = (fulfilled, rejected) ->
+  deferred = q.defer()
+  @addCallback deferred.resolve
+  @addErrback deferred.reject
+  deferred.promise.then fulfilled, rejected
+
+
+##
+# End mongoose with q promises
+##
 
 
 env = process.env.NODE_ENV || 'development'

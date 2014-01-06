@@ -16,7 +16,9 @@ Activation = mongoose.Schema
     required: true
     unique: true
 
-  verifyStatus: Boolean # Used to check status
+  activated:
+    type: Boolean
+    default: false
 
   createdAt:
     type: Date
@@ -33,9 +35,10 @@ Activation
     crypto.createHmac('sha1', @salt).update(text).digest('hex')
 
 
-Activation.pre "save", (next) ->
-  @salt = @makeSalt()
-  @hashedEmail = @encryptText(@email)
+Activation.pre 'validate', (next) ->
+  unless @hashedEmail
+    @salt = @makeSalt()
+    @hashedEmail = @encryptText(@email)
   next()
 
 

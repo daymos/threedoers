@@ -1,0 +1,14 @@
+extends ../layout
+
+block title
+  |  Activation Done
+
+block content
+  .row
+    div.col-md-12
+      if user
+        h3 Your account has been activated, please login.
+      else
+        h3 Nothing to activate.
+
+block scripts

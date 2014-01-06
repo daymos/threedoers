@@ -10,10 +10,12 @@ app = module.exports = express()
 
 # rules for serialize sessions (we need them as common part)
 passport.serializeUser (user, done) ->
+  console.log user
   done(null, user.id)
 
 passport.deserializeUser (id, done) ->
-  users.getOneRaw {_id: id}, (err, user) ->
+  console.log id
+  models.User.findOne {_id: id, active: true}, (err, user) ->
     done err, user
 
 # initialize passport itself and passport sessions
@@ -27,7 +29,7 @@ passport.use new LocalStrategy {
   },
   (username, password, done) ->
     User = models.User
-    User.findOne {username: username}, (err, user) ->
+    User.findOne {username: username, active: true}, (err, user) ->
       if err
         return done(err)
       if not user
@@ -37,13 +39,19 @@ passport.use new LocalStrategy {
       return done(null, user)
 
 
+app.get '/accounts/logout', (req, res) ->
+  if req.user
+    req.logout()
+  res.redirect '/'
+
+
 app.get '/accounts/login', (req, res, next) ->
   res.render 'accounts/login'
 
 
 app.post '/accounts/login', (req, res, next) ->
 
-  req.assert('username', 'Invalid username').isAlpha()
+  req.assert('username', regex: "Invalid username.").regex(/^[a-z0-9_-]{3,16}$/)
   req.assert('password', len: 'Should have between 6 - 20 characters.').len(6, 20)
 
   errors = req.validationErrors(true)
@@ -60,16 +68,10 @@ app.post '/accounts/login', (req, res, next) ->
           if req.param('remember-me')
             req.session.cookie.expires = false
             req.session.cookie.maxAge = 86400000*21
-          res.redirect '/'
+
+          req.logIn user, (err) ->
+            return next(err)  if err
+            res.redirect '/'
         else
           res.render 'accounts/login', { error: "Invalid username or password", username: req.param('username'), password: req.param('password') }
     )(req, res, next)
-
-
-app.get '/logout', (req, res) ->
-  if not req.user? then return res.json()
-  data = req.user._doc
-  data.apn_token = undefined
-  users.updateOne data, (err, user) ->
-    req.logout()
-    res.json()

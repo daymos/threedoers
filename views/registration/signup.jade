@@ -1,5 +1,7 @@
-
 extends ../layout
+
+block title
+  |  Signup
 
 block content
   .row
@@ -29,7 +31,7 @@ block content
           .form-group(class=(locals.errors && errors.password)?"has-error":"")
             label(for="password", class="control-label col-md-3") Password
             .col-md-8
-              input(type="password", class="form-control", name="password", id='password', placeholder="Enter your password", value=(locals.password)?"#{password}":"")
+              input(type="password", class="form-control", name="password", id='password', placeholder="Enter your password")
               - if (locals.errors && errors.password)
                 span(class="help-block")
                   = errors.password.msg
@@ -37,19 +39,21 @@ block content
           .form-group(class=(locals.errors && errors.passwordConfirm)?"has-error":"")
             label(for="passwordConfirm", class="control-label col-md-3") Confirm Password
             .col-md-8
-              input(type="password", class="form-control", name="passwordConfirm", id='passwordConfirm', placeholder="Confirm Password", value=(locals.passwordConfirm)?"#{passwordConfirm}":"")
+              input(type="password", class="form-control", name="passwordConfirm", id='passwordConfirm', placeholder="Confirm Password")
               - if (locals.errors && errors.passwordConfirm)
                 span(class="help-block")
                   = errors.passwordConfirm.msg
 
-          .form-group(class=(locals.errors && errors.country)?"has-error":"")
-            label(for="passwordConfirm", class="control-label col-md-3") Country
+          .form-group(class=(locals.errors && errors.address)?"has-error":"")
+            label(for="address", class="control-label col-md-3") Address
             .col-md-8
-              select(class="form-control", name="country", id='country-list', autofocus="autofocus", autocorrect="off", autocomplete="off")
-                != countries
-              - if (locals.errors && errors.country)
+              input(type="text", class="form-control", name="address", id='address', placeholder="Address")
+              - if (locals.errors && errors.address)
                 span(class="help-block")
-                  = errors.country.msg
+                  = errors.address.msg
+
+          input(name="city", id="city", type="hidden")
+          input(name="country", id="country", type="hidden")
 
           button(type="submit").btn.btn-primary.btn-lg.center-block
             span.glyphicon.glyphicon-hand-right
@@ -57,4 +61,5 @@ block content
 
 
 block scripts
+  script(src='https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places')
   script(src='/js/views/signup.js')

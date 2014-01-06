@@ -26,13 +26,31 @@ class Validator
   _required: ($element, options) ->
     val = $element.val()
     label = $element.siblings('label').text() # getting siblings label
-    @message = "#{label} is required"
-    @formMessage = "This field is required."
+    @message = options.message || "This field is required."
     return if val then true else false
+
+  _regexp: ($element, options) ->
+    val = $element.val()
+    label = $element.siblings('label').text() # getting siblings label
+    @message = options.message || "This field is not valid."
+    return if val.match(options.test) then true else false
+
+  _match: ($element, options) ->
+    val1 = $element.val()
+    val2 = $(options.test).val()
+    label = $element.siblings('label').text() # getting siblings label
+    @message = options.message || "Value didn't match"
+    return if val1 == val2 then true else false
 
   #############
   # End Validators
   #############
+
+  formatOptions: (options) ->
+    unless options.test
+      options =
+        tests: options
+    options
 
   validate: ->
     result = true
@@ -40,10 +58,12 @@ class Validator
       $element = @form.find selector
       for method of @validations[selector]
         if @["_#{method}"]
-          unless @["_#{method}"]($element, @validations[selector][method])
-            @form.trigger 'error', [$element, @message, @formMessage]
+          unless @["_#{method}"]($element, @formatOptions(@validations[selector][method]))
+            @form.trigger 'error', [$element, @message]
             result = false
             break
+          else
+            @form.trigger 'valid', [$element]
         else
           @form.trigger 'error', [$element, "Validator '#{method}' is not implemented"]
           result = false

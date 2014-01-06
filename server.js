@@ -1,5 +1,5 @@
 (function() {
-  var HTTPStatus, SessionStore, app, appName, db, engines, env, express, expressValidator, gzippo, http, https, logger, mongoose, server, settings, ssl_options, validator, _app, _i, _len, _ref;
+  var HTTPStatus, SessionStore, app, appName, db, engines, env, express, expressValidator, gzippo, http, https, logger, mongoose, q, server, settings, ssl_options, validator, _app, _i, _len, _ref;
 
   HTTPStatus = require("http-status");
 
@@ -15,9 +15,19 @@
 
   expressValidator = require('express-validator');
 
+  q = require('q');
+
   logger = require("./lib/logger");
 
   settings = require('./config');
+
+  mongoose.Promise.prototype.then = function(fulfilled, rejected) {
+    var deferred;
+    deferred = q.defer();
+    this.addCallback(deferred.resolve);
+    this.addErrback(deferred.reject);
+    return deferred.promise.then(fulfilled, rejected);
+  };
 
   env = process.env.NODE_ENV || 'development';
 

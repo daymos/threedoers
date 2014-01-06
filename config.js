@@ -7,6 +7,7 @@
     debug: false,
     rootDir: __dirname,
     logFile: __dirname + '/log/error.log',
+    site: 'http://imake-3doers.rhcloud.com',
     host: {
       ip: process.env.OPENSHIFT_NODEJS_IP,
       port: process.env.OPENSHIFT_NODEJS_PORT,
@@ -19,7 +20,13 @@
     mailer: {
       service: 'Mandrill',
       username: '3doers@gmail.com',
-      password: 'tYhdoBQgtOtpeYn4ZSlyXg'
+      password: 'tYhdoBQgtOtpeYn4ZSlyXg',
+      noReply: 'no-reply@imake.com'
+    },
+    registration: {
+      activation: {
+        subject: "Activate your account"
+      }
     }
   };
 

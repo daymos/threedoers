@@ -9,11 +9,9 @@ User = new Schema
 
   firstName:
     type: String
-    required: true
 
   lastName:
     type: String
-    required: true
 
   email:
     type: String
@@ -29,17 +27,34 @@ User = new Schema
 
   active:
     type: Boolean
-    default: true
+    default: false
 
-  hashedPassword: String
-  salt: String
+  city:
+    type: String
+    required: true
+
+  country:
+    type: String
+    required: true
+
+  address:
+    type: String
+    required: true
+
+  hashedPassword:
+    type: String
+    required: true
+
+  salt:
+    type: String
+    required: true
 
 
 User
   .virtual('password')
   .set (password) ->
     @salt = @makeSalt()
-    @hashed_password = @encryptPassword(password)
+    @hashedPassword = @encryptPassword(password)
 
 
 User
@@ -54,7 +69,7 @@ User
 
 User
   .method 'authenticate', (plainText) ->
-    return @encryptPassword(plainText) == @hashed_password
+    return @encryptPassword(plainText) == @hashedPassword
 
 
 module.exports.User = mongoose.model 'User', User
