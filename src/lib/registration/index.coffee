@@ -87,6 +87,7 @@ module.exports = (app) ->
         auth.User.findOne(email: activation.email).exec().then (user) ->
           user.active = true
           user.save (err) ->
+            logger.error err
             if err
               res.render 'registration/activation_done', activated: null
             else
