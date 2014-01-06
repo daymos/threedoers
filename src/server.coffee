@@ -38,7 +38,7 @@ global.root = __dirname
 
 logger.info ''
 logger.info '***********************************************************************'
-logger.info '* Starting iMake server:'
+logger.info '* Starting 3doers server:'
 logger.info '*'
 
 

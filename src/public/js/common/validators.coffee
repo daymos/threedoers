@@ -2,7 +2,7 @@ class Validator
   ######################################
   # Validator needs Jquery
   #
-  # This will handle most common validators for iMake
+  # This will handle most common validators for 3doers
   # now are simplest ones.
   ######################################
 

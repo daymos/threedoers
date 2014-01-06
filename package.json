@@ -1,5 +1,5 @@
 {
-  "name": "iMake",
+  "name": "3doers",
   "version": "0.0.1",
   "description": "Website for designers",
   "author": {
@@ -7,7 +7,7 @@
     "email": "lcruzc@linkux-it.com"
   },
   "website": {
-    "url": "imake.co"
+    "url": "3doers.it"
   },
   "repository": {
     "type": "git",
