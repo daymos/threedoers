@@ -84,14 +84,15 @@ module.exports = (app) ->
       if activation
         activation.activated = true
         activation.save()
-        auth.User.where(email: activation.email)
-                 .update active: true, (err, user) ->
-                  if err
-                    res.render 'registration/activation_done', user: null
-                  else
-                    res.render 'registration/activation_done', user: user
+        auth.User.findOne(email: activation.email).exec().then (user) ->
+          user.active = true
+          user.save (err) ->
+            if err
+              res.render 'registration/activation_done', activated: null
+            else
+              res.render 'registration/activation_done', activated: user
       else
-        res.render 'registration/activation_done', user: null
+        res.render 'registration/activation_done', activated: null
     ).fail( (reason) ->
       logger.error reason
       res.send 500
