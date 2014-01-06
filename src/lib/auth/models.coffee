@@ -49,6 +49,12 @@ User = new Schema
     type: String
     required: true
 
+  location:
+    type: []
+    required: true
+
+
+User.index loc: '2d'
 
 User
   .virtual('password')

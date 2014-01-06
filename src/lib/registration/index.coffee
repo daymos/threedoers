@@ -61,6 +61,7 @@ module.exports = (app) ->
                   city: req.body.city
                   country: req.body.country
                   address: req.body.address
+                  location: req.body.location.split(',')
 
                 usr.password = req.body.password
 
@@ -87,8 +88,8 @@ module.exports = (app) ->
         auth.User.findOne(email: activation.email).exec().then (user) ->
           user.active = true
           user.save (err) ->
-            logger.error err
             if err
+              logger.error err
               res.render 'registration/activation_done', activated: null
             else
               res.render 'registration/activation_done', activated: user

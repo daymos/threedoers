@@ -44,6 +44,7 @@ $(document).ready ->
     place = searchAddressBox.getPlace()
     city = no
     country = no
+    point = no
 
     for component in place.address_components
       if component.types[0] == 'locality'
@@ -51,9 +52,13 @@ $(document).ready ->
       if component.types[0] == 'country'
         country = component.long_name
 
-    if city and country
+    if place.geometry and place.geometry.location
+      point = [place.geometry.location.lng(), place.geometry.location.lat()]
+
+    if city and country and point
       $('#city').val(city)
       $('#country').val(country)
+      $('#location').val(point)
     else
       $input.siblings('.help-block').remove()  # previous messages remove
       $input.parent().append $('<span>').addClass('help-block').text("Is not a valid address.")
