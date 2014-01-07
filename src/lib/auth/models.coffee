@@ -53,6 +53,9 @@ User = new Schema
     type: []
     required: true
 
+  printer:
+    type: String
+
 
 User.index loc: '2d'
 
@@ -79,6 +82,12 @@ User
 
 
 module.exports.User = mongoose.model 'User', User
+
+module.exports.User.schema.path('printer').validate( (value) ->
+  return true unless value?  # allowing empty
+  return /request|accepted|denied/i.test(value)
+, 'Invalid Status')
+
 
 # User.path('image').set (new_value) ->
 #   if new_value isnt @image

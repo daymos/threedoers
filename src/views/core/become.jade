@@ -10,7 +10,10 @@ block content
       p.lead
          |3D print other people's design and start making money
 
-      p
-        form(action='/become', method='post')
-          input(type='hidden', name='_csrf', value=csrfToken)
-          input(type="submit", value="Send request", role="button").btn.btn-lg.btn-success
+      p.lead
+        if user.printer
+          | Already request was sent
+        else
+          form(action='/become', method='post')
+            input(type='hidden', name='_csrf', value=csrfToken)
+            input(type="submit", value="Send request", role="button").btn.btn-lg.btn-success

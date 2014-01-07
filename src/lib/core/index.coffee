@@ -13,8 +13,16 @@ module.exports = (app) ->
     res.render 'core/become'
 
   app.post '/become', decorators.loginRequired, (req, res) ->
-    mailer.send 'mailer/core/become', {user: req.user}, {from: req.user.email, to: settings.admins.emails, subject: "New Become a Printer Request"}
-    res.render 'core/become_done'
+    if req.user.printer
+      res.render 'core/become'
+    else
+      mailer.send('mailer/core/become',
+                  {user: req.user},
+                  {from: req.user.email, to: settings.admins.emails,
+                  subject: "New Become a Printer Request"}).then ->
+        req.user.printer = 'request'
+        req.user.save()
+      res.render 'core/become_done'
 
 
 # app.get "/", (req, res) ->
