@@ -22,6 +22,7 @@ class Mailer
 
     consolidate.jade "#{settings.rootDir}/views/#{template}.jade", context, (err, html) =>
       if err
+        logger.error err
         deferred.reject err
       else
         throw new Error "No options sent to mailer" unless options?

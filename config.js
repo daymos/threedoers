@@ -27,6 +27,9 @@
       activation: {
         subject: "Activate your account"
       }
+    },
+    admins: {
+      emails: ['3doers@gmail.com']
     }
   };
 

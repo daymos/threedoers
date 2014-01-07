@@ -1,7 +1,20 @@
 module.exports = (app) ->
+  decorators = require '../decorators'
+  logger = require '../logger'
+  mailer = require('../mailer').mailer
+  settings = require ('../../config')
+
 
   app.get '/', (req, res) ->
     res.render 'core/index'
+
+
+  app.get '/become', decorators.loginRequired, (req, res) ->
+    res.render 'core/become'
+
+  app.post '/become', decorators.loginRequired, (req, res) ->
+    mailer.send 'mailer/core/become', {user: req.user}, {from: req.user.email, to: settings.admins.emails, subject: "New Become a Printer Request"}
+    res.render 'core/become_done'
 
 
 # app.get "/", (req, res) ->

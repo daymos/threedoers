@@ -29,6 +29,9 @@ config =
     activation:
       subject: "Activate your account"
 
+  admins:
+    emails: ['3doers@gmail.com']
+
 try
   locals = require './locals'
   for key of locals

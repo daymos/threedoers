@@ -1,0 +1,16 @@
+
+extends base
+
+block title
+  |  Become a Printer
+
+block content
+  .jumbotron
+     h1 Become a printer
+      p.lead
+         |3D print other people's design and start making money
+
+      p
+        form(action='/become', method='post')
+          input(type='hidden', name='_csrf', value=csrfToken)
+          input(type="submit", value="Send request", role="button").btn.btn-lg.btn-success
