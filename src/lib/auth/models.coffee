@@ -50,7 +50,7 @@ User = new Schema
 
   location:
     type: []
-    required: true
+    # required: true
 
   printer:
     type: String
