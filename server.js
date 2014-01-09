@@ -72,7 +72,7 @@
 
   app.use(express.bodyParser({
     keepExtensions: true,
-    uploadDir: settings.mediaRoot
+    uploadDir: "" + global.root + "/public/tmp"
   }));
 
   app.use(express.cookieParser());
@@ -115,6 +115,7 @@
   _ref = ['core', 'auth', 'registration'];
   for (_i = 0, _len = _ref.length; _i < _len; _i++) {
     appName = _ref[_i];
+    logger.debug("Loading app " + appName);
     require("./lib/" + appName)(app);
   }
 

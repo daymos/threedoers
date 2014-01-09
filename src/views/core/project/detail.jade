@@ -1,0 +1,27 @@
+
+extends ../base
+
+block title
+  |  Your Project
+
+block content
+
+  .jumbotron
+
+    h1 Your design
+    canvas#cv(width='600', height='300')
+    p.hide#message-canvas
+      | It seems you are using an outdated browser that does not support canvas :-(
+
+    p
+      if project.processed
+        | Object volume: #{project.volume} cubic #{project.unit}
+      else
+        | Your project is still being processed
+
+
+block scripts
+    script(src='/js/views/project_detail.js')
+    script(type='text/javascript', src='/vendor/jsc3d.min.js')
+    script.
+      var filename = "#{project.file}"

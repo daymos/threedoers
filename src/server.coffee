@@ -57,7 +57,8 @@ app.set 'views', "#{global.root}/views"
 app.use express.static "#{global.root}/public"
 # app.use express.limit(config.req_max_size)
 
-app.use express.bodyParser({keepExtensions: true, uploadDir: settings.mediaRoot})
+# app.use express.bodyParser({defer: true})
+app.use express.bodyParser({keepExtensions: true, uploadDir: "#{global.root}/public/tmp"})
 app.use express.cookieParser()
 app.use express.methodOverride()
 app.use validator
@@ -88,6 +89,7 @@ app.use (req, res, next) ->
 
 # loading modules
 for appName in ['core', 'auth', 'registration']
+  logger.debug "Loading app #{appName}"
   require("./lib/#{appName}")(app)
 
 # start server

@@ -36,7 +36,16 @@ cd node-login
 npm install -d
 node app
 ```
-For testing purposes, I've provided a [database dump of all accounts here.](http://node-login.braitsch.io/print)  
+For testing purposes, I've provided a [database dump of all accounts here.](http://node-login.braitsch.io/print)
 Please note this list and the entire database automatically resets every 24 hours.
 
 Questions and suggestions for improvement are welcome.
+
+NOTE:
+####
+
+Deploy on OpenShift you need to create virtual env to use python script for calculating volume.
+
+virtualenv ~/app-root/data/3doers-pyenv
+. ~/app-root/data/3doers-pyenv/bin/activate
+pip install pymongo

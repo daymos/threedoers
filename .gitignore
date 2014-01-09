@@ -15,3 +15,7 @@ src/locals.coffee
 locals.coffee
 
 node_modules
+
+# python file
+py-env
+*.py[c|o]

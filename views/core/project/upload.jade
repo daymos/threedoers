@@ -1,0 +1,35 @@
+
+extends ../base
+
+block title
+  |  Upload Project
+
+block content
+
+  .jumbotron
+
+    h1 Upload your design
+    canvas#cv(width='600', height='300')
+    p.hide#message-canvas
+      | It seems you are using an outdated browser that does not support canvas :-(
+
+  p
+  | File must be in STL format
+
+  div.row
+    div.col-md-12
+      form(method='post', enctype='multipart/form-data', action='/project/upload', class="form-horizontal")
+        input(type='hidden', name='_csrf', value=csrfToken)
+
+        .form-group(class=(locals.errors && errors.thumbnail)?"has-error":"")
+          label.col-md-10(for='thumbnail') File input
+          input(type="file", name="thumbnail", id='thumbnail', placeholder="Enter your thumbnail", value=(locals.thumbnail)?"#{thumbnail}":"").col-md-11
+          - if (locals.errors && errors.thumbnail)
+            span(class="help-block col-md-12")
+              = errors.thumbnail.msg
+
+        input(type='submit', name='upload')
+
+block scripts
+    script(src='/js/views/upload.js')
+    script(type='text/javascript', src='/vendor/jsc3d.min.js')

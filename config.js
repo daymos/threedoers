@@ -30,6 +30,10 @@
     },
     admins: {
       emails: ['3doers@gmail.com']
+    },
+    python: {
+      path: __dirname + '/src/stlstats.py',
+      bin: '~/app-root/data/3doers-pyenv/bin/python'
     }
   };
 

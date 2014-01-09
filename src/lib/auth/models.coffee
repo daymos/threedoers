@@ -1,4 +1,3 @@
-fs = require "fs"
 mongoose = require 'mongoose'
 crypto = require 'crypto'
 
