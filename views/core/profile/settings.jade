@@ -25,7 +25,7 @@ block content-profile
           .form-group(class=(locals.errors && errors.firstName)?"has-error":"")
             label(for="firstName", class="control-label col-md-3") First Name
             .col-md-8
-              input(type="text", class="form-control", name="firstName", id='firstName', placeholder="Enter your first name", value="#{user.firstName}")
+              input(type="text", class="form-control", name="firstName", id='firstName', placeholder="Enter your first name", value=(user.firstName)?"#{user.firstName}":"")
               - if (locals.errors && errors.firstName)
                 span(class="help-block")
                   = errors.firstName.msg
@@ -33,7 +33,7 @@ block content-profile
           .form-group(class=(locals.errors && errors.lastName)?"has-error":"")
             label(for="lastName", class="control-label col-md-3") First Name
             .col-md-8
-              input(type="text", class="form-control", name="lastName", id='lastName', placeholder="Enter your last name", value="#{user.lastName}")
+              input(type="text", class="form-control", name="lastName", id='lastName', placeholder="Enter your last name", value=(user.lastName)?"#{user.lastName}":"")
               - if (locals.errors && errors.lastName)
                 span(class="help-block")
                   = errors.lastName.msg
