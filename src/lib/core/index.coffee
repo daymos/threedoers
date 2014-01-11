@@ -51,7 +51,7 @@ module.exports = (app, io) ->
       else
         res.send redirectTo: "/project/#{project.id}"
 
-    console.log "#{settings.python.bin} #{settings.python.path} #{req.files.thumbnail.path} -d #{project.density}"
+    logger.info "#{settings.python.bin} #{settings.python.path} #{req.files.thumbnail.path} -d #{project.density}"
 
     exec "#{settings.python.bin} #{settings.python.path} #{req.files.thumbnail.path} -d #{project.density}", (err, stdout, stderr) ->
       if not err and  not stderr
@@ -68,6 +68,8 @@ module.exports = (app, io) ->
         catch e
           logger.error e
           logger.error stderr
+          project.bad = true
+          project.save()
       else
         project.bad = true
         project.save()
@@ -76,7 +78,7 @@ module.exports = (app, io) ->
     models.STLProject.findOne({_id: req.params.id, user: req.user.id}).exec().then( (doc) ->
       if doc
         if doc.bad
-          console.log "#{settings.python.bin} #{settings.python.path} #{settings.upload.to}#{doc.file} -d #{doc.density}"
+          logger.info "#{settings.python.bin} #{settings.python.path} #{settings.upload.to}#{doc.file} -d #{doc.density}"
           exec "#{settings.python.bin} #{settings.python.path} #{settings.upload.to}#{doc.file} -d #{doc.density}", (err, stdout, stderr) ->
             if not err and  not stderr
               try
