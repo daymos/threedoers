@@ -54,6 +54,6 @@
   },
   "subdomain": "me3doers",
   "scripts": {
-    "start": "node server.js"
+    "start": "NODE_ENV=production node server.js --websocket-port=8000 --log-level=1"
   }
 }
