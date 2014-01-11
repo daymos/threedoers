@@ -52,8 +52,6 @@ module.exports = (app, io) ->
       else
         res.send redirectTo: "/project/#{project.id}"
 
-    logger.info "#{settings.python.bin} #{settings.python.path} #{req.files.thumbnail.path} -d #{project.density}"
-
     exec "#{settings.python.bin} #{settings.python.path} #{req.files.thumbnail.path} -d #{project.density}", (err, stdout, stderr) ->
       if not err and  not stderr
         try
@@ -68,7 +66,6 @@ module.exports = (app, io) ->
           cloned.status = project.humanizedStatus()  # to show good in browser
 
           io.sockets.in(project._id.toHexString()).emit('update', cloned)
-          logger.info "Project #{project._id} just processed."
         catch e
           logger.error e
           logger.error stderr
@@ -82,7 +79,6 @@ module.exports = (app, io) ->
     models.STLProject.findOne({_id: req.params.id, user: req.user.id}).exec().then( (doc) ->
       if doc
         if doc.bad
-          logger.info "#{settings.python.bin} #{settings.python.path} #{settings.upload.to}#{doc.file} -d #{doc.density}"
           exec "#{settings.python.bin} #{settings.python.path} #{settings.upload.to}#{doc.file} -d #{doc.density}", (err, stdout, stderr) ->
             if not err and  not stderr
               try
@@ -94,12 +90,10 @@ module.exports = (app, io) ->
                 doc.bad = false
                 doc.save()
 
-                console.log utils.cloneObject(doc._doc)
                 cloned = utils.cloneObject(doc._doc)
                 cloned.status = doc.humanizedStatus()  # to show good in browser
 
                 io.sockets.in(doc._id.toHexString()).emit('update', cloned)
-                logger.info "Project #{doc._id} just processed."
               catch e
                 logger.error e
                 logger.error stderr

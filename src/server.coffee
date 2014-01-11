@@ -110,8 +110,7 @@ if settings.protocol is 'https'
     logger.info '*'
     logger.info '***********************************************************************'
   )
-  io = io.listen server, () ->
-    console.log arguments
+  io = io.listen server
 else
   http = require 'http'
   server = http.createServer(app).listen(settings.host.port, settings.host.ip, ->
@@ -122,14 +121,13 @@ else
     logger.info '*'
     logger.info '***********************************************************************'
   )
-  io = io.listen server, () ->
-    console.log arguments
+  io = io.listen server
 
 io.set 'authorization', ioSession(express.cookieParser(settings.cookieSecret), sessionStore)
 
 unless settings.debug
   io.configure ->
-    # io.set 'log level', 1
+    io.set 'log level', 1
     io.set 'transports', ["websocket"]
     io.enable "browser client minification" # send minified client
     io.enable "browser client etag" # apply etag caching logic based on version number

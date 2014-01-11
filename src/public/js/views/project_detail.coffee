@@ -17,7 +17,6 @@ $(document).ready ->
     console.log data.msg
 
   socket.on 'update', (data) ->
-    console.log data
     updateFrontEnd(data)
 
   unless Modernizr.canvas

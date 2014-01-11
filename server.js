@@ -139,9 +139,7 @@
       logger.info('*');
       return logger.info('***********************************************************************');
     });
-    io = io.listen(server, function() {
-      return console.log(arguments);
-    });
+    io = io.listen(server);
   } else {
     http = require('http');
     server = http.createServer(app).listen(settings.host.port, settings.host.ip, function() {
@@ -152,15 +150,14 @@
       logger.info('*');
       return logger.info('***********************************************************************');
     });
-    io = io.listen(server, function() {
-      return console.log(arguments);
-    });
+    io = io.listen(server);
   }
 
   io.set('authorization', ioSession(express.cookieParser(settings.cookieSecret), sessionStore));
 
   if (!settings.debug) {
     io.configure(function() {
+      io.set('log level', 1);
       io.set('transports', ["websocket"]);
       io.enable("browser client minification");
       io.enable("browser client etag");
