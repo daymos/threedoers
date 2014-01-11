@@ -1,0 +1,26 @@
+extends ../base
+
+block base-headers
+  script.
+    $(document).ready(
+      function(event) {
+        $(".header a[href='/profile/projects']").parent().addClass('active');
+        $(".second-nav a[href='#{ nav }']").parent().addClass('active');
+      }
+    );
+
+block content
+  ul.nav.nav-tabs.second-nav
+    li
+      a(href='/profile/projects') Projects
+    li
+      a(href='/profile/archived') Archived
+    li
+      a(href='/profile/settings') Settings
+    if user.printer == 'accepted'
+      li
+        a(href='/printing/jobs') Printing Jobs
+
+  br
+  br
+  block content-profile
