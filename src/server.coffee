@@ -130,9 +130,9 @@ unless settings.debug
   io.configure ->
     # io.set 'log level', 1
     io.set 'transports', ["websocket"]
-    self.io.enable "browser client minification" # send minified client
-    self.io.enable "browser client etag" # apply etag caching logic based on version number
-    self.io.enable "browser client gzip" # gzip the file
+    io.enable "browser client minification" # send minified client
+    io.enable "browser client etag" # apply etag caching logic based on version number
+    io.enable "browser client gzip" # gzip the file
     io.set 'polling duration', 30
 
 # loading modules

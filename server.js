@@ -161,9 +161,9 @@
   if (!settings.debug) {
     io.configure(function() {
       io.set('transports', ["websocket"]);
-      self.io.enable("browser client minification");
-      self.io.enable("browser client etag");
-      self.io.enable("browser client gzip");
+      io.enable("browser client minification");
+      io.enable("browser client etag");
+      io.enable("browser client gzip");
       return io.set('polling duration', 30);
     });
   }
