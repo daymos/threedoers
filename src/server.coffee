@@ -109,7 +109,8 @@ if settings.protocol is 'https'
     logger.info '*'
     logger.info '***********************************************************************'
   )
-  io = io.listen server
+  io = io.listen server, () ->
+    console.log arguments
 else
   http = require 'http'
   server = http.createServer(app).listen(settings.host.port, settings.host.ip, ->
@@ -120,14 +121,15 @@ else
     logger.info '*'
     logger.info '***********************************************************************'
   )
-  io = io.listen server
+  io = io.listen server, () ->
+    console.log arguments
 
 io.set 'authorization', ioSession(express.cookieParser(settings.cookieSecret), sessionStore)
 
 unless settings.debug
   io.configure ->
-    io.set 'log level', 1
-    io.set 'transports', ["xhr-polling"]
+    # io.set 'log level', 1
+    io.set 'transports', ["websocket"]
     io.set 'polling duration', 30
 
 # loading modules

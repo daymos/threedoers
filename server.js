@@ -138,7 +138,9 @@
       logger.info('*');
       return logger.info('***********************************************************************');
     });
-    io = io.listen(server);
+    io = io.listen(server, function() {
+      return console.log(arguments);
+    });
   } else {
     http = require('http');
     server = http.createServer(app).listen(settings.host.port, settings.host.ip, function() {
@@ -149,15 +151,16 @@
       logger.info('*');
       return logger.info('***********************************************************************');
     });
-    io = io.listen(server);
+    io = io.listen(server, function() {
+      return console.log(arguments);
+    });
   }
 
   io.set('authorization', ioSession(express.cookieParser(settings.cookieSecret), sessionStore));
 
   if (!settings.debug) {
     io.configure(function() {
-      io.set('log level', 1);
-      io.set('transports', ["xhr-polling"]);
+      io.set('transports', ["websocket"]);
       return io.set('polling duration', 30);
     });
   }
