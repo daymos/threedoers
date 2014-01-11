@@ -155,7 +155,11 @@
   io.set('authorization', ioSession(express.cookieParser(settings.cookieSecret), sessionStore));
 
   if (!settings.debug) {
-    io.set('log level', 1);
+    io.configure(function() {
+      io.set('log level', 1);
+      io.set('transports', ["xhr-polling"]);
+      return io.set('polling duration', 30);
+    });
   }
 
   _ref = ['core', 'auth', 'registration'];

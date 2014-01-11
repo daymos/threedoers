@@ -125,7 +125,10 @@ else
 io.set 'authorization', ioSession(express.cookieParser(settings.cookieSecret), sessionStore)
 
 unless settings.debug
-  io.set 'log level', 1
+  io.configure ->
+    io.set 'log level', 1
+    io.set 'transports', ["xhr-polling"]
+    io.set 'polling duration', 30
 
 # loading modules
 for appName in ['core', 'auth', 'registration']
