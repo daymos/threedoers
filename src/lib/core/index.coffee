@@ -9,6 +9,7 @@ module.exports = (app, io) ->
   STLStats = require('../stlstat').STLStats
   gridfs = require '../gridfs'
   models = require('./models')
+  utils = require('../utils')
 
 
   app.get '/', (req, res) ->
@@ -57,21 +58,16 @@ module.exports = (app, io) ->
       if not err and  not stderr
         try
           result = JSON.parse(stdout)
-          logger.info("going 1")
           project.volume = result.volume
-          logger.info("going 2")
           project.weight = result.weight
-          logger.info("going 3")
           project.unit = result.unit
-          logger.info("going 4")
           project.status = models.PROJECT_STATUSES.PROCESSED[0]
-          logger.info("going 5")
           project.save()
-          logger.info("going 6")
-          project._doc.status = project.humanizedStatus()  # to show good in browser
-          logger.info("going 7")
-          io.sockets.in(project._id.toHexString()).emit('update', project._doc)
-          logger.info("going 8")
+
+          cloned = utils.cloneObject(project._doc)
+          cloned.status = project.humanizedStatus()  # to show good in browser
+
+          io.sockets.in(project._id.toHexString()).emit('update', cloned)
           logger.info "Project #{project._id} just processed."
         catch e
           logger.error e
@@ -91,23 +87,17 @@ module.exports = (app, io) ->
             if not err and  not stderr
               try
                 result = JSON.parse(stdout)
-                logger.info("going 1")
                 doc.volume = result.volume
-                logger.info("going 2")
                 doc.weight = result.weight
-                logger.info("going 3")
                 doc.unit = result.unit
-                logger.info("going 4")
                 doc.status = models.PROJECT_STATUSES.PROCESSED[0]
-                logger.info("going 5")
                 doc.bad = false
-                logger.info("going 6")
-                doc.save( -> logger.info(arguments) )
-                logger.info("going 7")
-                doc._doc.status = doc.humanizedStatus()  # to show good in browser
-                logger.info("going 8")
-                io.sockets.in(doc._id.toHexString()).emit('update', doc._doc)
-                logger.info("going 9")
+                doc.save()
+
+                cloned = utils.cloneObject(doc._doc)
+                cloned.status = doc.humanizedStatus()  # to show good in browser
+
+                io.sockets.in(doc._id.toHexString()).emit('update', cloned)
                 logger.info "Project #{doc._id} just processed."
               catch e
                 logger.error e
