@@ -94,9 +94,7 @@ module.exports = (app, io) ->
                 doc.bad = false
                 doc.save()
 
-                logger.info doc
-                logger.info doc._doc
-                logger.info utils
+                console.log utils.cloneObject(doc._doc)
                 cloned = utils.cloneObject(doc._doc)
                 logger.info("going 8")
                 cloned.status = doc.humanizedStatus()  # to show good in browser
