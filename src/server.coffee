@@ -93,6 +93,7 @@ app.use (req, res, next) ->
     user: req.user
     nav: req.path
     csrfToken: req.session._csrf
+    io: settings.io
   next()
 
 # start server

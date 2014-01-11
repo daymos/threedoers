@@ -119,7 +119,8 @@
     res.locals({
       user: req.user,
       nav: req.path,
-      csrfToken: req.session._csrf
+      csrfToken: req.session._csrf,
+      io: settings.io
     });
     return next();
   });

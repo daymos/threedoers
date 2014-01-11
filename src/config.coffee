@@ -15,6 +15,9 @@ config =
     port: process.env.OPENSHIFT_NODEJS_PORT
     protocol: 'http'
 
+  io:
+    port: 8000
+
   db:
     name: 'imake'
     host: 'mongodb://imake:3m1k2M4ng4@ds033617.mongolab.com:33617/'

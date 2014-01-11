@@ -11,7 +11,7 @@ updateFrontEnd = (data) ->
         $('h4.media-heading').removeClass('hide')
 
 $(document).ready ->
-  socket = io.connect(":8000/project?project=#{project}")
+  socket = io.connect(":#{port}/project?project=#{project}")
 
   socket.on 'error', (data) ->
     console.log data.msg

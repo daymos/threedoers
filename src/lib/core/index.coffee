@@ -96,12 +96,9 @@ module.exports = (app, io) ->
 
                 console.log utils.cloneObject(doc._doc)
                 cloned = utils.cloneObject(doc._doc)
-                logger.info("going 8")
                 cloned.status = doc.humanizedStatus()  # to show good in browser
 
-                logger.info("going 9")
                 io.sockets.in(doc._id.toHexString()).emit('update', cloned)
-                logger.info("going 10")
                 logger.info "Project #{doc._id} just processed."
               catch e
                 logger.error e
