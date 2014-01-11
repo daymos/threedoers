@@ -83,14 +83,23 @@ module.exports = (app, io) ->
             if not err and  not stderr
               try
                 result = JSON.parse(stdout)
+                logger.info("going 1")
                 doc.volume = result.volume
+                logger.info("going 2")
                 doc.weight = result.weight
+                logger.info("going 3")
                 doc.unit = result.unit
+                logger.info("going 4")
                 doc.status = models.doc_STATUSES.PROCESSED[0]
+                logger.info("going 5")
                 doc.bad = false
-                doc.save()
+                logger.info("going 6")
+                doc.save( -> logger.info(arguments) )
+                logger.info("going 7")
                 doc._doc.status = doc.humanizedStatus()  # to show good in browser
+                logger.info("going 8")
                 io.sockets.in(doc._id.toHexString()).emit('update', doc._doc)
+                logger.info("going 9")
                 logger.info "Project #{doc._id} just processed."
               catch e
                 logger.error e
