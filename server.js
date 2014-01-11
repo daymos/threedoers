@@ -154,6 +154,10 @@
 
   io.set('authorization', ioSession(express.cookieParser(settings.cookieSecret), sessionStore));
 
+  if (!settings.debug) {
+    io.set('log level', 1);
+  }
+
   _ref = ['core', 'auth', 'registration'];
   for (_i = 0, _len = _ref.length; _i < _len; _i++) {
     appName = _ref[_i];

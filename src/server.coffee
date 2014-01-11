@@ -124,6 +124,9 @@ else
 
 io.set 'authorization', ioSession(express.cookieParser(settings.cookieSecret), sessionStore)
 
+unless settings.debug
+  io.set 'log level', 1
+
 # loading modules
 for appName in ['core', 'auth', 'registration']
   logger.debug "Loading app #{appName}"
