@@ -19,6 +19,7 @@ module.exports = (app, io) ->
   app.get '/become', decorators.loginRequired, (req, res) ->
     res.render 'core/become'
 
+
   app.post '/become', decorators.loginRequired, (req, res) ->
     if req.user.printer
       res.render 'core/become'
@@ -75,10 +76,11 @@ module.exports = (app, io) ->
         project.bad = true
         project.save()
 
+
   app.get '/project/:id', decorators.loginRequired, (req, res, next) ->
     models.STLProject.findOne({_id: req.params.id, user: req.user.id}).exec().then( (doc) ->
       if doc
-        if doc.bad
+        unless doc.volume
           exec "#{settings.python.bin} #{settings.python.path} #{settings.upload.to}#{doc.file} -d #{doc.density}", (err, stdout, stderr) ->
             if not err and  not stderr
               try
@@ -106,31 +108,39 @@ module.exports = (app, io) ->
     )
 
 
-    # # set where the file should actually exists - in this case it is in the "images" directory
-    # target_path = "C:/imake_0.2/app/public/uploads/" + req.files.thumbnail.name
+  app.get '/profile/projects', decorators.loginRequired, (req, res) ->
+    models.STLProject.find({user: req.user._id}).exec().then( (docs) ->
+      res.render 'core/profile/list_projects', {projects: docs}
+    ).fail( ->
+      logger.error arguments
+      res.send 500
+    )
 
-    # # move the file from the temporary location to the intended location
-    # fs.rename tmp_path, target_path, (err) ->
-    #   throw err  if err
 
-    #   # delete the temporary file, so that the explicitly set temporary upload dir does not get filled with unwanted files
-    #   fs.unlink tmp_path, ->
-    #     throw err  if err
+  app.get '/profile/archived', decorators.loginRequired, (req, res) ->
+    models.STLProject.find({user: req.user._id, status: models.PROJECT_STATUSES.ARCHIVED[0]}).exec().then( (docs) ->
+      res.render 'core/profile/list_projects', {projects: docs}
+    ).fail( ->
+      logger.error arguments
+      res.send 500
+    )
 
-    #     #res.send('File uploaded to: ' + target_path + ' - ' + req.files.thumbnail.size + ' bytes');
-    #     console.log target_path
-    #     exec "c:/gnu/wget/bin/wget -q -O - http://\t127.0.0.1:8081/imake/live_preview.php" + "?x=" + target_path, (error, stdout, stderr) ->
-    #       console.log stdout
-    #       vol = stdout
 
-    #     setTimeout (->
-    #       parts = vol.split("Volume")
-    #       console.log parts
-    #       res.render "upload_1",
-    #         tg: req.files.thumbnail.name
-    #         vol: parts[1]
+  app.get '/profile/settings', decorators.loginRequired, (req, res) ->
+    res.render 'core/profile/settings', {errors: {}}
 
-    #     ), 2000
+
+  app.post '/profile/settings', decorators.loginRequired, (req, res) ->
+    if (req.body.city && req.body.country && req.body.location)
+      req.user.city = req.body.city
+      req.user.country = req.body.country
+      req.user.location = req.body.location
+
+    req.user.firstName = req.body.firstName
+    req.user.lastName = req.body.lastName
+    req.user.save()
+    res.render 'core/profile/settings'
+
 
   ###############################################
   # Socket IO event handlers

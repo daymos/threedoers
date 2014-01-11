@@ -1,6 +1,12 @@
 (function() {
   var HTTPStatus, SessionStore, app, appName, db, engines, env, express, expressValidator, gzippo, http, https, io, ioSession, logger, mongoose, passport, q, server, sessionStore, settings, ssl_options, validator, _i, _len, _ref;
 
+  settings = require('./config');
+
+  if (settings.debug) {
+    process.env.DEBUG = "express:*";
+  }
+
   HTTPStatus = require("http-status");
 
   express = require("express");
@@ -24,12 +30,6 @@
   ioSession = require('socket.io-session');
 
   logger = require("./lib/logger");
-
-  settings = require('./config');
-
-  if (settings.debug) {
-    process.env.DEBUG = "express:*";
-  }
 
   mongoose.Promise.prototype.then = function(fulfilled, rejected) {
     var deferred;

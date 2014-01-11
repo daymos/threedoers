@@ -19,6 +19,7 @@ module.exports.PROJECT_STATUSES = PROJECT_STATUSES =
   PRINTING: [7, 'printing']
   PRINTED: [8, 'printed']
   SHIPPING: [9, 'shipping']
+  ARCHIVED: [10, 'archived']
 
 
 ###############################################

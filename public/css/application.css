@@ -380,6 +380,27 @@ body {
 .capitalize {
   text-transform: capitalize; }
 
+.user-row {
+  margin-bottom: 14px; }
+  .user-row:last-child {
+    margin-bottom: 0; }
+
+.dropdown-user {
+  margin: 13px 0;
+  padding: 5px;
+  height: 100%; }
+  .dropdown-user:hover {
+    cursor: pointer; }
+
+.table-user-information > tbody > tr {
+  border-top: 1px solid #dddddd; }
+  .table-user-information > tbody > tr:first-child, .table-user-information > tbody > tr > td {
+    border-top: 0; }
+
+.list {
+  margin-left: 0;
+  margin-right: 0; }
+
 (function() {
 
 

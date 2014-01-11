@@ -1,6 +1,12 @@
 ##############################################################################
 # Main file to load all required config, settings and routes
 ##############################################################################
+settings = require './config'
+
+
+if settings.debug
+  process.env.DEBUG = "express:*"
+
 
 # requiring some modules in main files
 HTTPStatus = require "http-status"
@@ -16,11 +22,6 @@ io = require 'socket.io'
 ioSession = require 'socket.io-session'
 
 logger = require "./lib/logger"
-settings = require './config'
-
-if settings.debug
-  process.env.DEBUG = "express:*"
-
 
 ##
 # mongoose with q promises

@@ -18,12 +18,13 @@ html
     script(src='/js/lib.js')
     script(src='/js/common.js')
 
-    script.
-      $(document).ready(
-        function(event) {
-          $(".header a[href='#{ nav }']").parent().addClass('active');
-        }
-      );
+    block base-headers
+      script.
+        $(document).ready(
+          function(event) {
+            $(".header a[href='#{ nav }']").parent().addClass('active');
+          }
+        );
 
     block extra-headers
 
