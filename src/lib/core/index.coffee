@@ -92,7 +92,7 @@ module.exports = (app, io) ->
                 doc.unit = result.unit
                 doc.status = models.PROJECT_STATUSES.PROCESSED[0]
                 doc.bad = false
-                doc.save()
+                doc.save(-> console.log arguments)
 
                 cloned = utils.cloneObject(doc._doc)
                 cloned.status = doc.humanizedStatus()  # to show good in browser
