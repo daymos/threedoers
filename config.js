@@ -34,6 +34,9 @@
     python: {
       path: __dirname + '/src/stlstats.py',
       bin: '~/app-root/data/3doers-pyenv/bin/python'
+    },
+    upload: {
+      to: (process.env.OPENSHIFT_DATA_DIR || '') + '3doers/uploads/'
     }
   };
 

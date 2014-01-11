@@ -1,5 +1,5 @@
 (function() {
-  var HTTPStatus, SessionStore, app, appName, db, engines, env, express, expressValidator, gzippo, http, https, logger, mongoose, passport, q, server, settings, ssl_options, validator, _i, _len, _ref;
+  var HTTPStatus, SessionStore, app, appName, db, engines, env, express, expressValidator, gzippo, http, https, io, ioSession, logger, mongoose, passport, q, server, sessionStore, settings, ssl_options, validator, _i, _len, _ref;
 
   HTTPStatus = require("http-status");
 
@@ -19,9 +19,17 @@
 
   passport = require("passport");
 
+  io = require('socket.io');
+
+  ioSession = require('socket.io-session');
+
   logger = require("./lib/logger");
 
   settings = require('./config');
+
+  if (settings.debug) {
+    process.env.DEBUG = "express:*";
+  }
 
   mongoose.Promise.prototype.then = function(fulfilled, rejected) {
     var deferred;
@@ -68,11 +76,13 @@
 
   app.set('views', "" + global.root + "/views");
 
+  app.use(express["static"](settings.upload.to));
+
   app.use(express["static"]("" + global.root + "/public"));
 
   app.use(express.bodyParser({
     keepExtensions: true,
-    uploadDir: "" + global.root + "/public/tmp"
+    uploadDir: settings.upload.to
   }));
 
   app.use(express.cookieParser());
@@ -81,11 +91,13 @@
 
   app.use(validator);
 
+  sessionStore = new SessionStore({
+    url: "" + settings.db.host + settings.db.name
+  });
+
   app.use(express.session({
     secret: settings.cookieSecret,
-    store: new SessionStore({
-      url: "" + settings.db.host + settings.db.name
-    })
+    store: sessionStore
   }));
 
   app.use(passport.initialize());
@@ -112,13 +124,6 @@
     return next();
   });
 
-  _ref = ['core', 'auth', 'registration'];
-  for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-    appName = _ref[_i];
-    logger.debug("Loading app " + appName);
-    require("./lib/" + appName)(app);
-  }
-
   if (settings.protocol === 'https') {
     https = require('https');
     ssl_options = {
@@ -133,15 +138,27 @@
       logger.info('*');
       return logger.info('***********************************************************************');
     });
+    io = io.listen(server);
   } else {
     http = require('http');
     server = http.createServer(app).listen(settings.host.port, settings.host.ip, function() {
       logger.info("*   Visit page: " + settings.host.protocol + "://" + settings.host.ip + ":" + settings.host.port);
       logger.info('*   Mongo Database:', settings.db.name);
       logger.info('*   Pid File:', process.pid);
+      logger.info('*   Environment:', app.settings.env);
       logger.info('*');
       return logger.info('***********************************************************************');
     });
+    io = io.listen(server);
+  }
+
+  io.set('authorization', ioSession(express.cookieParser(settings.cookieSecret), sessionStore));
+
+  _ref = ['core', 'auth', 'registration'];
+  for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+    appName = _ref[_i];
+    logger.debug("Loading app " + appName);
+    require("./lib/" + appName)(app, io);
   }
 
 }).call(this);

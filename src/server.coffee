@@ -12,9 +12,14 @@ engines = require 'consolidate'
 expressValidator = require 'express-validator'
 q = require 'q'
 passport = require "passport"
+io = require 'socket.io'
+ioSession = require 'socket.io-session'
 
 logger = require "./lib/logger"
 settings = require './config'
+
+if settings.debug
+  process.env.DEBUG = "express:*"
 
 
 ##
@@ -44,6 +49,7 @@ logger.info '*'
 
 app = express()
 validator = expressValidator()
+
 db = mongoose.connect "#{settings.db.host}#{settings.db.name}", db: {safe: true, autoIndex: false}, (err) ->
   logger.error err if err
 
@@ -54,18 +60,20 @@ app.engine 'jade', engines.jade
 app.set 'view engine', 'jade'
 app.set 'views', "#{global.root}/views"
 
+app.use express.static settings.upload.to
 app.use express.static "#{global.root}/public"
 # app.use express.limit(config.req_max_size)
 
-# app.use express.bodyParser({defer: true})
-app.use express.bodyParser({keepExtensions: true, uploadDir: "#{global.root}/public/tmp"})
+app.use express.bodyParser({keepExtensions: true, uploadDir: settings.upload.to})
 app.use express.cookieParser()
 app.use express.methodOverride()
 app.use validator
 
+sessionStore = new SessionStore(url: "#{settings.db.host}#{settings.db.name}")
+
 app.use express.session(
   secret: settings.cookieSecret
-  store: new SessionStore(url: "#{settings.db.host}#{settings.db.name}")
+  store: sessionStore
 )
 
 # initialize passport itself and passport sessions
@@ -87,11 +95,6 @@ app.use (req, res, next) ->
     csrfToken: req.session._csrf
   next()
 
-# loading modules
-for appName in ['core', 'auth', 'registration']
-  logger.debug "Loading app #{appName}"
-  require("./lib/#{appName}")(app)
-
 # start server
 if settings.protocol is 'https'
   https = require 'https'
@@ -106,16 +109,25 @@ if settings.protocol is 'https'
     logger.info '*'
     logger.info '***********************************************************************'
   )
+  io = io.listen server
 else
   http = require 'http'
   server = http.createServer(app).listen(settings.host.port, settings.host.ip, ->
     logger.info "*   Visit page: #{settings.host.protocol}://#{settings.host.ip}:#{settings.host.port}"
     logger.info '*   Mongo Database:', settings.db.name
     logger.info '*   Pid File:', process.pid
+    logger.info '*   Environment:', app.settings.env
     logger.info '*'
     logger.info '***********************************************************************'
   )
+  io = io.listen server
 
+io.set 'authorization', ioSession(express.cookieParser(settings.cookieSecret), sessionStore)
+
+# loading modules
+for appName in ['core', 'auth', 'registration']
+  logger.debug "Loading app #{appName}"
+  require("./lib/#{appName}")(app, io)
 
 # # db connection
 

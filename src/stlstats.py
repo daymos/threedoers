@@ -141,15 +141,15 @@ class STLStats:
         """Reads a triangle data from the ascii STL and returns its signed volume."""
         return self._signed_volume_triangle(*self.triangles_data.pop())
 
-## This implementation if to use mongo as filesystem
+
 if __name__ == '__main__':
+    import os
 
     from optparse import OptionParser
 
     usage = "usage: %prog [options] filename"
 
     parser = OptionParser(usage=usage)
-
 
     parser.add_option("-d", "--density", dest="density", default=1.04, type="float",
                       help="Density for object", metavar="DENSITY")
@@ -163,26 +163,8 @@ if __name__ == '__main__':
         parser.print_help()
         exit(-1)
 
-    # START MONGO LOGIC
-
-    from gridfs import GridFS
-    from pymongo import MongoClient
-    from settings import *
-
-    try:
-        from local_settings import *
-    except:
-        pass
-
-    db = getattr(MongoClient(host=mongo_url), mongo_db)
-    fs = GridFS(db)
-
-    if not fs.exists(filename=args[0]):
-        print "\033[91m%s file does not exists.\033[0m\n" % args[0]
-        exit(-1)
-
-    _file = fs.get_last_version(args[0])
-    size = _file.length
+    _file = open(args[0])
+    size = os.path.getsize(args[0])
     binary = not 'facet' in _file.read(50)
     _file.seek(0)
 
@@ -190,56 +172,3 @@ if __name__ == '__main__':
     print '{ "volume": %s, "weight": %s, "density": %s, "unit": "%s"}' % (s.get_volume(options.unit), s.get_weight(), s.density, options.unit)
 
     _file.close()
-
-# if __name__ == '__main__':
-#     import os
-#     import StringIO
-#     import base64
-
-#     from optparse import OptionParser
-
-#     parser = OptionParser()
-
-#     parser.add_option("-f", "--file", dest="filename",
-#                       help="Filename in file system", metavar="FILE")
-
-#     parser.add_option("-c", "--content", dest="content",
-#                       help="Data of the file to be processed", metavar="CONTENT")
-
-#     parser.add_option("-d", "--density", dest="density", default=1.04, type="float",
-#                       help="Density for object", metavar="DENSITY")
-
-#     parser.add_option("-u", "--unit", dest="unit", default='cm',
-#                       help="unit to measure for object", metavar="UNIT")
-
-#     options, args = parser.parse_args()
-
-#     if bool(options.content) != bool(options.filename):  # xor logic
-#         text = options.content or options.filename
-#         if options.filename:
-#             if not os.path.exists(options.filename):
-#                 print "\033[91m%s file does not exists.\033[0m\n" % options.filename
-#                 exit(-1)
-
-#         _file = None
-#         size = None
-#         binary = True
-
-#         if options.filename:
-#             _file = open(options.filename)
-#             size = os.path.getsize(options.filename)
-#             binary = not 'facet' in _file.read(50)
-#             _file.seek(0)
-#         else:
-#             _file = StringIO.StringIO(base64.b64decode(options.content))
-#             size = len(options.content)
-#             binary = not 'facet' in options.content[:50]
-
-#         s = STLStats(_file, size, binary)
-#         print {'volume': s.get_volume(options.unit),
-#                'weight': s.get_weight(),
-#                'density': s.density,
-#                'unit': options.unit}
-#     else:
-#         print "\033[91mI need the --content or the --file\033[0m\n"
-#         parser.print_help()

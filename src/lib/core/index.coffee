@@ -1,4 +1,4 @@
-module.exports = (app) ->
+module.exports = (app, io) ->
   fs = require 'fs'
   exec = require('child_process').exec
 
@@ -41,44 +41,58 @@ module.exports = (app) ->
       return
     # get the temporary location of the file
     tmp_path = req.files.thumbnail.path
-
     project = new models.STLProject
+    project.user = req.user.id
+    project.file = req.files.thumbnail.path.split('/').pop()
+    project.save (err, doc) ->
+      if err
+        logger.error err
+        res.send 500
+      else
+        res.send redirectTo: "/project/#{project.id}"
 
-    opts =
-      content_type: req.files.thumbnail.type
+    console.log "#{settings.python.bin} #{settings.python.path} #{req.files.thumbnail.path} -d #{project.density}"
 
-    project.addFile(req.files.thumbnail, opts).then( (doc) ->
-      exec("#{settings.python.bin} #{settings.python.path} #{project.file} -d #{project.density}", (err, stdout, stderr) ->
-        if not err and  not stderr
-          try
-            result = JSON.parse(stdout)
-            project.volume = result.volume
-            project.weight = result.weight
-            project.unit = result.unit
-            project.processed = true
-            project.save()
-            logger.info "Project #{project.id} just processed."
-          catch e
-            logger.error e
-      )
-
-      project.user = req.user.id
-      project.save (err, doc) ->
-        if err
-          logger.error err
-          res.send 500
-        else
-          res.redirect "/project/#{project.id}"
-    ).fail( (reason) ->
-      logger.error reason
-      res.send 500
-    ).finally( ->
-      fs.unlink tmp_path
-    )
+    exec "#{settings.python.bin} #{settings.python.path} #{req.files.thumbnail.path} -d #{project.density}", (err, stdout, stderr) ->
+      if not err and  not stderr
+        try
+          result = JSON.parse(stdout)
+          project.volume = result.volume
+          project.weight = result.weight
+          project.unit = result.unit
+          project.status = models.PROJECT_STATUSES.PROCESSED[0]
+          project.save()
+          project._doc.status = project.humanizedStatus()  # to show good in browser
+          io.sockets.in(project._id.toHexString()).emit('update', project._doc)
+          logger.info "Project #{project._id} just processed."
+        catch e
+          logger.error e
+          logger.error stderr
+      else
+        project.bad = true
+        project.save()
 
   app.get '/project/:id', decorators.loginRequired, (req, res, next) ->
     models.STLProject.findOne({_id: req.params.id, user: req.user.id}).exec().then( (doc) ->
       if doc
+        if doc.bad
+          console.log "#{settings.python.bin} #{settings.python.path} #{settings.upload.to}#{doc.file} -d #{doc.density}"
+          exec "#{settings.python.bin} #{settings.python.path} #{settings.upload.to}#{doc.file} -d #{doc.density}", (err, stdout, stderr) ->
+            if not err and  not stderr
+              try
+                result = JSON.parse(stdout)
+                doc.volume = result.volume
+                doc.weight = result.weight
+                doc.unit = result.unit
+                doc.status = models.doc_STATUSES.PROCESSED[0]
+                doc.bad = false
+                doc.save()
+                doc._doc.status = doc.humanizedStatus()  # to show good in browser
+                io.sockets.in(doc._id.toHexString()).emit('update', doc._doc)
+                logger.info "Project #{doc._id} just processed."
+              catch e
+                logger.error e
+                logger.error stderr
         res.render 'core/project/detail', {project: doc}
       else
         next()
@@ -87,24 +101,6 @@ module.exports = (app) ->
       res.send 500
     )
 
-  app.get '/project/files/:name', decorators.loginRequired, (req, res, next) ->
-    models.STLProject.findOne(file:req.params.name, user:req.user.id).exec().then( (doc) ->
-      if doc
-        gridfs.getFile(req.params.name).then( (file) ->
-          res.header "Content-Type", file.type
-          res.header "Content-Length", file.length
-          res.header "Content-Disposition", "attachment; filename=#{file.filename}"
-          file.stream(true).pipe(res)
-        ).fail((reason) ->
-          logger.error reason
-          res.send 500
-        )
-      else
-        next()
-    ).fail((reason) ->
-      logger.error reason
-      res.send 500
-    )
 
     # # set where the file should actually exists - in this case it is in the "images" directory
     # target_path = "C:/imake_0.2/app/public/uploads/" + req.files.thumbnail.name
@@ -132,8 +128,25 @@ module.exports = (app) ->
 
     #     ), 2000
 
+  ###############################################
+  # Socket IO event handlers
+  ###############################################
 
-
+  io.of('/project').on 'connection', (socket) ->
+    if socket.handshake.query.project?
+      models.STLProject.findOne({_id: socket.handshake.query.project, user: socket.handshake.session.passport.user}).exec().then( (doc) ->
+        if doc
+          socket.join(socket.handshake.query.project)
+          doc._doc.status = doc.humanizedStatus()
+          socket.emit 'update', doc._doc
+        else
+          socket.emit 'error', msg: "Document not found"
+      ).fail( (reason) ->
+        logger.error reason
+        socket.emit 'error', msg: "Error searching for project. Mongo Error"
+      )
+    else
+      socket.emit 'error', msg: "No project was not sent"
 
 # app.get "/", (req, res) ->
 

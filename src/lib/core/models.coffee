@@ -5,7 +5,33 @@ Schema = mongoose.Schema
 ObjectId = Schema.ObjectId
 
 
+###############################################
+# Constants
+###############################################
+
+module.exports.PROJECT_STATUSES = PROJECT_STATUSES =
+  PROCESSING: [1, 'processing']
+  PROCESSED: [2, 'processed']
+  PRINT_REQUESTED: [3, 'print requested']
+  PRINT_ACCEPTED: [4, 'print accepted']
+  PRINT_DENIED: [5, 'print denied']
+  PAYED: [6, 'print accepted']
+  PRINTING: [7, 'printing']
+  PRINTED: [8, 'printed']
+  SHIPPING: [9, 'shipping']
+
+
+###############################################
+# Models
+###############################################
+
+
 STLProject = new Schema
+
+  title:
+    type: String
+    required: true
+    default: "Untitled Project"
 
   file:
     type: String
@@ -25,14 +51,18 @@ STLProject = new Schema
   unit:
     type: String
 
-  processed:
-    type: Boolean
-    default: false
+  status:
+    type: Number
+    default: PROJECT_STATUSES.PROCESSING[0]
     required: true
 
   user:
     type: ObjectId
     required: true
+
+  bad:
+    type: Boolean
+    default: false
 
 
 STLProject.methods.addFile = (file, options) ->
@@ -40,8 +70,41 @@ STLProject.methods.addFile = (file, options) ->
   gridfs.putFile(file.path, name, options).then (doc) =>
     @file = doc.filename
 
+STLProject.methods.humanizedStatus = ->
+  for key of PROJECT_STATUSES
+    if PROJECT_STATUSES[key][0] == @status
+      return PROJECT_STATUSES[key][1]
+
+STLProject.methods.validateNextStatus = (value) ->
+  # creating simple state machine, state and allowed next states
+  states =
+    1: [PROJECT_STATUSES.PROCESSED[0]]
+    2: [PROJECT_STATUSES.PROCESSING[0], PROJECT_STATUSES.PRINT_REQUESTED[0]]
+    3: [PROJECT_STATUSES.PRINT_ACCEPTED[0], PROJECT_STATUSES.PRINT_DENIED[0]]
+    4: [PROJECT_STATUSES.PAYED[0]]
+    5: [PROJECT_STATUSES.PROCESSING[0], PROJECT_STATUSES.PROCESSED[0]]
+    6: [PROJECT_STATUSES.PRINTING[0]]
+    7: [PROJECT_STATUSES.PRINTED[0]]
+    8: [PROJECT_STATUSES.SHIPPING[0]]
+
+  return value in states[@status]
+
+STLProject.pre 'save', (next) ->
+  @editable = @status in [PROJECT_STATUSES.PROCESSED[0], PROJECT_STATUSES.PRINT_DENIED[0]]
+  next()
+
 
 module.exports.STLProject = mongoose.model 'STLProject', STLProject
+
+
+###
+# Validations
+###
+
+module.exports.STLProject.schema.path('status').validate( (value) ->
+  return @status?
+  return @validateNextStatus(value)
+, 'Invalid next step')
 
 # User.path('image').set (new_value) ->
 #   if new_value isnt @image

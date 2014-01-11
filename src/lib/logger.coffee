@@ -34,6 +34,4 @@ logger = new (winston.Logger)(transports: loggers)
 logger.setLevels log.logger.levels
 winston.addColors log.logger.colors
 
-logger.debug("Creating logger+++++++++")
-
 module.exports = logger

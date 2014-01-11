@@ -8,20 +8,35 @@ block content
 
   .jumbotron
 
-    h1 Your design
+    h1
+      span#title #{project.title}
     canvas#cv(width='600', height='300')
     p.hide#message-canvas
       | It seems you are using an outdated browser that does not support canvas :-(
 
-    p
-      if project.processed
-        | Object volume: #{project.volume} cubic #{project.unit}
-      else
-        | Your project is still being processed
+  .row
+    .col-md-12
+      .media
+        .media-body
+          h4.media-heading(class=(project.status!=1)?"":"hide")
+            | Object Volume is&nbsp;
+            span#volume #{project.volume}
+            &nbsp;
+            span#unit #{project.unit}
+            sup 3
+          h5
+            | Status:&nbsp;
+            span.capitalize#status #{project.humanizedStatus()}
+          hr(style='margin: 8px auto;')
+          | ajaxed form shoud be here
+
+
 
 
 block scripts
     script(src='/js/views/project_detail.js')
     script(type='text/javascript', src='/vendor/jsc3d.min.js')
+    script(src='/vendor/socket.io.min.js')
     script.
-      var filename = "#{project.file}"
+      var filename = "#{project.file}";
+      var project = "#{project._id}";

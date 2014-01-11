@@ -367,6 +367,19 @@ body {
     background-color: #eee;
     color: #161A1C; }
 
+#promptzone {
+  border: 3px dashed #ccc;
+  cursor: pointer;
+  padding-top: 20px;
+  padding-bottom: 30px;
+  margin: 0 auto;
+  margin-top: 20px;
+  height: 80px;
+  width: 450px; }
+
+.capitalize {
+  text-transform: capitalize; }
+
 (function() {
 
 

@@ -13,6 +13,8 @@ tmp/
 # some files
 src/locals.coffee
 locals.coffee
+uploads/
+.sass-cache/
 
 node_modules
 
