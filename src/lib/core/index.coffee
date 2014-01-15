@@ -53,53 +53,15 @@ module.exports = (app, io) ->
       else
         res.send redirectTo: "/project/#{project.id}"
 
-    exec "#{settings.python.bin} #{settings.python.path} #{req.files.thumbnail.path} -d #{project.density}", (err, stdout, stderr) ->
-      if not err and  not stderr
-        try
-          result = JSON.parse(stdout)
-          project.volume = result.volume
-          project.weight = result.weight
-          project.unit = result.unit
-          project.status = models.PROJECT_STATUSES.PROCESSED[0]
-          project.save()
-
-          cloned = utils.cloneObject(project._doc)
-          cloned.status = project.humanizedStatus()  # to show good in browser
-
-          io.sockets.in(project._id.toHexString()).emit('update', cloned)
-        catch e
-          logger.error e
-          logger.error stderr
-          project.bad = true
-          project.save()
-      else
-        project.bad = true
-        project.save()
+    processVolumeWeight(project)
 
 
   app.get '/project/:id', decorators.loginRequired, (req, res, next) ->
     models.STLProject.findOne({_id: req.params.id, user: req.user.id}).exec().then( (doc) ->
       if doc
-        unless doc.volume
-          exec "#{settings.python.bin} #{settings.python.path} #{settings.upload.to}#{doc.file} -d #{doc.density}", (err, stdout, stderr) ->
-            if not err and  not stderr
-              try
-                result = JSON.parse(stdout)
-                doc.volume = result.volume
-                doc.weight = result.weight
-                doc.unit = result.unit
-                doc.status = models.PROJECT_STATUSES.PROCESSED[0]
-                doc.bad = false
-                doc.save()
-
-                cloned = utils.cloneObject(doc._doc)
-                cloned.status = doc.humanizedStatus()  # to show good in browser
-
-                io.sockets.in(doc._id.toHexString()).emit('update', cloned)
-              catch e
-                logger.error e
-                logger.error stderr
-        res.render 'core/project/detail', {project: doc}
+        if doc.bad
+          processVolumeWeight(doc)
+        res.render 'core/project/detail', {project: doc, colors: models.PROJECT_COLORS, densities: models.PROJECT_DENSITIES}
       else
         next()
     ).fail((reason) ->
@@ -142,6 +104,67 @@ module.exports = (app, io) ->
     res.render 'core/profile/settings'
 
 
+  app.post '/project/title/:id', decorators.loginRequired, (req, res) ->
+    req.assert('value').len(4)
+    errors = req.validationErrors(true)
+
+    if errors
+      res.send errors.value.msg, 400
+    else
+      models.STLProject.findOne({_id: req.params.id, editable: true}).exec().then( (doc) ->
+        if doc
+          doc.title = req.body.value
+          doc.save()
+          res.send 200
+        else
+          res.send 404
+      ).fail( ->
+        logger.error arguments
+        res.send 500
+      )
+
+  app.post '/project/color/:id', decorators.loginRequired, (req, res) ->
+    req.assert('value').regex(/red|green|blue|black|white|yellow/)
+    errors = req.validationErrors(true)
+
+    if errors
+      res.send errors.value.msg, 400
+    else
+      models.STLProject.findOne({_id: req.params.id, editable: true}).exec().then( (doc) ->
+        if doc
+          doc.color = req.body.value
+          doc.save()
+          res.send 200
+        else
+          res.send 404
+      ).fail( ->
+        logger.error arguments
+        res.send 500
+      )
+
+  app.post '/project/density/:id', decorators.loginRequired, (req, res) ->
+    value = parseFloat(req.body.value)
+    unless value in [models.PROJECT_DENSITIES.LOW[0], models.PROJECT_DENSITIES.MEDIUM[0], models.PROJECT_DENSITIES.HIGH[0], models.PROJECT_DENSITIES.COMPLETE[0]]
+      res.send 400
+    else
+      models.STLProject.findOne({_id: req.params.id, editable: true}).exec().then( (doc) ->
+        if doc
+          doc.density = value
+          doc.status = models.PROJECT_STATUSES.PROCESSING[0]
+
+          cloned = utils.cloneObject(doc._doc)
+          cloned.status = doc.humanizedStatus()  # to show good in browser
+          io.of('/project').in(doc._id.toHexString()).emit('update', cloned)
+
+          processVolumeWeight(doc)
+          res.send 200
+        else
+          res.send 404
+      ).fail( ->
+        logger.error arguments
+        res.send 500
+      )
+
   ###############################################
   # Socket IO event handlers
   ###############################################
@@ -150,9 +173,10 @@ module.exports = (app, io) ->
     if socket.handshake.query.project?
       models.STLProject.findOne({_id: socket.handshake.query.project, user: socket.handshake.session.passport.user}).exec().then( (doc) ->
         if doc
-          socket.join(socket.handshake.query.project)
+          socket.join(doc._id.toHexString())
           doc._doc.status = doc.humanizedStatus()
-          socket.emit 'update', doc._doc
+          console.log "/project/#{doc._id.toHexString()}"
+          io.of('/project').in(doc._id.toHexString()).emit 'update', doc._doc
         else
           socket.emit 'error', msg: "Document not found"
       ).fail( (reason) ->
@@ -161,6 +185,37 @@ module.exports = (app, io) ->
       )
     else
       socket.emit 'error', msg: "No project was not sent"
+
+
+  ###############################################
+  # Some functions
+  ###############################################
+
+  processVolumeWeight = (doc) ->
+    exec "#{settings.python.bin} #{settings.python.path} #{settings.upload.to}#{doc.file} -d #{doc.density}", (err, stdout, stderr) ->
+      if not err and  not stderr
+        try
+          result = JSON.parse(stdout)
+          doc.volume = result.volume
+          doc.weight = result.weight
+          doc.unit = result.unit
+          doc.status = models.PROJECT_STATUSES.PROCESSED[0]
+          doc.price = (doc.volume * 1.01 * doc.density * 0.03) + 5  # formula from doc sent by mattia
+          doc.bad = false
+          doc.save()
+        catch e
+          logger.error e
+          logger.error stderr
+          doc.bad = true
+          doc.save()
+      else
+        doc.bad = true
+        doc.save()
+
+      cloned = utils.cloneObject(doc._doc)
+      cloned.status = doc.humanizedStatus()  # to show good in browser
+
+      io.of('/project').in(doc._id.toHexString()).emit('update', cloned)
 
 # app.get "/", (req, res) ->
 

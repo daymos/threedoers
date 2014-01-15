@@ -7,11 +7,11 @@ class STLStats:
     To work with CLI.
     """
 
-    def __init__(self, file_, size, binary=True):
+    def __init__(self, file_, size, binary=True, density=1.04):  # Default material density. ABS plastic : 1.04gm/cc
         """Requires the size of content, because we are working with file like objects"""
         self.file = file_
         self.flag = False
-        self.density = 1.04  # Default material density. ABS plastic : 1.04gm/cc
+        self.density = density
         self.triangles_count = 0
         self.size = size
         self.binary = binary
@@ -168,7 +168,7 @@ if __name__ == '__main__':
     binary = not 'facet' in _file.read(50)
     _file.seek(0)
 
-    s = STLStats(_file, size, binary)
-    print '{ "volume": %s, "weight": %s, "density": %s, "unit": "%s"}' % (s.get_volume(options.unit), s.get_weight(), s.density, options.unit)
+    s = STLStats(_file, size, binary, options.density)
+    print '{ "volume": %s, "weight": %s, "density": %s, "unit": "%s"}' % (s.get_volume(options.unit), s.get_weight(), options.density, options.unit)
 
     _file.close()

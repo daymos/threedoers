@@ -21,6 +21,19 @@ module.exports.PROJECT_STATUSES = PROJECT_STATUSES =
   SHIPPING: [9, 'shipping']
   ARCHIVED: [10, 'archived']
 
+module.exports.PROJECT_COLORS = PROJECT_COLORS =
+  BLACK: 'black'
+  WHITE: 'white'
+  YELLOW: 'yellow'
+  RED: 'red'
+  BLUE: 'blue'
+  GREEN: 'green'
+
+module.exports.PROJECT_DENSITIES = PROJECT_DENSITIES =
+  LOW: [0.25, 'low']
+  MEDIUM: [0.5, 'medium']
+  HIGH: [0.75, 'high']
+  COMPLETE: [1, 'complete']
 
 ###############################################
 # Models
@@ -43,7 +56,7 @@ STLProject = new Schema
 
   density:
     type: Number
-    default: 1.04
+    default: PROJECT_DENSITIES.COMPLETE[0]
     required: true
 
   weight:
@@ -61,9 +74,23 @@ STLProject = new Schema
     type: ObjectId
     required: true
 
+  color:
+    type: String
+    required: true
+    default: PROJECT_COLORS.BLACK
+
+  price:
+    type: Number
+    required: true
+    default: 0
+
   bad:
     type: Boolean
     default: false
+
+  editable:
+    type: Boolean
+    default: true
 
 
 STLProject.methods.addFile = (file, options) ->
@@ -97,6 +124,16 @@ STLProject.pre 'save', (next) ->
 
 module.exports.STLProject = mongoose.model 'STLProject', STLProject
 
+
+module.exports.STLProject.schema.path('color').validate( (value) ->
+  return true unless value?  # allowing empty
+  return /black|white|yellow|red|blue|green/i.test(value)
+, 'Invalid Color')
+
+module.exports.STLProject.schema.path('density').validate( (value) ->
+  return true unless value?  # allowing empty
+  return value in [PROJECT_DENSITIES.LOW[0], PROJECT_DENSITIES.MEDIUM[0], PROJECT_DENSITIES.HIGH[0], PROJECT_DENSITIES.COMPLETE[0], 1.04]  # 1.04 fallback for already created proejcts
+, 'Invalid Density')
 
 ###
 # Validations
