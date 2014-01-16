@@ -1,0 +1,21 @@
+extends ../layout
+
+block base-headers
+  script.
+    $(document).ready(
+      function(event) {
+        $(".header a[href='/admin/users']").parent().addClass('active');
+        $(".second-nav a[href='#{ nav }']").parent().addClass('active');
+      }
+    );
+
+block content
+  ul.nav.nav-tabs.second-nav
+    li
+      a(href='/admin/users') Users
+    li
+      a(href='/admin/printer/request') Printer Request
+
+  br
+  br
+  block content-admin

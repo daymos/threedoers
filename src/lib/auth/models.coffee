@@ -55,6 +55,14 @@ User = new Schema
   printer:
     type: String
 
+  admin:
+    type: Boolean
+    default: false
+
+  createAt:
+    type: Date
+    default: Date.now
+
 
 User.index loc: '2d'
 

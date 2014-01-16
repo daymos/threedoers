@@ -166,7 +166,7 @@
     });
   }
 
-  _ref = ['core', 'auth', 'registration'];
+  _ref = ['admin', 'core', 'auth', 'registration'];
   for (_i = 0, _len = _ref.length; _i < _len; _i++) {
     appName = _ref[_i];
     logger.debug("Loading app " + appName);
