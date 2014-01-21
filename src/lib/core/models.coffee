@@ -80,9 +80,9 @@ STLProject = new Schema
     default: PROJECT_COLORS.BLACK
 
   price:
-    type: Number
+    type: String
     required: true
-    default: 0
+    default: '0.0'
 
   bad:
     type: Boolean
@@ -117,7 +117,22 @@ STLProject.methods.validateNextStatus = (value) ->
 
   return value in states[@status]
 
+STLProject.methods.validNextStatus = ->
+  # creating simple state machine, state and allowed next states
+  states =
+    1: [PROJECT_STATUSES.PROCESSED]
+    2: [PROJECT_STATUSES.PROCESSING, PROJECT_STATUSES.PRINT_REQUESTED]
+    3: [PROJECT_STATUSES.PRINT_ACCEPTED, PROJECT_STATUSES.PRINT_DENIED]
+    4: [PROJECT_STATUSES.PAYED]
+    5: [PROJECT_STATUSES.PROCESSING, PROJECT_STATUSES.PROCESSED]
+    6: [PROJECT_STATUSES.PRINTING]
+    7: [PROJECT_STATUSES.PRINTED]
+    8: [PROJECT_STATUSES.SHIPPING]
+
+  return states[@status]
+
 STLProject.pre 'save', (next) ->
+  # only editable at this points, only status should be edited later
   @editable = @status in [PROJECT_STATUSES.PROCESSED[0], PROJECT_STATUSES.PRINT_DENIED[0]]
   next()
 

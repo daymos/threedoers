@@ -1,6 +1,7 @@
 module.exports = (app, io) ->
   fs = require 'fs'
   exec = require('child_process').exec
+  decimal = require('Deci-mal').decimal
 
   decorators = require '../decorators'
   logger = require '../logger'
@@ -10,6 +11,7 @@ module.exports = (app, io) ->
   gridfs = require '../gridfs'
   models = require('./models')
   utils = require('../utils')
+  auth = require('../auth/models')
 
 
   app.get '/', (req, res) ->
@@ -165,18 +167,45 @@ module.exports = (app, io) ->
         res.send 500
       )
 
+  app.post '/project/generate/order/:id', decorators.loginRequired, (req, res, next) ->
+    models.STLProject.findOne({_id: req.params.id, editable: true}).exec().then( (doc) ->
+      if doc and doc.validateNextStatus(models.PROJECT_STATUSES.PRINT_REQUESTED[0])
+        res.render 'core/project/order', {project: doc}
+        doc.status = models.PROJECT_STATUSES.PRINT_REQUESTED[0]
+
+        # cloned = utils.cloneObject(doc._doc)
+        # cloned.status = doc.humanizedStatus()  # to show good in browser
+        # io.of('/project').in(doc._id.toHexString()).emit('update', cloned)
+
+        # processVolumeWeight(doc)
+        # res.send 200
+      else
+        next()
+    ).fail( ->
+      logger.error arguments
+      res.send 500
+    )
+
   ###############################################
   # Socket IO event handlers
   ###############################################
 
-  io.of('/project').on 'connection', (socket) ->
+  io.of('/project').on('connection', (socket) ->
     if socket.handshake.query.project?
       models.STLProject.findOne({_id: socket.handshake.query.project, user: socket.handshake.session.passport.user}).exec().then( (doc) ->
         if doc
           socket.join(doc._id.toHexString())
           doc._doc.status = doc.humanizedStatus()
-          console.log "/project/#{doc._id.toHexString()}"
           io.of('/project').in(doc._id.toHexString()).emit 'update', doc._doc
+
+          # for calculating order
+          socket.on('order-price', (data) ->
+            models.STLProject.findOne(doc._id).exec().then (doc) ->
+              ammount =  Math.abs(if (data.ammount and parseInt(data.ammount)) then parseInt(data.ammount) else 1)
+              price = calculateOrderPrice doc.price, ammount
+              io.of('/project').in(doc._id.toHexString()).emit 'update-price-order', price: price.toString()
+          )
+
         else
           socket.emit 'error', msg: "Document not found"
       ).fail( (reason) ->
@@ -185,7 +214,7 @@ module.exports = (app, io) ->
       )
     else
       socket.emit 'error', msg: "No project was not sent"
-
+  )
 
   ###############################################
   # Some functions
@@ -200,7 +229,7 @@ module.exports = (app, io) ->
           doc.weight = result.weight
           doc.unit = result.unit
           doc.status = models.PROJECT_STATUSES.PROCESSED[0]
-          doc.price = (doc.volume * 1.01 * doc.density * 0.03) + 5  # formula from doc sent by mattia
+          doc.price = decimal.fromNumber((doc.volume * 1.01 * doc.density * 0.03) + 5, 2)  # formula from doc sent by mattia
           doc.bad = false
           doc.save()
         catch e
@@ -216,6 +245,13 @@ module.exports = (app, io) ->
       cloned.status = doc.humanizedStatus()  # to show good in browser
 
       io.of('/project').in(doc._id.toHexString()).emit('update', cloned)
+
+
+  calculateOrderPrice = (basePrice, ammount) ->
+    if (basePrice<=10)
+      decimal.fromNumber((3 + 2*basePrice) * ammount, 2)
+    else
+      decimal.fromNumber((23 + 10*Math.log(basePrice-9)) * ammount, 2)
 
 # app.get "/", (req, res) ->
 

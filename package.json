@@ -33,7 +33,8 @@
     "nodemailer": "~0.6.0",
     "bufferpack": "0.0.6",
     "socket.io": "~0.9.16",
-    "socket.io-session": "0.0.5"
+    "socket.io-session": "0.0.5",
+    "Deci-mal": "~0.2.0"
   },
   "devDependencies": {
     "mocha": "*",

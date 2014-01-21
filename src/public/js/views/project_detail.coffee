@@ -6,9 +6,12 @@ updateFrontEnd = (data) ->
 
     if key == 'status'
       if data[key] == 'processing'
-        $('h4.media-heading').addClass('hide')
+        $('.object-volume').addClass('hide')
+        $('.processing-volume').removeClass('hide')
       else
-        $('h4.media-heading').removeClass('hide')
+        $('.object-volume').removeClass('hide')
+        $('.processing-volume').addClass('hide')
+
 
 colors =
   black: '#000000'
@@ -18,7 +21,11 @@ colors =
   blue: '#0000FF'
   yellow: '#FFFF00'
 
+
 $(document).ready ->
+  ###
+  # CSRF Protection
+  ###
   CSRF_HEADER = "X-CSRF-Token"
 
   setCSRFToken = (securityToken) ->
@@ -28,16 +35,35 @@ $(document).ready ->
 
   setCSRFToken $("meta[name=\"csrf-token\"]").attr("content")
 
+  ###
+  # Socket IO
+  ###
+
   socket = io.connect(":#{port}/project?project=#{project.id}")
 
   socket.on 'error', (data) ->
     console.log data.msg
 
   socket.on 'update', (data) ->
+    socket.emit 'order-price', {ammount: $("#ammount").val()}
     updateFrontEnd(data)
+
+  socket.on 'update-price-order', (data) ->
+    $('#order-price').text(data.price)
+
+  ###
+  # Some cool looks and feel
+  ###
+
+  $('.selectpicker').selectpicker()
 
   unless Modernizr.canvas
     $("#message-canvas").removeClass('hide')
+
+
+  ###
+  # JSC3D.Viewer
+  ###
 
   viewer = new JSC3D.Viewer $('#cv').get(0)
   viewer.setParameter 'SceneUrl', "/#{project.filename}"
@@ -47,6 +73,10 @@ $(document).ready ->
   viewer.setParameter 'RenderMode', 'smooth'
   viewer.init()
   viewer.update()
+
+  ###
+  # Some controllers
+  ###
 
   $("#color-chooser").val("#{project.color}").change(->
     $.post("/project/color/#{project.id}", value: $(this).val())
@@ -58,9 +88,13 @@ $(document).ready ->
     $.post("/project/density/#{project.id}", value: $(this).val())
   )
 
-  # $.fn.editableform.engine = 'jquery';
   $("#title").editable(
     type: 'text'
     pk: "#{project.id}"
     url: '/project/title'
+  )
+
+  $("#ammount").keyup(->
+    $("#order-price").text("Processing")
+    socket.emit 'order-price', {ammount: $("#ammount").val()}
   )

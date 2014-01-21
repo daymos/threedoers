@@ -10,37 +10,58 @@ block content
 
     h3
       a#title(data-type="text", data-url="/project/title/#{project.id}", data-title="Enter the Title") #{project.title}
-    canvas#cv(width='600', height='300')
+    canvas#cv.col-md-12
     p.hide#message-canvas
       | It seems you are using an outdated browser that does not support canvas :-(
+    .clearfix
+  .row
 
   .row
     .col-md-12
-      .media
-        .media-body
-          h4.media-heading(class=(project.status!=1)?"":"hide")
-            | Object Volume is&nbsp;
-            span#volume #{project.volume}
-            &nbsp;
-            span#unit #{project.unit}
-            sup 3
-            br
-            br
-            | Price:&nbsp;
-            span.capitalize#price #{project.price}
-            span &nbsp;&nbsp;Euro
+      .row
+        .col-md-12
+          h4
+            | Object Volume:&nbsp;
+            span.processing-volume(class=(project.status!=1)?"hide":"") Processing
+            span.object-volume(class=(project.status!=1)?"":"hide")
+              span#volume #{project.volume}
+              &nbsp;
+              span#unit #{project.unit}
+              sup 3
           h5
             | Status:&nbsp;
             span.capitalize#status #{project.humanizedStatus()}
-          hr(style='margin: 8px auto;')
-
-          select#color-chooser.col-md-2.col-md-offset-1
+      hr
+      .row
+        .col-md-5
+          br
+          strong Select a Color:
+          select#color-chooser.selectpicker
             - for color in colors
               option(value="#{color}") #{color}
 
-          select#density-chooser.col-md-2.col-md-offset-1
+          br
+          strong Select Density:
+          select#density-chooser.selectpicker
             - for density in densities
               option(value="#{density[0]}") #{density[1]}
+
+        .col-md-7
+          .well
+            form.form-inline(role="form").col-md-10.col-md-offset-1
+              legend How many items do you want?
+              .form-group
+                label.sr-only(for='ammount') Ammount
+                input#ammount.form-control(type='number', placeholder='1')
+
+              input(type="submit", value="Place an Order").btn.btn-primary
+
+              br
+              br
+              strong Order Price: &nbsp;&nbsp;
+              span.form-control-static#order-price Processing
+              span &nbsp;&nbsp;Euro
+            .clearfix
 
 block extra-headers
   link(rel='stylesheet', href='//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css')
@@ -49,6 +70,7 @@ block extra-headers
 block scripts
     script(src='/js/views/project_detail.js')
     script(type='text/javascript', src='/vendor/jsc3d.min.js')
+    script(type='text/javascript', src='/vendor/bootstrap-select.min.js')
     script(src='/vendor/socket.io.min.js')
     script(src='//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js')
     script.
