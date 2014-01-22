@@ -71,7 +71,12 @@ block content
                 span &nbsp;&nbsp;Euro
               .clearfix
 
-      - if (project.status > 3)  // if project was accepted
+      // if user same as owner and status payed
+      - if (project.status == statuses.PRINT_ACCEPTED[0] && user.id == project.user)
+        a(href="/project/pay/#{project.id}").btn.btn-lg.btn-primary.pull-right Pay Order
+        .clearfix
+
+      - if (project.status >= statuses.PRINT_ACCEPTED[0])  // if project was accepted
         h5 Comments
 
         ul#comment-list.list-group

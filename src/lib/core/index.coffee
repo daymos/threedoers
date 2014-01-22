@@ -2,6 +2,7 @@ module.exports = (app, io) ->
   fs = require 'fs'
   exec = require('child_process').exec
   decimal = require('Deci-mal').decimal
+  paypal = require('paypal-rest-sdk')
 
   decorators = require '../decorators'
   logger = require '../logger'
@@ -13,6 +14,7 @@ module.exports = (app, io) ->
   utils = require('../utils')
   auth = require('../auth/models')
 
+  paypal.configure(settings.paypal.api)
 
   app.get '/', (req, res) ->
     res.render 'core/index'
@@ -63,7 +65,11 @@ module.exports = (app, io) ->
       if doc
         if doc.bad
           processVolumeWeight(doc)
-        res.render 'core/project/detail', {project: doc, colors: models.PROJECT_COLORS, densities: models.PROJECT_DENSITIES}
+        res.render 'core/project/detail',
+          project: doc
+          colors: models.PROJECT_COLORS
+          densities: models.PROJECT_DENSITIES
+          statuses: models.PROJECT_STATUSES
       else
         next()
     ).fail((reason) ->
@@ -191,7 +197,7 @@ module.exports = (app, io) ->
   app.post '/project/comment/:id', decorators.loginRequired, (req, res, next) ->
     # Same as get /project/:id both printer who accepted and the owner can change this
     models.STLProject.findOne({_id: req.params.id, $or: [{user: req.user.id}, {'order.printer': req.user.id}]}).exec().then( (doc) ->
-      if doc and doc.status > 3  # test if comments allowed
+      if doc and doc.status >= models.PROJECT_STATUSES.PRINT_ACCEPTED[0]  # test if comments allowed
         if req.body.message
           comment =
             author: req.user.id
@@ -206,6 +212,77 @@ module.exports = (app, io) ->
           res.json msg: "The message is required.", 400
       else
         res.json msg: "Not allowed comments at this moment.", 400
+    ).fail( ->
+      logger.error arguments
+      res.send 500
+    )
+
+
+  app.get '/project/pay/:id', decorators.loginRequired, (req, res, next) ->
+    # Same as get /project/:id both printer who accepted and the owner can change this
+    models.STLProject.findOne({_id: req.params.id, user: req.user.id}).exec().then( (doc) ->
+      if doc and doc.validateNextStatus(models.PROJECT_STATUSES.PAYED[0])  # test if comments allowed
+        payment =
+          intent: "sale"
+          payer:
+            payment_method: "paypal"
+
+          redirect_urls:
+            return_url: "#{settings.site}/project/pay/execute/#{doc.id}"
+            cancel_url: "#{settings.site}/project/pay/cancel/#{doc.id}"
+
+          transactions: [
+            amount:
+              total: doc.order.price
+              currency: "USD"
+
+            description: "Payment for 3D printing in 3doers"
+          ]
+
+        paypal.payment.create payment, (error, payment) ->
+          if error
+            logger.error error
+            res.send 500
+          else
+            if payment.payer.payment_method is "paypal"
+              req.session.paymentId = payment.id
+              redirectUrl = undefined
+              i = 0
+
+              while i < payment.links.length
+                link = payment.links[i]
+                redirectUrl = link.href  if link.method is "REDIRECT"
+                i++
+              res.redirect redirectUrl
+      else
+        res.redirect "/project/#{req.params.id}"
+    ).fail( ->
+      logger.error arguments
+      res.send 500
+    )
+
+
+  app.get '/project/pay/cancel/:id', decorators.loginRequired, (req, res) ->
+    delete req.session.paymentId
+    res.redirect "/project/#{req.params.id}"
+
+
+  app.get '/project/pay/execute/:id', decorators.loginRequired, (req, res) ->
+    models.STLProject.findOne({_id: req.params.id, user: req.user.id}).exec().then( (doc) ->
+      if doc and doc.validateNextStatus(models.PROJECT_STATUSES.PAYED[0])  # test if next state is allowed
+        auth.User.findOne(doc.order.printer).exec (err, user) ->
+          paymentId = req.session.paymentId
+          payerId = req.param("PayerID")
+          details = payer_id: payerId
+          paypal.payment.execute paymentId, details, (error, payment) ->
+            if error
+              logger.error error
+            else
+              mailer.send('mailer/project/payed', {project: doc, user: user, site:settings.site}, {from: settings.mailer.noReply, to:[user.email], subject: settings.project.payed.subject}).then ->
+                doc.status = models.PROJECT_STATUSES.PAYED[0]
+                doc.save()
+      else
+        res.redirect "/project/#{req.params.id}"
     ).fail( ->
       logger.error arguments
       res.send 500
@@ -231,25 +308,24 @@ module.exports = (app, io) ->
 
 
   app.post '/printing/accept/:id', decorators.printerRequired, (req, res) ->
-    models.STLProject.find(status: models.PROJECT_STATUSES.PRINT_REQUESTED[0]).exec (err, docs) ->
-      models.STLProject.findOne({_id: req.params.id, editable: false}).exec().then( (doc) ->
-        if doc and doc.validateNextStatus(models.PROJECT_STATUSES.PRINT_ACCEPTED[0])
-          auth.User.findOne(doc.user).exec (err, user) ->
-            if user
-              mailer.send('mailer/printing/accept', {project: doc, user: user, site:settings.site}, {from: settings.mailer.noReply, to:[user.email], subject: settings.printing.accept.subject}).then ->
-                doc.status = models.PROJECT_STATUSES.PRINT_ACCEPTED[0]
-                doc.order =
-                  printer: req.user.id
-                  ammount: doc.order.ammount
-                  price: doc.order.price
-                doc.save()
-                res.json msg: "Accepted"
-        else
-          res.json msg: "Looks like someone accepted, try with another", 400
-      ).fail( ->
-        logger.error arguments
-        res.send 500
-      )
+    models.STLProject.findOne({_id: req.params.id, editable: false}).exec().then( (doc) ->
+      if doc and doc.validateNextStatus(models.PROJECT_STATUSES.PRINT_ACCEPTED[0])
+        auth.User.findOne(doc.user).exec (err, user) ->
+          if user
+            mailer.send('mailer/printing/accept', {project: doc, user: user, site:settings.site}, {from: settings.mailer.noReply, to:[user.email], subject: settings.printing.accept.subject}).then ->
+              doc.status = models.PROJECT_STATUSES.PRINT_ACCEPTED[0]
+              doc.order =
+                printer: req.user.id
+                ammount: doc.order.ammount
+                price: doc.order.price
+              doc.save()
+              res.json msg: "Accepted"
+      else
+        res.json msg: "Looks like someone accepted, try with another", 400
+    ).fail( ->
+      logger.error arguments
+      res.send 500
+    )
 
   ###############################################
   # Socket IO event handlers
@@ -259,7 +335,7 @@ module.exports = (app, io) ->
     if socket.handshake.query.project?
       models.STLProject.findOne(
         {_id: socket.handshake.query.project, user: socket.handshake.session.passport.user},
-        {title: 1, volume:1, status: 1}).exec().then( (doc) ->
+        {title: 1, volume:1, status: 1, editable: 1}).exec().then( (doc) ->
         if doc
           socket.join(doc._id.toHexString())
           doc._doc.status = doc.humanizedStatus()

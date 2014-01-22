@@ -32,6 +32,10 @@ config =
     activation:
       subject: "Activate your account"
 
+  project:
+    payed:
+      subject: "Project was payed."
+
   printing:
     accept:
       subject: "Your project was accepted by a printer"
@@ -45,6 +49,15 @@ config =
 
   upload:
     to: (process.env.OPENSHIFT_DATA_DIR || '') + '3doers/uploads/'
+
+  paypal:
+    port: 5000
+    api:
+      host: "api.paypal.com"
+      port: ""
+      client_id: "AbVJNRB86vH_GeBUz853oqhXZvS36ET3-a1DjC2IRP9djSF6hwwjAX7u03pU"
+      client_secret: "EBuONxDylIjxbPRINS_caUUdG6MqBnucAClogB9CE-rEovnA6ysJ3AhDGr-m"
+
 try
   locals = require './locals'
   for key of locals
