@@ -13,3 +13,11 @@ module.exports.adminRequired = (req, res, next) ->
     next()
   else
     res.redirect '/accounts/login'
+
+
+module.exports.printerRequired = (req, res, next) ->
+  # Only test it user is required if not redirect to login
+  if req.user and req.user.printer == "accepted"
+    next()
+  else
+    res.redirect '/accounts/login'

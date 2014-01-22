@@ -32,6 +32,10 @@ config =
     activation:
       subject: "Activate your account"
 
+  printing:
+    accept:
+      subject: "Your project was accepted by a printer"
+
   admins:
     emails: ['3doers@gmail.com']
 

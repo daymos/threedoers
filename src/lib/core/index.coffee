@@ -59,7 +59,7 @@ module.exports = (app, io) ->
 
 
   app.get '/project/:id', decorators.loginRequired, (req, res, next) ->
-    models.STLProject.findOne({_id: req.params.id, user: req.user.id}).exec().then( (doc) ->
+    models.STLProject.findOne({_id: req.params.id, $or: [{user: req.user.id}, {'order.printer': req.user.id}]}).exec().then( (doc) ->
       if doc
         if doc.bad
           processVolumeWeight(doc)
@@ -113,17 +113,21 @@ module.exports = (app, io) ->
     if errors
       res.send errors.value.msg, 400
     else
-      models.STLProject.findOne({_id: req.params.id, editable: true}).exec().then( (doc) ->
+      models.STLProject.findOne({_id: req.params.id}).exec().then( (doc) ->
         if doc
-          doc.title = req.body.value
-          doc.save()
-          res.send 200
+          if doc.editable
+            doc.title = req.body.value
+            doc.save()
+            res.send 200
+          else
+            res.send "Project couldn't be editable at this status.", 400
         else
           res.send 404
       ).fail( ->
         logger.error arguments
         res.send 500
       )
+
 
   app.post '/project/color/:id', decorators.loginRequired, (req, res) ->
     req.assert('value').regex(/red|green|blue|black|white|yellow/)
@@ -144,6 +148,7 @@ module.exports = (app, io) ->
         res.send 500
       )
 
+
   app.post '/project/density/:id', decorators.loginRequired, (req, res) ->
     value = parseFloat(req.body.value)
     unless value in [models.PROJECT_DENSITIES.LOW[0], models.PROJECT_DENSITIES.MEDIUM[0], models.PROJECT_DENSITIES.HIGH[0], models.PROJECT_DENSITIES.COMPLETE[0]]
@@ -156,6 +161,7 @@ module.exports = (app, io) ->
 
           cloned = utils.cloneObject(doc._doc)
           cloned.status = doc.humanizedStatus()  # to show good in browser
+          delete cloned.comments
           io.of('/project').in(doc._id.toHexString()).emit('update', cloned)
 
           processVolumeWeight(doc)
@@ -167,24 +173,83 @@ module.exports = (app, io) ->
         res.send 500
       )
 
-  app.post '/project/generate/order/:id', decorators.loginRequired, (req, res, next) ->
+
+  app.post '/project/order/:id', decorators.loginRequired, (req, res, next) ->
     models.STLProject.findOne({_id: req.params.id, editable: true}).exec().then( (doc) ->
       if doc and doc.validateNextStatus(models.PROJECT_STATUSES.PRINT_REQUESTED[0])
-        res.render 'core/project/order', {project: doc}
         doc.status = models.PROJECT_STATUSES.PRINT_REQUESTED[0]
-
-        # cloned = utils.cloneObject(doc._doc)
-        # cloned.status = doc.humanizedStatus()  # to show good in browser
-        # io.of('/project').in(doc._id.toHexString()).emit('update', cloned)
-
-        # processVolumeWeight(doc)
-        # res.send 200
-      else
-        next()
+        doc.order =
+          ammount: req.body.ammount
+          price: calculateOrderPrice(doc.price, req.body.ammount).toString()
+        doc.save()
+      res.redirect "/project/#{req.params.id}"
     ).fail( ->
       logger.error arguments
       res.send 500
     )
+
+  app.post '/project/comment/:id', decorators.loginRequired, (req, res, next) ->
+    # Same as get /project/:id both printer who accepted and the owner can change this
+    models.STLProject.findOne({_id: req.params.id, $or: [{user: req.user.id}, {'order.printer': req.user.id}]}).exec().then( (doc) ->
+      if doc and doc.status > 3  # test if comments allowed
+        if req.body.message
+          comment =
+            author: req.user.id
+            username: req.user.username
+            content: req.body.message
+            createdAt: Date.now()
+
+          doc.comments.push(comment)
+          doc.save()
+          res.json comment, 200
+        else
+          res.json msg: "The message is required.", 400
+      else
+        res.json msg: "Not allowed comments at this moment.", 400
+    ).fail( ->
+      logger.error arguments
+      res.send 500
+    )
+
+
+  app.get '/printing/requests', decorators.printerRequired, (req, res) ->
+    models.STLProject.find(status: models.PROJECT_STATUSES.PRINT_REQUESTED[0]).exec (err, docs) ->
+      if err
+        logger.error err
+        res.send 500
+      else
+        res.render 'core/printing/requests', {projects: docs}
+
+
+  app.get '/printing/jobs', decorators.printerRequired, (req, res) ->
+    models.STLProject.find('order.printer': req.user.id).exec (err, docs) ->
+      if err
+        logger.error err
+        res.send 500
+      else
+        res.render 'core/printing/jobs', {projects: docs}
+
+
+  app.post '/printing/accept/:id', decorators.printerRequired, (req, res) ->
+    models.STLProject.find(status: models.PROJECT_STATUSES.PRINT_REQUESTED[0]).exec (err, docs) ->
+      models.STLProject.findOne({_id: req.params.id, editable: false}).exec().then( (doc) ->
+        if doc and doc.validateNextStatus(models.PROJECT_STATUSES.PRINT_ACCEPTED[0])
+          auth.User.findOne(doc.user).exec (err, user) ->
+            if user
+              mailer.send('mailer/printing/accept', {project: doc, user: user, site:settings.site}, {from: settings.mailer.noReply, to:[user.email], subject: settings.printing.accept.subject}).then ->
+                doc.status = models.PROJECT_STATUSES.PRINT_ACCEPTED[0]
+                doc.order =
+                  printer: req.user.id
+                  ammount: doc.order.ammount
+                  price: doc.order.price
+                doc.save()
+                res.json msg: "Accepted"
+        else
+          res.json msg: "Looks like someone accepted, try with another", 400
+      ).fail( ->
+        logger.error arguments
+        res.send 500
+      )
 
   ###############################################
   # Socket IO event handlers
@@ -192,7 +257,9 @@ module.exports = (app, io) ->
 
   io.of('/project').on('connection', (socket) ->
     if socket.handshake.query.project?
-      models.STLProject.findOne({_id: socket.handshake.query.project, user: socket.handshake.session.passport.user}).exec().then( (doc) ->
+      models.STLProject.findOne(
+        {_id: socket.handshake.query.project, user: socket.handshake.session.passport.user},
+        {title: 1, volume:1, status: 1}).exec().then( (doc) ->
         if doc
           socket.join(doc._id.toHexString())
           doc._doc.status = doc.humanizedStatus()

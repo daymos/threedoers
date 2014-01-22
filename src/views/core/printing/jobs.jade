@@ -1,0 +1,73 @@
+
+extends ../profile/base
+
+block title
+  |  Your Projects
+
+block content-profile
+  .container
+    .row
+      .well.col-xs-11.col-sm-11.col-md-11.col-lg-11.center-block
+        - if (projects.length == 0)
+          p There is not any project yet for this list.
+        - for (project in projects)
+          - project = projects[project]
+          .row.user-row
+            .col-xs-10.col-sm-9.col-md-9.col-lg-9.col-md-offset-1
+              strong #{project.title}
+              br
+              span.text-muted.capitalize Status: #{project.humanizedStatus()}
+            .col-xs-1.col-sm-1.col-md-1.col-lg-1.dropdown-user(data-for="#{project.id}")
+              i.glyphicon.glyphicon-chevron-down.text-muted
+          .row.user-infos(class="#{project.id}", data-project="#{project.id}")
+            .col-xs-12.col-sm-12.col-md-10.col-lg-10.col-xs-offset-0.col-sm-offset-0.col-md-offset-1.col-lg-offset-1
+              .panel.panel-primary
+                .panel-heading
+                  h3.panel-title Project information
+                .panel-body
+                  .row
+                    .col-xs-10.col-sm-10.hidden-md.hidden-lg
+                      strong
+                        a(href="/project/#{project.id}") #{project.title}
+                      br
+                      dl
+                        dt Status:
+                        dd.capitalize #{project.humanizedStatus()}
+                        dt Volume:
+                        dd #{project.volume} #{project.unit}
+                          sup 3
+                        dt Density
+                        dd #{project.density}
+                        dt Weight
+                        dd #{project.weight}
+                        dt Ammount
+                        dd #{project.order.ammount}
+                    .col-md-9.col-lg-9.hidden-xs.hidden-sm
+                      strong
+                        a(href="/project/#{project.id}") #{project.title}
+                      br
+                      table.table.table-user-information
+                        tbody
+                          tr
+                            td Status:
+                            td.capitalize #{project.humanizedStatus()}
+                          tr
+                            td Volume:
+                            td #{project.volume} #{project.unit}
+                              sup 3
+                          tr
+                            td Density
+                            td #{project.density}
+                          tr
+                            td Weight
+                            td #{project.weight}
+                          tr
+                            td Ammount
+                            td #{project.order.ammount}
+
+
+block extra-headers
+  meta(name="csrf-token", content="#{csrfToken}")
+
+block scripts
+    script(src='/js/views/printing_requests.js')

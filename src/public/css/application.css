@@ -143,6 +143,10 @@ body {
   margin-left: 0;
   margin-right: 0; }
 
+textarea.comment {
+  height: 100px;
+  padding-bottom: 20px; }
+
 (function() {
 
 

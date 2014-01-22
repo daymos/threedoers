@@ -14,12 +14,11 @@ module.exports.PROJECT_STATUSES = PROJECT_STATUSES =
   PROCESSED: [2, 'processed']
   PRINT_REQUESTED: [3, 'print requested']
   PRINT_ACCEPTED: [4, 'print accepted']
-  PRINT_DENIED: [5, 'print denied']
-  PAYED: [6, 'print accepted']
-  PRINTING: [7, 'printing']
-  PRINTED: [8, 'printed']
-  SHIPPING: [9, 'shipping']
-  ARCHIVED: [10, 'archived']
+  PAYED: [5, 'payed']
+  PRINTING: [6, 'printing']
+  PRINTED: [7, 'printed']
+  SHIPPING: [8, 'shipping']
+  ARCHIVED: [9, 'archived']
 
 module.exports.PROJECT_COLORS = PROJECT_COLORS =
   BLACK: 'black'
@@ -38,6 +37,25 @@ module.exports.PROJECT_DENSITIES = PROJECT_DENSITIES =
 ###############################################
 # Models
 ###############################################
+
+
+Comment = new Schema
+
+  author:
+    type: ObjectId
+    required: true
+
+  username:
+    type: String
+    required: true
+
+  content:
+    type: String
+    required: true
+
+  createdAt:
+    type: Date
+    default: Date.now
 
 
 STLProject = new Schema
@@ -92,6 +110,13 @@ STLProject = new Schema
     type: Boolean
     default: true
 
+  order:
+    type: {}
+
+  comments:
+    type: [Comment]
+
+
 
 STLProject.methods.addFile = (file, options) ->
   name = file.path.split('/').pop()
@@ -108,12 +133,11 @@ STLProject.methods.validateNextStatus = (value) ->
   states =
     1: [PROJECT_STATUSES.PROCESSED[0]]
     2: [PROJECT_STATUSES.PROCESSING[0], PROJECT_STATUSES.PRINT_REQUESTED[0]]
-    3: [PROJECT_STATUSES.PRINT_ACCEPTED[0], PROJECT_STATUSES.PRINT_DENIED[0]]
+    3: [PROJECT_STATUSES.PRINT_ACCEPTED[0]]
     4: [PROJECT_STATUSES.PAYED[0]]
-    5: [PROJECT_STATUSES.PROCESSING[0], PROJECT_STATUSES.PROCESSED[0]]
-    6: [PROJECT_STATUSES.PRINTING[0]]
-    7: [PROJECT_STATUSES.PRINTED[0]]
-    8: [PROJECT_STATUSES.SHIPPING[0]]
+    5: [PROJECT_STATUSES.PRINTING[0]]
+    6: [PROJECT_STATUSES.PRINTED[0]]
+    7: [PROJECT_STATUSES.SHIPPING[0]]
 
   return value in states[@status]
 
@@ -122,18 +146,17 @@ STLProject.methods.validNextStatus = ->
   states =
     1: [PROJECT_STATUSES.PROCESSED]
     2: [PROJECT_STATUSES.PROCESSING, PROJECT_STATUSES.PRINT_REQUESTED]
-    3: [PROJECT_STATUSES.PRINT_ACCEPTED, PROJECT_STATUSES.PRINT_DENIED]
+    3: [PROJECT_STATUSES.PRINT_ACCEPTED]
     4: [PROJECT_STATUSES.PAYED]
-    5: [PROJECT_STATUSES.PROCESSING, PROJECT_STATUSES.PROCESSED]
-    6: [PROJECT_STATUSES.PRINTING]
-    7: [PROJECT_STATUSES.PRINTED]
-    8: [PROJECT_STATUSES.SHIPPING]
+    5: [PROJECT_STATUSES.PRINTING]
+    6: [PROJECT_STATUSES.PRINTED]
+    7: [PROJECT_STATUSES.SHIPPING]
 
   return states[@status]
 
 STLProject.pre 'save', (next) ->
   # only editable at this points, only status should be edited later
-  @editable = @status in [PROJECT_STATUSES.PROCESSED[0], PROJECT_STATUSES.PRINT_DENIED[0]]
+  @editable = @status in [PROJECT_STATUSES.PROCESSED[0]]
   next()
 
 

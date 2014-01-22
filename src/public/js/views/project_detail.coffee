@@ -12,6 +12,9 @@ updateFrontEnd = (data) ->
         $('.object-volume').removeClass('hide')
         $('.processing-volume').addClass('hide')
 
+    if key == 'order'
+      $('#order-placed-order').text(data[key].price)
+
 
 colors =
   black: '#000000'
@@ -21,6 +24,17 @@ colors =
   blue: '#0000FF'
   yellow: '#FFFF00'
 
+
+replaceTag = (tag) ->
+  tagsToReplace[tag] or tag
+
+safe_tags_replace = (str) ->
+  str.replace /[&<>]/g, replaceTag
+
+tagsToReplace =
+  "&": "&amp;"
+  "<": "&lt;"
+  ">": "&gt;"
 
 $(document).ready ->
   ###
@@ -47,6 +61,8 @@ $(document).ready ->
   socket.on 'update', (data) ->
     socket.emit 'order-price', {ammount: $("#ammount").val()}
     updateFrontEnd(data)
+    if $("#density-chooser").length == 0 and data.editable
+      location.reload(true)
 
   socket.on 'update-price-order', (data) ->
     $('#order-price').text(data.price)
@@ -83,10 +99,13 @@ $(document).ready ->
     viewer.setParameter 'ModelColor', "#{colors[project.color]}"
     viewer.update(false)
   )
+  $("#color-chooser").selectpicker('val', "#{project.color}")
+
 
   $("#density-chooser").val("#{project.density}").change(->
     $.post("/project/density/#{project.id}", value: $(this).val())
   )
+  $("#density-chooser").selectpicker('val', "#{project.density}")
 
   $("#title").editable(
     type: 'text'
@@ -98,3 +117,32 @@ $(document).ready ->
     $("#order-price").text("Processing")
     socket.emit 'order-price', {ammount: $("#ammount").val()}
   )
+
+  $("#comment-button").click (e) ->
+    e.preventDefault()
+    $.ajax
+      url: "/project/comment/#{project.id}"
+      method: "post"
+      dataType: "json"
+      data: {message: $("#comment-text").val()}
+
+      success: (data) ->
+        template = "<li class='list-group-item'>
+              <div class='row'>
+                <div class='col-xs-2 col-md-1'><img src='http://placehold.it/80' alt='' class='img-circle img-responsive'></div>
+                <div class='col-xs-10 col-md-11'>
+                  <div>
+                    <div class='mic-info'>By: &nbsp; &nbsp;<a href='#'>#{data.username}</a>&nbsp;on #{Date(data.createdAt)}</div>
+                  </div><br>
+                  <div class='comment-text'>#{safe_tags_replace(data.content)}</div>
+                </div>
+              </div>
+            </li>"
+
+        $("#comment-list").append($(template))
+        $("#comment-text").val("")  # cleaning the textarea
+
+      statusCode:
+        400: (data) ->
+          data = JSON.parse(data.responseText)
+          alert(data.msg)

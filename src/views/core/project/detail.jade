@@ -31,37 +31,70 @@ block content
           h5
             | Status:&nbsp;
             span.capitalize#status #{project.humanizedStatus()}
-      hr
-      .row
-        .col-md-5
-          br
-          strong Select a Color:
-          select#color-chooser.selectpicker
-            - for color in colors
-              option(value="#{color}") #{color}
 
-          br
-          strong Select Density:
-          select#density-chooser.selectpicker
-            - for density in densities
-              option(value="#{density[0]}") #{density[1]}
-
-        .col-md-7
-          .well
-            form.form-inline(role="form").col-md-10.col-md-offset-1
-              legend How many items do you want?
-              .form-group
-                label.sr-only(for='ammount') Ammount
-                input#ammount.form-control(type='number', placeholder='1')
-
-              input(type="submit", value="Place an Order").btn.btn-primary
-
-              br
-              br
-              strong Order Price: &nbsp;&nbsp;
-              span.form-control-static#order-price Processing
+          -if (!project.editable && project.order)
+            h5
+              | Price:&nbsp;
+              span.capitalize#order-placed-order #{project.order.price}
               span &nbsp;&nbsp;Euro
-            .clearfix
+      hr
+      - if (project.editable)
+        .row
+          .col-md-5
+            br
+            strong Select a Color:
+            select#color-chooser.selectpicker
+              - for color in colors
+                option(value="#{color}") #{color}
+
+            br
+            strong Select Density:
+            select#density-chooser.selectpicker
+              - for density in densities
+                option(value="#{density[0]}") #{density[1]}
+
+          .col-md-7
+            .well
+              form.form-inline(role="form", action="/project/order/#{project.id}", method="post").col-md-10.col-md-offset-1
+                input(type='hidden', name='_csrf', value=csrfToken)
+                legend How many items do you want?
+                .form-group
+                  label.sr-only(for='ammount') Ammount
+                  input#ammount.form-control(type='number', placeholder='1', name='ammount')
+
+                input(type="submit", value="Place an Order").btn.btn-primary
+
+                br
+                br
+                strong Order Price: &nbsp;&nbsp;
+                span.form-control-static#order-price Processing
+                span &nbsp;&nbsp;Euro
+              .clearfix
+
+      - if (project.status > 3)  // if project was accepted
+        h5 Comments
+
+        ul#comment-list.list-group
+          - for comment in project.comments
+            li.list-group-item
+              .row
+                .col-xs-2.col-md-1
+                  img.img-circle.img-responsive(src='http://placehold.it/80', alt='')
+                .col-xs-10.col-md-11
+                  div
+                    .mic-info
+                      | By: &nbsp; &nbsp;
+                      a(href='#') #{comment.username}
+                      | &nbsp;on #{comment.createdAt}
+                  br
+                  .comment-text
+                    | #{comment.content}
+
+
+        textarea#comment-text.comment.col-md-12
+        .clearfix
+        br
+        button.btn.btn-primary.pull-right#comment-button Comment
 
 block extra-headers
   link(rel='stylesheet', href='//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css')
