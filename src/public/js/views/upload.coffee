@@ -30,11 +30,9 @@ $(document).ready ->
                           .html("#{percentComplete}% Complete")
 
     error: ->
-      console.log arguments
       html = '<br><div class="alert alert-danger"><strong>Error</strong> uploading your file, please try again.</div>'
       $("#result").html html
 
     success: (data) ->
-      console.log data
       location.href = data.redirectTo
 
