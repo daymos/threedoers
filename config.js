@@ -54,10 +54,10 @@
     paypal: {
       port: 5000,
       api: {
-        host: "api.paypal.com",
+        host: "api.sandbox.paypal.com",
         port: "",
-        client_id: "AbVJNRB86vH_GeBUz853oqhXZvS36ET3-a1DjC2IRP9djSF6hwwjAX7u03pU",
-        client_secret: "EBuONxDylIjxbPRINS_caUUdG6MqBnucAClogB9CE-rEovnA6ysJ3AhDGr-m"
+        client_id: "AZrTbRDZWrirQKBM6U0xlh2QbDhy-YgzhviBgD9dIhV6EoXePHBPVGD99hD6",
+        client_secret: "ENKeHRBEcHZ3TdTdNUHpkKqd9ktHYwTYZQur6XrGtY-BttLKsDRc6ZRa_uE-"
       }
     }
   };

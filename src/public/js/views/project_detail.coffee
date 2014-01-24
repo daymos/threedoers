@@ -92,18 +92,16 @@ $(document).ready ->
   # Some controllers
   ###
 
-  $("#color-chooser").val("#{project.color}").change(->
-    $.post("/project/color/#{project.id}", value: $(this).val())
-    viewer.setParameter 'ModelColor', "#{colors[project.color]}"
-    viewer.update(false)
-  )
   $("#color-chooser").selectpicker('val', "#{project.color}")
+  $("#color-chooser").val("#{project.color}").change(->
+    $.post("/project/color/#{project.id}", value: $(this).val(), -> location.reload())
+  )
 
 
+  $("#density-chooser").selectpicker('val', "#{project.density}")
   $("#density-chooser").val("#{project.density}").change(->
     $.post("/project/density/#{project.id}", value: $(this).val())
   )
-  $("#density-chooser").selectpicker('val', "#{project.density}")
 
   $("#title").editable(
     type: 'text'
@@ -111,9 +109,17 @@ $(document).ready ->
     url: '/project/title'
   )
 
-  $("#ammount").keyup(->
-    $("#order-price").text("Processing")
-    socket.emit 'order-price', {ammount: $("#ammount").val()}
+  $("#ammount").keyup( (event) ->
+    if (/\D/g.test(@value) or /^0$/.test(@value))
+      # Filter non-digits from input value.
+      @value = @value.replace(/\D/g, '')
+      @value = @value.replace(/^0$/, '')
+
+    if /^[1-9][0-9]*$/.test(@value) or /^\s*$/.test(@value)
+      $("#order-price").text("Processing")
+      socket.emit 'order-price', {ammount: $("#ammount").val()}
+    else
+      event.preventDefault()
   )
 
   $("#comment-button").click (e) ->

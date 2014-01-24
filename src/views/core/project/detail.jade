@@ -76,6 +76,18 @@ block content
         a(href="/project/pay/#{project.id}").btn.btn-lg.btn-primary.pull-right Pay Order
         .clearfix
 
+      - if (project.status == statuses.PAYED[0])
+        .row
+          form.form-inline(role="form", action="/project/start-printing/#{project.id}", method="post").col-md-12
+            input(type='hidden', name='_csrf', value=csrfToken)
+            input(type="submit", value="Print Order").btn.btn-primary.pull-right
+
+      - if (project.status == statuses.PRINTING[0])
+        .row
+          form.form-inline(role="form", action="/project/printed/#{project.id}", method="post").col-md-12
+            input(type='hidden', name='_csrf', value=csrfToken)
+            input(type="submit", value="Order Printed").btn.btn-primary.pull-right
+
       - if (project.status >= statuses.PRINT_ACCEPTED[0])  // if project was accepted
         h5 Comments
 

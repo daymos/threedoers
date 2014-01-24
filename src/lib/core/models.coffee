@@ -95,7 +95,7 @@ STLProject = new Schema
   color:
     type: String
     required: true
-    default: PROJECT_COLORS.BLACK
+    default: PROJECT_COLORS.WHITE
 
   price:
     type: String

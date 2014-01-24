@@ -61,7 +61,6 @@ module.exports = (app, io) ->
   app.get '/project/:id', decorators.loginRequired, (req, res, next) ->
     models.STLProject.findOne({_id: req.params.id, $or: [{user: req.user.id}, {'order.printer': req.user.id}]}).exec().then( (doc) ->
       if doc
-        console.log doc.volume or not doc.bad
         unless doc.volume and not doc.bad
           processVolumeWeight(doc)
         res.render 'core/project/detail',
@@ -283,6 +282,30 @@ module.exports = (app, io) ->
                 doc.save()
       else
         res.redirect "/project/#{req.params.id}"
+    ).fail( ->
+      logger.error arguments
+      res.send 500
+    )
+
+
+  app.post '/project/start-printing/:id', decorators.loginRequired, (req, res, next) ->
+    models.STLProject.findOne({_id: req.params.id, 'order.printer': req.user.id}).exec().then( (doc) ->
+      if doc and doc.validateNextStatus(models.PROJECT_STATUSES.PRINTING[0])
+        doc.status = models.PROJECT_STATUSES.PRINTING[0]
+        doc.save()
+      res.redirect "/project/#{req.params.id}"
+    ).fail( ->
+      logger.error arguments
+      res.send 500
+    )
+
+
+  app.post '/project/printed/:id', decorators.loginRequired, (req, res, next) ->
+    models.STLProject.findOne({_id: req.params.id, 'order.printer': req.user.id}).exec().then( (doc) ->
+      if doc and doc.validateNextStatus(models.PROJECT_STATUSES.PRINTED[0])
+        doc.status = models.PROJECT_STATUSES.PRINTED[0]
+        doc.save()
+      res.redirect "/project/#{req.params.id}"
     ).fail( ->
       logger.error arguments
       res.send 500
