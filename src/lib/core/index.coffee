@@ -182,10 +182,11 @@ module.exports = (app, io) ->
   app.post '/project/order/:id', decorators.loginRequired, (req, res, next) ->
     models.STLProject.findOne({_id: req.params.id, editable: true}).exec().then( (doc) ->
       if doc and doc.validateNextStatus(models.PROJECT_STATUSES.PRINT_REQUESTED[0])
+        ammount =  Math.abs(if (req.body.ammount and parseInt(req.body.ammount)) then parseInt(req.body.ammount) else 1)
         doc.status = models.PROJECT_STATUSES.PRINT_REQUESTED[0]
         doc.order =
-          ammount: req.body.ammount
-          price: calculateOrderPrice(doc.price, req.body.ammount).toString()
+          ammount: ammount
+          price: calculateOrderPrice(doc.price, ammount).toString()
         doc.save()
       res.redirect "/project/#{req.params.id}"
     ).fail( ->
