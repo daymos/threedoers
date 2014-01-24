@@ -57,13 +57,12 @@ module.exports = (app, io) ->
       else
         res.send redirectTo: "/project/#{project.id}"
 
-    processVolumeWeight(project)
-
 
   app.get '/project/:id', decorators.loginRequired, (req, res, next) ->
     models.STLProject.findOne({_id: req.params.id, $or: [{user: req.user.id}, {'order.printer': req.user.id}]}).exec().then( (doc) ->
       if doc
-        if doc.bad
+        console.log doc.volume or not doc.bad
+        unless doc.volume and not doc.bad
           processVolumeWeight(doc)
         res.render 'core/project/detail',
           project: doc
