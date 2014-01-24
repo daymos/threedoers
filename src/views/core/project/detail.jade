@@ -38,7 +38,7 @@ block content
               span.capitalize#order-placed-order #{project.order.price}
               span &nbsp;&nbsp;Euro
       hr
-      - if (project.editable)
+      - if (project.status == statuses.PROCESSING[0] || project.status == statuses.PROCESSED[0])
         .row
           .col-md-5
             br

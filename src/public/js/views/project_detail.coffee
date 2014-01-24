@@ -61,10 +61,6 @@ $(document).ready ->
   socket.on 'update', (data) ->
     socket.emit 'order-price', {ammount: $("#ammount").val()}
     updateFrontEnd(data)
-    console.log data
-    if $("#density-chooser").length == 0 and data.editable
-      console.log "paso"
-      location.reload(true)
 
   socket.on 'update-price-order', (data) ->
     $('#order-price').text(data.price)
