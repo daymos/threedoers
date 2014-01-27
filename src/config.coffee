@@ -36,6 +36,12 @@ config =
     payed:
       subject: "Project was payed."
 
+  printer:
+    accepted:
+      subject: "Your request was accepted"
+    denied:
+      subject: "Your request was denied"
+
   printing:
     accept:
       subject: "Your project was accepted by a printer"

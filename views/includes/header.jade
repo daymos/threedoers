@@ -1,7 +1,5 @@
 .header
   ul.nav.nav-pills.pull-right
-    li
-      a(href='/') Home
     if user
       if user.admin
         li
@@ -17,5 +15,8 @@
     else
       li
         a(href='/accounts/login') Login
+      li
+        a(href='/accounts/signup') Sign Up
 
-  h3.text-muted 3doers
+  h3.text-muted
+    a(href='/') 3doers

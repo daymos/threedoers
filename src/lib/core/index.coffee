@@ -49,6 +49,7 @@ module.exports = (app, io) ->
     tmp_path = req.files.thumbnail.path
     project = new models.STLProject
     project.user = req.user.id
+    project.title = req.files.thumbnail.name
     project.file = req.files.thumbnail.path.split('/').pop()
     project.save (err, doc) ->
       if err
@@ -280,8 +281,8 @@ module.exports = (app, io) ->
               mailer.send('mailer/project/payed', {project: doc, user: user, site:settings.site}, {from: settings.mailer.noReply, to:[user.email], subject: settings.project.payed.subject}).then ->
                 doc.status = models.PROJECT_STATUSES.PAYED[0]
                 doc.save()
-      else
-        res.redirect "/project/#{req.params.id}"
+
+      res.redirect "/project/#{req.params.id}"
     ).fail( ->
       logger.error arguments
       res.send 500
