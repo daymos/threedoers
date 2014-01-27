@@ -7,7 +7,7 @@
     debug: false,
     rootDir: __dirname,
     logFile: __dirname + '/log/error.log',
-    site: 'http://3doers.it',
+    site: 'http://www.3doers.it',
     host: {
       ip: process.env.OPENSHIFT_NODEJS_IP,
       port: process.env.OPENSHIFT_NODEJS_PORT,
