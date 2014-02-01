@@ -84,8 +84,10 @@ $(document).ready ->
   viewer.setParameter 'ModelColor', "#{colors[project.color]}"
   viewer.setParameter 'BackgroundColor1', '#E5D7BA'
   viewer.setParameter 'BackgroundColor2', '#383840'
-  viewer.setParameter 'RenderMode', 'smooth'
+  viewer.setParameter 'BackgroundImageUrl', '
+  viewer.setParameter 'RenderMode', 'flat'
   viewer.setParameter 'Definition','high'
+  viewer.setParameter 'MipMapping','on'
   viewer.init()
   viewer.update()
 
@@ -137,7 +139,7 @@ $(document).ready ->
                 <div class='col-xs-2 col-md-1'><img src='http://placehold.it/80' alt='' class='img-circle img-responsive'></div>
                 <div class='col-xs-10 col-md-11'>
                   <div>
-                    <div class='mic-info'>By: &nbsp; &nbsp;<a href='#'>#{data.username}</a>&nbsp;on #{Date(data.createdAt)}</div>
+                   <div class='mic-info'>By: &nbsp; &nbsp;<a href='#'>#{data.username}</a>&nbsp;on #{Date(data.createdAt)}</div>
                   </div><br>
                   <div class='comment-text'>#{safe_tags_replace(data.content)}</div>
                 </div>

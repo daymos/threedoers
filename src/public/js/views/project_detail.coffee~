@@ -84,8 +84,10 @@ $(document).ready ->
   viewer.setParameter 'ModelColor', "#{colors[project.color]}"
   viewer.setParameter 'BackgroundColor1', '#E5D7BA'
   viewer.setParameter 'BackgroundColor2', '#383840'
-  viewer.setParameter 'RenderMode', 'smooth'
+  viewer.setParameter 'BackgroundImageUrl', '
+  viewer.setParameter 'RenderMode', 'flat'
   viewer.setParameter 'Definition','high'
+  viewer.setParameter 'MipMapping','on'
   viewer.init()
   viewer.update()
 
