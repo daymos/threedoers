@@ -83,8 +83,8 @@ $(document).ready ->
   viewer.setDefinition 'high'
   viewer.setParameter 'SceneUrl', "/#{project.filename}"
   viewer.setParameter 'ModelColor', "#{colors[project.color]}"
-  viewer.setParameter 'BackgroundColor1', '#ffffff'
-  viewer.setParameter 'BackgroundColor2', '#ffffff'
+  viewer.setParameter 'BackgroundColor1', '#00CC00'
+  viewer.setParameter 'BackgroundColor2', '#ffCC00'
   viewer.setParameter 'RenderMode', 'smooth'
   viewer.setDefinition 'high'
   viewer.init()
@@ -94,10 +94,10 @@ $(document).ready ->
   # Some controllers
   ###
 
-  #$("#color-chooser").selectpicker('val', "#{project.color}")
-  #$("#color-chooser").val("#{project.color}").change(->
-  #  $.post("/project/color/#{project.id}", value: $(this).val(), -> location.reload())
-  #)
+  $("#color-chooser").selectpicker('val', "#{project.color}")
+  $("#color-chooser").val("#{project.color}").change(->
+    $.post("/project/color/#{project.id}", value: $(this).val(), -> location.reload())
+  )
 
 
   $("#density-chooser").selectpicker('val', "#{project.density}")

@@ -94,10 +94,10 @@ $(document).ready ->
   # Some controllers
   ###
 
-  $("#color-chooser").selectpicker('val', "#{project.color}")
-  $("#color-chooser").val("#{project.color}").change(->
-    $.post("/project/color/#{project.id}", value: $(this).val(), -> location.reload())
-  )
+  #$("#color-chooser").selectpicker('val', "#{project.color}")
+  #$("#color-chooser").val("#{project.color}").change(->
+  #  $.post("/project/color/#{project.id}", value: $(this).val(), -> location.reload())
+  #)
 
 
   $("#density-chooser").selectpicker('val', "#{project.density}")
