@@ -83,8 +83,8 @@ $(document).ready ->
   viewer.setDefinition 'high'
   viewer.setParameter 'SceneUrl', "/#{project.filename}"
   viewer.setParameter 'ModelColor', "#{colors[project.color]}"
-  viewer.setParameter 'BackgroundColor1', '#OOCCOO'
-  viewer.setParameter 'BackgroundColor2', '#ffCCOO'
+  viewer.setParameter 'BackgroundColor1', '#00CC00'
+  viewer.setParameter 'BackgroundColor2', '#ffCC00'
   viewer.setParameter 'RenderMode', 'smooth'
   viewer.setDefinition 'high'
   viewer.init()

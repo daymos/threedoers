@@ -80,13 +80,11 @@ $(document).ready ->
   ###
 
   viewer = new JSC3D.Viewer $('#cv').get(0)
-  viewer.setDefinition 'high'
   viewer.setParameter 'SceneUrl', "/#{project.filename}"
   viewer.setParameter 'ModelColor', "#{colors[project.color]}"
-  viewer.setParameter 'BackgroundColor1', '#00CC00'
-  viewer.setParameter 'BackgroundColor2', '#ffCC00'
+  viewer.setParameter 'BackgroundColor1', '#E5D7BA'
+  viewer.setParameter 'BackgroundColor2', '#383840'
   viewer.setParameter 'RenderMode', 'smooth'
-  viewer.setDefinition 'high'
   viewer.init()
   viewer.update()
 
