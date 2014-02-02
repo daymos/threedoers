@@ -90,6 +90,7 @@ $(document).ready ->
   viewer.setParameter 'RenderMode', 'flat'
   viewer.setParameter 'Definition','high'
   viewer.setParameter 'MipMapping','on'
+  viewer.setParameter 'CreaseAngle', '30'
   viewer.init()
   viewer.update()
 

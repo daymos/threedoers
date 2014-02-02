@@ -87,7 +87,7 @@ $(document).ready ->
   viewer.setParameter 'InitRotationY', '25'
   viewer.setParameter 'InitRotationZ', '25'
   viewer.setParameter 'BackgroundColor2', '#383840'
-  viewer.setParameter 'RenderMode', 'flat'
+  viewer.setParameter 'RenderMode', 'smooth'
   viewer.setParameter 'Definition','high'
   viewer.setParameter 'MipMapping','on'
   viewer.setParameter 'CreaseAngle', '30'
