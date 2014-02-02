@@ -83,8 +83,11 @@ $(document).ready ->
   viewer.setParameter 'SceneUrl', "/#{project.filename}"
   viewer.setParameter 'ModelColor', "#{colors[project.color]}"
   viewer.setParameter 'BackgroundColor1', '#E5D7BA'
+  viewer.setParameter 'InitRotationX', '25'
+  viewer.setParameter 'InitRotationY', '25'
+  viewer.setParameter 'InitRotationZ', '25'
   viewer.setParameter 'BackgroundColor2', '#383840'
-  viewer.setParameter 'RenderMode', 'wireframe'
+  viewer.setParameter 'RenderMode', 'flat'
   viewer.setParameter 'Definition','high'
   viewer.setParameter 'MipMapping','on'
   viewer.init()
