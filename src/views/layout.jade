@@ -1,22 +1,37 @@
 !!! 5
-html
+html.no-js(lang='en', xmlns:fb='http://ogp.me/ns/fb#')
   head
-    meta(name='viewport', content='width=device-width, initial-scale=1.0')
-    meta(name='author', content='3doers')
-    meta(name='description', content='find a 3d printer for your project or start printing others')
-
+    meta(charset='utf-8')
     title
       | 3doers ::
       block title
+    meta(name='description', content='find a 3d printer for your project or start printing others')
+    meta(name='keywords', content='')
+    meta(name='author', content='3doers')
 
-    link(rel='stylesheet', href='//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css')
-    link(rel='stylesheet', href='//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css')
-    link(rel='stylesheet', href='/css/application.css')
-    script(src='http://code.jquery.com/jquery-1.10.2.min.js')
-    script(src='http://code.jquery.com/jquery-migrate-1.0.0.js')
-    script(src='//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js')
-    script(src='/js/lib.js')
-    script(src='/js/common.js')
+    meta(content='width=device-width, initial-scale=1, maximum-scale=1', name='viewport')
+    meta(content='yes', name='apple-mobile-web-app-capable')
+    meta(content='black', name='apple-mobile-web-app-status-bar-style')
+
+    meta(content='', property='og:title')
+    meta(content='website', property='og:type')
+    meta(content='', property='og:description')
+    meta(content='http://3doers.it', property='og:url')
+    meta(content='', property='og:image')
+    meta(content='3doers', property='og:site_name')
+    meta(content='', property='fb:app_id')
+
+    link(href='/img/apple-touch-icon-144x144-precomposed.png', rel='apple-touch-icon-precomposed', sizes='144x144', type='image/png')
+    link(href='/img/apple-touch-icon-144x144-precomposed.png', rel='apple-touch-icon-precomposed', sizes='114x114', type='image/png')
+    link(href='/img/apple-touch-icon-72x72-precomposed.png', rel='apple-touch-icon-precomposed', sizes='72x72', type='image/png')
+    link(href='/img/apple-touch-icon-57x57-precomposed.png', rel='apple-touch-icon-precomposed', type='image/png')
+    link(href='/img/apple-touch-icon-original.png', rel='shortcut icon')
+
+    link(href='/img/favicon.png', rel='shortcut icon', type='image/png')
+    link(href='/img/favicon.ico', rel='shortcut icon', type='image/x-icon')
+
+    link(href='/css/application.css', media='screen', rel='stylesheet')
+    script(src='/vendor/modernizr.js')
 
     block base-headers
       script.

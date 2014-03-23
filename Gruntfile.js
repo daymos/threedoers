@@ -62,10 +62,10 @@ module.exports = function(grunt) {
         src: ['tmp/assets/public/js/common/**/*.js'],
         dest: 'src/public/js/common.js',
       },
-      css: {
-        src: ['src/public/css/**/*.css', '!src/public/css/application.css', 'tmp/assets/public/css/**/*.css', 'tmp/assets/public/js/views/*.js'],
-        dest: 'src/public/css/application.css',
-      },
+      // css: {
+      //   src: ['src/public/css/**/*.css', '!src/public/css/application.css', 'tmp/assets/public/css/**/*.css', 'tmp/assets/public/js/views/*.js'],
+      //   dest: 'src/public/css/application.css',
+      // },
     },
 
     copy: {
