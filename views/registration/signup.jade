@@ -4,62 +4,60 @@ block title
   |  Signup
 
 block content
-  .row
-    div.well.col-md-10.center-block
-      form(method="post", action="/accounts/signup", role="form", id="registration", class="form-horizontal")
+  .title_block
+    section.homepage.container2
+      h1.title
+        p
+          | REGISTRATION
+          br
+        p
+          | FORM
+          br
+      .title_background.registration
+        .title_bar1
+        .title_bar2
+
+  .block_registration_form.row
+    section.homepage.container2
+      form#registration.form-horizontal(name='signup-form', accept-charset='UTF-8', role='form', method='POST', action='/accounts/signup')
+        input(name='authenticity_token', type='hidden')
         fieldset
-          legend Registration Form
+          input(value=csrfToken, name='_csrf', type='hidden')
+          p.form-group
+            input#username.form-control(name='username', placeholder='USERNAME', value='')
+            input#email.form-control(name='email', placeholder='EMAIL', value='')
+            input#password.form-control(name='password', placeholder='PASSWORD', type='password', value='')
+            input#passwordConfirm.form-control(name='passwordConfirm', placeholder='CONFIRM PASSWORD', type='password', value='')
+            input#address.form-control(name='address', placeholder='ADDRESS', value='')
+            input#city(name='city', type='hidden')
+            input#country(name='country', type='hidden')
+            input#location(name='location', type='hidden')
+          p.btn.btn-primary.btn-lg.center-block
+            input#submit.form-control(name='submit', value='REGISTER', type='submit')
+      .registration_background
+        .hand
+          img(alt='3doers Hand', src='/img/hand_register.png')
+        .background
 
-          input(type='hidden', name='_csrf', value=csrfToken)
 
-          .form-group(class=(locals.errors && errors.username)?"has-error":"")
-            label(for="username", class="control-label col-md-3") Username
-            .col-md-8
-              input(type="text", class="form-control", name="username", id='username', placeholder="Enter your username", value=(locals.username)?"#{username}":"")
-              - if (locals.errors && errors.username)
-                span(class="help-block")
-                  = errors.username.msg
-
-          .form-group(class=(locals.errors && errors.email)?"has-error":"")
-            label(for="email", class="control-label col-md-3") Email
-            .col-md-8
-              input(type="email", class="form-control", name="email", id='email', placeholder="Enter your email", value=(locals.email)?"#{email}":"")
-              - if (locals.errors && errors.email)
-                span(class="help-block")
-                  = errors.email.msg
-
-          .form-group(class=(locals.errors && errors.password)?"has-error":"")
-            label(for="password", class="control-label col-md-3") Password
-            .col-md-8
-              input(type="password", class="form-control", name="password", id='password', placeholder="Enter your password")
-              - if (locals.errors && errors.password)
-                span(class="help-block")
-                  = errors.password.msg
-
-          .form-group(class=(locals.errors && errors.passwordConfirm)?"has-error":"")
-            label(for="passwordConfirm", class="control-label col-md-3") Confirm Password
-            .col-md-8
-              input(type="password", class="form-control", name="passwordConfirm", id='passwordConfirm', placeholder="Confirm Password")
-              - if (locals.errors && errors.passwordConfirm)
-                span(class="help-block")
-                  = errors.passwordConfirm.msg
-
-          .form-group(class=(locals.errors && errors.address)?"has-error":"")
-            label(for="address", class="control-label col-md-3") Address
-            .col-md-8
-              input(type="text", class="form-control", name="address", id='address', placeholder="Address")
-              - if (locals.errors && errors.address)
-                span(class="help-block")
-                  = errors.address.msg
-
-          input(name="city", id="city", type="hidden")
-          input(name="country", id="country", type="hidden")
-          input(name="location", id="location", type="hidden")
-
-          button(type="submit").btn.btn-primary.btn-lg.center-block
-            span.glyphicon.glyphicon-hand-right
-            | &nbsp;&nbsp;&nbsp;Register me
-
+  .publicity_block
+    section.homepage.container6
+      .publicity
+        .container-left
+          img(alt='3doers image', src='/img/publicity_homepage.png')
+        .container-right
+          p
+            span
+              | WELCOME TO 3DOERS
+              br
+            span
+              | FIND A 3D PRINTER FOR YOUR PROJECT
+              br
+            span  OR START PRINTING OTHERS
+      .publicity_comment_background
+        .publicity_bar1
+        .publicity_bar2
+        .publicity_bar3
 
 block scripts
   script(src='https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places')
