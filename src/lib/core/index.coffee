@@ -17,7 +17,7 @@ module.exports = (app, io) ->
   paypal.configure(settings.paypal.api)
 
   app.get '/', (req, res) ->
-    res.render 'core/index'
+    res.render 'core/index', message: null
 
 
   app.post '/', (req, res) ->
