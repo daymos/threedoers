@@ -39,6 +39,14 @@ module.exports.PROJECT_DENSITIES = PROJECT_DENSITIES =
 ###############################################
 
 
+Subscription = new Schema
+  email:
+    type: String
+    required: true
+    index:
+      unique: true
+
+
 Comment = new Schema
 
   author:
@@ -159,6 +167,8 @@ STLProject.pre 'save', (next) ->
   @editable = @status in [PROJECT_STATUSES.PROCESSED[0]]
   next()
 
+
+module.exports.Subscription = mongoose.model 'Subscription', Subscription
 
 module.exports.STLProject = mongoose.model 'STLProject', STLProject
 

@@ -26,15 +26,15 @@ block content
         .title_bar4
     section.homepage.container3
       h3.subtitle
-        | Applicake brownie bear claw sweet sesame
+        | 3DOERS IS A FAST COLLECTIVE 3D PRINTING SERVICE
         br
-        | snaps wafer soufflé. Caramels chocolate
+        | YOU CAN UPLOAD, PRINT OR WORK ON THE FILES
         br
-        | ice cream bonbon wafer oat cake bear
-        br
-        | claw. Chocolate bar danish sweet
+        | LEARN HOW TO DO IT HERE
     .gallery
       ul#bxslider
+        li
+          img(alt='3d printer', width='960', height='540', src='/img/yoda_gallery_img.jpg')
         li
           img(alt='3d printer', width='1282', height='597', src='/img/img_gallery_1.png')
         li
@@ -43,59 +43,28 @@ block content
         .gallery_image
           img(alt='3d printer', width='716', height='171', src='/img/gallery_image.png')
       .square
-    .instructions_block
+    .beta_email_block
       section.homepage.container4
-        .instructions
+        .container-left
           h3.title
-            | APPLICAKE BROWNIE BEAR
+            | JOIN US IN OUR BETA
             br
-            | CLAW SWEET
-          p.text
-            | Snaps wafer soufflé. Caramels chocolate ice cream bonbon wafer oat cake bear claw. Chocolate bar danish sweet
-          .options
-            .upload
-              a.button(href='') UPLOAD A PROJECT
-              a#upload-comment(href='')
-                | FOR UPLOAD A PROJECT YOU MUST
-                | LOGIN OR SIGN UP
-            .printer
-              a.button(href='') BECOME A PRINTER
-              a#printer-comment(href='')
-                | FOR UPLOAD A PROJECT YOU MUST
-                | LOGIN OR SIGN UP
-            .filemanager
-              a.button(href='') BECOME A FILE MANAGER
-              a#filemanager-comment(href='')
-                | FOR UPLOAD A PROJECT YOU MUST
-                | LOGIN OR SIGN UP
-      .instructions_background
-    .comment_block
-      section.homepage.container5
-        .revision
-          .container-left
-            h1.first_comment
-              p.comment
-                | YOU'RE SURE THAT
-                br
-              p.comment
-                | YOUR FILE IS READY
-                br
-              p.comment  TO BE PRINTED?
-          .container-right
-            img(alt='3doers image', src='img/icona3d_homepage.png')
-        .revision_link
-          p
-            | NO!
-            a(href='', target='')  SO CLICK HERE FOR IL SERVIZIO DI REVISIONE!
-      .first_comment_background
-        .comment_bar1
-        .comment_bar2
-        .comment_bar3
+            | WE'RE LAUNCHING SOON!
+        .container-right
+          form#registration(accept-charset='UTF-8', role='form', method='POST', action='.')
+            input(name='authenticity_token', type='hidden')
+            fieldset
+              input(value=csrfToken, name='_csrf', type='hidden')
+              p.form-group
+                input#email.form(name='email', placeholder='Your Email Address', value='')
+              p
+                input#submit.form(name='submit', value='SEND', type='submit')
+      .beta_email_background
     .publicity_block
       section.homepage.container6
         .publicity
           .container-left
-            img(alt='3doers image', src='img/publicity_homepage.png')
+            img(alt='3doers image', src='/img/publicity_homepage.png')
           .container-right
             p
               span
@@ -109,3 +78,119 @@ block content
         .publicity_bar1
         .publicity_bar2
         .publicity_bar3
+
+block scripts
+  - if (message)
+    script.
+      $(document).ready(
+        function(event) {
+          alert('#{ message }');
+        }
+      );
+
+  // commented in favor of coming soon
+  //- .title_block
+  //-   section.homepage.container2
+  //-       h1.title
+  //-         p
+  //-           | WELCOME TO 3DOERS
+  //-           br
+  //-         p
+  //-           | FIND A 3D PRINTER FOR
+  //-           br
+  //-         p
+  //-           | YOUR PROJECT OR START
+  //-           br
+  //-         p
+  //-           | PRINTING OTHERS
+  //-           br
+  //-     .title_background
+  //-       .title_bar1
+  //-       .title_bar2
+  //-       .title_bar3
+  //-       .title_bar4
+  //-   section.homepage.container3
+  //-     h3.subtitle
+  //-       | Applicake brownie bear claw sweet sesame
+  //-       br
+  //-       | snaps wafer soufflé. Caramels chocolate
+  //-       br
+  //-       | ice cream bonbon wafer oat cake bear
+  //-       br
+  //-       | claw. Chocolate bar danish sweet
+  //-   .gallery
+  //-     ul#bxslider
+  //-       li
+  //-         img(alt='3d printer', width='1282', height='597', src='/img/img_gallery_1.png')
+  //-       li
+  //-         img(alt='3d printer', width='1280', height='593', src='/img/img_gallery_2.png')
+  //-     .container-gallery_homepage
+  //-       .gallery_image
+  //-         img(alt='3d printer', width='716', height='171', src='/img/gallery_image.png')
+  //-     .square
+  //-   .instructions_block
+  //-     section.homepage.container4
+  //-       .instructions
+  //-         h3.title
+  //-           | APPLICAKE BROWNIE BEAR
+  //-           br
+  //-           | CLAW SWEET
+  //-         p.text
+  //-           | Snaps wafer soufflé. Caramels chocolate ice cream bonbon wafer oat cake bear claw. Chocolate bar danish sweet
+  //-         .options
+  //-           .upload
+  //-             a.button(href='') UPLOAD A PROJECT
+  //-             a#upload-comment(href='')
+  //-               | FOR UPLOAD A PROJECT YOU MUST
+  //-               | LOGIN OR SIGN UP
+  //-           .printer
+  //-             a.button(href='') BECOME A PRINTER
+  //-             a#printer-comment(href='')
+  //-               | FOR UPLOAD A PROJECT YOU MUST
+  //-               | LOGIN OR SIGN UP
+  //-           .filemanager
+  //-             a.button(href='') BECOME A FILE MANAGER
+  //-             a#filemanager-comment(href='')
+  //-               | FOR UPLOAD A PROJECT YOU MUST
+  //-               | LOGIN OR SIGN UP
+  //-     .instructions_background
+  //-   .comment_block
+  //-     section.homepage.container5
+  //-       .revision
+  //-         .container-left
+  //-           h1.first_comment
+  //-             p.comment
+  //-               | YOU'RE SURE THAT
+  //-               br
+  //-             p.comment
+  //-               | YOUR FILE IS READY
+  //-               br
+  //-             p.comment  TO BE PRINTED?
+  //-         .container-right
+  //-           img(alt='3doers image', src='img/icona3d_homepage.png')
+  //-       .revision_link
+  //-         p
+  //-           | NO!
+  //-           a(href='', target='')  SO CLICK HERE FOR IL SERVIZIO DI REVISIONE!
+  //-     .first_comment_background
+  //-       .comment_bar1
+  //-       .comment_bar2
+  //-       .comment_bar3
+  //-   .publicity_block
+  //-     section.homepage.container6
+  //-       .publicity
+  //-         .container-left
+  //-           img(alt='3doers image', src='img/publicity_homepage.png')
+  //-         .container-right
+  //-           p
+  //-             span
+  //-               | WELCOME TO 3DOERS
+  //-               br
+  //-             span
+  //-               | FIND A 3D PRINTER FOR YOUR PROJECT
+  //-               br
+  //-             span  OR START PRINTING OTHERS
+  //-     .publicity_comment_background
+  //-       .publicity_bar1
+  //-       .publicity_bar2
+  //-       .publicity_bar3

@@ -20,6 +20,29 @@ module.exports = (app, io) ->
     res.render 'core/index'
 
 
+  app.post '/', (req, res) ->
+    req.assert('email').isEmail()
+    errors = req.validationErrors(true)
+    if errors
+      res.render 'core/index',
+        message: errors.email.msg
+        email: req.body.email
+    else
+      models.Subscription.find(email: req.body.email).exec().then( (emails)->
+        if emails.length > 0
+          res.render 'core/index',
+            message: "Already subscribed"
+            email: req.body.email
+        else
+          s = new models.Subscription()
+          s.email = req.body.email
+          s.save()
+          res.render 'core/index',
+            message: "Thank you for subscribing"
+            email: req.body.email
+      )
+
+
   app.get '/become', decorators.loginRequired, (req, res) ->
     res.render 'core/become'
 
