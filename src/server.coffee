@@ -1,6 +1,7 @@
 ##############################################################################
 # Main file to load all required config, settings and routes
 ##############################################################################
+console.log "require config"
 settings = require './config'
 
 
@@ -9,16 +10,27 @@ if settings.debug
 
 
 # requiring some modules in main files
+console.log "require http status"
 HTTPStatus = require "http-status"
+console.log "require express"
 express = require "express"
+console.log "require gzippo"
 gzippo = require "gzippo"
+console.log "require session-mongoose"
 SessionStore = require('session-mongoose')(express)
+console.log "require mongoose"
 mongoose = require "mongoose"
+console.log "require consolidate"
 engines = require 'consolidate'
+console.log "require express-validator"
 expressValidator = require 'express-validator'
+console.log "require q"
 q = require 'q'
+console.log "require passport"
 passport = require "passport"
+console.log "require socket"
 io = require 'socket.io'
+console.log "require socket.io-session"
 ioSession = require 'socket.io-session'
 
 logger = require "./lib/logger"
