@@ -36,9 +36,11 @@ block content
         li
           img(alt='3d printer', width='960', height='540', src='/img/yoda_gallery_img.jpg')
         li
-          img(alt='3d printer', width='1282', height='597', src='/img/img_gallery_1.png')
+          img(alt='3d printer', width='1282', height='597', src='/img/user_gallery_img.png')
         li
-          img(alt='3d printer', width='1280', height='593', src='/img/img_gallery_2.png')
+          img(alt='3d printer', width='1280', height='593', src='/img/printer_gallery_img.png')
+        li
+          img(alt='3d printer', width='1280', height='593', src='/img/filemanager_gallery_img.png')
       .container-gallery_homepage
         .gallery_image
           img(alt='3d printer', width='716', height='171', src='/img/gallery_image.png')
@@ -56,10 +58,69 @@ block content
             fieldset
               input(value=csrfToken, name='_csrf', type='hidden')
               p.form-group
-                input#email.form(name='email', placeholder='Your Email Address', value='')
+                input#email(name='email', placeholder='Your Email Address', value='', class='form')
               p
-                input#submit.form(name='submit', value='SEND', type='submit')
+                input#submit(name='submit', value='SEND', type='submit', class='form')
+          .status_messages.ok.hide
+            p
+              | YOUR MAIL WAS SENT! THANK YOU!
+          .status_messages.error.hide
+            p
+              | OPS! THERE WAS AN ERROR! TRY AGAIN!
       .beta_email_background
+
+    //.instructions_block
+    //  section.homepage.container4
+    //    .instructions
+    //      h3.title
+    //        | SIGN UP!
+    //        br
+    //      p.text
+    //        | Join to our community and start the collective
+    //        br
+    //        | 3D printing.
+    //      .options
+    //        .upload
+    //          a.button(href='') UPLOAD A PROJECT
+    //          a#upload-comment(href='')
+    //            | FOR UPLOAD A PROJECT YOU MUST
+    //            | LOGIN OR SIGN UP
+    //        .printer
+    //          a.button(href='') BECOME A PRINTER
+    //          a#printer-comment(href='')
+    //            | FOR UPLOAD A PROJECT YOU MUST
+    //            | LOGIN OR SIGN UP
+    //        .filemanager
+    //          a.button(href='') BECOME A FILE MANAGER
+    //          a#filemanager-comment(href='')
+    //            | FOR UPLOAD A PROJECT YOU MUST
+    //            | LOGIN OR SIGN UP
+    //  .instructions_background
+    //.comment_block
+    //  section.homepage.container5
+    //    .revision
+    //      .container-left
+    //        h1.first_comment
+    //          p.comment
+    //            | YOU'RE SURE THAT
+    //            br
+    //          p.comment
+    //            | YOUR FILE IS READY
+    //            br
+    //          p.comment  TO BE PRINTED?
+    //      .container-right
+    //        img(alt='3doers image', src='img/icona3d_homepage.png')
+    //    .revision_link
+    //      p
+    //        | NO!
+    //        a(href='', target='')  SO CLICK HERE FOR IL SERVIZIO DI REVISIONE!
+    //  .first_comment_background
+    //    .comment_bar1
+    //    .comment_bar2
+    //    .comment_bar3
+
+
+
     .publicity_block
       section.homepage.container6
         .publicity

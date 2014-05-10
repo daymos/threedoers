@@ -13,9 +13,9 @@ block content
         p
           | FORM
           br
-      .title_background.registration
-        .title_bar1
-        .title_bar2
+    .title_background.registration
+     .title_bar1
+     .title_bar2
 
   .block_registration_form.row
     section.homepage.container2
@@ -24,16 +24,16 @@ block content
         fieldset
           input(value=csrfToken, name='_csrf', type='hidden')
           p.form-group
-            input#username.form-control(name='username', placeholder='USERNAME', value='')
-            input#email.form-control(name='email', placeholder='EMAIL', value='')
-            input#password.form-control(name='password', placeholder='PASSWORD', type='password', value='')
-            input#passwordConfirm.form-control(name='passwordConfirm', placeholder='CONFIRM PASSWORD', type='password', value='')
-            input#address.form-control(name='address', placeholder='ADDRESS', value='')
+            input#username.form-control.form(name='username', placeholder='USERNAME', value='')
+            input#email.form-control.form(name='email', placeholder='EMAIL', value='')
+            input#password.form-control.form(name='password', placeholder='PASSWORD', type='password', value='')
+            input#passwordConfirm.form-control.form(name='passwordConfirm', placeholder='CONFIRM PASSWORD', type='password', value='')
+            input#address.form-control.form(name='address', placeholder='ADDRESS', value='')
             input#city(name='city', type='hidden')
             input#country(name='country', type='hidden')
             input#location(name='location', type='hidden')
           p.btn.btn-primary.btn-lg.center-block
-            input#submit.form-control(name='submit', value='REGISTER', type='submit')
+            input#submit.form-control.form(name='submit', value='REGISTER', type='submit')
       .registration_background
         .hand
           img(alt='3doers Hand', src='/img/hand_register.png')
