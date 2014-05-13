@@ -1,3 +1,63 @@
+.center-block {
+  float: none !important; }
+
+.ui-autocomplete {
+  padding: 0;
+  list-style: none;
+  background-color: #fff;
+  width: 218px;
+  border: 1px solid #BBB;
+  max-height: 350px;
+  overflow-y: scroll; }
+  .ui-autocomplete .ui-menu-item a {
+    border-top: 1px solid #CCC;
+    display: block;
+    padding: 4px 6px;
+    color: #353D44;
+    cursor: pointer; }
+  .ui-autocomplete .ui-menu-item:first-child a {
+    border-top: none; }
+  .ui-autocomplete .ui-menu-item a.ui-state-hover {
+    background-color: #eee;
+    color: #161A1C; }
+
+#promptzone {
+  border: 3px dashed #ccc;
+  cursor: pointer;
+  padding-top: 20px;
+  padding-bottom: 30px;
+  margin: 0 auto;
+  margin-top: 20px;
+  height: 80px;
+  width: 450px; }
+
+.capitalize {
+  text-transform: capitalize; }
+
+.user-row {
+  margin-bottom: 14px; }
+  .user-row:last-child {
+    margin-bottom: 0; }
+
+.dropdown-user {
+  margin: 13px 0;
+  padding: 5px;
+  height: 100%; }
+  .dropdown-user:hover {
+    cursor: pointer; }
+
+.table-user-information > tbody > tr {
+  border-top: 1px solid #dddddd; }
+  .table-user-information > tbody > tr:first-child, .table-user-information > tbody > tr > td {
+    border-top: 0; }
+
+.list {
+  margin-left: 0;
+  margin-right: 0; }
+
+textarea.comment {
+  height: 100px;
+  padding-bottom: 20px; }
 
 article, aside, details, figcaption, figure, footer, header, hgroup, main, nav, section, summary {
   display: block; }
@@ -211,42 +271,49 @@ html {
   src: url("/fonts/bebasneue/BebasBold.eot?#iefix") format("eot"), url("/fonts/bebasneue/BebasBold.woff") format("woff"), url("/fonts/bebasneue/BebasBold.ttf") format("truetype"), url("/fonts/bebasneue/BebasBold.svg?1394506181") format("svg");
   font-weight: 700;
   font-style: normal; }
+
 @font-face {
   font-family: "Lato";
   src: url("/fonts/lato/LatoBlackItalic.eot");
   src: url("/fonts/lato/LatoBlackItalic.eot?#iefix") format("eot"), url("/fonts/lato/LatoBlackItalic.woff") format("woff"), url("/fonts/lato/LatoBlackItalic.ttf") format("truetype"), url("/fonts/lato/LatoBlackItalic.svg?1394506181") format("svg");
   font-weight: 900;
   font-style: italic; }
+
 @font-face {
   font-family: "Lato";
   src: url("/fonts/lato/LatoBoldItalic.eot");
   src: url("/fonts/lato/LatoBoldItalic.eot?#iefix") format("eot"), url("/fonts/lato/LatoBoldItalic.woff") format("woff"), url("/fonts/lato/LatoBoldItalic.ttf") format("truetype"), url("/fonts/lato/LatoBoldItalic.svg?1394506181") format("svg");
   font-weight: 700;
   font-style: italic; }
+
 @font-face {
   font-family: "Lato";
   src: url("/fonts/lato/LatoRegular.eot");
   src: url("/fonts/lato/LatoRegular.eot?#iefix") format("eot"), url("/fonts/lato/LatoRegular.woff") format("woff"), url("/fonts/lato/LatoRegular.ttf") format("truetype"), url("/fonts/lato/LatoRegular.svg?1394506181") format("svg");
   font-weight: 400;
   font-style: normal; }
+
 @font-face {
   font-family: "Titillium";
   src: url("/fonts/titillium/TitilliumBold.eot");
   src: url("/fonts/titillium/TitilliumBold.eot?#iefix") format("eot"), url("/fonts/titillium/TitilliumBold.woff") format("woff"), url("/fonts/titillium/TitilliumBold.ttf") format("truetype"), url("/fonts/titillium/TitilliumBold.svg?1394506181") format("svg");
   font-weight: 700;
   font-style: normal; }
+
 @font-face {
   font-family: "Titillium";
   src: url("/fonts/titillium/TitilliumBoldItalic.eot");
   src: url("/fonts/titillium/TitilliumBoldItalic.eot?#iefix") format("eot"), url("/fonts/titillium/TitilliumBoldItalic.woff") format("woff"), url("/fonts/titillium/TitilliumBoldItalic.ttf") format("truetype"), url("/fonts/titillium/TitilliumBoldItalic.svg?1394506181") format("svg");
   font-weight: 700;
   font-style: italic; }
+
 @font-face {
   font-family: "Titillium";
   src: url("/fonts/titillium/TitilliumSemiBoldItalic.eot");
   src: url("/fonts/titillium/TitilliumSemiBoldItalic.eot?#iefix") format("eot"), url("/fonts/titillium/TitilliumSemiBoldItalic.woff") format("woff"), url("/fonts/titillium/TitilliumSemiBoldItalic.ttf") format("truetype"), url("/fonts/titillium/TitilliumSemiBoldItalic.svg?1394506181") format("svg");
   font-weight: 600;
   font-style: italic; }
+
 .container1, .container2, .container3, .container4, .container5, .container6, .container7 {
   *zoom: 1;
   max-width: 25em;
@@ -278,6 +345,7 @@ html {
   src: url("../fonts/font-awesome/fontawesome-webfont.eot?#iefix&v=4.0.3") format("embedded-opentype"), url("../fonts/font-awesome/fontawesome-webfont.woff?v=4.0.3") format("woff"), url("../fonts/font-awesome/fontawesome-webfont.ttf?v=4.0.3") format("truetype"), url("../fonts/font-awesome/fontawesome-webfont.svg?v=4.0.3#fontawesomeregular") format("svg");
   font-weight: normal;
   font-style: normal; }
+
 .fa {
   display: inline-block;
   font-family: FontAwesome;
@@ -352,30 +420,35 @@ html {
 
   100% {
     -moz-transform: rotate(359deg); } }
+
 @-webkit-keyframes spin {
   0% {
     -webkit-transform: rotate(0deg); }
 
   100% {
     -webkit-transform: rotate(359deg); } }
+
 @-o-keyframes spin {
   0% {
     -o-transform: rotate(0deg); }
 
   100% {
     -o-transform: rotate(359deg); } }
+
 @-ms-keyframes spin {
   0% {
     -ms-transform: rotate(0deg); }
 
   100% {
     -ms-transform: rotate(359deg); } }
+
 @keyframes spin {
   0% {
     transform: rotate(0deg); }
 
   100% {
     transform: rotate(359deg); } }
+
 .fa-rotate-90 {
   filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=$rotation);
   -webkit-transform: rotate(90deg);

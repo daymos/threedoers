@@ -1,50 +1,74 @@
 extends base
+extends base
 
 block title
   |  Login
 
 block content
-  .row
-    div.well.col-md-5.center-block
-      form(method="post", action="/accounts/login", role="form", id="loginForm")
-        h2 Please Login
-        br
-        - if (locals.error)
-          div(class="alert alert-danger")
-            = error
-
-        input(type='hidden', name='_csrf', value=csrfToken)
-
-        .form-group(class=(locals.errors && errors.username)?"has-error":"")
-          label(for="username", class="control-label") Username
-          input(type="text", class="form-control", name="username", id='username', placeholder="Enter your username", value=(locals.username)?"#{username}":"").form-control
-          - if (locals.errors && errors.username)
-            span(class="help-block")
-              = errors.username.msg
-
-        .form-group(class=(locals.errors && errors.password)?"has-error":"")
-          label(for="password", class="control-label") Password
-          input(type="password", class="form-control", name="password", id='password', placeholder="Enter your password", value=(locals.password)?"#{password}":"").form-control
-          - if (locals.errors && errors.password)
-            span(class="help-block")
-              = errors.password.msg
-
-        button(type="submit").btn.btn-primary.btn-lg.btn-block
-          span.glyphicon.glyphicon-lock
-          | &nbsp;&nbsp;&nbsp;Sign in
-
-        .checkbox
-          label
-            input(type="checkbox", checked='checked')
-            | Remember Me
-
-        div.btn-links
-          a(href='#')#forgot-password Forgot Your Password?
+  .title_block
+    section.homepage.container2
+      h1.title
+        p
+          | LOGIN
           br
-          a(href='/accounts/signup')#create-account Create An Account
+        p
+          | FORM
+          br
 
-  include ../modals/alert
-  include ../modals/lost-password
+    .title_background.login
+      .title_bar1
+      .title_bar2
+
+  .block_login_form.row
+    section.homepage.container2
+      form(method="post", action="/accounts/login", role="form", id="loginForm")
+        fieldset
+          input(type='hidden', name='_csrf', value=csrfToken)
+
+          p.form-group
+            input.form-control.form(type="text", name="username", id='username', placeholder="USERNAME", value="")
+            input.form-control.form(type="password", name="password", id='password', placeholder="PASSWORD", value="")
+
+          p.checkbox
+            input(type="checkbox", name="rememberme", id="rememberme", checked='checked')
+            span.remembertext
+              | REMEMBER ME
+          p.links.btn-links
+            a(href='#')#forgot-password FORGOT YOUR PASSWORD
+            br
+            a#create-account(href='/accounts/signup') CREATE AN ACCOUNT
+
+          p.btn.btn-primary.btn-lg.center-block
+            input#submit.form-control.form(name='submit', value='SIGN IN', type='submit')
+
+    .login_background
+      .hand
+        img(alt='3doers Hand', src='/img/hand_register.png')
+      .background
+
+  .publicity_block
+    section.homepage.container6
+      .publicity
+        .container-left
+          img(alt='3doers image', src='/img/publicity_homepage.png')
+        .container-right
+          p
+            span
+              | WELCOME TO 3DOERS
+              br
+            span
+              | FIND A 3D PRINTER FOR YOUR PROJECT
+              br
+            span  OR START PRINTING OTHERS
+  
+    .publicity_comment_background
+      .publicity_bar1
+      .publicity_bar2
+      .publicity_bar3
+
+  //include ../modals/alert
+  //include ../modals/lost-password
+
 
 block scripts
   script(src='/js/views/login.js')

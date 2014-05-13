@@ -63,7 +63,7 @@ module.exports = function(grunt) {
         dest: 'src/public/js/common.js',
       },
       css: {
-        src: ['src/public/css/**/*.css', '!src/public/css/application.css', 'tmp/assets/public/css/**/*.css', 'tmp/assets/public/js/views/*.js'],
+        src: ['!src/public/css/application.css', 'tmp/assets/public/css/**/*.css'],
         dest: 'src/public/css/application.css',
       },
     },

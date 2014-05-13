@@ -1,31 +1,55 @@
 (function() {
   var HTTPStatus, SessionStore, app, appName, db, engines, env, express, expressValidator, gzippo, http, https, io, ioSession, logger, mongoose, passport, q, server, sessionStore, settings, ssl_options, validator, _i, _len, _ref;
 
+  console.log("require config");
+
   settings = require('./config');
 
   if (settings.debug) {
     process.env.DEBUG = "express:*";
   }
 
+  console.log("require http status");
+
   HTTPStatus = require("http-status");
+
+  console.log("require express");
 
   express = require("express");
 
+  console.log("require gzippo");
+
   gzippo = require("gzippo");
+
+  console.log("require session-mongoose");
 
   SessionStore = require('session-mongoose')(express);
 
+  console.log("require mongoose");
+
   mongoose = require("mongoose");
+
+  console.log("require consolidate");
 
   engines = require('consolidate');
 
+  console.log("require express-validator");
+
   expressValidator = require('express-validator');
+
+  console.log("require q");
 
   q = require('q');
 
+  console.log("require passport");
+
   passport = require("passport");
 
+  console.log("require socket");
+
   io = require('socket.io');
+
+  console.log("require socket.io-session");
 
   ioSession = require('socket.io-session');
 

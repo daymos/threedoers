@@ -5,15 +5,57 @@ block title
   |  Become a Printer
 
 block content
-  .jumbotron
-     h1 Become a printer
-      p.lead
-         |3D print other people's design and start making money
+  .block_sendrequest
+    section.homepage.container2
+      .sendrequest_text
+        p.title
+          | BECOME A PRINTER
+          br
+          | 3D PRINT OTHER
+          br
+          | PEOPLE'S DESIGN AND
+          br
+          | START MAKING MONEY
+      form#printer_request_form.printer_request_form(name='printer_request_form', accept-charset='UTF-8', role='form', method='POST', action='/become')
+        input(value='csrfToken', name='_csrf', type='hidden')
+        p
+          input#printer_request_submit.button.btn.btn-lg.btn-success(name='printer_request_submit', value='SEND REQUEST', type='submit')
+    
+    .sendrequest_background
+      .hand
+        img(alt='3doers Hand', src='/img/hand_register.png')
+      .background
+  
+  .publicity_block
+    section.homepage.container6
+      .publicity
+        .container-left
+          img(alt='3doers image', src='/img/publicity_homepage.png')
+        .container-right
+          p
+            span
+              | WELCOME TO 3DOERS
+              br
+            span
+              | FIND A 3D PRINTER FOR YOUR PROJECT
+              br
+            span  OR START PRINTING OTHERS
+    .publicity_comment_background
+      .publicity_bar1
+      .publicity_bar2
+      .publicity_bar3
 
-      p.lead
-        if user.printer
-          | Already request was sent
-        else
-          form(action='/become', method='post')
-            input(type='hidden', name='_csrf', value=csrfToken)
-            input(type="submit", value="Send request", role="button").btn.btn-lg.btn-success
+
+
+//.jumbotron
+//     h1 Become a printer
+//      p.lead
+//         |3D print other people's design and start making money
+//
+//      p.lead
+//        if user.printer
+//          | Already request was sent
+//        else
+//          form(action='/become', method='post')
+//            input(type='hidden', name='_csrf', value=csrfToken)
+//            input(type="submit", value="Send request", role="button").btn.btn-lg.btn-success
