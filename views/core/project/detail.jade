@@ -38,9 +38,9 @@ block body
             | PRICE:
             span#order-placed-order  #{project.order.price}
 
-  - if (project.status == statuses.PROCESSING[0] || project.status == statuses.PROCESSED[0])
-    .block_configuration_form.row
-      section.homepage.container2
+  .block_configuration_form.row
+    section.homepage.container2
+      - if (project.status == statuses.PROCESSING[0] || project.status == statuses.PROCESSED[0])
         .form_group1
           //
             /todo manca value dal backend
@@ -72,9 +72,6 @@ block body
                   span  $
               .submit
                 input#submit.form(type='submit', value='PLACE ORDER', name='submit')
-
-      .configuration_background
-        .background
 
       // if user same as owner and status payed
       - if (project.status == statuses.PRINT_ACCEPTED[0] && user.id == project.user)
@@ -118,11 +115,15 @@ block body
         br
         button.btn.btn-primary.pull-right#comment-button Comment
 
+    .configuration_background
+      .background
+
+
 block extra-headers
   meta(name="csrf-token", content="#{csrfToken}")
 
 block scripts
-  script(type='text/javascript', src='/js/lib/jquery.jeditable.js')
+  script(type='text/javascript', src='/vendor/jquery.jeditable.js')
   script(type='text/javascript', src='/js/views/project_detail.js')
   script(type='text/javascript', src='/vendor/jsc3d.min.js')
   script(type='text/javascript', src='/vendor/socket.io.min.js')

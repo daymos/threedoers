@@ -4,7 +4,7 @@ extends base
 block title
   |  Become a Printer
 
-block content
+block body
   .block_sendrequest
     section.homepage.container2
       .sendrequest_text
@@ -16,16 +16,19 @@ block content
           | PEOPLE'S DESIGN AND
           br
           | START MAKING MONEY
-      form#printer_request_form.printer_request_form(name='printer_request_form', accept-charset='UTF-8', role='form', method='POST', action='/become')
-        input(value='csrfToken', name='_csrf', type='hidden')
-        p
-          input#printer_request_submit.button.btn.btn-lg.btn-success(name='printer_request_submit', value='SEND REQUEST', type='submit')
-    
+      if user.printer
+        | Already request was sent
+      else
+        form#printer_request_form.printer_request_form(name='printer_request_form', accept-charset='UTF-8', role='form', method='POST', action='/become')
+          input(value=csrfToken, name='_csrf', type='hidden')
+          p
+            input#printer_request_submit.button.btn.btn-lg.btn-success(name='printer_request_submit', value='SEND REQUEST', type='submit')
+
     .sendrequest_background
       .hand
         img(alt='3doers Hand', src='/img/hand_register.png')
       .background
-  
+
   .publicity_block
     section.homepage.container6
       .publicity
