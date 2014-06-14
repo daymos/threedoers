@@ -60,12 +60,13 @@ html.no-js(lang="en", "xmlns:fb"="http://ogp.me/ns/fb#")
     script(src='/vendor/modernizr.js')
     script(src='/js/common.js')
     script(src='//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.min.js')
+    script(src="//code.jquery.com/jquery-migrate-1.0.0.js")
 
     block base-headers
       script.
         $(document).ready(
           function(event) {
-            $(".header a[href='#{ nav }']").parent().addClass('active');
+            $("ul.menu a[href='#{ nav }']").parent().addClass('active');
           }
         );
 

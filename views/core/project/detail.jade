@@ -4,72 +4,77 @@ extends ../base
 block title
   |  Your Project
 
-block content
+block body
 
-  .jumbotron
+  .container_block
+    section.homepage.container2
+      p#title.title(data-type="text", data-url="/project/title/#{project.id}", data-title="Enter the Title") #{project.title}
+      .images_data
+        .frame-1
+        .frame-2
+        .file
+          canvas#cv
+        p#message-canvas.messages.hide
+          | It seems you are using an outdated browser that does not support canvas :-(
+        .container_background
 
-    h3
-      a#title(data-type="text", data-url="/project/title/#{project.id}", data-title="Enter the Title") #{project.title}
-    canvas#cv
-    p.hide#message-canvas
-      | It seems you are using an outdated browser that does not support canvas :-(
-    .clearfix
-  .row
+      .parameters.processing-volume(class=(project.status!=1)?"hide":"")
+        p.objects
+          | OBJECT VOLUME:
+          span.object-volume
+            span#volume &nbsp;#{project.volume}
+            &nbsp
+            span#unit #{project.unit}
+            &nbsp
+            sup 3
+        //
+          /todo manca immagine di status
 
-  .row
-    .col-md-12
-      .row
-        .col-md-12
-          h4
-            | Object Volume:&nbsp;
-            span.processing-volume(class=(project.status!=1)?"hide":"") Processing
-            span.object-volume(class=(project.status!=1)?"":"hide")
-              span#volume #{project.volume}
-              &nbsp;
-              span#unit #{project.unit}
-              sup 3
-          h5
-            | Status:&nbsp;
-            span.capitalize#status #{project.humanizedStatus()}
+        p.status
+          | STATUS:
+          span#status &nbsp;#{project.humanizedStatus()}
+        -if (!project.editable && project.order)
+          p.order.hide
+            | PRICE:
+            span#order-placed-order  #{project.order.price}
 
-          -if (!project.editable && project.order)
-            h5
-              | Price:&nbsp;
-              span.capitalize#order-placed-order #{project.order.price}
-              span &nbsp;&nbsp;Euro
-      hr
-      - if (project.status == statuses.PROCESSING[0] || project.status == statuses.PROCESSED[0])
-        .row
-          .col-md-5
-            br
-            strong Select a Color:
-            select#color-chooser.selectpicker
-              - for color in colors
-                option(value="#{color}") #{color}
+  - if (project.status == statuses.PROCESSING[0] || project.status == statuses.PROCESSED[0])
+    .block_configuration_form.row
+      section.homepage.container2
+        .form_group1
+          //
+            /todo manca value dal backend
 
-            br
-            strong Select Density:
-            select#density-chooser.selectpicker
-              - for density in densities
-                option(value="#{density[0]}") #{density[1]}
+          select#color-chooser.selectpicker
+            option(selected='selected', disabled='disabled') SELECT A COLOR *
+            - for color in colors
+              option(value="#{color}") #{color}
 
-          .col-md-7
-            .well
-              form.form-inline(role="form", action="/project/order/#{project.id}", method="post").col-md-10.col-md-offset-1
+          select#density-chooser.selectpicker
+            option(selected='selected', disabled='disabled') SELECT A DENSITY *
+            - for density in densities
+              option(value="#{density[0]}") #{density[1]}
+
+        .form_group2.well
+          form.form-horizontal(action='/project/order/#{project.id}', method='POST', role='form', accept-charset='utf-8', name='')
+            input(type='hidden', name='authenticity_token')
+            .block1
+              .left
                 input(type='hidden', name='_csrf', value=csrfToken)
-                legend How many items do you want?
-                .form-group
-                  label.sr-only(for='ammount') Ammount
-                  input#ammount.form-control(type='number', placeholder='1', name='ammount')
+                input#ammount.form(type='number', min='1', placeholder='HOW MANY ITEMS? *', name='ammount')
+              .right
+                input#ammount.form(type='number', min='1', placeholder='HOW MANY ITEMS? *', name='ammount')
+            .block2
+              .price
+                span.order
+                  | ORDER PRICE:
+                  span#order-price  Processing
+                  span  $
+              .submit
+                input#submit.form(type='submit', value='PLACE ORDER', name='submit')
 
-                input(type="submit", value="Place an Order").btn.btn-primary
-
-                br
-                br
-                strong Order Price: &nbsp;&nbsp;
-                span.form-control-static#order-price Processing
-                span &nbsp;&nbsp;Euro
-              .clearfix
+      .configuration_background
+        .background
 
       // if user same as owner and status payed
       - if (project.status == statuses.PRINT_ACCEPTED[0] && user.id == project.user)
@@ -114,20 +119,18 @@ block content
         button.btn.btn-primary.pull-right#comment-button Comment
 
 block extra-headers
-  link(rel='stylesheet', href='//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css')
   meta(name="csrf-token", content="#{csrfToken}")
 
 block scripts
-    script(src='/js/views/project_detail.js')
-    script(type='text/javascript', src='/vendor/jsc3d.min.js')
-    script(type='text/javascript', src='/vendor/bootstrap-select.min.js')
-    script(src='/vendor/socket.io.min.js')
-    script(src='//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js')
-    script.
-      var project = {
-        id: "#{project._id}",
-        filename: "#{project.file}",
-        color: "#{project.color?project.color:'black'}",
-        density: "#{project.density}"
-      };
-      var port = "#{io.port}";
+  script(type='text/javascript', src='/js/lib/jquery.jeditable.js')
+  script(type='text/javascript', src='/js/views/project_detail.js')
+  script(type='text/javascript', src='/vendor/jsc3d.min.js')
+  script(type='text/javascript', src='/vendor/socket.io.min.js')
+  script.
+    var project = {
+      id: "#{project._id}",
+      filename: "#{project.file}",
+      color: "#{project.color?project.color:'black'}",
+      density: "#{project.density}"
+    };
+    var port = "#{io.port}";

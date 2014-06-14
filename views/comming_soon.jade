@@ -72,7 +72,10 @@ html.no-js(lang="en", "xmlns:fb"="http://ogp.me/ns/fb#")
     block extra-headers
 
   body
-    include includes/comming_soon
+    if user
+      include includes/header
+    else
+      include includes/comming_soon
     block body
     include includes/footer
     block scripts

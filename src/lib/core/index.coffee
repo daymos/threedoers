@@ -148,7 +148,7 @@ module.exports = (app, io) ->
           if doc.editable
             doc.title = req.body.value
             doc.save()
-            res.send 200
+            res.send req.body.value, 200
           else
             res.send "Project couldn't be editable at this status.", 400
         else

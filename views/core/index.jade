@@ -27,11 +27,17 @@ block body
       .title_bar4
   section.homepage.container3
     h3.subtitle
-      | 3DOERS IS A FAST COLLECTIVE 3D PRINTING SERVICE
-      br
-      | YOU CAN UPLOAD, PRINT OR WORK ON THE FILES
-      br
-      | LEARN HOW TO DO IT HERE
+      if user
+        | Applicake brownie bear claw sweet sesame<br/>
+        | snaps wafer soufflé. Caramels chocolate<br/>
+        | ice cream bonbon wafer oat cake bear<br/>
+        | claw. Chocolate bar danish sweet
+      else
+        | 3DOERS IS A FAST COLLECTIVE 3D PRINTING SERVICE
+        br
+        | YOU CAN UPLOAD, PRINT OR WORK ON THE FILES
+        br
+        | LEARN HOW TO DO IT HERE
 
   .gallery
     ul#bxslider
@@ -43,24 +49,81 @@ block body
       .gallery_image: img(src="/img/gallery_image.png", alt='3d printer')
     .square
 
-  .beta_email_block
-    section.homepage.container4
-      .container-left
-        h3.title
-          | JOIN US IN OUR BETA
-          br
-          | WE'RE LAUNCHING SOON!
-      .container-right
-        form#registration(action='/', method='POST', role='form', accept-charset='utf-8')
-          input(name='authenticity_token', type='hidden')
-          fieldset
-            input(value=csrfToken, name='_csrf', type='hidden')
-            p.form-group
-              input#email.form(value='', placeholder='Your Email Address', name='email')
-            p
-              input#submit.form(type='submit', value='SEND', name='submit')
-        if message
-          .status_messages(class=error?"error":"ok")
-            p #{message}
+  unless user
+    .beta_email_block
+      section.homepage.container4
+        .container-left
+          h3.title
+            | JOIN US IN OUR BETA
+            br
+            | WE'RE LAUNCHING SOON!
+        .container-right
+          form#registration(action='/', method='POST', role='form', accept-charset='utf-8')
+            input(name='authenticity_token', type='hidden')
+            fieldset
+              input(value=csrfToken, name='_csrf', type='hidden')
+              p.form-group
+                input#email.form(value='', placeholder='Your Email Address', name='email')
+              p
+                input#submit.form(type='submit', value='SEND', name='submit')
+          if message
+            .status_messages(class=error?"error":"ok")
+              p #{message}
+
+  if user
+    .instructions_block
+      section.homepage.container4
+        .instructions
+          h3.title
+            | APPLICAKE BROWNIE BEAR
+            br
+            | CLAW SWEET
+          p.text
+            | Snaps wafer soufflé. Caramels chocolate ice cream bonbon wafer oat cake bear claw. Chocolate bar danish sweet
+          .options
+            .upload
+              a.button(href="/project/upload") UPLOAD A PROJECT
+              a#upload-comment
+                | FOR UPLOAD A PROJECT YOU MUST
+                br
+                | LOGIN OR SIGN UP
+            .printer
+              a.button BECOME A PRINTER
+              a#printer-comment
+                | FOR UPLOAD A PROJECT YOU MUST
+                br
+                | LOGIN OR SIGN UP
+            .filemanager
+              a.button BECOME A FILE MANAGER
+              a#filemanager-comment
+                | FOR UPLOAD A PROJECT YOU MUST
+                br
+                | LOGIN OR SIGN UP
+      .instructions_background
+
+    .comment_block
+      section.homepage.container5
+        .revision
+          .container-left
+            h1.first_comment
+              p.comment
+                | YOU'RE SURE THAT
+                br
+              p.comment
+                | YOUR FILE IS READY
+                br
+              p.comment
+                | TO BE PRINTED?
+          .container-right
+            img(src='/img/icona3d_homepage.png', alt='3doers image')
+        .revision_link
+          p
+            | NO!
+            a(target='', href='')  SO CLICK HERE FOR IL SERVIZIO DI REVISIONE!
+      .first_comment_background
+        .comment_bar1
+        .comment_bar2
+        .comment_bar3
+
 
   include ../includes/publicity

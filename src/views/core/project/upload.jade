@@ -7,7 +7,7 @@ block title
 block extra-headers
   meta(name="csrf-token", content="#{csrfToken}")
 
-block content
+block body
 
   .title_block
     section.homepage.container2
@@ -31,7 +31,7 @@ block content
         p
           | STL FORMAT
           br
-          
+
     .title_background
       .title_bar1
       .title_bar2
@@ -39,7 +39,7 @@ block content
         img(alt='3doers Point', src='/img/exclamation_point.jpg')
 
   .container_block
-    section.homepage.container2
+    section#clickable.homepage.container2
       .images_data
         #promptzone.upload
           p
@@ -54,7 +54,7 @@ block content
           .progress-bar(aria-valuemax='100', aria-valuemin='0', aria-valuenow='0', role='progressbar')
             span.sr-only  0% Complete
 
-            
+
   .publicity_block
     section.homepage.container6
       .publicity
@@ -73,7 +73,7 @@ block content
       .publicity_bar1
       .publicity_bar2
       .publicity_bar3
- 
+
 .jumbotron
   p
     | File must be in STL format
@@ -88,5 +88,6 @@ block content
           span.sr-only 0% Complete
 
 block scripts
+  script(src='/js/lib/jquery.ajaxupload.js')
   script(src='/js/views/upload.js')
 

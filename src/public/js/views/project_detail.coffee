@@ -2,7 +2,7 @@ updateFrontEnd = (data) ->
   for key of data
     element = $("##{key}")
     if element.length == 1
-      element.text(data[key])
+      element.text(" #{data[key]}")
 
     if key == 'status'
       if data[key] == 'processing'
@@ -13,7 +13,7 @@ updateFrontEnd = (data) ->
         $('.processing-volume').addClass('hide')
 
     if key == 'order'
-      $('#order-placed-order').text(data[key].price)
+      $('#order-placed-order').text(" #{data[key].price}")
 
 
 colors =
@@ -65,12 +65,6 @@ $(document).ready ->
   socket.on 'update-price-order', (data) ->
     $('#order-price').text(data.price)
 
-  ###
-  # Some cool looks and feel
-  ###
-
-  $('.selectpicker').selectpicker()
-
   unless Modernizr.canvas
     $("#message-canvas").removeClass('hide')
 
@@ -98,22 +92,18 @@ $(document).ready ->
   # Some controllers
   ###
 
-  $("#color-chooser").selectpicker('val', "#{project.color}")
+  $("#color-chooser").val("#{project.color}")
   $("#color-chooser").val("#{project.color}").change(->
     $.post("/project/color/#{project.id}", value: $(this).val(), -> location.reload())
   )
 
 
-  $("#density-chooser").selectpicker('val', "#{project.density}")
+  $("#density-chooser").val("#{project.density}")
   $("#density-chooser").val("#{project.density}").change(->
     $.post("/project/density/#{project.id}", value: $(this).val())
   )
 
-  $("#title").editable(
-    type: 'text'
-    pk: "#{project.id}"
-    url: '/project/title'
-  )
+  $("#title").editable("/project/title/#{project.id}")
 
   $("#ammount").keyup( (event) ->
     if (/\D/g.test(@value) or /^0$/.test(@value))

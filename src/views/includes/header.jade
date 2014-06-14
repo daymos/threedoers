@@ -12,28 +12,35 @@ unless user
 
     div.login_background
       div.login_bar
-
-        //- ul.menu
-        //-   li
-        //-     p
-        //-       a UPLOAD PROJECT
-        //-   li
-        //-     p
-        //-       a BECOME A PRINTER
-        //-   li
-        //-     p
-        //-       a BECOME A FILE MANAGER
-        //-   li#myprofile
-        //-     p
-        //-       a(href='javascript://nop', onclick='toggle(this);') MY PROFILE
-        //-     p
-        //-       a.myprofileitem USER
-        //-     p
-        //-       a.myprofileitem PRINTER
-        //-     p
-        //-       a.myprofileitem FILE MANAGER
-        //-     p
-        //-       a.myprofileitem EDIT PROFILE
-        //-   li
-        //-     p
-        //-       a SIGN OUT
+else
+    div.menuheader_block
+      section.homepage.container1
+        header
+          div.container-left
+            a.logo(href='/')
+              img(alt='3doers Icon', src='/img/logo_3doers.png')
+          div.container-right
+            ul.menu
+              li
+                p
+                  a(href="/project/upload") UPLOAD PROJECT
+              li
+                p
+                  a BECOME A PRINTER
+              li
+                p
+                  a BECOME A FILE MANAGER
+              li#myprofile
+                p
+                  a(href='javascript://nop', onclick='toggle(this);') MY PROFILE
+                p
+                  a.myprofileitem USER
+                p
+                  a.myprofileitem PRINTER
+                p
+                  a.myprofileitem FILE MANAGER
+                p
+                  a.myprofileitem EDIT PROFILE
+              li
+                p
+                  a SIGN OUT
