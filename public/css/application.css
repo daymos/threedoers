@@ -1682,7 +1682,7 @@ div.info_projects p, div.info_archived p, div.info_jobs_available p, div.reviews
 .block_registration_form form fieldset p .form, .block_registration_form form fieldset .photoedit span {
   font-family: Titillium, "Helvetica Neue", Helvetica, Arial, sans-serif; }
 
-.block_login_form form fieldset p #username, .block_login_form form fieldset p #password, .block_login_form form fieldset p #forgot-password, .block_login_form form fieldset p #create-account {
+.block_login_form form fieldset p #username, .block_login_form form fieldset p #password, .block_login_form form fieldset p #forgotpassword, .block_login_form form fieldset p #createaccount {
   font-family: Titillium, "Helvetica Neue", Helvetica, Arial, sans-serif; }
 
 .flange ul li {
@@ -1701,7 +1701,7 @@ div.info_projects p span, div.info_archived p span, div.info_jobs_available p sp
   font-family: Titillium, "Helvetica Neue", Helvetica, Arial, sans-serif; }
 
 body {
-  background: white; }
+  background: #f3fff4; }
 
 .hide {
   display: none; }
@@ -1941,9 +1941,9 @@ h3.subtitle {
             overflow: hidden;
             text-overflow: ellipsis;
             padding: 0; }
-          .beta_email_block .container-right form fieldset p .form::-webkit-input-placeholder, .beta_email_block .container-right form fieldset p .form:-moz-placeholder, .beta_email_block .container-right form fieldset p .form::-moz-placeholder, .beta_email_block .container-right form fieldset p .form:-ms-input-placeholder {
-            color: black !important;
-            text-shadow: #7bf282 1px 3px 1px !important; }
+            .beta_email_block .container-right form fieldset p .form::-webkit-input-placeholder, .beta_email_block .container-right form fieldset p .form:-moz-placeholder, .beta_email_block .container-right form fieldset p .form::-moz-placeholder, .beta_email_block .container-right form fieldset p .form:-ms-input-placeholder {
+              color: black;
+              text-shadow: #7bf282 1px 3px 1px; }
           .beta_email_block .container-right form fieldset p #submit {
             width: 72.72727%;
             float: left;
@@ -2077,7 +2077,7 @@ h3.subtitle {
       text-align: center; }
       .footer_block footer .container-right .share {
         margin-top: -7px;
-        display: none; }
+        display: block; }
         .footer_block footer .container-right .share .addthis_toolbox a {
           cursor: pointer;
           border: none;
@@ -2103,7 +2103,7 @@ h3.subtitle {
 
 @media (min-width: 43.75em) {
   body {
-    background: white; }
+    background: #f3fff4; }
 
   .hide {
     display: none; }
@@ -2328,9 +2328,9 @@ h3.subtitle {
               overflow: hidden;
               text-overflow: ellipsis;
               padding: 0; }
-            .beta_email_block .container-right form fieldset p .form::-webkit-input-placeholder, .beta_email_block .container-right form fieldset p .form:-moz-placeholder, .beta_email_block .container-right form fieldset p .form::-moz-placeholder, .beta_email_block .container-right form fieldset p .form:-ms-input-placeholder {
-              color: black;
-              text-shadow: #7bf282 1px 3px 1px; }
+              .beta_email_block .container-right form fieldset p .form::-webkit-input-placeholder, .beta_email_block .container-right form fieldset p .form:-moz-placeholder, .beta_email_block .container-right form fieldset p .form::-moz-placeholder, .beta_email_block .container-right form fieldset p .form:-ms-input-placeholder {
+                color: black;
+                text-shadow: #7bf282 1px 3px 1px; }
             .beta_email_block .container-right form fieldset p #submit {
               width: 40%;
               float: left;
@@ -2452,7 +2452,7 @@ h3.subtitle {
         text-align: center; }
         .footer_block footer .container-right .share {
           margin-top: -7px;
-          display: none; }
+          display: block; }
           .footer_block footer .container-right .share .addthis_toolbox a {
             cursor: pointer;
             border: none;
@@ -2563,7 +2563,7 @@ h3.subtitle {
   .block_registration_form form fieldset p .form, .block_registration_form form fieldset .photoedit span {
     font-family: Titillium, "Helvetica Neue", Helvetica, Arial, sans-serif; }
 
-  .block_login_form form fieldset p #username, .block_login_form form fieldset p #password, .block_login_form form fieldset p #forgot-password, .block_login_form form fieldset p #create-account {
+  .block_login_form form fieldset p #username, .block_login_form form fieldset p #password, .block_login_form form fieldset p #forgotpassword, .block_login_form form fieldset p #createaccount {
     font-family: Titillium, "Helvetica Neue", Helvetica, Arial, sans-serif; }
 
   .flange ul li {
@@ -2582,10 +2582,10 @@ h3.subtitle {
     font-family: Titillium, "Helvetica Neue", Helvetica, Arial, sans-serif; }
 
   body {
-    background: white; }
+    background: #f3fff4; }
 
   .hide {
-    display: none !important; }
+    display: none; }
 
   .menuheader_block {
     position: relative; }
@@ -2937,9 +2937,9 @@ h3.subtitle {
               overflow: hidden;
               text-overflow: ellipsis;
               padding: 0; }
-            .beta_email_block .container-right form fieldset p .form::-webkit-input-placeholder, .beta_email_block .container-right form fieldset p .form:-moz-placeholder, .beta_email_block .container-right form fieldset p .form::-moz-placeholder, .beta_email_block .container-right form fieldset p .form:-ms-input-placeholder {
-              color: black !important;
-              text-shadow: #7bf282 1px 3px 1px !important; }
+              .beta_email_block .container-right form fieldset p .form::-webkit-input-placeholder, .beta_email_block .container-right form fieldset p .form:-moz-placeholder, .beta_email_block .container-right form fieldset p .form::-moz-placeholder, .beta_email_block .container-right form fieldset p .form:-ms-input-placeholder {
+                color: black;
+                text-shadow: #7bf282 1px 3px 1px; }
             .beta_email_block .container-right form fieldset p #submit {
               width: 47.82609%;
               float: left;
@@ -3242,7 +3242,7 @@ h3.subtitle {
         text-align: center; }
         .footer_block footer .container-right .share {
           margin-top: -7px;
-          display: none; }
+          display: block; }
           .footer_block footer .container-right .share .addthis_toolbox a {
             cursor: pointer;
             border: none;
@@ -3369,9 +3369,9 @@ h3.subtitle {
           overflow: hidden;
           text-overflow: ellipsis;
           padding: 0; }
-        .block_registration_form form fieldset p .form::-webkit-input-placeholder, .block_registration_form form fieldset p .form:-moz-placeholder, .block_registration_form form fieldset p .form::-moz-placeholder, .block_registration_form form fieldset p .form:-ms-input-placeholder {
-          color: black !important;
-          text-shadow: #7bf282 1px 3px 1px !important; }
+          .block_registration_form form fieldset p .form::-webkit-input-placeholder, .block_registration_form form fieldset p .form:-moz-placeholder, .block_registration_form form fieldset p .form::-moz-placeholder, .block_registration_form form fieldset p .form:-ms-input-placeholder {
+            color: black;
+            text-shadow: #7bf282 1px 3px 1px; }
         .block_registration_form form fieldset p .remembertext {
           font-size: 1.1875em;
           font-weight: 700;
@@ -3491,15 +3491,15 @@ h3.subtitle {
           margin: 0px;
           margin-bottom: 9px;
           border: none;
-          background: white;
-          -webkit-box-shadow: black 5px -5px 0px;
-          -moz-box-shadow: black 5px -5px 0px;
-          box-shadow: black 5px -5px 0px;
+          background: black;
+          -webkit-box-shadow: white 5px -5px 0px;
+          -moz-box-shadow: white 5px -5px 0px;
+          box-shadow: white 5px -5px 0px;
           font-size: 1.25em;
           font-weight: 700;
           font-style: italic;
           text-indent: 1em;
-          color: black;
+          color: white;
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
@@ -3516,7 +3516,7 @@ h3.subtitle {
           overflow: hidden;
           text-overflow: ellipsis;
           padding: 0; }
-        .block_login_form form fieldset p #forgot-password, .block_login_form form fieldset p #create-account {
+        .block_login_form form fieldset p #forgotpassword, .block_login_form form fieldset p #createaccount {
           font-size: 0.875em;
           font-weight: 700;
           font-style: normal;
@@ -3526,7 +3526,7 @@ h3.subtitle {
           overflow: hidden;
           text-overflow: ellipsis;
           padding: 0; }
-        .block_login_form form fieldset p #forgot-password:visited, .block_login_form form fieldset p #create-account:visited, .block_login_form form fieldset p #forgot-password:focus, .block_login_form form fieldset p #create-account:focus, .block_login_form form fieldset p #forgot-password:hover, .block_login_form form fieldset p #create-account:hover, .block_login_form form fieldset p #forgot-password:active, .block_login_form form fieldset p #create-account:active {
+        .block_login_form form fieldset p #forgotpassword:visited, .block_login_form form fieldset p #createaccount:visited, .block_login_form form fieldset p #forgotpassword:focus, .block_login_form form fieldset p #createaccount:focus, .block_login_form form fieldset p #forgotpassword:hover, .block_login_form form fieldset p #createaccount:hover, .block_login_form form fieldset p #forgotpassword:active, .block_login_form form fieldset p #createaccount:active {
           color: #ff4d67; }
         .block_login_form form fieldset p #submit {
           width: 37.93103%;
@@ -4664,7 +4664,7 @@ div.info_projects:last-of-type .separator, div.info_archived:last-of-type .separ
     width: 100%; }
   .bx-wrapper .bx-loading {
     min-height: 50px;
-    background: url(../img/bx_loader.gif) center center no-repeat white;
+    background: url(img/bx_loader.gif) center center no-repeat white;
     height: 100%;
     width: 100%;
     position: absolute;
@@ -4700,10 +4700,10 @@ div.info_projects:last-of-type .separator, div.info_archived:last-of-type .separ
       background: #494F77; }
   .bx-wrapper .bx-prev {
     left: 10px;
-    background: url(../img/controls.png) no-repeat 0 -32px; }
+    background: url(img/controls.png) no-repeat 0 -32px; }
   .bx-wrapper .bx-next {
     right: 10px;
-    background: url(../img/controls.png) no-repeat -43px -32px; }
+    background: url(img/controls.png) no-repeat -43px -32px; }
   .bx-wrapper .bx-prev:hover {
     background-position: 0 0; }
   .bx-wrapper .bx-next:hover {
@@ -4727,7 +4727,7 @@ div.info_projects:last-of-type .separator, div.info_archived:last-of-type .separ
       width: 10px;
       height: 11px;
       outline: 0;
-      background: url(../img/controls.png) -86px -11px no-repeat;
+      background: url(img/controls.png) -86px -11px no-repeat;
       margin: 0 3px; }
       .bx-wrapper .bx-controls-auto .bx-start:hover, .bx-wrapper .bx-controls-auto .bx-start.active {
         background-position: -86px 0; }
@@ -4737,7 +4737,7 @@ div.info_projects:last-of-type .separator, div.info_archived:last-of-type .separ
       width: 9px;
       height: 11px;
       outline: 0;
-      background: url(../img/controls.png) -86px -44px no-repeat;
+      background: url(img/controls.png) -86px -44px no-repeat;
       margin: 0 3px; }
       .bx-wrapper .bx-controls-auto .bx-stop:hover, .bx-wrapper .bx-controls-auto .bx-stop.active {
         background-position: -86px -33px; }

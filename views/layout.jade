@@ -1,34 +1,60 @@
 !!! 5
-html.no-js(lang='en', xmlns:fb='http://ogp.me/ns/fb#')
+//if lt IE 7
+  | [if lt IE 7]
+//if lt IE 7
+  | [if lt IE 7]
+//if lt IE 7
+  | [if lt IE 7]
+//if IE 7
+  | [if IE 7]
+//if IE 7
+  | [if IE 7]
+//if IE 7
+  | [if IE 7]
+//if IE 8
+  | [if IE 8]
+//if IE 8
+  | [if IE 8]
+//if IE 8
+  | [if IE 8]
+html.no-js(lang="en", "xmlns:fb"="http://ogp.me/ns/fb#")
   head
     meta(charset='utf-8')
     title
       | 3doers ::
       block title
-    meta(name='description', content='find a 3d printer for your project or start printing others')
-    meta(name='keywords', content='')
-    meta(name='author', content='3doers')
 
-    meta(content='width=device-width, initial-scale=1, maximum-scale=1', name='viewport')
-    meta(content='yes', name='apple-mobile-web-app-capable')
-    meta(content='black', name='apple-mobile-web-app-status-bar-style')
+    meta(name='viewport', content='width=device-width, initial-scale=1, maximum-scale=1')
+    meta(name='apple-mobile-web-app-capable', content='yes')
+    meta(name='apple-mobile-web-app-status-bar-style', content='black')
 
-    meta(content='', property='og:title')
-    meta(content='website', property='og:type')
-    meta(content='', property='og:description')
-    meta(content='http://3doers.it', property='og:url')
-    meta(content='', property='og:image')
-    meta(content='3doers', property='og:site_name')
-    meta(content='', property='fb:app_id')
+    block header-seo
+      meta(name='description', content='')
+      meta(name='keywords')
 
-    link(href='/img/apple-touch-icon-144x144-precomposed.png', rel='apple-touch-icon-precomposed', sizes='144x144', type='image/png')
-    link(href='/img/apple-touch-icon-144x144-precomposed.png', rel='apple-touch-icon-precomposed', sizes='114x114', type='image/png')
-    link(href='/img/apple-touch-icon-72x72-precomposed.png', rel='apple-touch-icon-precomposed', sizes='72x72', type='image/png')
-    link(href='/img/apple-touch-icon-57x57-precomposed.png', rel='apple-touch-icon-precomposed', type='image/png')
-    link(href='/img/apple-touch-icon-original.png', rel='shortcut icon')
+    block open-graph
+      meta(property='og:title')
+      meta(property='og:type', content='website')
+      meta(property='og:description')
+      meta(property='og:url', content='http://3doers.it')
+      meta(property='og:image')
+      meta(property='og:site_name', content='3doers')
+      meta(property='fb:app_id')
 
-    link(href='/img/favicon.png', rel='shortcut icon', type='image/png')
-    link(href='/img/favicon.ico', rel='shortcut icon', type='image/x-icon')
+    // Favicons and touch icons
+    // For retina-display iPads
+    link(type='image/png', sizes='144x144', rel='apple-touch-icon-precomposed', href='/img/apple-touch-icon-144x144-precomposed.png')
+    // For retina-display iPhones
+    link(type='image/png', sizes='114x114', rel='apple-touch-icon-precomposed', href='/img/apple-touch-icon-144x144-precomposed.png')
+    // For iPad 1
+    link(type='image/png', sizes='72x72', rel='apple-touch-icon-precomposed', href='/img/apple-touch-icon-72x72-precomposed.png')
+    // For iPhone 3G, iPod Touch and Android
+    link(type='image/png', rel='apple-touch-icon-precomposed', href='/img/apple-touch-icon-57x57-precomposed.png')
+    // For Nokia
+    link(rel='shortcut icon', href='/img/apple-touch-icon-original.png')
+    // For everything else
+    link(type='image/png', rel='shortcut icon', href='/img/favicon.png')
+    link(type='image/x-icon', rel='shortcut icon', href='/img/favicon.ico')
 
     link(href='/css/application.css', media='screen', rel='stylesheet')
     script(src='/vendor/modernizr.js')
@@ -46,9 +72,7 @@ html.no-js(lang='en', xmlns:fb='http://ogp.me/ns/fb#')
     block extra-headers
 
   body
-    .container
-      include includes/header
-      block content
-      include includes/footer
-
+    include includes/header
+    block body
+    include includes/footer
     block scripts

@@ -17,29 +17,31 @@ module.exports = (app, io) ->
   paypal.configure(settings.paypal.api)
 
   app.get '/', (req, res) ->
-    res.render 'core/index', message: null
-
+    res.render 'core/index', {message: null, error: false, message: false}
 
   app.post '/', (req, res) ->
     req.assert('email').isEmail()
     errors = req.validationErrors(true)
     if errors
       res.render 'core/index',
-        message: errors.email.msg
+        message: "OPS! THERE WAS AN ERROR! TRY AGAIN! <br/> #{errors.email.msg}"
         email: req.body.email
+        error: true
     else
       models.Subscription.find(email: req.body.email).exec().then( (emails)->
         if emails.length > 0
           res.render 'core/index',
-            message: "Already subscribed"
+            message: "ALREADY SUBSCRIBED!"
             email: req.body.email
+            error: true
         else
           s = new models.Subscription()
           s.email = req.body.email
           s.save()
           res.render 'core/index',
-            message: "Thank you for subscribing"
+            message: "YOUR MAIL WAS SENT! THANK YOU!"
             email: req.body.email
+            error: false
       )
 
 

@@ -1,0 +1,258 @@
+!!! 5
+html.no-js(lang='en', xmlns:fb='http://ogp.me/ns/fb#')
+  head
+    meta(charset='utf-8')
+    title 3doers :: Home
+    meta(name='viewport', content='width=device-width, initial-scale=1, maximum-scale=1')
+    meta(name='apple-mobile-web-app-capable', content='yes')
+    meta(name='apple-mobile-web-app-status-bar-style', content='black')
+    meta(name='description', content='')
+    meta(name='keywords')
+    meta(property='og:title')
+    meta(property='og:type', content='website')
+    meta(property='og:description')
+    meta(property='og:url', content='http://3doers.it')
+    meta(property='og:image')
+    meta(property='og:site_name', content='3doers')
+    meta(property='fb:app_id')
+    //
+       Favicons and touch icons
+    //
+       For retina-display iPads
+    link(type='image/png', sizes='144x144', rel='apple-touch-icon-precomposed', href='/img/apple-touch-icon-144x144-precomposed.png')
+    //
+       For retina-display iPhones
+    link(type='image/png', sizes='114x114', rel='apple-touch-icon-precomposed', href='/img/apple-touch-icon-144x144-precomposed.png')
+    //
+       For iPad 1
+    link(type='image/png', sizes='72x72', rel='apple-touch-icon-precomposed', href='/img/apple-touch-icon-72x72-precomposed.png')
+    //
+       For iPhone 3G, iPod Touch and Android
+    link(type='image/png', rel='apple-touch-icon-precomposed', href='/img/apple-touch-icon-57x57-precomposed.png')
+    //
+       For Nokia
+    link(rel='shortcut icon', href='/img/apple-touch-icon-original.png')
+    //
+       For everything else
+    link(type='image/png', rel='shortcut icon', href='/img/favicon.png')
+    link(type='image/x-icon', rel='shortcut icon', href='/img/favicon.ico')
+    link(href='/css/application.css', media='screen', rel='stylesheet')
+    script(src='/vendor/modernizr.js')
+    script(src='/js/common.js')
+    script(src='//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.min.js')
+    script
+      $(document).ready(function (event){
+        $(".header a[href='/']").parent().addClass('active');
+      });
+  body
+    .container
+      .header_block
+        section.homepage.container1
+          header
+            .container-left
+              a.logo(href='/')
+                img#icon(alt='3doers Icon', src='/img/logo_3doers.png')
+            .container-right
+              ul.login
+                li
+                  p COMING SOON....
+        .login_background
+          .login_bar
+      .title_block
+        section.homepage.container2
+          h1.title
+            p
+              | WELCOME TO 3DOERS
+              br
+            p
+              | FIND A 3D PRINTER FOR
+              br
+            p
+              | YOUR PROJECT OR START
+              br
+            p
+              | PRINTING OTHERS
+              br
+        .title_background
+          .title_bar1
+          .title_bar2
+          .title_bar3
+          .title_bar4
+        section.homepage.container3
+          h3.subtitle
+            | 3DOERS IS A FAST COLLECTIVE 3D PRINTING SERVICE
+            br
+            | YOU CAN UPLOAD, PRINT OR WORK ON THE FILES
+            br
+            | LEARN HOW TO DO IT HERE
+        .gallery
+          ul#bxslider
+            li
+              img(alt='3d printer', width='960', height='540', src='/img/yoda_gallery_img.png')
+            li
+              img(alt='3d printer', width='1282', height='597', src='/img/user_gallery_img.png')
+            li
+              img(alt='3d printer', width='1280', height='593', src='/img/printer_gallery_img.png')
+            li
+              img(alt='3d printer', width='1280', height='593', src='/img/filemanager_gallery_img.png')
+          .container-gallery_homepage
+            .gallery_image
+              img(alt='3d printer', width='716', height='171', src='/img/gallery_image.png')
+          .square
+        .beta_email_block
+          section.homepage.container4
+            .container-left
+              h3.title
+                | JOIN US IN OUR BETA
+                br
+                | WE'RE LAUNCHING SOON!
+            .container-right
+              form#registration(accept-charset='UTF-8', role='form', method='POST', action='.')
+                input(name='authenticity_token', type='hidden')
+                fieldset
+                  input(value='8GGPSLGKnmd89JIHJlJnOqwa', name='_csrf', type='hidden')
+                  p.form-group
+                    input#email.form(name='email', placeholder='Your Email Address', value='')
+                  p
+                    input#submit.form(name='submit', value='SEND', type='submit')
+              .status_messages.ok.hide
+                p YOUR MAIL WAS SENT! THANK YOU!
+              .status_messages.error.hide
+                p OPS! THERE WAS AN ERROR! TRY AGAIN!
+          .beta_email_background
+        //
+          .instructions_block
+        //
+            section.homepage.container4
+        //
+              .instructions
+        //
+                h3.title
+        //
+                  | SIGN UP!
+        //
+                  br
+        //
+                p.text
+        //
+                  | Join to our community and start the collective
+        //
+                  br
+        //
+                  | 3D printing.
+        //
+                .options
+        //
+                  .upload
+        //
+                    a.button(href='') UPLOAD A PROJECT
+        //
+                    a#upload-comment(href='')
+        //
+                      | FOR UPLOAD A PROJECT YOU MUST
+        //
+                      | LOGIN OR SIGN UP
+        //
+                  .printer
+        //
+                    a.button(href='') BECOME A PRINTER
+        //
+                    a#printer-comment(href='')
+        //
+                      | FOR UPLOAD A PROJECT YOU MUST
+        //
+                      | LOGIN OR SIGN UP
+        //
+                  .filemanager
+        //
+                    a.button(href='') BECOME A FILE MANAGER
+        //
+                    a#filemanager-comment(href='')
+        //
+                      | FOR UPLOAD A PROJECT YOU MUST
+        //
+                      | LOGIN OR SIGN UP
+        //
+            .instructions_background
+        //
+          .comment_block
+        //
+            section.homepage.container5
+        //
+              .revision
+        //
+                .container-left
+        //
+                  h1.first_comment
+        //
+                    p.comment
+        //
+                      | YOU'RE SURE THAT
+        //
+                      br
+        //
+                    p.comment
+        //
+                      | YOUR FILE IS READY
+        //
+                      br
+        //
+                    p.comment  TO BE PRINTED?
+        //
+                .container-right
+        //
+                  img(alt='3doers image', src='img/icona3d_homepage.png')
+        //
+              .revision_link
+        //
+                p
+        //
+                  | NO!
+        //
+                  a(href='', target='')  SO CLICK HERE FOR IL SERVIZIO DI REVISIONE!
+        //
+            .first_comment_background
+        //
+              .comment_bar1
+        //
+              .comment_bar2
+        //
+              .comment_bar3
+        .publicity_block
+          section.homepage.container6
+            .publicity
+              .container-left
+                img(alt='3doers image', src='/img/publicity_homepage.png')
+              .container-right
+                p
+                  span
+                    | WELCOME TO 3DOERS
+                    br
+                  span
+                    | FIND A 3D PRINTER FOR YOUR PROJECT
+                    br
+                  span  OR START PRINTING OTHERS
+          .publicity_comment_background
+            .publicity_bar1
+            .publicity_bar2
+            .publicity_bar3
+      .footer_block
+        .container7
+          footer
+            .container-left
+              .copyright ©2014 Artsy|AboutJobsPressOpen SourceTerms of UsePrivacy PolicyFeedback
+            .container-right
+              .share
+                .addthis_toolbox
+                  a.addthis_button_facebook.sharebt(addthis:title='author_messages', addthis:url='', fb:like:href='')
+                    i.fa.fa-facebook
+                  a.addthis_button_twitter.sharebt(addthis:title='Rewend', addthis:url='', tw:url='')
+                    i.fa.fa-twitter
+                  a.addthis_button_google_plusone_share.sharebt(addthis:title='author_messages', addthis:url='')
+                    i.fa.fa-google-plus
+                  a.addthis_button_linkedin_share.sharebt(addthis:title='author_messages', addthis:url='')
+                    i.fa.fa-linkedin
+          .footer_background
+        script(src='/js/site.js')
+    //
+       commented in favor of coming soon
