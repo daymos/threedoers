@@ -3,7 +3,7 @@ extends ../layout
 block title
   |  Signup
 
-block content
+block body
   .title_block
     section.homepage.container2
       h1.title
@@ -14,51 +14,44 @@ block content
           | FORM
           br
     .title_background.registration
-     .title_bar1
-     .title_bar2
-
+      .title_bar1
+      .title_bar2
+  //
+    /todo OCCHIO adattare html and css  con versione backend
   .block_registration_form.row
     section.homepage.container2
-      form#registration.form-horizontal(name='signup-form', accept-charset='UTF-8', role='form', method='POST', action='/accounts/signup')
-        input(name='authenticity_token', type='hidden')
+      form#registration.form-horizontal(action='/accounts/signup', method='POST', role='form', accept-charset='utf-8', name='signup-form')
+        input(type='hidden', name='authenticity_token')
         fieldset
-          input(value=csrfToken, name='_csrf', type='hidden')
+          input(type='hidden', name='_csrf', value=csrfToken)
           p.form-group
-            input#username.form-control.form(name='username', placeholder='USERNAME', value='')
-            input#email.form-control.form(name='email', placeholder='EMAIL', value='')
-            input#password.form-control.form(name='password', placeholder='PASSWORD', type='password', value='')
-            input#passwordConfirm.form-control.form(name='passwordConfirm', placeholder='CONFIRM PASSWORD', type='password', value='')
-            input#address.form-control.form(name='address', placeholder='ADDRESS', value='')
-            input#city(name='city', type='hidden')
-            input#country(name='country', type='hidden')
-            input#location(name='location', type='hidden')
+            input#username.form(value='', placeholder='USERNAME', name='username')
+            input#email.form(value='', placeholder='EMAIL', name='email')
+            input#password.form(type='password', value='', placeholder='PASSWORD', name='password')
+            input#passwordConfirm.form(type='password', value='', placeholder='CONFIRM PASSWORD', name='passwordConfirm')
+            input#address.form(value='', placeholder='ADDRESS', name='address')
+            input#city(type='hidden', name='city')
+            input#country(type='hidden', name='country')
+            input#location(type='hidden', name='location')
           p.btn.btn-primary.btn-lg.center-block
-            input#submit.form-control.form(name='submit', value='REGISTER', type='submit')
-      .registration_background
-        .hand
-          img(alt='3doers Hand', src='/img/hand_register.png')
-        .background
+            input#submit.form(type='submit', value='REGISTER', name='submit')
 
+    .registration_background
+      .hand
+        img(src='/img/hand_register.png', alt='3doers Hand')
+      .background
+  include ../includes/publicity
 
-  .publicity_block
-    section.homepage.container6
-      .publicity
-        .container-left
-          img(alt='3doers image', src='/img/publicity_homepage.png')
-        .container-right
-          p
-            span
-              | WELCOME TO 3DOERS
-              br
-            span
-              | FIND A 3D PRINTER FOR YOUR PROJECT
-              br
-            span  OR START PRINTING OTHERS
-      .publicity_comment_background
-        .publicity_bar1
-        .publicity_bar2
-        .publicity_bar3
 
 block scripts
   script(src='https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places')
   script(src='/js/views/signup.js')
+
+  if locals.error
+    script
+      alert("#{locals.error}");
+
+  if locals.errors
+    - for (key in errors)
+      script
+        alert("#{key}: #{errors[key].msg}");

@@ -1,37 +1,37 @@
 $(document).ready ->
-  form = $('#registration')
+  # form = $('#registration')
 
-  validator = new Validator form,
-    '#username':
-      regexp:
-        test: /^[a-z0-9_-]{3,16}$/
-        message: "Invalid username."
-    '#password':
-      regexp:
-        test: /^[a-zA-Z]\w{3,14}$/
-        message: "Should contains from 4 to 15, letters(uppercase, downcase), digits, first should be a letter."
-    '#email':
-      required: true
-    '#passwordConfirm':
-      regexp:
-        test: /^[a-zA-Z]\w{3,14}$/
-        message: "Should contains from 4 to 15, letters(uppercase, downcase), digits, first should be a letter."
-      match:
-        test: '#password'
-        message: "Passwords didn't match"
-    '#address':
-      required: true
+  # validator = new Validator form,
+  #   '#username':
+  #     regexp:
+  #       test: /^[a-z0-9_-]{3,16}$/
+  #       message: "Invalid username."
+  #   '#password':
+  #     regexp:
+  #       test: /^[a-zA-Z]\w{3,14}$/
+  #       message: "Should contains from 4 to 15, letters(uppercase, downcase), digits, first should be a letter."
+  #   '#email':
+  #     required: true
+  #   '#passwordConfirm':
+  #     regexp:
+  #       test: /^[a-zA-Z]\w{3,14}$/
+  #       message: "Should contains from 4 to 15, letters(uppercase, downcase), digits, first should be a letter."
+  #     match:
+  #       test: '#password'
+  #       message: "Passwords didn't match"
+  #   '#address':
+  #     required: true
 
-  form.on 'error', (form, element, message) ->
-    # improving error fields
-    element.siblings('.help-block').remove()  # previous messages remove
-    element.parent().append $('<span>').addClass('help-block').text(message)
-    element.closest('.form-group').addClass('has-error')
+  # form.on 'error', (form, element, message) ->
+  #   # improving error fields
+  #   element.siblings('.help-block').remove()  # previous messages remove
+  #   element.parent().append $('<span>').addClass('help-block').text(message)
+  #   element.closest('.form-group').addClass('has-error')
 
-  form.on 'valid', (form, element, message) ->
-    # improving error fields
-    element.siblings('.help-block').remove()
-    element.closest('.form-group').removeClass('has-error')
+  # form.on 'valid', (form, element, message) ->
+  #   # improving error fields
+  #   element.siblings('.help-block').remove()
+  #   element.closest('.form-group').removeClass('has-error')
 
   # Google autocomplete
   $input = $('#address').bind 'keypress', (e) ->

@@ -3,9 +3,33 @@ extends ../layout
 block title
   |  Signup Done
 
-block content
-  .row
-    div.col-md-12
-      h3 Your account was create please review your email box to activate your account.
+block body
+  .title_block
+    section.homepage.container2
+      h1.title
+        p
+          | REGISTRATION
+          br
+        p
+          | FORM
+          br
+    .title_background.registration
+      .title_bar1
+      .title_bar2
+  .block_thankyou_text
+    section.homepage.container2
+      .thankyou_text
+        p.title
+          | Thank you for registering  with 3DOERS!
+        p.paragraph1
+          | Your account has been created and a verification email has been sent to your registered email address. Please click on the verification link included in the email to activate your account.
+        p.paragraph2
+          | Your account will not be activated until you verify your email address.
+    .thankyou_background
+      .hand
+        img(src='/img/hand_register.png', alt='3doers Hand')
+      .background
+  include ../includes/publicity
+
 
 block scripts
