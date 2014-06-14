@@ -1,58 +1,56 @@
-
 extends base
 
 block title
   |  Your Projects
 
-block content-profile
-    div.well.col-md-10.center-block
-      form(method="post", action="/profile/settings", role="form", id="registration", class="form-horizontal")
+block body
+  .title_block
+    section.homepage.container2
+      h1.title
+        p
+          | EDIT YOUR
+          br
+        p
+          | PROFILE
+          br
+    .title_background.editprofile
+      .title_bar1
+      .title_bar2
+  //
+    /todo OCCHIO adattare html and css  con versione backend
+  .block_registration_form.row
+    section.homepage.container2
+      form#registration(action='/profile/settings', method='POST', role='form', accept-charset='utf-8')
+        input(type='hidden', name='authenticity_token')
         fieldset
-          legend Account Form
-
           input(type='hidden', name='_csrf', value=csrfToken)
+          p.photoedit
+            img#profile_image(width='142', height='142', src='/img/edit_photo_placeholder.png?1396277523', alt='profile image')
+            span  EDIT PHOTO
+          p.form-group
+            input#username.form(value=(user.username)?"#{user.username}":"", placeholder='USERNAME', name='username')
+            input#email.form(value=(user.email)?"#{user.email}":"", placeholder='EMAIL', name='email')
+            input#firstName.form(value=(user.firstName)?"#{user.firstName}":"", placeholder='FIRST NAME', name='firstName')
+            input#lastName.form(value=(user.lastName)?"#{user.lastName}":"", placeholder='LAST NAME', name='lastName')
+            input#address.form(value=(user.address)?"#{user.address}":"", placeholder='ADDRESS', name='address')
+          p.checkbox
+            input#rememberme(type='checkbox', value='1', checked='', name='rememberme')
+            span.remembertext   I WANT ANOTHER ADDRESS FOR DELIVERY
+          p.form-group
+            input#aux_address.form(value='', placeholder='ADDRESS', name='aux_address')
+            a#link.remembertext(href='') DIRECT LINK TO SERVICE DELIVERY
+            input#city(type='hidden', name='city')
+            input#country(type='hidden', name='country')
+            input#location(type='hidden', name='location')
+          p.btn.btn-primary.btn-lg.center-block
+            input#submit.form(type='submit', value='UPDATE', name='submit')
 
-          .form-group
-            label(for="username", class="control-label col-md-3") Username
-            .col-md-8
-              p.form-control-static #{user.username}
+    .registration_background
+      .hand
+        img(src='/img/hand_register.png', alt='3doers Hand')
+      .background.update
 
-          .form-group
-            label(for="email", class="control-label col-md-3") Email
-            .col-md-8
-              p.form-control-static #{user.email}
-
-          .form-group(class=(locals.errors && errors.firstName)?"has-error":"")
-            label(for="firstName", class="control-label col-md-3") First Name
-            .col-md-8
-              input(type="text", class="form-control", name="firstName", id='firstName', placeholder="Enter your first name", value=(user.firstName)?"#{user.firstName}":"")
-              - if (locals.errors && errors.firstName)
-                span(class="help-block")
-                  = errors.firstName.msg
-
-          .form-group(class=(locals.errors && errors.lastName)?"has-error":"")
-            label(for="lastName", class="control-label col-md-3") First Name
-            .col-md-8
-              input(type="text", class="form-control", name="lastName", id='lastName', placeholder="Enter your last name", value=(user.lastName)?"#{user.lastName}":"")
-              - if (locals.errors && errors.lastName)
-                span(class="help-block")
-                  = errors.lastName.msg
-
-          .form-group(class=(locals.errors && errors.address)?"has-error":"")
-            label(for="address", class="control-label col-md-3") Address
-            .col-md-8
-              input(type="text", class="form-control", name="address", id='address', placeholder="Address")
-              - if (locals.errors && errors.address)
-                span(class="help-block")
-                  = errors.address.msg
-
-          input(name="city", id="city", type="hidden")
-          input(name="country", id="country", type="hidden")
-          input(name="location", id="location", type="hidden")
-
-          button(type="submit").btn.btn-primary.btn-lg.center-block
-            span.glyphicon.glyphicon-hand-right
-            | &nbsp;&nbsp;&nbsp; Update
+  include ../../includes/publicity
 
 block scripts
     script(src='/js/views/settings.js')
