@@ -5,24 +5,23 @@ block base-headers
     $(document).ready(
       function(event) {
         $(".header a[href='/profile/projects']").parent().addClass('active');
-        $(".second-nav a[href='#{ nav }']").parent().addClass('active');
+        $(".flange a[href='#{ nav }']").parent().addClass('active');
       }
     );
 
 block body
-  ul.nav.nav-tabs.second-nav
-    li
-      a(href='/profile/projects') Projects
-    li
-      a(href='/profile/archived') Archived
-    li
-      a(href='/profile/settings') Settings
-    if user.printer == 'accepted'
-      li
-        a(href='/printing/requests') Printing Requests
-      li
-        a(href='/printing/jobs') Printing Jobs
+  section.page.container1
+    .flange
+      ul
+        li#projects
+          a(href='/profile/projects') PROJECTS
+          .background.activeline
 
-  br
-  br
-  block content-profile
+        li#archived
+          a(href='/profile/archived') ARCHIVED
+          .background.activeline
+      .line
+
+    block content-profile
+
+  include ../../includes/publicity

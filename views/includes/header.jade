@@ -34,9 +34,10 @@ else
                 p
                   a(href='javascript://nop', onclick='toggle(this);') MY PROFILE
                 p
-                  a.myprofileitem USER
-                p
-                  a.myprofileitem PRINTER
+                  a(href='/profile/projects').myprofileitem USER
+                if user.printer == 'accepted'
+                  p
+                    a(href='/printing/requests').myprofileitem PRINTER
                 p
                   a.myprofileitem FILE MANAGER
                 p

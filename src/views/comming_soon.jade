@@ -60,6 +60,12 @@ html.no-js(lang="en", "xmlns:fb"="http://ogp.me/ns/fb#")
     script(src='/vendor/modernizr.js')
     script(src='/js/common.js')
     script(src='//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.min.js')
+    script(src="//code.jquery.com/jquery-migrate-1.0.0.js")
+
+    script.
+      function toggle(){
+        $(".myprofileitem").fadeToggle('slow','linear');
+      }
 
     block base-headers
       script.

@@ -1,5 +1,6 @@
 mongoose = require 'mongoose'
 gridfs = require '../gridfs'
+inflection = require 'inflection'
 
 Schema = mongoose.Schema
 ObjectId = Schema.ObjectId
@@ -135,6 +136,11 @@ STLProject.methods.humanizedStatus = ->
   for key of PROJECT_STATUSES
     if PROJECT_STATUSES[key][0] == @status
       return PROJECT_STATUSES[key][1]
+
+STLProject.methods.dasherizedStatus = ->
+  for key of PROJECT_STATUSES
+    if PROJECT_STATUSES[key][0] == @status
+      return inflection.dasherize(PROJECT_STATUSES[key][1]).replace('-', '_')
 
 STLProject.methods.validateNextStatus = (value) ->
   # creating simple state machine, state and allowed next states

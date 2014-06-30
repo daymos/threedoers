@@ -3976,11 +3976,11 @@ h3.subtitle {
         position: relative;
         top: -19px;
         z-index: -1; }
-      .flange ul li:first-child {
+      .flange ul li.active {
         border: #7bf282 1px solid;
         border-bottom: none;
         cursor: default; }
-        .flange ul li:first-child .background, .flange ul li:first-child .background1 {
+        .flange ul li.active .background, .flange ul li.active .background1 {
           display: block; }
   .flange .line {
     height: 1px;

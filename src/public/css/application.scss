@@ -4941,7 +4941,7 @@ h3.subtitle {
         top: -19px;
         z-index: -1;
       }
-      &:first-child {
+      &.active {
         border: #7bf282 1px solid;
         border-bottom: none;
         cursor: default;

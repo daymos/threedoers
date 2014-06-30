@@ -105,7 +105,7 @@ module.exports = function(grunt) {
       },
 
       sass: {
-        files: ['src/public/css/**/*.scss', 'src/public/css/**/*.css'],
+        files: ['src/public/css/**/*.scss'],
         tasks: ['sass:dev', 'concat:css']
       }
     }
