@@ -10,26 +10,26 @@ block content-profile
       p There is not any project yet for this list.
     - for (project in projects)
       - project = projects[project]
-      .info_jobs_available.project(data-project="#{ project.id }")
+      .info_archived.project(data-project="#{ project.id }")
         p.filename
           | FILE NAME:
           span#name
             |   #{ project.title }
         .status
-          img(id="status_img" ,alt="Request status ", src="/img/icons_#{ project.dasherizedStatus() }.png")
+          img(id="status_img" ,alt="Request status ", src="/img/icons_printing.png")
           p
             | STATUS:
             span#status
               |  #{ project.humanizedStatus() }
         .link_to_project
-          a(href="/project/#{ project.id }", class="button") ACCEPT
+          a(href="/project/#{ project.id }", class="button") GO TO PROJECT
         .separator
           img(id="separator1", alt="division figure", src="/img/separatori_lista.png")
           img(id="separator2", alt="division figure", src="/img/img_separatori_lista.png")
 
 
-block extra-headers
-  meta(name="csrf-token", content="#{csrfToken}")
-
+//- block extra-headers
+//-   meta(name="csrf-token", content="#{csrfToken}")
+//-
 block scripts
-    script(src='/js/views/printing_requests.js')
+    script(src='/js/views/printing_jobs.js')

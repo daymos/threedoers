@@ -1,0 +1,29 @@
+extends ../base
+
+block base-headers
+  script.
+    $(document).ready(
+      function(event) {
+        $(".header a[href='/profile/projects']").parent().addClass('active');
+        $(".flange a[href='#{ nav }']").parent().addClass('active');
+      }
+    );
+
+block body
+  section.page.container1
+    .flange.printer
+      ul
+        li#printing_request
+          a(href="/printing/requests") PRINTING REQUEST
+          .background1.activeline
+        li#jobs_available
+          a(href="/printing/jobs") JOBS AVAILABLE
+          .background2.activeline
+        li#archived
+          a(href="/printing/archived") ARCHIVED
+          .background.activeline
+      .line
+
+    block content-profile
+
+  include ../../includes/publicity

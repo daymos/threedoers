@@ -1,0 +1,1 @@
+(function(){$(document).ready(function(){return $(".info_jobs_available").last().find(".separator").css("display","none"),$(".info > div").css("display","block")})}).call(this);

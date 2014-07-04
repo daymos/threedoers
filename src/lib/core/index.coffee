@@ -348,13 +348,20 @@ module.exports = (app, io) ->
 
 
   app.get '/printing/jobs', decorators.printerRequired, (req, res) ->
-    models.STLProject.find('order.printer': req.user.id).exec (err, docs) ->
+    models.STLProject.find('order.printer': req.user.id, status: models.PROJECT_STATUSES.PRINT_ACCEPTED[0]).exec (err, docs) ->
       if err
         logger.error err
         res.send 500
       else
         res.render 'core/printing/jobs', {projects: docs}
 
+  app.get '/printing/archived', decorators.printerRequired, (req, res) ->
+    models.STLProject.find('order.printer': req.user.id, status: models.PROJECT_STATUSES.ARCHIVED[0]).exec (err, docs) ->
+      if err
+        logger.error err
+        res.send 500
+      else
+        res.render 'core/printing/archived', {projects: docs}
 
   app.post '/printing/accept/:id', decorators.printerRequired, (req, res) ->
     models.STLProject.findOne({_id: req.params.id, editable: false}).exec().then( (doc) ->

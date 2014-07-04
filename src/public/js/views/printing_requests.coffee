@@ -12,33 +12,35 @@ $(document).ready ->
 
   setCSRFToken $("meta[name=\"csrf-token\"]").attr("content")
 
+  $(".info_jobs_available").last().find(".separator").css("display", "none")
+  $(".info > div").css("display","block")
 
-  panels = $(".user-infos")
-  panelsButton = $(".dropdown-user")
-  panels.hide()
-  panelsButton.click ->
+  # panels = $(".user-infos")
+  # panelsButton = $(".dropdown-user")
+  # panels.hide()
+  # panelsButton.click ->
 
-    #get data-for attribute
-    dataFor = $(this).attr("data-for")
-    idFor = $(".#{dataFor}")
+  #   #get data-for attribute
+  #   dataFor = $(this).attr("data-for")
+  #   idFor = $(".#{dataFor}")
 
-    #current button
-    currentButton = $(this)
-    idFor.slideToggle 400, ->
+  #   #current button
+  #   currentButton = $(this)
+  #   idFor.slideToggle 400, ->
 
-      #Completed slidetoggle
-      if idFor.is(":visible")
-        currentButton.html "<i class=\"glyphicon glyphicon-chevron-up text-muted\"></i>"
-      else
-        currentButton.html "<i class=\"glyphicon glyphicon-chevron-down text-muted\"></i>"
+  #     #Completed slidetoggle
+  #     if idFor.is(":visible")
+  #       currentButton.html "<i class=\"glyphicon glyphicon-chevron-up text-muted\"></i>"
+  #     else
+  #       currentButton.html "<i class=\"glyphicon glyphicon-chevron-down text-muted\"></i>"
 
 
-  $("[data-toggle=\"tooltip\"]").tooltip()
-
-  $("button").click (e) ->
+  # $("[data-toggle=\"tooltip\"]").tooltip()
+  
+  $(".link_to_project .button").click (e) ->
     e.preventDefault()
     $.ajax
-      url: "/printing/accept/#{$(this).closest(".user-infos").attr('data-project')}"
+      url: "/printing/accept/#{$(this).closest(".project").attr('data-project')}"
       method: "post"
       dataType: "json"
 
@@ -50,5 +52,3 @@ $(document).ready ->
         400: (data) ->
           alert(data.msg)
           location.reload(true)
-
-
