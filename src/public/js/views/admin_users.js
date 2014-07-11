@@ -1,1 +1,48 @@
-(function(){$(document).ready(function(){var e,t,n,r;return e="X-CSRF-Token",r=function(t){return jQuery.ajaxPrefilter(function(n,r,i){return i.crossDomain?void 0:i.setRequestHeader(e,t)})},r($('meta[name="csrf-token"]').attr("content")),t=$(".user-infos"),n=$(".dropdown-user"),t.hide(),n.click(function(){var e,t,n;return t=$(this).attr("data-for"),n=$(t),e=$(this),n.slideToggle(400,function(){return n.is(":visible")?e.html('<i class="glyphicon glyphicon-chevron-up text-muted"></i>'):e.html('<i class="glyphicon glyphicon-chevron-down text-muted"></i>')})}),$('[data-toggle="tooltip"]').tooltip(),$("button.btn-primary").click(function(e){var t;return e.preventDefault(),t=$(this).closest(".user-infos").attr("data-id"),$.post("/admin/printer/accept/"+t,function(){return location.reload(!0)})}),$("button.btn-danger").click(function(e){var t;return e.preventDefault(),t=$(this).closest(".user-infos").attr("data-id"),$.post("/admin/printer/deny/"+t,function(){return location.reload(!0)})})})}).call(this);
+(function() {
+  $(document).ready(function() {
+    var CSRF_HEADER, panels, panelsButton, setCSRFToken;
+    CSRF_HEADER = "X-CSRF-Token";
+    setCSRFToken = function(securityToken) {
+      return jQuery.ajaxPrefilter(function(options, _, xhr) {
+        if (!xhr.crossDomain) {
+          return xhr.setRequestHeader(CSRF_HEADER, securityToken);
+        }
+      });
+    };
+    setCSRFToken($("meta[name=\"csrf-token\"]").attr("content"));
+    panels = $(".user-infos");
+    panelsButton = $(".dropdown-user");
+    panels.hide();
+    panelsButton.click(function() {
+      var currentButton, dataFor, idFor;
+      dataFor = $(this).attr("data-for");
+      idFor = $(dataFor);
+      currentButton = $(this);
+      return idFor.slideToggle(400, function() {
+        if (idFor.is(":visible")) {
+          return currentButton.html("<i class=\"glyphicon glyphicon-chevron-up text-muted\"></i>");
+        } else {
+          return currentButton.html("<i class=\"glyphicon glyphicon-chevron-down text-muted\"></i>");
+        }
+      });
+    });
+    $("[data-toggle=\"tooltip\"]").tooltip();
+    $("button.btn-primary").click(function(e) {
+      var id;
+      e.preventDefault();
+      id = $(this).closest('.user-infos').attr('data-id');
+      return $.post("/admin/printer/accept/" + id, function() {
+        return location.reload(true);
+      });
+    });
+    return $("button.btn-danger").click(function(e) {
+      var id;
+      e.preventDefault();
+      id = $(this).closest('.user-infos').attr('data-id');
+      return $.post("/admin/printer/deny/" + id, function() {
+        return location.reload(true);
+      });
+    });
+  });
+
+}).call(this);

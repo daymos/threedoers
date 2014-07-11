@@ -33,6 +33,7 @@
     "passport-local": "0.1.6",
     "paypal-rest-sdk": "~0.6.4",
     "q": "*",
+    "raven": "^0.7.0",
     "session-mongoose": "0.4.1",
     "socket.io": "~0.9.16",
     "socket.io-session": "0.0.5",

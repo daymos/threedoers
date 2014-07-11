@@ -1,0 +1,170 @@
+= partial "partials/menuheader"
+
+.container_block
+  %section.homepage.container2
+
+    %p.title#title{:"data-type" => "text", :"data-url" => "", :"data-title" => ""}
+      iphone_cover_cell.stl
+    .return
+      %a{href:"", class:""}
+        %img{alt: "3doers Hand", src: "images/return_to_jobs.png"}
+        %p
+          Return to jobs available
+    .download
+      %a{href:"", class:""}
+        %p
+          SCARICA QUI IL FILE
+        %img{alt: "3doers Hand", src: "images/icon_download.png"}
+    .images_data
+
+      .frame-1
+
+      .frame-2
+
+      .file
+        %canvas#cv
+
+      .container_background
+
+.print_info_block
+  %section.homepage.container2
+    .acceptation_info
+      .info1
+        .status
+          %p
+            STATUS
+          %p
+            %span#status
+              PRINTING
+          %img{alt: "3doers Hand", src: "images/icons_printing_background_green.png"}
+
+      .info2
+        .line
+
+      .info3
+        .volume
+          %p
+            VOLUME:
+          %p
+            %span#volume
+              81.80047863cm3
+
+        .density
+          %p
+            DENSITY:
+          %p
+            %span#density
+              1
+
+        .weight
+          %p
+            WEIGHT:
+          %p
+            %span#weight
+              81.80047863
+
+      .info4
+        .ammount
+          %p
+            AMMOUNT:
+          %p
+            %span#ammount
+              4
+
+        .dimension
+          %p
+            DIMENSION:
+          %p
+            %span#dimension
+              24X30X2
+
+        .price
+          %p
+            PRICE:
+          %p
+            %span#price
+              27
+            %span
+              &nbsp;EURO
+
+      .info5
+        .resolution
+          %p
+            RESOLUTION:
+          %p
+            %span#resolution
+              70
+            %span
+              &#37;
+
+.payment-status_block.pay_ok
+  %section.homepage.container2
+    .payment-status
+      %p
+        PAGAMENTO AVVENUTO!
+        %br
+        INIZIA LA TUA STAMPA!
+
+      %img{alt: "OK", src: "images/alert_payment_ok.png"}
+
+.payment-status_block.confirm
+  %section.homepage.container2
+    .payment-status
+      %p
+        ATTENDI IL PAGAMENTO!
+        %br
+        RICEVERAI UNA MAIL DI CONFERMA
+
+      %img{alt: "OK", src: "images/alert_payment.png"}
+
+
+.title_block
+  %section.homepage.container2
+
+    %h1.title
+      %p
+        COMMENTS HERE
+
+      %p
+        FOR YOUR PROJECT
+
+      %img{alt: "3doers Hand", src: "images/icons_comment_2.png"}
+
+
+
+  .title_background.printer_page
+    .title_bar1
+    .title_bar2
+
+
+%section.homepage.container2
+  .project_comments
+    .project_comment
+      .user_image
+        %img{alt: "3doers Hand", src: "images/edit_photo_placeholder.png"}
+      %p
+        Sesame snaps brownie topping lollipop apple pie cake jelly-o. Pudding oat cake gummies. Danish jelly biscuit jelly-o pie pie cheesecake. Chocolate pudding bonbon carrot cake. Lollipop pastry
+    .project_comment
+      .user_image
+        %img{alt: "3doers Hand", src: "images/edit_photo_placeholder.png"}
+      %p
+        esame snaps brownie topping lollipop apple pie cake jelly-o. Pudding oat cake gummies.?
+
+    .project_comment
+      .user_image
+        %img{alt: "3doers Hand", src: "images/edit_photo_placeholder.png"}
+      %p
+        applicake candy canes danish chocolate bar pie tiramisu. Cotton candy danish chocolate cake oat cake fruitcake candy topping cotton candy jelly beans. Oat cake pudding macaroon tart pastry cake biscuit powder. Bear claw topping sesame snaps. Carrot cake donut cookie chupa chups soufflé pastry sugar plum. Jelly carrot cake tootsie roll cupcake dragée chocolate cake liquorice jujubes cupcake. Tiramisu apple pie dessert fruitcake cake.
+
+.comment_textarea_block
+  %section.homepage.container2
+    .container-left
+      %textarea{rows: "10"}
+    .container-right
+      .submit
+        = submit_tag :name, :name => "submit_comment", :id => 'submit_comment',:class=> "form", :value=>'SEND'
+
+
+
+= partial "partials/publicity"
+= partial "partials/footer"

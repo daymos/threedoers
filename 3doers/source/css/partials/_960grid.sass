@@ -1,0 +1,1820 @@
+
++at-breakpoint($break2)
+
+  .bebasneue
+    font-family: Bebasneue, "Helvetica Neue", Helvetica, Arial, sans-serif
+  .lato
+    font-family: Lato, "Helvetica Neue", Helvetica, Arial, sans-serif
+
+  .titillium
+    font-family: Titillium, "Helvetica Neue", Helvetica, Arial, sans-serif
+
+  body
+    background: $opaque_body
+
+  .hide
+    display: none
+
+
+  .menuheader_block
+    position: relative
+    header
+      +span-columns(16,16)
+      position: relative
+      margin: 35px auto 80px
+
+
+      .container-left
+        +span-columns(3,16)
+
+      .container-right
+        +span-columns(13 omega,16)
+        margin-top: 57px
+        ul.menu
+          //+span-columns(5,5)
+          //position: relative
+
+          +horizontal-list(15px)
+          position: absolute
+          right: 0
+          li#myprofile
+            width: 98px
+          li
+            text-align: right
+
+            p
+              margin: 0
+              @extend .bebasneue
+              font-size: px-to-em(23px, 16px)
+              font-weight: 700
+              font-style: normal
+              color: $white
+              line-height: 1.5em
+              a
+                text-decoration: none
+                +link-colors($black,$black,$black,$black,$black)
+                &:hover
+                  border-bottom: 2px solid $green_shadow
+
+              a.myprofileitem
+                display: none
+                &:hover
+                  border-bottom: 2px solid $green_shadow
+
+
+  .header_block
+    position: relative
+    header
+      +span-columns(16,16)
+      position: relative
+      margin-top: 35px
+      margin-bottom: 45px
+
+      .container-left
+        +span-columns(8,16)
+        text-align: left
+        a
+          img
+            width: auto
+            max-width: none
+            height: auto
+            max-height: none
+
+
+      .container-right
+        +span-columns(8 omega,16)
+        margin-top: 57px
+        ul.login
+          //+span-columns(5,5)
+          //position: relative
+          +float-right
+          +horizontal-list(27px)
+          li
+            p
+              margin: 0
+              @extend .bebasneue
+              font-size: px-to-em(27px, 16px)
+              font-weight: 700
+              font-style: normal
+              color: $white
+              line-height: 1em
+              a
+                text-decoration: none
+                +link-colors($white,$white,$white,$white,$white)
+
+
+    .login_background
+      width: 50%
+      .login_bar
+        position: absolute
+        height: 49px
+        width: 40%
+        background: $black
+        top: 81px
+        right: 0
+        z-index: -10
+
+
+  .title_block
+    position: relative
+    .title
+      +span-columns(16,16)
+      position: relative
+      p
+        padding: 0
+        margin: 0
+        @extend .lato
+        font-size: px-to-em(28.8px,16px)
+        font-weight: 700
+        font-style: italic
+        color: $black
+        line-height: 1em
+
+      img
+        position: absolute
+        top: -22px
+        left: 552px
+
+
+
+    .title_background
+      .title_bar1, .title_bar2,.title_bar3,.title_bar4
+        background: $green
+        height: 52px
+        z-index: -10
+      .title_bar1
+        width: 62%
+        min-width: 610px
+        max-width: none
+        position: absolute
+        top: 20px
+      .title_bar2
+        width: 66%
+        min-width: 647px
+        max-width: none
+        position: absolute
+        top: 77px
+      .title_bar3
+        width: 70%
+        min-width: 708px
+        max-width: none
+        position: absolute
+        top: 134px
+      .title_bar4
+        width: 53%
+        min-width: 540px
+        max-width: none
+        position: absolute
+        top: 191px
+
+
+    .registration
+      .title_bar1
+        width: 47%
+        min-width: 0
+      .title_bar2
+        width: 29%
+        min-width: 0
+
+    .login
+      .title_bar1
+        width: 36%
+        min-width: 0
+      .title_bar2
+        width: 32%
+        min-width: 0
+
+    .upload
+      .title_bar1
+        width: 65%
+        min-width: 0
+      .title_bar2
+        width: 31%
+        min-width: 0
+
+    .editprofile
+      .title_bar1
+        width: 40%
+        min-width: 0
+      .title_bar2
+        width: 34%
+        min-width: 0
+
+    .printer_page
+      .title_bar1
+        width: 52%
+        min-width: 538.5px
+        max-width: 707.5px
+      .title_bar2
+        width: 54%
+        min-width: 560.5px
+        max-width: 754.7px
+
+
+
+
+  .aux_title_block
+    position: relative
+
+    .title
+      +float-right
+      p
+        text-align: right
+        padding: 0
+        margin: 0
+        @extend .lato
+        font-size: px-to-em(45px,16px)
+        font-weight: 700
+        font-style: italic
+        color: $black
+        line-height: 1em
+
+    .title_background
+      .title_bar1, .title_bar2
+        background: $green
+        height: 42px
+        right: 0
+        z-index: -10
+      .title_bar1
+        width: 42%
+        //min-width: 651px
+        position: absolute
+        top: 0px
+      .title_bar2
+        width: 37%
+        //min-width: 690px
+        position: absolute
+        top: 45px
+      .exclamation_point
+        position: absolute
+        top: 0
+        right: 41%
+        img
+          width: 62%
+          height: auto
+
+
+  h3.subtitle
+    margin: 0
+    margin-bottom: 25px
+    @extend .titillium
+    font-size: px-to-em(25px,16px)
+    font-weight: 700
+    font-style: italic
+    color: $black
+    line-height: 1em
+
+  .gallery
+    position: relative
+    +box-sizing(border-box)
+    overflow: hidden
+    margin: auto  0
+    margin-top: 40px
+
+    .bx-viewport
+      border: 6px solid $green
+    #bxslider
+      margin: 0 auto
+      img
+        width: 100%
+        height: auto
+
+    .bx-pager, .bx-default-pager
+      display: none!important
+
+    .bx-wrapper
+      margin: 0 auto 8px
+
+    .bx-wrapper .bx-prev
+      left: 56px
+
+    .bx-wrapper .bx-next
+      right: 54px
+
+    .gallery_image
+      margin-top: -8px
+      text-align: right
+      img
+        width: auto
+        max-width: none
+        height: auto
+
+
+    .square
+      +stretch(2em, 2em, 9em, 2em)
+      border: 6px solid $green
+
+  .beta_email_block
+    position: relative
+    margin-top: 60px
+
+    .container-left
+      +span-columns(8,16)
+      margin-top: 57px
+      //margin: 57px auto 21px
+      h3.title
+        //margin: 98px auto 0
+        margin: 30px auto 0
+
+        @extend .lato
+        font-size: px-to-em(24px,16px)
+        font-weight: 900
+        font-style: italic
+        color: $black
+        line-height: 1em
+
+    .container-right
+      +span-columns(8 omega,16)
+      margin-top: 57px
+      form
+        +span-columns(8,8)
+        //margin-top: 50px
+        input
+          +border-radius(0px)
+          +box-sizing(content-box)
+        fieldset
+          border: none
+          margin: 0
+          padding: 0
+          p
+            +span-columns(8,8)
+            margin: 0
+            padding: 0
+
+            .form
+              +span-columns(8,8)
+              height: 61px
+              margin: 0px
+              margin-bottom: 9px
+              border: none
+              +box-shadow($black 5px -5px 0px)
+              @extend .titillium
+              font-size: px-to-em(20px,16px)
+              font-weight: 700
+              font-style: italic
+              text-indent: 1em
+              +nowrap
+              overflow: hidden
+              text-overflow: ellipsis
+              padding: 0
+              +placeholder
+                color: $black
+                +text-shadow($green 1px 3px 1px)
+
+
+            #submit
+              +span-columns(4,8)
+              height: 51px!important
+              margin-top: 15px!important
+              font-size: px-to-em(16px,16px)!important
+              +box-shadow($green_shadow 5px -5px 0px !important)
+              &:hover
+                +box-shadow($black-shadow 5px -5px 0px !important)
+              +submit_button
+
+      .status_messages
+        +span-columns(8,8)
+        margin-top: 7px
+        p
+          margin: 0 auto
+          padding: 0
+          @extend .titillium
+          font-size: px-to-em(24px,16px)
+          font-weight: 700
+          font-style: normal
+          +nowrap
+          overflow: hidden
+          text-overflow: ellipsis
+
+      .ok
+        color: $green_status
+      .error
+        color: $pink
+
+
+    //.beta_email_background
+    //  position: absolute
+    //  background: $green
+    //  height: 254px
+    //  top: 0
+    //  z-index: -10
+    //  +stretch-x
+    //  height: 220px
+
+
+
+  .instructions_block
+    position: relative
+    background: $green
+    margin: 30px auto 60px
+    .instructions
+      margin: 54px auto 20px
+      +span-columns(16,16)
+      position: relative
+      h3.title
+        margin: 0
+        +span-columns(8,16)
+        @extend .lato
+        font-size: px-to-em(24px,16px)
+        font-weight: 900
+        font-style: italic
+        color: $black
+        line-height: 1.5em
+
+      p.text
+        margin: 0
+        +span-columns(8,16)
+        @extend .titillium
+        font-size: px-to-em(22px,16px)
+        font-weight: 600
+        font-style: italic
+        color: $black
+        line-height: 1em
+
+      .options
+        +span-columns(16,16)
+        +horizontal-list (40px)
+        margin-top: 23px
+        padding: 20px 0
+        text-align: center
+
+        div.upload, div.printer, div.filemanager
+          +span-columns(5,16)
+          a.button
+            position: relative
+            +inline-block
+            height: 37px
+            width: 230px
+            padding-top: 20px
+            background: $black-shadow
+            text-decoration: none
+            +box-shadow($gray 2px -2px 0px)
+            @extend .lato
+            font-size: px-to-em(18px,16px)
+            font-weight: 900
+            font-style: italic
+            line-height: 1em
+            text-align: center
+            +link-colors($green,$black-shadow,$green,$green,$green)
+
+            &:hover
+              background: $gray
+              +box-shadow($black-shadow 2px -2px 0px)
+            //&:active
+            //  padding: 0.5px 4px
+            //  background: $dark-blue
+            //  border: $orange 2px solid
+            //  +box-shadow(none)
+            //  +box-sizing(border-box)
+
+        a#upload-comment, a#printer-comment, a#filemanager-comment
+          display: none
+          //+inline-block
+          margin-top: 12px
+          text-align: center
+
+          //text-decoration: none
+          @extend .lato
+          font-size: px-to-em(16px,16px)
+          font-weight: 900
+          font-style: italic
+          color: $black
+          line-height: 1em
+          text-align: center
+          +link-colors($pink,$pink,$pink,$pink,$pink)
+
+    //.instructions_background
+    //  position: absolute
+    //  background: $green
+    //  height: 255px
+    //  top: 34px
+    //  z-index: -10
+    //  +stretch-x
+
+  .comment_block
+    position: relative
+    .revision
+      +span-columns(16,16)
+      position: relative
+
+      .container-left
+        +span-columns(10,16)
+        position: relative
+        h1.first_comment
+          +span-columns(10,10)
+          margin: 21.440px auto
+          p.comment
+            padding: 0
+            margin: 0
+            @extend .lato
+            font-size: px-to-em(28.8px,16px)
+            font-weight: 700
+            font-style: italic
+            color: $black
+            line-height: 1em
+
+      .container-right
+        text-align: center
+
+    .revision_link
+      +span-columns(16,16)
+      p
+        padding: 0
+        margin: 0
+        @extend .titillium
+        font-size: 66px
+        font-weight: 700
+        font-style: italic
+        color: $black
+        line-height: 1em
+        +text-shadow($green 1px 3px 1px)
+
+        a
+          @extend .titillium
+          font-size: 25px
+          font-weight: 700
+          font-style: italic
+          color: $black
+          line-height: 1em
+          +link-colors($black,$black,$black,$black,$black)
+
+      .container-right
+        +span-columns(6 omega, 16)
+        margin: 21.440px auto
+        text-align: center
+
+    .first_comment_background
+      .comment_bar1, .comment_bar2,.comment_bar3
+        background: $green
+        height: 52px
+        z-index: -10
+      .comment_bar1
+        width: 56%
+        position: absolute
+        top: 20px
+      .comment_bar2
+        width: 59%
+        position: absolute
+        top: 77px
+      .comment_bar3
+        width: 51%
+        position: absolute
+        top: 134px
+
+
+
+  .publicity_block
+    position: relative
+    .publicity
+      +span-columns(16, 16)
+      margin-top: 80px
+      position: relative
+
+      .container-left
+        +span-columns(8, 16)
+        margin-top: 13px
+        text-align: center
+        img
+          width: 53%
+          height: auto
+
+      .container-right
+        +span-columns(8 omega, 16)
+
+        p
+          @extend .lato
+          font-size: px-to-em(24px,16px)
+          font-weight: 700
+          font-style: italic
+          color: $black
+          line-height: 1.5em
+
+    .publicity_comment_background
+      .publicity_bar1, .publicity_bar2,.publicity_bar3
+        background: $green
+        height: 32px
+        width: 52%
+        max-width: none
+        right: 0
+        z-index: -10
+      .publicity_bar1
+        position: absolute
+        top: 104px
+      .publicity_bar2
+        position: absolute
+        top: 140px
+      .publicity_bar3
+        position: absolute
+        top: 176px
+
+
+  .footer_block
+    position: relative
+    margin-top: 0
+    footer
+      +span-columns(16,16)
+      margin-top: 100px
+      .container-left
+        +span-columns(11,16)
+        text-align: center
+        .copyright
+          @extend .lato
+          font-size: 14px
+          font-weight: 400
+          font-style: normal
+          color: $white
+          line-height: 1em
+      .container-right
+        +span-columns(5 omega,16)
+        text-align: center
+        .share
+          margin-top: -7px
+          display: block
+          .addthis_toolbox
+            a
+              cursor: pointer
+              border: none
+              text-decoration: none
+              width: 34px
+              height: 34px
+              display: inline-block
+              text-align: center
+              font-size: px-to-em(20px,16px)
+              line-height: px-to-em(22px,16px)
+              +link-colors($white, $white, $white, $white, $white)
+
+
+    .footer_background
+      background: $black
+      position: absolute
+      top: 51px
+      height: 108px
+      z-index: -10
+      +stretch-x
+
+
+      /****Thankyou page****/
+
+  .title_block
+    .registration
+      .title_bar1
+        width: 47%
+        min-width: auto
+      .title_bar2
+        width: 29%
+        min-width: auto
+
+  .block_thankyou_text
+    position: relative
+    margin: 58px auto 72px
+    .thankyou_text
+      +span-columns(16,16)
+      p
+        text-transform: uppercase
+      p.title
+        +span-columns(7,16)
+        margin: 63px auto 36px
+        clear: both
+        @extend .lato
+        font-size: px-to-em(44.8px,16px)
+        font-weight: 700
+        font-style: italic
+        color: $black
+        +text-shadow($green_shadow 1px 3px 1px)
+        line-height: 1em
+
+
+      p.paragraph1, p.paragraph2
+        +span-columns(8,16)
+        clear: both
+        @extend .titillium
+        font-size: px-to-em(19px,16px)
+        font-weight: 700
+        font-style: italic
+        color: $black
+        line-height: 1em
+
+      p.paragraph1
+        margin: 0 auto 19px
+
+      p.paragraph2
+        margin: 0 auto
+
+    .thankyou_background
+      .hand
+        position: absolute
+        top: 121px
+        right: 0
+      .background
+        background: $green
+        height: 437px
+        top: 0
+        z-index: -10
+        +stretch-x
+
+
+/****Registration and Update page****/
+
+
+.block_registration_form
+  position: relative
+  margin: 50px auto 50px
+
+  form
+    +span-columns(16,16)
+    margin-top: 50px
+    input
+      +border-radius(0px)
+      +box-sizing(content-box)
+    fieldset
+      border: none
+      margin: 0
+      padding: 0
+      p
+        +span-columns(10,16)
+        margin: 0
+        padding: 0
+
+        .form
+          +span-columns(9,10)
+          height: 61px
+          margin: 0px
+          margin-bottom: 9px
+          border: none
+          +box-shadow($black 5px -5px 0px)
+          @extend .titillium
+          font-size: px-to-em(20px,16px)
+          font-weight: 700
+          font-style: italic
+          text-indent: 1em
+          +nowrap
+          overflow: hidden
+          text-overflow: ellipsis
+          padding: 0
+          +placeholder
+            color: $black
+            +text-shadow($green 1px 3px 1px)
+
+        .remembertext
+          @extend .lato
+          font-size: px-to-em(19px,16px)
+          font-weight: 700
+          font-style: italic
+          text-indent: 1em
+          color: $black
+          +nowrap
+          overflow: hidden
+          text-overflow: ellipsis
+          padding: 0
+
+        #submit
+          +span-columns(4,10)
+          height: 51px!important
+          font-size: px-to-em(16px,16px)!important
+          +box-shadow($green_shadow 5px -5px 0px !important)
+          &:hover
+            +box-shadow($black-shadow 5px -5px 0px !important)
+          +submit_button
+
+      .photoedit
+        margin: 10px auto 50px
+        img
+          +float-left
+        span
+          +float-left
+          padding-left: columns(1/2)
+          @extend .titillium
+          font-size: px-to-em(19px,16px)
+          font-weight: 700
+          font-style: normal
+          cursor: pointer
+          text-decoration: underline
+          +text-shadow($white 1px 1px)
+          +nowrap
+          overflow: hidden
+          text-overflow: ellipsis
+
+
+      .checkbox
+        margin: 30px auto
+
+
+
+
+  .registration_background
+    .hand
+      position: absolute
+      top: 121px
+      right: 0
+    .background
+      background: $green
+      height: 542px
+      top: 0
+      z-index: -10
+      +stretch-x
+
+    .update
+      height: 930px
+
+
+/****Login page****/
+
+.block_login_form
+  position: relative
+  margin: 50px auto 50px
+
+  form
+    +span-columns(16,16)
+    margin-top: 50px
+    input
+      +border-radius(0px)
+      +box-sizing(content-box)
+    fieldset
+      border: none
+      margin: 0
+      padding: 0
+      p
+        +span-columns(10,16)
+        margin: 0
+        padding: 0
+
+        #username, #password
+          +span-columns(9,10)
+          height: 61px
+          margin: 0px
+          margin-bottom: 9px
+          border: none
+          background: $black
+          +box-shadow($white 5px -5px 0px)
+          @extend .titillium
+          font-size: px-to-em(20px,16px)
+          font-weight: 700
+          font-style: italic
+          text-indent: 1em
+          color: white
+          +nowrap
+          overflow: hidden
+          text-overflow: ellipsis
+          padding: 0
+          +placeholder
+            color: $green_shadow
+
+        .remembertext
+          @extend .lato
+          font-size: px-to-em(19px,16px)
+          font-weight: 700
+          font-style: italic
+          text-indent: 1em
+          color: $black
+          +nowrap
+          overflow: hidden
+          text-overflow: ellipsis
+          padding: 0
+
+        #forgotpassword, #createaccount
+          @extend .titillium
+          font-size: px-to-em(14px,16px)
+          font-weight: 700
+          font-style: normal
+          text-indent: 1em
+          +link-colors($pink,$pink,$pink,$pink,$pink)
+          +nowrap
+          overflow: hidden
+          text-overflow: ellipsis
+          padding: 0
+
+        #submit
+          +span-columns(4,10)
+          height: 51px!important
+          font-size: px-to-em(16px,16px)!important
+          +box-shadow($green_shadow 5px -5px 0px !important)
+          &:hover
+            +box-shadow($black-shadow 5px -5px 0px !important)
+          +submit_button
+
+      .checkbox
+        margin: 16px auto
+
+  .login_background
+    .hand
+      position: absolute
+      top: 121px
+      right: 0
+    .background
+      background: $green
+      height: 437px
+      top: 0
+      z-index: -10
+      +stretch-x
+
+/****Upload page - Configuration page****/
+
+.container_block
+  position: relative
+  margin: 0 auto -20px
+
+  p.title
+    padding: 0
+    margin: 30px auto 0
+    @extend .lato
+    font-size: px-to-em(27px, 16px)
+    font-weight: 900
+    font-style: italic
+    color: $black
+    line-height: 1.5em
+
+  .return
+    +span-columns(8,16)
+    margin: 20px auto 0
+    a
+      display: inline-block
+      text-decoration: none
+
+      img
+        vertical-align: middle
+
+      p
+        display: inline-block
+        margin: 0 auto
+        padding-left: 10px
+        @extend .lato
+        font-size: px-to-em(21px, 16px)
+        font-weight: 600
+        font-style: italic
+        text-decoration: underline
+        color: $black
+        line-height: 1.5em
+
+  .download
+    +span-columns(8 omega,16)
+    margin: 6px auto 0
+    a
+      +float-right
+      text-decoration: none
+      p
+        display: inline-block
+        margin: 0 auto
+        padding-right: 10px
+        @extend .lato
+        font-size: px-to-em(23px, 16px)
+        font-weight: 900
+        font-style: italic
+        text-decoration: underline
+        color: $black
+        line-height: 1.5em
+
+      img
+        vertical-align: middle
+
+  .images_data
+    +span-columns(16,16)
+    position: relative
+    margin: 50px  auto 0
+    height: 400px
+
+    .upload
+      width: 100%
+      height: 95%
+      p
+        position: absolute
+        top: 31%
+        left: 33%
+        margin: 0 auto
+        @extend .lato
+        font-size: px-to-em(27px, 16px)
+        font-weight: 900
+        font-style: italic
+        color: $black
+        line-height: 1.5em
+
+    .frame-1
+      +stretch(0em, 0em, 3em, 3em)
+      border: 3px dashed $black
+
+    .frame-2
+      +stretch(2em, 2em, 5em, 0em)
+      border: 3px dashed $black
+
+    .file
+      +stretch(100px,240px,140px,320px)
+
+    p.messages
+      //todo piattaforma1 manca css messaggio
+
+
+
+    .container_background
+      +stretch(-1em, 0em, 4em, 1em)
+      z-index: -1
+      background: $gray_upload
+
+  .parameters
+    +span-columns(16,16)
+    position: relative
+    margin-bottom: 50px
+    p
+      padding: 0
+      margin: 0 auto
+      @extend .lato
+      font-size: px-to-em(26px,16px)
+      font-weight: 900
+      font-style: italic
+      line-height: 1.5em
+      +nowrap
+      overflow: hidden
+      text-overflow: ellipsis
+
+      span
+        @extend .lato
+        font-size: px-to-em(16px,16px)
+        font-weight: 700
+        font-style: italic
+        line-height: 1em
+        +nowrap
+        overflow: hidden
+        text-overflow: ellipsis
+
+
+    .progress-bar
+      @extend .lato
+      font-size: px-to-em(16px, 16px)
+      font-weight: 900
+      font-style: italic
+      color: $black
+      line-height: 1.5em
+
+/****Configuration form page****/
+
+.block_configuration_form
+  position: relative
+  margin-bottom: 63px
+
+  .form_group1
+    +span-columns(16, 16)
+    margin: 60px auto 40px
+    #color-chooser, #density-chooser
+      height: 43px
+      border-radius: 5px
+      background: $white
+      @extend .lato
+      font-size: px-to-em(19px,16px)
+      font-weight: 700
+      font-style: italic
+      text-indent: 1em
+      +nowrap
+      overflow: hidden
+      text-overflow: ellipsis
+      padding: 0
+
+    #color-chooser
+      +span-columns(5, 16)
+      +post(1)
+    #density-chooser
+      +span-columns(5 , 16)
+
+
+
+  .form_group2
+    +span-columns(16,16)
+    .block1
+      +span-columns(16,16)
+      margin-bottom: 60px
+      #ammount
+        height: 43px
+        width: 100%
+        border: none
+        border-radius: 5px
+        background: $white
+        +placeholder
+          color: $black
+        @extend .lato
+        font-size: px-to-em(19px,16px)
+        font-weight: 700
+        font-style: italic
+        text-indent: 1em
+        +nowrap
+        overflow: hidden
+        text-overflow: ellipsis
+        padding: 0
+      .left
+        +span-columns(5, 16)
+        +post(1)
+      .right
+        +span-columns(5 , 16)
+
+    .block2
+      +span-columns(16,16)
+
+      .price
+        +span-columns(5, 16)
+        +post(1)
+        height: 51px
+        .order
+          display: inline-block
+          width: 100%
+          background: $white
+          @extend .lato
+          font-size: px-to-em(19px,16px)
+          font-weight: 900
+          font-style: italic
+          text-indent: 1em
+          line-height: 3em
+          +nowrap
+          overflow: hidden
+          text-overflow: ellipsis
+          padding: 0
+
+      .submit
+        +span-columns(4, 16)
+        #submit
+          +span-columns(4,4)
+          margin-top: 0!important
+          height: 51px!important
+          font-size: px-to-em(16px,16px)!important
+          +box-shadow($green_shadow 5px -5px 0px !important)
+          &:hover
+            +box-shadow($black-shadow 5px -5px 0px !important)
+          +submit_button
+
+
+  .configuration_background
+    .hand
+      position: absolute
+      top: 121px
+      right: 0
+    .background
+      background: $green
+      height: 360px
+      top: 0
+      z-index: -10
+      +stretch-x
+
+
+/****Send page****/
+
+.block_sendrequest
+  position: relative
+  margin-bottom: 38px
+  .sendrequest_text
+    +span-columns(16,16)
+    p.title
+      //+span-columns(16,16)
+      margin: 63px auto 30px
+      clear: both
+      @extend .lato
+      font-size: px-to-em(44.8px,16px)
+      font-weight: 700
+      font-style: italic
+      color: $black
+      +text-shadow($green_shadow 1px 3px 1px)
+      line-height: 1em
+
+  .printer_request_form
+    +span-columns(16,16)
+    position: relative
+    p
+      #printer_request_submit
+        +span-columns(4,16)
+        height: 51px!important
+        font-size: px-to-em(16px,16px)!important
+        +box-shadow($green_shadow 5px -5px 0px !important)
+        &:hover
+          +box-shadow($black-shadow 5px -5px 0px !important)
+        +submit_button
+
+
+  .sendrequest_background
+    .hand
+      position: absolute
+      top: 121px
+      right: 0
+    .background
+      background: $green
+      height: 414px
+      top: 0
+      z-index: -10
+      +stretch-x
+
+
+/****User page****/
+//todo piattaforma2 guardare backend e modificare efecto delle flangie
+.flange
+  position: relative
+  margin-bottom: 50px
+
+  ul
+    +horizontal-list
+
+    li
+      height: 24px
+      padding: 20px!important
+      border-bottom: $green 1px solid
+      cursor: pointer
+      @extend .titillium
+      font-size: px-to-em(25px,16px)
+      font-weight: 700
+      font-style: normal
+      +text-shadow($green 1px 1px 1px)
+      +nowrap
+      overflow: hidden
+      text-overflow: ellipsis
+
+      .background, .background1, .background2
+        display: none
+        border-bottom: $green 13px solid
+        position: relative
+        top: -19px
+        z-index: -1
+
+
+
+      &:first-child
+        border: $green 1px solid
+        border-bottom: none
+        cursor: default
+        .background
+          display: block
+        .background1
+          display: block
+
+  .line
+    height: 1px
+    border-bottom: $green 1px solid
+    z-index: -1
+    +stretch(63px,0px,16px,304px)
+
+
+.printer
+  //.line
+  //  width: 33%
+  .background1
+    width: 213px!important
+  .background2
+    width: 178px!important
+
+  .line
+    +stretch(63px,0px,16px,628px)
+
+.file_manager
+  .background1
+    width: 213px!important
+  .background2
+    width: 229px!important
+
+  .line
+    +stretch(63px,0px,16px,672px)
+
+
+
+
+div.info_projects, div.info_archived, div.info_jobs_available, div.reviews_request
+  position: relative
+
+  p
+    margin: 30px auto 0
+    @extend .lato
+    font-size: px-to-em(24px,16px)
+    font-weight: 700
+    font-style: italic
+    color: $black
+    +text-shadow($green 1px 1px 1px)
+    line-height: 1em
+
+    span
+      @extend .titillium
+      font-size: 22px
+      font-weight: 700
+      font-style: normal
+      text-shadow: none
+      +nowrap
+      overflow: hidden
+      text-overflow: ellipsis
+
+    span#name
+      //text-decoration: underline
+
+    span#price
+      @extend .titillium
+      font-size: 31px
+      font-weight: 700
+      font-style: italic
+      +text-shadow($green 1px 1px 1px)
+
+    span#currency
+      font-size: 20px
+      +text-shadow($green 1px 1px 1px)
+
+    span#time
+      +text-shadow($green 1px 1px 1px)
+
+  .price
+    margin-top: 20px
+
+  .status
+    margin: 36px auto 0
+    p
+      display: inline
+      padding-right: 42px
+
+    img
+      vertical-align: middle
+      padding-right: 34px
+
+  .time
+    margin: 36px auto 0
+    p
+      display: inline
+      padding-right: 42px
+
+    img
+      vertical-align: middle
+      padding-right: 34px
+
+  .link_to_project
+    position: absolute
+    top: 1px
+    right: 223px
+
+    a
+      background: $black-shadow
+      border: $green 3px solid
+      display: inline-block
+      padding: 10px  22px
+      @extend .lato
+      font-size: px-to-em(18px,16px)
+      font-weight: 900
+      font-style: italic
+      line-height: 1em
+      text-decoration: none
+      +link-colors($green,$black,$green,$green,$green)
+      &:hover
+        //color: $black
+        background: $green_shadow
+
+
+  .separator
+    height: 81px
+    position: relative
+    margin-top: 53px
+
+    #separator1
+      position: absolute
+      top: 0px
+    #separator2
+      position: absolute
+      top: -56px
+      right: -5px
+
+  //&:last-child
+  &:last-of-type
+    .separator
+      display: none
+
+.infoprojects + .info_archived
+  .info_projects
+    .separator
+      display: none
+
+.info_jobs_available
+  display: none
+
+.info_archived
+  display: none
+  .price
+    margin-top: 31px
+
+
+.file_info_block
+  background: $green
+  margin: 35px auto 82px
+  position: relative
+
+
+  .file_info
+    +span-columns(16,16)
+    margin: 50px auto 50px
+    padding-bottom: 60px
+    border-bottom: $white 2px solid
+
+    .container-left
+      +span-columns(7,16)
+      .images_data
+        position: relative
+        height: 154px
+        margin: 15px auto
+
+        .frame-1
+          +stretch(-1em, 0em, -4em, 1.5em)
+          border: 3px dashed $black
+          z-index: 10
+
+        .frame-2
+          +stretch(0.5em, 1.5em, -5.5em, 0em)
+          border: 3px dashed $black
+          z-index: 10
+        .file
+          +stretch(35px,81px,-27px,85px)
+          z-index: 10
+          canvas#cv
+            width: 100%
+            height: 100%
+            z-index: 10
+
+        .container_background
+          background: $gray_upload
+          +stretch(-1em, 2em, -5em, 0em)
+
+    .container-right
+      +span-columns(8 omega,16)
+      p
+        margin: 15px auto
+        @extend .titillium
+        font-size: 29px
+        font-weight: 700
+        font-style: italic
+        +text-shadow($white 1px 1px 1px)
+        +nowrap
+        overflow: hidden
+        text-overflow: ellipsis
+
+        span
+          @extend .lato
+          font-size: 22px
+          font-weight: 700
+          font-style: italic
+          +nowrap
+          overflow: hidden
+          text-overflow: ellipsis
+
+
+      .column-left
+        +span-columns(4,9)
+
+      .column-right
+        +span-columns(4 omega,9)
+
+  .comments
+    +span-columns(16,16)
+    position: relative
+
+    h3
+      margin: 0 auto
+      @extend .titillium
+      font-size: 36px
+      font-weight: 700
+      font-style: italic
+      line-height: 1.5em
+      +text-shadow($white 1px 1px 1px)
+      +nowrap
+      overflow: hidden
+      text-overflow: ellipsis
+
+    .comment
+      margin: 30px auto 55px
+      p
+        margin: 0 auto
+        +span-columns(13,16)
+        @extend .lato
+        font-size: 19px
+        font-weight: 700
+        font-style: italic
+        +text-shadow($white 1px 1px 1px)
+        line-height: 1.5em
+        overflow: hidden
+        text-overflow: ellipsis
+
+      img
+        margin-top: -28px
+
+
+  .submit
+    position: absolute
+    bottom: -68px
+    #submit
+      width: 210px
+      height: 51px!important
+      font-size: px-to-em(16px,16px)!important
+      +box-shadow($green_shadow 5px -5px 0px !important)
+      &:hover
+        +box-shadow($black-shadow 5px -5px 0px !important)
+      +submit_button
+
+
+.info
+
+  .info_reviews_request
+    +span-columns(16,16)
+
+    #division1
+      display: none
+
+    .file_data
+
+      p
+        +span-columns(14,16)
+        margin: 10px auto
+        @extend .lato
+        font-size: px-to-em(24px,16px)
+        font-weight: 700
+        font-style: italic
+        color: $black
+        +text-shadow($green 1px 1px 1px)
+        line-height: 2.5em
+        +nowrap
+        overflow: hidden
+        text-overflow: ellipsis
+
+        span
+          @extend .titillium
+          font-size: 22px
+          font-weight: 700
+          font-style: normal
+          text-shadow: none
+
+      img
+        width: 30px
+        height: auto
+        margin-top: 25px
+        +float-right
+
+    .review_content
+      display: none
+      clear: both
+      p.filename
+        display: none
+
+    &:first-child
+      #division1
+        margin-bottom: 7px
+        display: block
+
+
+
+.print_info_block
+  position: relative
+  margin-top: 25px
+  background: $green
+
+  .acceptation_info
+    .info1, .info2, .info3, .info4, .info5
+      p
+        margin: 15px auto
+        @extend .titillium
+        font-size: 29px
+        font-weight: 700
+        font-style: italic
+        line-height: 1em
+        +text-shadow($white 1px 1px 1px)
+        +nowrap
+        overflow: hidden
+        text-overflow: ellipsis
+
+        span
+          @extend .lato
+          font-size: 22px
+          font-weight: 700
+          font-style: italic
+          +nowrap
+          overflow: hidden
+          text-overflow: ellipsis
+
+    .info1
+      +span-columns(3,16)
+      p
+        &:first-child
+          font-size: 36px
+    .info2
+      +span-columns(1,16)
+      margin-top: 10px
+      .line
+        height: 260px
+        width: 1px
+        border-right: $white 1px solid
+
+    .info3
+      +span-columns(4,16)
+
+    .info4
+      +span-columns(4,16)
+
+    .info5
+      +span-columns(4 omega,16)
+
+
+
+.submit-accept #submit-accept, .submit_deny #submit-deny
+  +span-columns(4,6)
+  height: 51px!important
+  font-size: px-to-em(16px,16px)!important
+  +submit_button
+
+.submit-accept
+  +span-columns(6,16)
+  margin: 20px auto 40px
+  #submit-accept
+    +box-shadow($green_shadow 5px -5px 0px)
+    &:hover
+      +box-shadow($black 5px -5px 0px)
+
+.submit_deny
+  +span-columns(6,16)
+  margin: 20px auto 40px
+  #submit-deny
+    background: $orange
+    color: $black
+    +box-shadow($black_shadow 5px -5px 0px)
+    //todo piattaforma2 chiedere a Manu l'hover di questa bottona
+    &:hover
+      background: $black
+      color: $orange
+      +box-shadow($orange 5px -5px 0px)
+
+
+.project_comments
+  +span-columns(16,16)
+  margin: 20px auto 65px
+  position: relative
+
+  .project_comment
+    +span-columns(11,16)
+    margin-top: 20px
+    .user_image
+      +span-columns(2,11)
+      text-align: center
+      img
+        width: 63%
+        height: auto
+
+    p
+      +span-columns(9 omega,11)
+      margin: 0 auto
+      @extend .lato
+      font-size: 19px
+      font-weight: 600
+      font-style: italic
+      line-height: 1.5em
+      overflow: hidden
+      text-overflow: ellipsis
+
+
+.comment_textarea_block
+  background: $green
+  padding: 61px 0 34px 0
+
+  .container-left
+    +span-columns(10,16)
+    position: relative
+    margin-left: 119px
+    //todo piattaforma2 si è textarea mettere placeholder
+    textarea
+      width: 100%
+      background: $green
+      border: $white 2px solid
+      +box-sizing(border-box)
+
+  .container-right
+    +span-columns(4 omega, 16)
+    .submit
+      +span-columns(4,4)
+      margin-top: 110px
+      #submit_comment
+        width: 98%
+        height: 51px!important
+        font-size: px-to-em(16px,16px)!important
+        +box-shadow($green_shadow 5px -5px 0px !important)
+        &:hover
+          +box-shadow($black 5px -5px 0px !important)
+        +submit_button
+
+
+/******Payment-printer_page****/
+
+.payment-status_block
+  margin: 45px auto 60px
+  .payment-status
+    p
+      display: inline-block
+      @extend .lato
+      font-size: 26px
+      font-weight: 900
+      font-style: italic
+      line-height: 1em
+      overflow: hidden
+      text-overflow: ellipsis
+    img
+      padding-left: 25px
+      padding-bottom: 30px
+
+.pay_ok
+  background: $blue
+  p
+    color: $white
+  img
+    width: 47px
+    height: auto
+
+.confirm
+  background: $orange
+  p
+    color: $black
+  img
+    width: 82px
+    height: auto
+
+
+/*****Payment-printer_page*******/
+
+.payment_printer_block
+  position: relative
+  background: $blue
+  margin: 45px auto 60px
+  .distance
+    +span-columns(16,16)
+    margin: 50px auto 10px
+    position: relative
+    .image
+      +span-columns(2,16)
+      text-align: center
+      img
+        width: 70%
+        height: auto
+
+    p
+      +span-columns(8,16)
+      margin: 0 auto
+      @extend .lato
+      font-size: 30px
+      font-weight: 900
+      font-style: italic
+      color: $white
+      line-height: 1em
+      overflow: hidden
+      text-overflow: ellipsis
+
+  .form_group
+    +span-columns(16,16)
+
+    p.radio1, p.radio2
+      +span-columns(6,16)
+      margin: 20px auto 20px
+      @extend .lato
+      font-size: 26px
+      font-weight: 900
+      font-style: italic
+      color: $white
+      line-height: 1em
+      overflow: hidden
+      text-overflow: ellipsis
+
+
+    p.submit
+      +span-columns(4,16)
+      margin: 28px auto 50px
+      clear: both
+      #payment_submit
+        +span-columns(4,4)
+        height: 51px!important
+        margin: 0 auto!important
+        font-size: px-to-em(16px,16px)!important
+        color: $black!important
+        background: $gray_paybutton!important
+        +box-shadow($black_shadow 5px -5px 0px !important)
+        +submit_button
+        &:hover
+          color: $gray_paybutton!important
+          background: $black!important
+          +box-shadow($gray_paybutton 5px -5px 0px !important)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

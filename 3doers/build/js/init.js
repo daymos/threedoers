@@ -1,0 +1,1 @@
+Modernizr.load([{test:Modernizr.mq("only all"),nope:"/js/vendor/respond.src.js"}]);

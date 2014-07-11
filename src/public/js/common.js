@@ -1,1 +1,90 @@
-(function(){var e;e=function(){function e(e,t){var n=this;this.form=e,this.validations=t,this.form=$(this.form),this.form.submit(function(){return n.validate()})}return e.prototype._required=function(e,t){var n,r;return r=e.val(),n=e.siblings("label").text(),this.message=t.message||"This field is required.",r?!0:!1},e.prototype._regexp=function(e,t){var n,r;return r=e.val(),n=e.siblings("label").text(),this.message=t.message||"This field is not valid.",r.match(t.test)?!0:!1},e.prototype._match=function(e,t){var n,r,i;return r=e.val(),i=$(t.test).val(),n=e.siblings("label").text(),this.message=t.message||"Value didn't match",r===i?!0:!1},e.prototype.formatOptions=function(e){return e.test||(e={tests:e}),e},e.prototype.validate=function(){var e,t,n,r;n=!0;for(r in this.validations){e=this.form.find(r);for(t in this.validations[r])if(this["_"+t]){if(!this["_"+t](e,this.formatOptions(this.validations[r][t]))){this.form.trigger("error",[e,this.message]),n=!1;break}this.form.trigger("valid",[e])}else this.form.trigger("error",[e,"Validator '"+t+"' is not implemented"]),n=!1}return n},e}(),this.Validator=e}).call(this);
+(function() {
+  var Validator;
+
+  Validator = (function() {
+    function Validator(form, validations) {
+      var _this = this;
+      this.form = form;
+      this.validations = validations;
+      this.form = $(this.form);
+      this.form.submit(function(event) {
+        return _this.validate();
+      });
+    }
+
+    Validator.prototype._required = function($element, options) {
+      var label, val;
+      val = $element.val();
+      label = $element.siblings('label').text();
+      this.message = options.message || "This field is required.";
+      if (val) {
+        return true;
+      } else {
+        return false;
+      }
+    };
+
+    Validator.prototype._regexp = function($element, options) {
+      var label, val;
+      val = $element.val();
+      label = $element.siblings('label').text();
+      this.message = options.message || "This field is not valid.";
+      if (val.match(options.test)) {
+        return true;
+      } else {
+        return false;
+      }
+    };
+
+    Validator.prototype._match = function($element, options) {
+      var label, val1, val2;
+      val1 = $element.val();
+      val2 = $(options.test).val();
+      label = $element.siblings('label').text();
+      this.message = options.message || "Value didn't match";
+      if (val1 === val2) {
+        return true;
+      } else {
+        return false;
+      }
+    };
+
+    Validator.prototype.formatOptions = function(options) {
+      if (!options.test) {
+        options = {
+          tests: options
+        };
+      }
+      return options;
+    };
+
+    Validator.prototype.validate = function() {
+      var $element, method, result, selector;
+      result = true;
+      for (selector in this.validations) {
+        $element = this.form.find(selector);
+        for (method in this.validations[selector]) {
+          if (this["_" + method]) {
+            if (!this["_" + method]($element, this.formatOptions(this.validations[selector][method]))) {
+              this.form.trigger('error', [$element, this.message]);
+              result = false;
+              break;
+            } else {
+              this.form.trigger('valid', [$element]);
+            }
+          } else {
+            this.form.trigger('error', [$element, "Validator '" + method + "' is not implemented"]);
+            result = false;
+          }
+        }
+      }
+      return result;
+    };
+
+    return Validator;
+
+  })();
+
+  this.Validator = Validator;
+
+}).call(this);

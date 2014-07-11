@@ -1,0 +1,59 @@
+-# coding: utf-8
+!!!5
+/[if lt IE 7] <html class="no-js lt-ie9 lt-ie8 lt-ie7">
+/[if IE 7] <html class="no-js lt-ie9 lt-ie8">
+/[if IE 8] <html class="no-js lt-ie9">
+%html.no-js{lang:"en",:"xmlns:fb" => "http://ogp.me/ns/fb#"}
+  %head
+    %meta{:charset => "utf-8"}
+
+    %title
+      = page_title
+    %meta{:name => "description", :content => ""}
+    %meta{:name => "viewport", :content => "width=device-width, initial-scale=1, maximum-scale=1"}
+    %meta{:name => "apple-mobile-web-app-capable", :content =>"yes"}
+    %meta{:name => "apple-mobile-web-app-status-bar-style", :content => "black"}
+    %meta{:name => "keywords", :content => "" }
+    %meta{:property=>"og:title", :content=>""}
+    %meta{:property=>"og:type", :content=>"website"}
+    %meta{:property=>"og:description", :content => ""}
+    %meta{:property=>"og:url", :content=>"http://3doers.it"}
+    %meta{:property=>"og:image", :content=>""}
+    %meta{:property=>"og:site_name", :content=>"3doers"}
+    %meta{:property=>"fb:app_id", :content=>""}
+
+    <!-- Favicons and touch icons -->
+    <!-- For retina-display iPads -->
+    %link{ :href=>"apple-touch-icon-144x144-precomposed.png", :rel=>"apple-touch-icon-precomposed", :sizes=>"144x144", :type=>"image/png" }
+    <!-- For retina-display iPhones -->
+    %link{ :href=>"apple-touch-icon-144x144-precomposed.png", :rel=>"apple-touch-icon-precomposed", :sizes=>"114x114", :type=>"image/png" }
+    <!-- For iPad 1 -->
+    %link{ :href=>"apple-touch-icon-72x72-precomposed.png", :rel=>"apple-touch-icon-precomposed", :sizes=>"72x72", :type=>"image/png" }
+    <!-- For iPhone 3G, iPod Touch and Android -->
+    %link{ :href=>"apple-touch-icon-57x57-precomposed.png", :rel=>"apple-touch-icon-precomposed", :type=>"image/png" }
+    <!-- For Nokia -->
+    %link{ :href=>"apple-touch-icon-original.png", :rel=>"shortcut icon" }
+    <!-- For everything else -->
+    %link{ :href=>"favicon.png", :rel=>"shortcut icon", :type=>"image/png" }
+    %link{ :href=>"favicon.ico", :rel=>"shortcut icon", :type=>"image/x-icon" }
+
+
+    = stylesheet_link_tag "application"
+    = javascript_include_tag "vendor/modernizr.js"
+
+
+
+  %body
+
+    = yield
+    //todo codice per il addthis o guardare altre maniere di fare lo share
+    %script{src: ""}
+    = javascript_include_tag "site.js"
+
+
+
+
+
+
+
+
