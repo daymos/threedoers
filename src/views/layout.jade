@@ -56,11 +56,14 @@ html.no-js(lang="en", "xmlns:fb"="http://ogp.me/ns/fb#")
     link(type='image/png', rel='shortcut icon', href='/img/favicon.png')
     link(type='image/x-icon', rel='shortcut icon', href='/img/favicon.ico')
 
-    link(href='/css/application.css', media='screen', rel='stylesheet')
-    script(src='/vendor/modernizr.js')
-    script(src='/js/common.js')
-    script(src='//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.min.js')
-    script(src="//code.jquery.com/jquery-migrate-1.0.0.js")
+    link(href='css/application.css', rel='stylesheet')
+    // jQuery (necessary for Bootstrap's JavaScript plugins)
+    script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js')
+    // HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries
+    // WARNING: Respond.js doesn't work if you view the page via file://
+    // if lt IE 9
+      script(src='https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js')
+      script(src='https://oss.maxcdn.com/respond/1.4.2/respond.min.js')
 
     script.
       function toggle(){
@@ -78,7 +81,12 @@ html.no-js(lang="en", "xmlns:fb"="http://ogp.me/ns/fb#")
     block extra-headers
 
   body
-    include includes/header
-    block body
-    include includes/footer
+    .main-holder
+      include includes/header
+      block body
+      include includes/footer
     block scripts
+
+    // Include all compiled plugins (below), or include individual files as needed
+    script(src='/vendor/bootstrap.min.js')
+

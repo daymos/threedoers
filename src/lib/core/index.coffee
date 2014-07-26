@@ -17,13 +17,16 @@ module.exports = (app, io) ->
   paypal.configure(settings.paypal.api)
 
   app.get '/', (req, res) ->
+    res.render 'core/comming', {message: null, error: false, message: false}
+
+  app.get '/home', (req, res) ->
     res.render 'core/index', {message: null, error: false, message: false}
 
   app.post '/', (req, res) ->
     req.assert('email').isEmail()
     errors = req.validationErrors(true)
     if errors
-      res.render 'core/index',
+      res.render 'core/comming',
         message: "OPS! THERE WAS AN ERROR! TRY AGAIN! <br/> #{errors.email.msg}"
         email: req.body.email
         error: true

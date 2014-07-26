@@ -62,8 +62,21 @@ module.exports = function(grunt) {
         src: ['tmp/assets/public/js/common/**/*.js'],
         dest: 'src/public/js/common.js',
       },
-      css: {
-        src: ['!src/public/css/application.css', 'tmp/assets/public/css/**/*.css'],
+      cssComming: {
+        src: ['!src/public/css/comming.css',
+              'src/public/css/bootstrap-select.min.css',
+              'tmp/assets/public/css/comming.css',
+              'src/public/css/narrow_jumbo.css'],
+        dest: 'src/public/css/comming.css',
+      },
+      cssApplication: {
+        src: ['!src/public/css/application.css',
+              'src/public/css/bootstrap.css',
+              'src/public/css/bootstrap-theme.css',
+              'src/public/css/font.css',
+              'src/public/css/flexslider.css',
+              'src/public/css/font-awesome.css',
+              'tmp/assets/public/css/application.css'],
         dest: 'src/public/css/application.css',
       },
     },
@@ -72,7 +85,7 @@ module.exports = function(grunt) {
       assets: {
         expand: true,
         cwd: 'src/public/',
-        src: ['css/application.css', 'js/application.js', 'js/site.js', 'js/common.js', 'js/lib.js', 'js/views/*.js', 'vendor/*.js', 'tmp/.gitignore', 'img/*.png', 'img/*.jpg', 'fonts/**'],
+        src: ['css/application.css', 'css/comming.css', 'js/application.js', 'js/site.js', 'js/common.js', 'js/lib.js', 'js/views/*.js', 'vendor/*.js', 'tmp/.gitignore', 'img/*.png', 'img/*.jpg', 'fonts/**'],
         dest: 'public/'
       },
       views: {
@@ -106,7 +119,7 @@ module.exports = function(grunt) {
 
       sass: {
         files: ['src/public/css/**/*.scss'],
-        tasks: ['sass:dev', 'concat:css']
+        tasks: ['sass:dev', 'concat:cssApplication', 'concat:cssComming']
       }
     }
 

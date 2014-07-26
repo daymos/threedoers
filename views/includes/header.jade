@@ -1,17 +1,19 @@
 unless user
-  div.header_block
-    section.homepage.container1
-      header
-        div.container-left
-          a.logo(href='/')
-            img(alt='3doers Icon', src='/img/logo_3doers.png')
-        div.container-right
-          ul.login
-            li: p: a(href="/accounts/login") LOG IN
-            li: p: a(href="/accounts/signup") SIGN UP
-
-    div.login_background
-      div.login_bar
+  header
+    #header
+      .container
+        .row
+          .col-md-6
+            a(href='/')
+              img(src='/img/logo.png')
+          .col-md-6
+            nav
+              .main-nav
+                ul
+                  li
+                    a(href='/accounts/login') LOG IN
+                  li
+                    a(href='/accounts/signup') SIGN UP
 else
     div.menuheader_block
       section.homepage.container1
