@@ -1,111 +1,98 @@
 extends ../layout
 
 block body
-  section#content
-    div
-      .container
-        h1.page-title
-          span Welcome To 3Doers
-        h1.page-title
-          span Find A 3D Printer For
-        h1.page-title
-          span Your Project Or Start
-        h1.page-title
-          span Printing Others
-        h4.h4-3d
-          | 3DOERS IS A FAST COLLECTIVE 3D PRINTING SERVICE.
-          br
-          | YOU CAN UPLOAD, PRINT OR WORK ON THE FILES.
-          br
-          | LEARN HOW TO DO IT HERE.
+  div
+    .container
+      h1.page-title
+        span Welcome To 3Doers
+      h1.page-title
+        span Find A 3D Printer For
+      h1.page-title
+        span Your Project Or Start
+      h1.page-title
+        span Printing Others
+      h4.h4-3d
+        | 3DOERS IS A FAST COLLECTIVE 3D PRINTING SERVICE.
         br
-      .flexslider
-        ul.slides
-          li
-            img(src='img/user_gallery_img.png')
-          li
-            img(src='img/yoda_gallery_img.png')
+        | YOU CAN UPLOAD, PRINT OR WORK ON THE FILES.
+        br
+        | LEARN HOW TO DO IT HERE.
+      br
+    .flexslider
+      ul.slides
+        li: img(src="/img/yoda_gallery_img.png", alt='3d printer')
+        li: img(src="/img/user_gallery_img.png", alt='3d printer')
+        li: img(src="/img/printer_gallery_img.png", alt='3d printer')
+        li: img(src="/img/filemanager_gallery_img.png", alt='3d printer')
 
-      .main-slider-bottom
-        img(src='img/gallery_image.png')
+    .main-slider-bottom
+      img(src='img/gallery_image.png')
+    br
+    br
+    br
+
+  .section.primary
+    .container
+      h2.h2-3d.text-shadow-white SIGN UP!
+      h3.h3-3d
+        | Join to our community and start the collective
+        br
+        | 3D printing.
+      br
+      br
+      .row
+        .col-md-4
+          a.btn.btn-default.btn-lg.btn-block(href='/project/upload')
+            span UPLOAD A PROJECT
+          br
+        .col-md-4
+          a.btn.btn-default.btn-lg.btn-block(href='/become')
+            span BECOME A PRINTER
+          br
+        .col-md-4
+          a.btn.btn-default.btn-lg.btn-block(href='#')
+            span BECOME A FILE MANAGER
+  div
+    .container
       br
       br
       br
-
-    .section.primary
-      .container
-        h2.h2-3d.text-shadow-white SIGN UP!
-        h3.h3-3d
-          | Join to our community and start the collective
+      br
+      br
+      br
+      .row
+        .col-md-7
+          h1.page-title
+            span Are You Sure That
+          h1.page-title
+            span Your File Is Ready
+          h1.page-title
+            span To Be Printed?
+          h2.file-revision
+            | No!
+            a.default-hover(href='#') So Click Here For A File Revision
           br
-          | 3D printing.
-        br
-        br
-        .row
-          .col-md-4
-            a.btn.btn-default.btn-lg.btn-block(href='#')
-              span UPLOAD A PROJECT
-            br
-          .col-md-4
-            a.btn.btn-default.btn-lg.btn-block(href='#')
-              span BECOME A PRINTER
-            br
-          .col-md-4
-            a.btn.btn-default.btn-lg.btn-block(href='#')
-              span BECOME A FILE MANAGER
-    div
-      .container
-        br
-        br
-        br
-        br
-        br
-        br
-        .row
-          .col-md-7
-            h1.page-title
-              span Are You Sure That
-            h1.page-title
-              span Your File Is Ready
-            h1.page-title
-              span To Be Printed?
-            h2.file-revision
-              | No!
-              a.default-hover(href='#') So Click Here For A File Revision
-            br
-            br
-          .col-md-5
-            p.text-center
-              img(src='img/icona3d_homepage.png')
-        br
-        br
-        br
-        br
-        .row
-          .col-md-5
-            p.text-center
-              img(src='img/publicity_homepage.png')
-            br
-          .col-md-7
-            h1.page-title.small.right
-              span Welcome To 3Doers
-            h1.page-title.small.right
-              span Find A 3D Printer For Your Project
-            h1.page-title.small.right
-              span Or Start Printing Others
-        br
-        br
-        br
-        br
-
+          br
+        .col-md-5
+          p.text-center
+            img(src='/img/icona3d_homepage.png')
+      br
+      br
+      br
+      br
+      include ../includes/publicity
+      br
+      br
+      br
+      br
 
 block scripts
   script(src='/vendor/jquery.flexslider-min.js')
   script(type='text/javascript')
     $(window).load(function() {
       $('.flexslider').flexslider({
-      'controlNav': false,
-      'prevText': '',
-      'nextText': ''
-      });
+        'controlNav': false,
+        'prevText': '',
+        'nextText': ''
+        });
       });

@@ -34,7 +34,9 @@ $(document).ready ->
   #   element.closest('.form-group').removeClass('has-error')
 
   # Google autocomplete
-  $input = $('#address').bind 'keypress', (e) ->
+  $input = $('#address')
+
+  $input.bind 'keypress', (e) ->
     e.preventDefault() if ( e.which == 13 )
 
   $input.val('')  # set empty to allow user to enter address again to get data

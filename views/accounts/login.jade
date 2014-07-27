@@ -4,44 +4,48 @@ block title
   |  Login
 
 block body
-  .title_block
-    section.homepage.container2
-      h1.title
-        p
-          | LOGIN
-          br
-        p
-          | FORM
-          br
-    .title_background.login
-      .title_bar1
-      .title_bar2
-  //
-    /todo OCCHIO adattare html and css  con versione backend
-  .block_login_form.row
-    section.homepage.container2
-      form#registration.form-horizontal(action='/accounts/login', method='POST', role='form', accept-charset='utf-8', name='signup-form')
-        input(type='hidden', name='authenticity_token')
-        fieldset
-          input(type='hidden', name='_csrf', value=csrfToken)
-          p.form-group
-            input#username.form(value='', placeholder='USERNAME', name='username')
-            input#password.form(type='password', value='', placeholder='PASSWORD', name='password')
-          p.checkbox
-            input#rememberme(type='checkbox', value='1', checked='', name='rememberme')
-            span.remembertext  REMEMBER ME
-          p.links.btn-links
-            a#forgotpassword(href='') FORGOT YOUR PASSWORD?
-            br
-            a#createaccount(href='/accounts/signup') CREATE AN ACCOUNT
-          p.btn.btn-primary.btn-lg.center-block
-            input#submit.form(type='submit', value='SIGN IN', name='submit')
-
-    .login_background
-      .hand
-        img(src='/img/hand_register.png', alt='3doers Hand')
-      .background
-  include ../includes/publicity
+  div
+    .container
+        h1.page-title
+          span Login
+        h1.page-title
+          span Form
+    br
+    br
+    .section.primary
+      .container
+        .row
+          .col-md-6
+            form#registration.form-horizontal(action='/accounts/login', method='POST', role='form', accept-charset='utf-8', name='signup-form')
+              input(type='hidden', name='_csrf', value=csrfToken)
+              .form-group
+                input.form-control.dark.input-text.input-lg(type='text', placeholder='USERNAME', name='username')
+              .form-group
+                input.form-control.dark.input-text.input-lg(type='password', placeholder='PASSWORD', name='password')
+              br
+              .form-group
+                a.default-hover.forgot-password(href='#') FORGOT YOUR PASSWORD?
+                br
+                a.default-hover.create-account(href='/accounts/signup') CREATE AN ACCOUNT
+              br
+              br
+              br
+              br
+              .form-group
+                .row
+                  .col-md-8
+                    button.btn.btn-xlg.btn-default.btn-block(type='submit')
+                      span SIGN IN
+          .col-md-6
+            div
+              img(src='/img/hand_register.png')
+    br
+    br
+    br
+    include ../includes/publicity
+    br
+    br
+    br
 
 block scripts
   script(src='/js/views/login.js')

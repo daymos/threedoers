@@ -56,9 +56,7 @@ html.no-js(lang="en", "xmlns:fb"="http://ogp.me/ns/fb#")
     link(type='image/png', rel='shortcut icon', href='/img/favicon.png')
     link(type='image/x-icon', rel='shortcut icon', href='/img/favicon.ico')
 
-    link(href='css/application.css', rel='stylesheet')
-    // jQuery (necessary for Bootstrap's JavaScript plugins)
-    script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js')
+    link(href='/css/application.css', rel='stylesheet')
     // HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries
     // WARNING: Respond.js doesn't work if you view the page via file://
     // if lt IE 9
@@ -71,22 +69,28 @@ html.no-js(lang="en", "xmlns:fb"="http://ogp.me/ns/fb#")
       }
 
     block base-headers
-      script.
-        $(document).ready(
-          function(event) {
-            $("ul.menu a[href='#{ nav }']").addClass('active');
-          }
-        );
-
     block extra-headers
 
   body
     .main-holder
       include includes/header
-      block body
-      include includes/footer
-    block scripts
 
+      section#content
+        block body
+
+      include includes/footer
+
+    // jQuery (necessary for Bootstrap's JavaScript plugins)
+    script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js')
     // Include all compiled plugins (below), or include individual files as needed
+    script(src='/js/common.js')
     script(src='/vendor/bootstrap.min.js')
 
+    block scripts
+
+    script.
+      $(document).ready(
+        function(event) {
+          $("ul.menu a[href='#{ nav }']").addClass('active');
+        }
+      );
