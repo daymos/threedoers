@@ -5,34 +5,71 @@ block title
   |  Your Projects
 
 block content-profile
-  .info
-    - if (projects.length == 0)
-      p There is not any project yet for this list.
-    - for (project in projects)
-      - project = projects[project]
-        .info_projects
-          p.filename
-            | NAME: #{project.title}
-            span#name
-          p.filename
-            | FILE NAME: #{project.file}
-            span#name
-          .status
-            p
-              | STATUS:
-              span#status  #{project.humanizedStatus()}
-            img(id="status_img", alt="Request status", src="/img/icons_#{project.dasherizedStatus()}.png")
-          p.price
-            | PRICE:
-            span#price  #{project.price}
-            span#currency  EURO
-          .link_to_project
+    .tab-content
+      #projects
+        - if (projects.length == 0)
+          p.info-3d There is not any project yet for this list.
+        - for (project in projects)
+          - project = projects[project]
+            p.info-3d
+              span.title NAME:
+              a(href='/project/#{project.id}') #{project.title}
+              br
+              span.title FILE NAME: #{project.file}
+            br
+            p.info-3d
+              span.title STATUS
+              | #{project.humanizedStatus()}
+              span.image.align-right
+                img(src='/img/icons_#{project.dasherizedStatus()}.png')
+              br
+              span.title PRICE:
+              span.price #{project.price}
+              span.currency EURO
+            br
+            .separator-3d
+              img(src='/img/img_separatori_lista.png')
 
-            a(href="/project/#{project.id}", class="") GO TO THE
-              | PROJECT
-          .separator
-            img(id="separator1", alt="division figure", src="/img/separatori_lista.png")
-            img(id="separator2", alt="division figure", src="/img/img_separatori_lista.png")
+      #archived.tab-pane.fade
+        p.info-3d
+          span.title FILE NAME:
+          a(href='#') purple_spike_ring_20x20mm1.st
+        br
+        p.info-3d
+          span.title PRICE:
+          span.price 20
+          span.currency EURO
+        .separator-3d
+          img(src='/img/img_separatori_lista.png')
+        p.info-3d
+          span.title FILE NAME:
+          a(href='#') purple_spike_ring_20x20mm1.st
+        br
+        p.info-3d
+          span.title PRICE:
+          span.price 20
+          span.currency EURO
+div
+  .container
+    br
+    br
+    br
+    .row
+      .col-md-5
+        p.text-center
+          img(src='/img/publicity_homepage.png')
+        br
+      .col-md-7
+        h1.page-title.small.right
+          span Welcome To 3Doers
+        h1.page-title.small.right
+          span Find A 3D Printer For Your Project
+        h1.page-title.small.right
+          span Or Start Printing Others
+    br
+    br
+    br
+    br
 
 block scripts
   script(src='/js/views/project_list.js')

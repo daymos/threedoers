@@ -1,27 +1,25 @@
 extends ../base
 
-block base-headers
+block base-scripts
   script.
     $(document).ready(
       function(event) {
         $(".header a[href='/profile/projects']").parent().addClass('active');
-        $(".flange a[href='#{ nav }']").parent().addClass('active');
+        $(".subnav a[href='#{ nav }']").parent().addClass('active');
       }
     );
 
 block body
-  section.page.container1
-    .flange
-      ul
+  div.subnav
+    .container
+      ul.nav.nav-tabs
         li#projects
-          a(href='/profile/projects') PROJECTS
-          .background.activeline
-
+          a(href='/profile/projects')
+            span Projects
         li#archived
-          a(href='/profile/archived') ARCHIVED
-          .background.activeline
-      .line
+          a(href='/profile/archived')
+            span Archived
 
-    block content-profile
+      block content-profile
 
   include ../../includes/publicity

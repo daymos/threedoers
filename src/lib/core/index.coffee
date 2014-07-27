@@ -65,7 +65,7 @@ module.exports = (app, io) ->
                   subject: "New Become a Printer Request"}).then ->
         req.user.printer = 'request'
         req.user.save()
-      res.render 'core/become_done'
+      res.render 'core/become'
 
 
   app.get '/project/upload', decorators.loginRequired, (req, res) ->

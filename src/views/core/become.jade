@@ -5,60 +5,49 @@ block title
   |  Become a Printer
 
 block body
-  .block_sendrequest
-    section.homepage.container2
-      .sendrequest_text
-        p.title
-          | BECOME A PRINTER
+  .section.primary
+    .container
+      .row
+        .col-md-7
+          h1.h1-3d.text-shadow-white
+            | BECOME A PRINTER
+            br
+            | 3D PRINT OTHER
+            br
+            | PEOPLE'S DESIGN AND
+            br
+            | START MAKING MONEY
+        .col-md-5
+          div
+            img(src='img/hand_register.png')
+      br
+      br
+      br
+      .row
+        .col-md-3
           br
-          | 3D PRINT OTHER
           br
-          | PEOPLE'S DESIGN AND
-          br
-          | START MAKING MONEY
-      if user.printer
-        | Already request was sent
-      else
-        form#printer_request_form.printer_request_form(name='printer_request_form', accept-charset='UTF-8', role='form', method='POST', action='/become')
-          input(value=csrfToken, name='_csrf', type='hidden')
-          p
-            input#printer_request_submit.button.btn.btn-lg.btn-success(name='printer_request_submit', value='SEND REQUEST', type='submit')
-
-    .sendrequest_background
-      .hand
-        img(alt='3doers Hand', src='/img/hand_register.png')
-      .background
-
-  .publicity_block
-    section.homepage.container6
-      .publicity
-        .container-left
-          img(alt='3doers image', src='/img/publicity_homepage.png')
-        .container-right
-          p
-            span
-              | WELCOME TO 3DOERS
+          form#printer_request_form.printer_request_form(name='printer_request_form', accept-charset='UTF-8', role='form', method='POST', action='/become')
+            input(value=csrfToken, name='_csrf', type='hidden')
+            button.btn.btn-default.btn-lg.btn-block(type='submit')
+              span SEND REQUEST
+        .col-md-7.col-md-offset-2
+          if user.printer
+            h1.h1-3d.text-shadow-white
+              | ALREADY REQUEST
               br
-            span
-              | FIND A 3D PRINTER FOR YOUR PROJECT
-              br
-            span  OR START PRINTING OTHERS
-    .publicity_comment_background
-      .publicity_bar1
-      .publicity_bar2
-      .publicity_bar3
-
-
-
-//.jumbotron
-//     h1 Become a printer
-//      p.lead
-//         |3D print other people's design and start making money
-//
-//      p.lead
-//        if user.printer
-//          | Already request was sent
-//        else
-//          form(action='/become', method='post')
-//            input(type='hidden', name='_csrf', value=csrfToken)
-//            input(type="submit", value="Send request", role="button").btn.btn-lg.btn-success
+              | WAS SENT
+      br
+  div
+    .container
+      br
+      br
+      br
+      br
+      br
+      br
+      include ../includes/publicity
+      br
+      br
+      br
+      br

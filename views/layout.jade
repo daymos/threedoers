@@ -68,7 +68,6 @@ html.no-js(lang="en", "xmlns:fb"="http://ogp.me/ns/fb#")
         $(".myprofileitem").fadeToggle('slow','linear');
       }
 
-    block base-headers
     block extra-headers
 
   body
@@ -82,10 +81,13 @@ html.no-js(lang="en", "xmlns:fb"="http://ogp.me/ns/fb#")
 
     // jQuery (necessary for Bootstrap's JavaScript plugins)
     script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js')
+    script(src='http://code.jquery.com/jquery-migrate-1.2.1.js')
     // Include all compiled plugins (below), or include individual files as needed
+    script(src='/js/lib.js')
     script(src='/js/common.js')
     script(src='/vendor/bootstrap.min.js')
 
+    block base-scripts
     block scripts
 
     script.
