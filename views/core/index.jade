@@ -1,5 +1,8 @@
 extends ../layout
 
+block title
+  |  Home
+
 block body
   div
     .container
@@ -33,13 +36,25 @@ block body
 
   .section.primary
     .container
-      h2.h2-3d.text-shadow-white SIGN UP!
-      h3.h3-3d
-        | Join to our community and start the collective
+      if user
+        h2.h2-3d
+          | APPLICAKE BROWNIE
+          br
+          | BEAR CLAW SWEET
+          h5.h5-3d
+            | Snaps wafer soufflé. Caramels chocolate ice
+            br
+            | cream bonbon wafer oat cake bear claw. Choco-
+            br
+            | late bar danish sweet
+      else
+        h2.h2-3d.text-shadow-white SIGN UP!
+        h3.h3-3d
+          | Join to our community and start the collective
+          br
+          | 3D printing.
         br
-        | 3D printing.
-      br
-      br
+        br
       .row
         .col-md-4
           a.btn.btn-default.btn-lg.btn-block(href='/project/upload')
@@ -76,6 +91,140 @@ block body
         .col-md-5
           p.text-center
             img(src='/img/icona3d_homepage.png')
+
+      if user
+        div
+          .container
+              br
+              br
+              br
+              br
+              h1.page-title
+                span LAST PROJECTS
+              br
+              br
+              br
+              br
+              .row
+                .col-md-4
+                  .project-single
+                    img(src='img/projects/picture1.png')
+                    .info
+                      .info-wrapper
+                        a(href='#')
+                          | Applicake Brownie Bear Claw Sweet Sesame Snaps Wafer Soufflé. Caramels Chocolate Ice Cream Bonbon Wafer Oat Cake Bear Claw. Chocolate Bar Danish Sweet
+                .col-md-4
+                  .project-single
+                    img(src='img/projects/picture2.png')
+                    .info
+                      .info-wrapper
+                        a(href='#')
+                          | Applicake Brownie Bear Claw Sweet Sesame Snaps Wafer Soufflé. Caramels Chocolate Ice Cream Bonbon Wafer Oat Cake Bear Claw. Chocolate Bar Danish Sweet
+                .col-md-4
+                  .project-single
+                    img(src='img/projects/picture3.png')
+                    .info
+                      .info-wrapper
+                        a(href='#')
+                          | Applicake Brownie Bear Claw Sweet Sesame Snaps Wafer Soufflé. Caramels Chocolate Ice Cream Bonbon Wafer Oat Cake Bear Claw. Chocolate Bar Danish Sweet
+                .col-md-4.clean-left
+                  .project-single
+                    img(src='img/projects/picture1.png')
+                    .info
+                      .info-wrapper
+                        a(href='#')
+                          | Applicake Brownie Bear Claw Sweet Sesame Snaps Wafer Soufflé. Caramels Chocolate Ice Cream Bonbon Wafer Oat Cake Bear Claw. Chocolate Bar Danish Sweet
+                .col-md-4
+                  .project-single
+                    img(src='img/projects/picture2.png')
+                    .info
+                      .info-wrapper
+                        a(href='#')
+                          | Applicake Brownie Bear Claw Sweet Sesame Snaps Wafer Soufflé. Caramels Chocolate Ice Cream Bonbon Wafer Oat Cake Bear Claw. Chocolate Bar Danish Sweet
+                .col-md-4
+                  .project-single
+                    img(src='img/projects/picture3.png')
+                    .info
+                      .info-wrapper
+                        a(href='#')
+                          | Applicake Brownie Bear Claw Sweet Sesame Snaps Wafer Soufflé. Caramels Chocolate Ice Cream Bonbon Wafer Oat Cake Bear Claw. Chocolate Bar Danish Sweet
+              br
+          div
+            .container
+              br
+              br
+              br
+              br
+              .row
+                .col-md-5.col-md-offset-7
+                  h1.page-title.right
+                    span COMMUNITY
+              br
+              br
+              br
+              br
+              .row
+                .col-md-2.col-md-2-5
+                  .community-single
+                    a(href='#')
+                      img(src='img/community/picture1.png')
+                .col-md-2.col-md-2-5
+                  .community-single
+                    a(href='#')
+                      img(src='img/community/picture2.png')
+                .col-md-2.col-md-2-5
+                  .community-single
+                    a(href='#')
+                      img(src='img/community/picture3.png')
+                .col-md-2.col-md-2-5
+                  .community-single
+                    a(href='#')
+                      img(src='img/community/picture4.png')
+                .col-md-2.col-md-2-5
+                  .community-single
+                    a(href='#')
+                      img(src='img/community/picture.png')
+                .col-md-2.col-md-2-5.clean-left
+                  .community-single
+                    a(href='#')
+                      img(src='img/community/picture1.png')
+                .col-md-2.col-md-2-5
+                  .community-single
+                    a(href='#')
+                      img(src='img/community/picture2.png')
+                .col-md-2.col-md-2-5
+                  .community-single
+                    a(href='#')
+                      img(src='img/community/picture3.png')
+                .col-md-2.col-md-2-5
+                  .community-single
+                    a(href='#')
+                      img(src='img/community/picture4.png')
+                .col-md-2.col-md-2-5
+                  .community-single
+                    a(href='#')
+                      img(src='img/community/picture.png')
+                .col-md-2.col-md-2-5.clean-left
+                  .community-single
+                    a(href='#')
+                      img(src='img/community/picture1.png')
+                .col-md-2.col-md-2-5
+                  .community-single
+                    a(href='#')
+                      img(src='img/community/picture2.png')
+                .col-md-2.col-md-2-5
+                  .community-single
+                    a(href='#')
+                      img(src='img/community/picture3.png')
+                .col-md-2.col-md-2-5
+                  .community-single
+                    a(href='#')
+                      img(src='img/community/picture4.png')
+                .col-md-2.col-md-2-5
+                  .community-single
+                    a(href='#')
+                      img(src='img/community/picture.png')
+
       br
       br
       br
