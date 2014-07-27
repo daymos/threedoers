@@ -17,7 +17,10 @@ module.exports = (app, io) ->
   paypal.configure(settings.paypal.api)
 
   app.get '/', (req, res) ->
-    res.render 'core/comming', {message: null, error: false, message: false}
+    if req.user
+      res.render 'core/index', {message: null, error: false, message: false}
+    else
+      res.render 'core/comming', {message: null, error: false, message: false}
 
   app.get '/home', (req, res) ->
     res.render 'core/index', {message: null, error: false, message: false}

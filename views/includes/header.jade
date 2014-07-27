@@ -1,6 +1,6 @@
-unless user
-  header
-    #header
+header
+  #header
+    unless user
       .container
         .row
           .col-md-6
@@ -14,36 +14,48 @@ unless user
                     a(href='/accounts/login') LOG IN
                   li
                     a(href='/accounts/signup') SIGN UP
-else
-    div.menuheader_block
-      section.homepage.container1
-        header
-          div.container-left
-            a.logo(href='/')
-              img(alt='3doers Icon', src='/img/logo_3doers.png')
-          div.container-right
-            ul.menu
-              li
-                p
-                  a(href="/project/upload") UPLOAD PROJECT
-              li
-                p
-                  a(href="/become") BECOME A PRINTER
-              li
-                p
-                  a BECOME A FILE MANAGER
-              li#myprofile
-                p
-                  a(href='javascript://nop', onclick='toggle(this);') MY PROFILE
-                p
-                  a(href='/profile/projects').myprofileitem USER
-                if user.printer == 'accepted'
-                  p
-                    a(href='/printing/requests').myprofileitem PRINTER
-                p
-                  a.myprofileitem FILE MANAGER
-                p
-                  a(href="/profile/settings").myprofileitem EDIT PROFILE
-              li
-                p
-                  a(href="/accounts/logout") SIGN OUT
+    else
+      .container
+        .row
+          .col-md-3
+            a(href='#')
+              img(src='/img/logo.png')
+          .col-md-9
+            .search-form.pull-right
+              form
+                input.form-control(type='text', placeholder='SEARCH')
+                button(type='submit')
+                a.square-social-link(href='#')
+                  span.fa.fa-facebook
+                a.square-social-link(href='#')
+                  span.fa.fa-twitter
+                a.square-social-link(href='#')
+                  span.fa.fa-google-plus
+                a.square-social-link(href='#')
+                  span.fa.fa-heart
+                span.favorite-count
+                  span 1
+            .clearfix
+            .simple-nav
+              nav
+                ul.nav.nav-pills.navbar-right
+                  li
+                    a(href='/project/upload') Upload A Project
+                  li.dropdown
+                    a(href='/become') Become A Printer
+                  li.dropdown
+                    a(href='/become') Become A File Manager
+                  li.dropdown
+                    a.dropdown-toggle(href='#', data-toggle='dropdown') My Profile
+                    ul.dropdown-menu(role='menu')
+                      li
+                        a(href='/profile/projects') User
+                      if user.printer == 'accepted'
+                        li
+                          a(href='/profile/requests') Printer
+                      li
+                        a(href='#') File manager
+                      li
+                        a(href='/profile/settings') Edit profile
+                  li
+                    a(href='/accounts/logout') Sign Out
