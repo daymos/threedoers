@@ -370,9 +370,21 @@ a.create-account:focus {
 /* Sections */
 .section {
   padding: 48px 0;
+  position: relative;
 }
 .section.primary {
   background: $bg-primary;
+}
+
+/* Hands */
+.right-hand {
+	position: absolute;
+	right: 0;
+	top: 0;
+}
+.right-hand.middle {
+	top: 50%;
+	margin-top: -96px;
 }
 
 /* Projects Section */
@@ -622,6 +634,7 @@ a.create-account:focus {
   a {
     color: #000000;
     font-size: 25px;
+    margin-left: 10px;
   }
 }
 
@@ -693,7 +706,8 @@ a.create-account:focus {
   width: 100%;
   z-index: 1;
 }
-.btn:hover:after {
+.btn:hover:after,
+.btn:focus:after {
   height: 102%;
   opacity: 1;
 }
@@ -789,6 +803,7 @@ a.create-account:focus {
 
 /* Effects */
 a.hover-effect {
+	outline: none;
   position: relative;
   text-decoration: none;
 }
@@ -808,7 +823,8 @@ a.hover-effect::after {
   -moz-transform: translateY(10px);
   transform: translateY(10px);
 }
-a.hover-effect:hover::after {
+a.hover-effect:hover::after,
+a.hover-effect:focus::after {
   opacity: 1;
   -webkit-transform: translateY(0px);
   -moz-transform: translateY(0px);
