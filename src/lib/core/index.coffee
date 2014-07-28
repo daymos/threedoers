@@ -389,6 +389,19 @@ module.exports = (app, io) ->
       res.send 500
     )
 
+  app.post '/printing/deny/:id', decorators.printerRequired, (req, res) ->
+    models.STLProject.findOne({_id: req.params.id, editable: false}).exec().then( (doc) ->
+      if doc
+        doc.status = models.PROJECT_STATUSES.PROCESSED[0]
+        doc.save()
+        res.json msg: "Accepted"
+      if doc and doc.status == models.PROJECT_STATUSES.PRINT_ACCEPTED[0]
+        res.json msg: "Looks like someone accepted, try with another", 400
+    ).fail( ->
+      logger.error arguments
+      res.send 500
+    )
+
   ###############################################
   # Socket IO event handlers
   ###############################################

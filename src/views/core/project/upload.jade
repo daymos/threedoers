@@ -16,9 +16,17 @@ block body
             span Upload
           h1.page-title
             span Project
+      br
+      br
       .row
-        .col-md-6
-          | FILE MUST BE IN STL FORMAT
+        .col-md-6.col-md-offset-6
+          h1.page-title.right
+            span File Must Be In
+      .row
+        .col-md-5.col-md-offset-7
+          h1.page-title.right
+            span Stl Format
+
       br
       br
       br
@@ -47,82 +55,6 @@ block body
     br
     br
     br
-
-
-  .title_block
-    section.homepage.container2
-      h1.title
-        p
-          | UPLOAD YOUR DESIGN
-          br
-        p
-          | FORM
-          br
-    .title_background.upload
-        .title_bar1
-        .title_bar2
-
-  .aux_title_block
-    section.homepage.container2
-      .title
-        p
-          | FILE MUST BE IN
-          br
-        p
-          | STL FORMAT
-          br
-
-    .title_background
-      .title_bar1
-      .title_bar2
-      .exclamation_point
-        img(alt='3doers Point', src='/img/exclamation_point.jpg')
-
-  .container_block
-    section#clickable.homepage.container2
-      .images_data
-        #promptzone.upload
-          p
-            | CLICK HERE TO CHOOSE
-            br
-            | IMAGES TO UPLOAD
-        .frame-1
-        .frame-2
-        .container_background
-
-
-
-  .publicity_block
-    section.homepage.container6
-      .publicity
-        .container-left
-          img(alt='3doers image', src='/img/publicity_homepage.png')
-        .container-right
-          p
-            span
-              | WELCOME TO 3DOERS
-              br
-            span
-              | FIND A 3D PRINTER FOR YOUR PROJECT
-              br
-            span  OR START PRINTING OTHERS
-    .publicity_comment_background
-      .publicity_bar1
-      .publicity_bar2
-      .publicity_bar3
-
-.jumbotron
-  p
-    | File must be in STL format
-    br
-    div.row
-      div.col-md-12
-        #promptzone
-          | Click here to choose images to upload
-      #result
-      .progress.hide
-        .progress-bar(role='progressbar', aria-valuenow='0', aria-valuemin='0', aria-valuemax='100')
-          span.sr-only 0% Complete
 
 block scripts
   script(src='/vendor/jquery.ajaxupload.js')
