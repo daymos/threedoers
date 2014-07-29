@@ -20,19 +20,19 @@ block body
         .col-md-3
           br
           br
-          form#printer_request_form.printer_request_form(name='printer_request_form', accept-charset='UTF-8', role='form', method='POST', action='/become')
+          form#printer_request_form.printer_request_form(name='printer_request_form', accept-charset='UTF-8', role='form', method='POST', action='/become/filemanager')
             input(value=csrfToken, name='_csrf', type='hidden')
             button.btn.btn-default.btn-lg.btn-block(type='submit')
               span SEND REQUEST
         .col-md-7.col-md-offset-2
-          if user.printer
+          if user.filemanager
             h1.h1-3d.text-shadow-white
               | ALREADY REQUEST
               br
               | WAS SENT
       br
     .right-hand.middle
-      img(src='img/hand_register.png')
+      img(src='/img/hand_register.png')
   div
     .container
       br

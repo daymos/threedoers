@@ -51,6 +51,23 @@ module.exports = (app, io) ->
       )
 
 
+  app.get '/become/filemanager', decorators.loginRequired, (req, res) ->
+    res.render 'core/become_filemanager'
+
+
+  app.post '/become/filemanager', decorators.loginRequired, (req, res) ->
+    if req.user.filemanager
+      res.render 'core/become_filemanager'
+    else
+      mailer.send('mailer/core/become',
+                  {user: req.user},
+                  {from: req.user.email, to: settings.admins.emails,
+                  subject: "New Become a File manager Request"}).then ->
+        req.user.filemanager = 'request'
+        req.user.save()
+      res.render 'core/become_filemanager'
+
+
   app.get '/become', decorators.loginRequired, (req, res) ->
     res.render 'core/become'
 
@@ -391,8 +408,8 @@ module.exports = (app, io) ->
 
   app.post '/printing/deny/:id', decorators.printerRequired, (req, res) ->
     models.STLProject.findOne({_id: req.params.id, editable: false}).exec().then( (doc) ->
-      if doc
-        doc.status = models.PROJECT_STATUSES.PROCESSED[0]
+      if doc and (doc.status == models.PROJECT_STATUSES.PRINT_REQUESTED[0] or doc.status == models.PROJECT_STATUSES.PRINT_ACCEPTED[0])
+        doc.status -= 1
         doc.save()
         res.json msg: "Accepted"
       if doc and doc.status == models.PROJECT_STATUSES.PRINT_ACCEPTED[0]

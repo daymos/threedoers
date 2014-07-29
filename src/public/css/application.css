@@ -8549,6 +8549,18 @@ hr.hr-light {
   -webkit-transition: none;
   -o-transition: none 0 ease-in;
   transition: none; }
+.simple-nav .nav .open > a, .simple-nav .nav .open > a:hover, .simple-nav .nav .open > a:focus {
+  background: none; }
+.simple-nav .nav .dropdown-menu {
+  background-color: transparent;
+  border-color: transparent;
+  box-shadow: none;
+  text-align: right; }
+.simple-nav .nav .dropdown-menu > li > a {
+  display: inline;
+  padding: 0; }
+.simple-nav .nav .dropdown-menu > li > a:hover {
+  background: none; }
 
 /* Typography */
 .h1-3d {
@@ -8767,11 +8779,31 @@ a.create-account:focus {
   font-style: italic; }
 
 /* Preview Print */
+#clickable {
+  cursor: pointer; }
+
 .preview-print {
   background-color: #e8e8e8;
   padding: 7% 5%;
   position: relative;
   text-align: center; }
+  .preview-print .upload {
+    font-family: "Lato", Helvetica, sans-serif;
+    font-size: 44px;
+    font-style: italic;
+    font-weight: 900;
+    margin: 70px auto;
+    text-align: left;
+    width: 70%; }
+  .preview-print .progress {
+    height: 50px; }
+  .preview-print .progress-bar {
+    background: url("../img/progress-bar.png");
+    color: #000000;
+    font-family: "Lato", Helvetica, sans-serif;
+    font-size: 40px;
+    font-weight: 900;
+    line-height: 50px; }
 
 .preview-print:after,
 .preview-print:before {
@@ -8816,6 +8848,17 @@ a.create-account:focus {
     margin-left: 20px; }
 
 /* Slider */
+.slider-3d {
+  position: relative; }
+  .slider-3d .square {
+    border: 6px solid #7bf282;
+    height: 99%;
+    left: 3%;
+    position: absolute;
+    top: 5%;
+    width: 94%;
+    z-index: 99; }
+
 .main-slider-bottom {
   padding-left: 30%;
   padding-right: 10%;
@@ -8834,6 +8877,12 @@ a.create-account:focus {
     color: #000000;
     font-size: 25px;
     margin-left: 10px; }
+
+.exclamation {
+  left: -30px;
+  position: absolute;
+  top: 0px;
+  z-index: 99; }
 
 /* Tabs */
 .nav-tabs {
@@ -9033,6 +9082,26 @@ a.default-hover::after {
 
 a.primary-hover::after {
   background-color: #7bf282; }
+
+/* Flexslider */
+.flex-direction-nav .flex-prev,
+.flex-direction-nav .flex-next {
+  opacity: 1;
+  z-index: 9999; }
+
+.flexslider:hover .flex-prev {
+  opacity: 0.7;
+  left: 5%; }
+
+.flexslider:hover .flex-next {
+  opacity: 0.7;
+  right: 5%; }
+
+.flex-direction-nav .flex-prev {
+  left: 5%; }
+
+.flex-direction-nav .flex-next {
+  right: 5%; }
 
 /* Responsive */
 @media (min-width: 992px) {
