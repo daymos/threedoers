@@ -301,6 +301,22 @@ hr.hr-light {
     -o-transition: none 0 ease-in;
     transition: none;
   }
+  .nav .open > a, .nav .open > a:hover, .nav .open > a:focus {
+  	background: none;
+  }
+  .nav .dropdown-menu {
+  	background-color: transparent;
+  	border-color: transparent;
+  	box-shadow: none;
+  	text-align: right;
+  }
+  .nav .dropdown-menu > li > a {
+  	display: inline;
+  	padding: 0;
+  }
+  .nav .dropdown-menu > li > a:hover {
+  	background: none;
+  }
 }
 
 /* Typography */
@@ -558,11 +574,36 @@ a.create-account:focus {
 }
 
 /* Preview Print */
+#clickable {
+	cursor: pointer;
+}
 .preview-print {
   background-color: #e8e8e8;
   padding: 7% 5%;
   position: relative;
   text-align: center;
+
+  .upload {
+  	font-family: $font-primary-stack;
+  	font-size: 44px;
+  	font-style: italic;
+  	font-weight: 900;
+  	margin: 70px auto;
+  	text-align: left;
+  	width: 70%;
+  }
+
+  .progress {
+  	height: 50px;
+  }
+  .progress-bar {
+  	background: url('../img/progress-bar.png') left top repeat-x;
+  	color: #000000;
+  	font-family: $font-primary-stack;
+  	font-size: 40px;
+  	font-weight: 900;
+  	line-height: 50px;
+  }
 }
 .preview-print:after,
 .preview-print:before {
@@ -615,6 +656,19 @@ a.create-account:focus {
 }
 
 /* Slider */
+.slider-3d {
+	position: relative;
+
+	.square {
+		border: 6px solid #7bf282;
+		height: 99%;
+		left: 3%;
+		position: absolute;
+		top: 5%;
+		width: 94%;
+		z-index: 99;
+	}
+}
 .main-slider-bottom {
   padding-left: 30%;
   padding-right: 10%;
@@ -842,6 +896,21 @@ a.primary-hover {
   &::after {
     background-color: $primary-color;
   }
+}
+
+/* Flexslider */
+.flex-direction-nav .flex-prev,
+.flex-direction-nav .flex-next {
+	opacity: 1;
+	z-index: 9999;
+}
+.flexslider:hover .flex-prev { opacity: 0.7; left: 5%; }
+.flexslider:hover .flex-next { opacity: 0.7; right: 5%; }
+.flex-direction-nav .flex-prev {
+	left: 5%;
+}
+.flex-direction-nav .flex-next {
+	right: 5%;
 }
 
 /* Responsive */
