@@ -55,6 +55,9 @@ User = new Schema
   printer:
     type: String
 
+  filemanager:
+    type: String
+
   admin:
     type: Boolean
     default: false
