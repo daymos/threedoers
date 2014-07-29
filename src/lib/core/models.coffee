@@ -125,6 +125,9 @@ STLProject = new Schema
   comments:
     type: [Comment]
 
+  createdAt:
+    type: Date
+
 
 
 STLProject.methods.addFile = (file, options) ->
@@ -171,6 +174,8 @@ STLProject.methods.validNextStatus = ->
 STLProject.pre 'save', (next) ->
   # only editable at this points, only status should be edited later
   @editable = @status in [PROJECT_STATUSES.PROCESSED[0]]
+  now = new Date()
+  @createdAt = now  unless @createdAt
   next()
 
 

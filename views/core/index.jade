@@ -63,13 +63,15 @@ block body
           a.btn.btn-default.btn-lg.btn-block(href='/project/upload')
             span UPLOAD A PROJECT
           br
-        .col-md-4
-          a.btn.btn-default.btn-lg.btn-block(href='/become')
-            span BECOME A PRINTER
-          br
-        .col-md-4
-          a.btn.btn-default.btn-lg.btn-block(href='#')
-            span BECOME A FILE MANAGER
+        - if (user.printer != 'accepted')
+          .col-md-4
+            a.btn.btn-default.btn-lg.btn-block(href='/become')
+              span BECOME A PRINTER
+            br
+        - if (user.filemanager != 'accepted')
+          .col-md-4
+            a.btn.btn-default.btn-lg.btn-block(href='#')
+              span BECOME A FILE MANAGER
   div
     .container
       br
@@ -109,49 +111,15 @@ block body
               br
               br
               .row
-                .col-md-4
-                  .project-single
-                    img(src='img/projects/picture1.png')
-                    .info
-                      .info-wrapper
-                        a(href='#')
-                          | Applicake Brownie Bear Claw Sweet Sesame Snaps Wafer Soufflé. Caramels Chocolate Ice Cream Bonbon Wafer Oat Cake Bear Claw. Chocolate Bar Danish Sweet
-                .col-md-4
-                  .project-single
-                    img(src='img/projects/picture2.png')
-                    .info
-                      .info-wrapper
-                        a(href='#')
-                          | Applicake Brownie Bear Claw Sweet Sesame Snaps Wafer Soufflé. Caramels Chocolate Ice Cream Bonbon Wafer Oat Cake Bear Claw. Chocolate Bar Danish Sweet
-                .col-md-4
-                  .project-single
-                    img(src='img/projects/picture3.png')
-                    .info
-                      .info-wrapper
-                        a(href='#')
-                          | Applicake Brownie Bear Claw Sweet Sesame Snaps Wafer Soufflé. Caramels Chocolate Ice Cream Bonbon Wafer Oat Cake Bear Claw. Chocolate Bar Danish Sweet
-                .col-md-4.clean-left
-                  .project-single
-                    img(src='img/projects/picture1.png')
-                    .info
-                      .info-wrapper
-                        a(href='#')
-                          | Applicake Brownie Bear Claw Sweet Sesame Snaps Wafer Soufflé. Caramels Chocolate Ice Cream Bonbon Wafer Oat Cake Bear Claw. Chocolate Bar Danish Sweet
-                .col-md-4
-                  .project-single
-                    img(src='img/projects/picture2.png')
-                    .info
-                      .info-wrapper
-                        a(href='#')
-                          | Applicake Brownie Bear Claw Sweet Sesame Snaps Wafer Soufflé. Caramels Chocolate Ice Cream Bonbon Wafer Oat Cake Bear Claw. Chocolate Bar Danish Sweet
-                .col-md-4
-                  .project-single
-                    img(src='img/projects/picture3.png')
-                    .info
-                      .info-wrapper
-                        a(href='#')
-                          | Applicake Brownie Bear Claw Sweet Sesame Snaps Wafer Soufflé. Caramels Chocolate Ice Cream Bonbon Wafer Oat Cake Bear Claw. Chocolate Bar Danish Sweet
-              br
+                for project in projects
+                  .col-md-4
+                    .project-single
+                      img(src='/#{project.file}')
+                      .info
+                        .info-wrapper
+                          a(href='/project/#{project.id}')
+                            | Applicake Brownie Bear Claw Sweet Sesame Snaps Wafer Soufflé. Caramels Chocolate Ice Cream Bonbon Wafer Oat Cake Bear Claw. Chocolate Bar Danish Sweet
+                br
           div
             .container
               br
@@ -167,67 +135,14 @@ block body
               br
               br
               .row
-                .col-md-2.col-md-2-5
-                  .community-single
-                    a(href='#')
-                      img(src='img/community/picture1.png')
-                .col-md-2.col-md-2-5
-                  .community-single
-                    a(href='#')
-                      img(src='img/community/picture2.png')
-                .col-md-2.col-md-2-5
-                  .community-single
-                    a(href='#')
-                      img(src='img/community/picture3.png')
-                .col-md-2.col-md-2-5
-                  .community-single
-                    a(href='#')
-                      img(src='img/community/picture4.png')
-                .col-md-2.col-md-2-5
-                  .community-single
-                    a(href='#')
-                      img(src='img/community/picture.png')
-                .col-md-2.col-md-2-5.clean-left
-                  .community-single
-                    a(href='#')
-                      img(src='img/community/picture1.png')
-                .col-md-2.col-md-2-5
-                  .community-single
-                    a(href='#')
-                      img(src='img/community/picture2.png')
-                .col-md-2.col-md-2-5
-                  .community-single
-                    a(href='#')
-                      img(src='img/community/picture3.png')
-                .col-md-2.col-md-2-5
-                  .community-single
-                    a(href='#')
-                      img(src='img/community/picture4.png')
-                .col-md-2.col-md-2-5
-                  .community-single
-                    a(href='#')
-                      img(src='img/community/picture.png')
-                .col-md-2.col-md-2-5.clean-left
-                  .community-single
-                    a(href='#')
-                      img(src='img/community/picture1.png')
-                .col-md-2.col-md-2-5
-                  .community-single
-                    a(href='#')
-                      img(src='img/community/picture2.png')
-                .col-md-2.col-md-2-5
-                  .community-single
-                    a(href='#')
-                      img(src='img/community/picture3.png')
-                .col-md-2.col-md-2-5
-                  .community-single
-                    a(href='#')
-                      img(src='img/community/picture4.png')
-                .col-md-2.col-md-2-5
-                  .community-single
-                    a(href='#')
-                      img(src='img/community/picture.png')
-
+                for _user in users
+                  .col-md-2.col-md-2-5
+                    .community-single
+                      a(href='#')
+                      - if (_user.photo)
+                        img(width='100%', height='100%', src='/#{ _user.photo }', alt='#{ _user.firstName } #{ _user.lastName }')
+                      - else
+                        img(width='100%', height='100%', src='/img/edit_photo_placeholder.png?1396277523', alt='profile image')
       br
       br
       br

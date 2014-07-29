@@ -3,6 +3,7 @@ module.exports = (app) ->
   passport = require "passport"
   LocalStrategy = require("passport-local").Strategy
 
+  decorators = require '../decorators'
   logger = require "../logger"
   models = require "./models"
 
@@ -67,3 +68,19 @@ module.exports = (app) ->
           else
             res.render 'accounts/login', { error: "Invalid username or password", username: req.param('username'), password: req.param('password') }
       )(req, res, next)
+
+
+  app.post '/accounts/user/photo/upload', decorators.loginRequired, (req, res) ->
+    if req.files.photo.size == 0
+      res.send 400
+      return
+
+    user = req.user
+    user.photo = req.files.photo.path.split('/').pop()
+
+    user.save (err, doc) ->
+      if err
+        logger.error err
+        res.send 500
+      else
+        res.send 200

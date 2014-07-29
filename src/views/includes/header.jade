@@ -18,7 +18,7 @@ header
       .container
         .row
           .col-md-2
-            a(href='#')
+            a(href='/')
               img(src='/img/logo.png')
           .col-md-10
             .search-form.pull-right
@@ -41,10 +41,12 @@ header
                 ul.nav.nav-pills.navbar-right
                   li
                     a(href='/project/upload') Upload A Project
-                  li.dropdown
-                    a(href='/become') Become A Printer
-                  li.dropdown
-                    a(href='/become/filemanager') Become A File Manager
+                  - if (user.printer != 'accepted')
+                    li.dropdown
+                      a(href='/become') Become A Printer
+                  - if (user.filemanager != 'accepted')
+                    li.dropdown
+                      a(href='/become/filemanager') Become A File Manager
                   li.dropdown
                     a.dropdown-toggle(href='#', data-toggle='dropdown') My Profile
                     ul.dropdown-menu(role='menu')

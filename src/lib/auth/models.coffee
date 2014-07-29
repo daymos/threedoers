@@ -6,6 +6,10 @@ ObjectId = Schema.ObjectId
 
 User = new Schema
 
+  photo:
+    type: String
+    required: false
+
   firstName:
     type: String
 

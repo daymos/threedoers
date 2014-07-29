@@ -46,3 +46,27 @@ $(document).ready ->
       $input.siblings('.help-block').remove()  # previous messages remove
       $input.parent().append $('<span>').addClass('help-block').text("Is not a valid address.")
       $input.closest('.form-group').addClass('has-error')
+
+
+  CSRF_HEADER = "X-CSRF-Token"
+
+  setCSRFToken = (securityToken) ->
+    jQuery.ajaxPrefilter (options, _, xhr) ->
+      xhr.setRequestHeader CSRF_HEADER, securityToken  unless xhr.crossDomain
+
+
+  setCSRFToken $("meta[name=\"csrf-token\"]").attr("content")
+
+  # Set fieldname
+  $.ajaxUploadSettings.name = "photo"
+
+  # Set promptzone
+  $("#clickable").ajaxUploadPrompt
+    url: "/accounts/user/photo/upload"
+
+    error: ->
+      html = '<br><div class="alert alert-danger"><strong>Error</strong> uploading your file, please try again.</div>'
+      $("#result").html html
+
+    success: (data) ->
+      location.reload()

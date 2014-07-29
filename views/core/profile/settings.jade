@@ -3,6 +3,10 @@ extends base
 block title
   |  Your Profile
 
+
+block extra-headers
+  meta(name="csrf-token", content="#{csrfToken}")
+
 block body
   .container
     .row
@@ -16,12 +20,16 @@ block body
     .container
       .row
         .col-md-6
+          p#result
           form#registration(action='/profile/settings', method='POST', role='form', accept-charset='utf-8')
             input(type='hidden', name='authenticity_token')
             input(type='hidden', name='_csrf', value=csrfToken)
             .photoedit
-              img#profile_image(width='142', height='142', src='/img/edit_photo_placeholder.png?1396277523', alt='profile image')
-              a(href='#') EDIT PHOTO
+              - if (user.photo)
+                img#profile_image(width='142', height='142', src='/#{ user.photo }', alt='#{ user.firstName } #{ user.lastName }')
+              - else
+                img#profile_image(width='142', height='142', src='/img/edit_photo_placeholder.png?1396277523', alt='profile image')
+              a#clickable(href='#') EDIT PHOTO
             .form-group
               input#username.form-control.input-text.input-lg(value=(user.username)?"#{user.username}":"", placeholder='USERNAME', name='username')
             .form-group
@@ -42,7 +50,7 @@ block body
               input#location(type='hidden', name='location')
             .form-group
               a#link.direct-link(href='') DIRECT LINK TO SERVICE DELIVERY
-            
+
             br
             br
             br
@@ -62,8 +70,8 @@ block body
   include ../../includes/publicity
 
 block scripts
-    script(src='/js/views/settings.js')
-    script(src='https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places')
-    script(type='text/javascript', src='/vendor/jsc3d.min.js')
-    script.
-      var address = "#{user.address}"
+  script(src='/vendor/jquery.ajaxupload.js')
+  script(src='/js/views/settings.js')
+  script(src='https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places')
+  script.
+    var address = "#{user.address}"
