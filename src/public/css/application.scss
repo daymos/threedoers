@@ -597,7 +597,7 @@ a.create-account:focus {
   	height: 50px;
   }
   .progress-bar {
-  	background: url('../img/progress-bar.png') left top repeat-x;
+  	background: url('../img/progress-bar.png');
   	color: #000000;
   	font-family: $font-primary-stack;
   	font-size: 40px;
@@ -690,6 +690,12 @@ a.create-account:focus {
     font-size: 25px;
     margin-left: 10px;
   }
+}
+.exclamation {
+	left: -30px;
+	position: absolute;
+	top: 0px;
+	z-index: 99;
 }
 
 /* Tabs */
