@@ -4,51 +4,60 @@ block title
   |  Your Profile
 
 block body
-  .title_block
-    section.homepage.container2
-      h1.title
-        p
-          | EDIT YOUR
-          br
-        p
-          | PROFILE
-          br
-    .title_background.editprofile
-      .title_bar1
-      .title_bar2
-  //
-    /todo OCCHIO adattare html and css  con versione backend
-  .block_registration_form.row
-    section.homepage.container2
-      form#registration(action='/profile/settings', method='POST', role='form', accept-charset='utf-8')
-        input(type='hidden', name='authenticity_token')
-        fieldset
-          input(type='hidden', name='_csrf', value=csrfToken)
-          p.photoedit
-            img#profile_image(width='142', height='142', src='/img/edit_photo_placeholder.png?1396277523', alt='profile image')
-            span  EDIT PHOTO
-          p.form-group
-            input#username.form(value=(user.username)?"#{user.username}":"", placeholder='USERNAME', name='username')
-            input#email.form(value=(user.email)?"#{user.email}":"", placeholder='EMAIL', name='email')
-            input#firstName.form(value=(user.firstName)?"#{user.firstName}":"", placeholder='FIRST NAME', name='firstName')
-            input#lastName.form(value=(user.lastName)?"#{user.lastName}":"", placeholder='LAST NAME', name='lastName')
-            input#address.form(value=(user.address)?"#{user.address}":"", placeholder='ADDRESS', name='address')
-          p.checkbox
-            input#rememberme(type='checkbox', value='1', checked='', name='rememberme')
-            span.remembertext   I WANT ANOTHER ADDRESS FOR DELIVERY
-          p.form-group
-            input#aux_address.form(value='', placeholder='ADDRESS', name='aux_address')
-            a#link.remembertext(href='') DIRECT LINK TO SERVICE DELIVERY
-            input#city(type='hidden', name='city')
-            input#country(type='hidden', name='country')
-            input#location(type='hidden', name='location')
-          p.btn.btn-primary.btn-lg.center-block
-            input#submit.form(type='submit', value='UPDATE', name='submit')
+  .container
+    .row
+      .col-md-6
+        h1.page-title
+          span Edit Your
+        h1.page-title
+          span Profile
+  br
+  .section.primary
+    .container
+      .row
+        .col-md-6
+          form#registration(action='/profile/settings', method='POST', role='form', accept-charset='utf-8')
+            input(type='hidden', name='authenticity_token')
+            input(type='hidden', name='_csrf', value=csrfToken)
+            .photoedit
+              img#profile_image(width='142', height='142', src='/img/edit_photo_placeholder.png?1396277523', alt='profile image')
+              a(href='#') EDIT PHOTO
+            .form-group
+              input#username.form-control.input-text.input-lg(value=(user.username)?"#{user.username}":"", placeholder='USERNAME', name='username')
+            .form-group
+              input#email.form-control.input-text.input-lg(value=(user.email)?"#{user.email}":"", placeholder='EMAIL', name='email')
+            .form-group
+              input#firstName.form-control.input-text.input-lg(value=(user.firstName)?"#{user.firstName}":"", placeholder='FIRST NAME', name='firstName')
+            .form-group
+              input#lastName.form-control.input-text.input-lg(value=(user.lastName)?"#{user.lastName}":"", placeholder='LAST NAME', name='lastName')
+            .form-group
+              input#address.form-control.input-text.input-lg(value=(user.address)?"#{user.address}":"", placeholder='ADDRESS', name='address')
+            .checkbox
+              input#rememberme(type='checkbox', value='1', checked='', name='rememberme')
+              label(for='rememberme') I WANT ANOTHER ADDRESS FOR DELIVERY
+            .form-group
+              input#aux_address.form-control.input-text.input-lg(value='', placeholder='ADDRESS', name='aux_address')
+              input#city(type='hidden', name='city')
+              input#country(type='hidden', name='country')
+              input#location(type='hidden', name='location')
+            .form-group
+              a#link.direct-link(href='') DIRECT LINK TO SERVICE DELIVERY
+            
+            br
+            br
+            br
 
-    .registration_background
-      .hand
-        img(src='/img/hand_register.png', alt='3doers Hand')
-      .background.update
+            .form-group
+              button#submit.btn.btn-default.btn-lg.btn-medium(type='submit')
+                span UPDATE
+
+    .right-hand.top
+      img(src='/img/hand_register.png', alt='3doers Hand')
+
+  br
+  br
+  br
+  br
 
   include ../../includes/publicity
 
