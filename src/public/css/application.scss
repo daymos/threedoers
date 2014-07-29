@@ -933,6 +933,13 @@ a.primary-hover {
 }
 
 /* Flexslider */
+.flexslider .slides {
+  text-align: center;
+}
+.flexslider .slides img {
+  width: auto;
+  display: inline;
+}
 .flex-direction-nav .flex-prev,
 .flex-direction-nav .flex-next {
 	opacity: 1;
