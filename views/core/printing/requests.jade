@@ -5,27 +5,83 @@ block title
   |  Your Projects
 
 block content-profile
-  .info
-    - if (projects.length == 0)
-      p There is not any project yet for this list.
-    - for (project in projects)
-      - project = projects[project]
-      .info_jobs_available.project(data-project="#{ project.id }")
-        p.filename
-          | FILE NAME:
-          span#name
-            |   #{ project.title }
-        .status
-          img(id="status_img" ,alt="Request status ", src="/img/icons_#{ project.dasherizedStatus() }.png")
-          p
-            | STATUS:
-            span#status
-              |  #{ project.humanizedStatus() }
-        .link_to_project
-          a(href="/project/#{ project.id }", class="button") ACCEPT
-        .separator
-          img(id="separator1", alt="division figure", src="/img/separatori_lista.png")
-          img(id="separator2", alt="division figure", src="/img/img_separatori_lista.png")
+  .tab-content
+    #projects.panel-group.panel-group-3d
+      - if (projects.length == 0)
+        .container
+          p.info-3d There is not any project yet for this list.
+      - for (project in projects)
+        - project = projects[project]
+        .panel
+          .panel-heading
+            .container
+              h4.panel-title
+                span PROJECT NAME:
+                | #{project.title}
+                a.accordion-btn.collapsed(data-toggle='collapse', data-parent='#projects', href='#project-#{project.id}')
+          div.panel-collapse.collapse(id='project-#{project.id}')
+            .panel-body
+              .container
+                br
+                br
+                p.info-3d
+                  span.title FILE NAME:
+                  | #{project.file}
+                br
+                p.info-3d
+                  span.image.align-left
+                    img(src='/img/icons_#{project.dasherizedStatus()}.png')
+                  span.title STATUS
+                  | #{project.humanizedStatus()}
+                br
+                br
+                p.info-3d
+                  span.image.align-left
+                    img(src='/img/icons_time_order.png')
+                  span.title QUESTO ORDINE ASPETTA DA: 2 DAYS 3H
+                br
+                br
+
+              .section.primary
+                .container
+                    .row
+                      .col-md-6
+                      .col-md-3
+                        .printer-properties
+                          h4 Volume
+                          p #{project.volume} cm3
+                          h4 Density
+                          p #{project.density}
+                          h4 Weight
+                          p #{project.weight}
+                      .col-md-3
+                        .printer-properties
+                          h4 Ammount
+                          p #{project.ammount}
+                          h4 Dimensions
+                          p #{project.dimensions}
+                    hr.hr-light
+                    .comment-user
+                      h3 Comment By The User
+                      br
+                      .comment
+                        p
+                          | Liquorice jelly beans applicake gummi bears candy canes. Dragée bear claw candy canes. Pie muffin cheesecake.
+                          br
+                          | Candy jelly biscuit marzipan gummi bears muffin chupa chups danish liquorice.
+                          br
+                          | Applicake pastry applicake biscuit.
+
+              br
+              br
+              .container
+                a(href="/project/#{ project.id }", class="btn btn-default btn-lg btn-medium")
+                  span ACCEPT
+                br
+                br
+                br
+        .container
+          .divider
 
 
 block extra-headers

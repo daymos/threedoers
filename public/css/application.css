@@ -8937,6 +8937,40 @@ a.direct-link {
   padding-bottom: 80px;
   padding-top: 80px; }
 
+/* Collapse */
+.panel-group-3d .panel {
+  background: none;
+  box-shadow: none; }
+.panel-group-3d .panel-heading + .panel-collapse > .panel-body {
+  border-top-color: transparent; }
+.panel-group-3d .panel-body {
+  padding: 15px 0; }
+.panel-group-3d .panel-title {
+  font-family: "Titillium Web", Helvetica, sans-serif;
+  font-size: 22px;
+  font-weight: bold; }
+  .panel-group-3d .panel-title span {
+    margin-right: 20px;
+    font-family: "Lato", Helvetica, sans-serif;
+    font-size: 24px;
+    font-style: italic;
+    text-shadow: 3px 3px #d8ffd2; }
+.panel-group-3d .accordion-btn {
+  background: url("../img/button_accordion.png") left top no-repeat;
+  display: block;
+  float: right;
+  height: 43px;
+  width: 43px; }
+.panel-group-3d .accordion-btn.collapsed {
+  background: url("../img/button-accordion-h.png") left top no-repeat; }
+.panel-group-3d .accordion-btn:hover {
+  opacity: 0.8; }
+.panel-group-3d .divider {
+  border-top: 4px solid #7bf282;
+  border-bottom: 4px solid #d8ffd2;
+  margin-bottom: 50px;
+  margin-top: 50px; }
+
 /* Buttons */
 .btn {
   overflow: hidden;
@@ -9109,6 +9143,13 @@ a.primary-hover::after {
   background-color: #7bf282; }
 
 /* Flexslider */
+.flexslider .slides {
+  text-align: center; }
+
+.flexslider .slides img {
+  width: auto;
+  display: inline; }
+
 .flex-direction-nav .flex-prev,
 .flex-direction-nav .flex-next {
   opacity: 1;
