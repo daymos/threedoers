@@ -1,27 +1,27 @@
 extends ../base
 
-block base-headers
+block base-scripts
   script.
     $(document).ready(
       function(event) {
         $(".header a[href='/profile/projects']").parent().addClass('active');
-        $(".flange a[href='#{ nav }']").parent().addClass('active');
+        $(".subnav a[href='#{ nav }']").parent().addClass('active');
       }
     );
 
 block body
-  section.page.container1
-    .flange.printer
-      ul
+  div.subnav
+    .container
+      ul.nav.nav-tabs
         li#printing_request
-          a(href="/printing/requests") PRINTING REQUEST
-          .background1.activeline
+          a(href="/printing/requests")
+            span Printing Request
         li#jobs_available
-          a(href="/printing/jobs") JOBS AVAILABLE
-          .background2.activeline
+          a(href="/printing/jobs")
+            span Jobs Available
         li#archived
-          a(href="/printing/archived") ARCHIVED
-          .background.activeline
+          a(href="/printing/archived")
+            span Archived
       .line
 
     block content-profile
