@@ -7,8 +7,9 @@ block title
 block content-profile
   .tab-content
     #projects.panel-group.panel-group-3d
-      - if (projects.length == 0)
-        p.info-3d There is not any project yet for this list.
+      - if (projects.length == 2)
+        .container
+          p.info-3d There is not any project yet for this list.
       - for (project in projects)
         - project = projects[project]
         .panel
