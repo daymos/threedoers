@@ -218,42 +218,49 @@ html {
   src: url("/fonts/bebasneue/BebasBold.eot?#iefix") format("eot"), url("/fonts/bebasneue/BebasBold.woff") format("woff"), url("/fonts/bebasneue/BebasBold.ttf") format("truetype"), url("/fonts/bebasneue/BebasBold.svg?1394506181") format("svg");
   font-weight: 700;
   font-style: normal; }
+
 @font-face {
   font-family: "Lato";
   src: url("/fonts/lato/LatoBlackItalic.eot");
   src: url("/fonts/lato/LatoBlackItalic.eot?#iefix") format("eot"), url("/fonts/lato/LatoBlackItalic.woff") format("woff"), url("/fonts/lato/LatoBlackItalic.ttf") format("truetype"), url("/fonts/lato/LatoBlackItalic.svg?1394506181") format("svg");
   font-weight: 900;
   font-style: italic; }
+
 @font-face {
   font-family: "Lato";
   src: url("/fonts/lato/LatoBoldItalic.eot");
   src: url("/fonts/lato/LatoBoldItalic.eot?#iefix") format("eot"), url("/fonts/lato/LatoBoldItalic.woff") format("woff"), url("/fonts/lato/LatoBoldItalic.ttf") format("truetype"), url("/fonts/lato/LatoBoldItalic.svg?1394506181") format("svg");
   font-weight: 700;
   font-style: italic; }
+
 @font-face {
   font-family: "Lato";
   src: url("/fonts/lato/LatoRegular.eot");
   src: url("/fonts/lato/LatoRegular.eot?#iefix") format("eot"), url("/fonts/lato/LatoRegular.woff") format("woff"), url("/fonts/lato/LatoRegular.ttf") format("truetype"), url("/fonts/lato/LatoRegular.svg?1394506181") format("svg");
   font-weight: 400;
   font-style: normal; }
+
 @font-face {
   font-family: "Titillium";
   src: url("/fonts/titillium/TitilliumBold.eot");
   src: url("/fonts/titillium/TitilliumBold.eot?#iefix") format("eot"), url("/fonts/titillium/TitilliumBold.woff") format("woff"), url("/fonts/titillium/TitilliumBold.ttf") format("truetype"), url("/fonts/titillium/TitilliumBold.svg?1394506181") format("svg");
   font-weight: 700;
   font-style: normal; }
+
 @font-face {
   font-family: "Titillium";
   src: url("/fonts/titillium/TitilliumBoldItalic.eot");
   src: url("/fonts/titillium/TitilliumBoldItalic.eot?#iefix") format("eot"), url("/fonts/titillium/TitilliumBoldItalic.woff") format("woff"), url("/fonts/titillium/TitilliumBoldItalic.ttf") format("truetype"), url("/fonts/titillium/TitilliumBoldItalic.svg?1394506181") format("svg");
   font-weight: 700;
   font-style: italic; }
+
 @font-face {
   font-family: "Titillium";
   src: url("/fonts/titillium/TitilliumSemiBoldItalic.eot");
   src: url("/fonts/titillium/TitilliumSemiBoldItalic.eot?#iefix") format("eot"), url("/fonts/titillium/TitilliumSemiBoldItalic.woff") format("woff"), url("/fonts/titillium/TitilliumSemiBoldItalic.ttf") format("truetype"), url("/fonts/titillium/TitilliumSemiBoldItalic.svg?1394506181") format("svg");
   font-weight: 600;
   font-style: italic; }
+
 .container1, .container2, .container3, .container4, .container5, .container6, .container7 {
   *zoom: 1;
   max-width: 25em;
@@ -275,7 +282,7 @@ html {
 @media (min-width: 58.75em) {
   .container1, .container2, .container3, .container4, .container5, .container6, .container7 {
     max-width: 58.75em; } }
-/*!
+/*
 *  Font Awesome 4.0.3 by @davegandy - http://fontawesome.io - @fontawesome
 *  License - http://fontawesome.io/license (Font: SIL OFL 1.1, CSS: MIT License)
 */
@@ -285,6 +292,7 @@ html {
   src: url("../fonts/font-awesome/fontawesome-webfont.eot?#iefix&v=4.0.3") format("embedded-opentype"), url("../fonts/font-awesome/fontawesome-webfont.woff?v=4.0.3") format("woff"), url("../fonts/font-awesome/fontawesome-webfont.ttf?v=4.0.3") format("truetype"), url("../fonts/font-awesome/fontawesome-webfont.svg?v=4.0.3#fontawesomeregular") format("svg");
   font-weight: normal;
   font-style: normal; }
+
 .fa {
   display: inline-block;
   font-family: FontAwesome;
@@ -324,12 +332,12 @@ html {
 
 .fa-li {
   position: absolute;
-  left: -2.14286em;
+  left: -2.143em;
   width: 2.14286em;
   top: 0.14286em;
   text-align: center; }
   .fa-li.fa-lg {
-    left: -1.85714em; }
+    left: -1.857em; }
 
 .fa-border {
   padding: .2em .25em .15em;
@@ -359,30 +367,35 @@ html {
 
   100% {
     -moz-transform: rotate(359deg); } }
+
 @-webkit-keyframes spin {
   0% {
     -webkit-transform: rotate(0deg); }
 
   100% {
     -webkit-transform: rotate(359deg); } }
+
 @-o-keyframes spin {
   0% {
     -o-transform: rotate(0deg); }
 
   100% {
     -o-transform: rotate(359deg); } }
+
 @-ms-keyframes spin {
   0% {
     -ms-transform: rotate(0deg); }
 
   100% {
     -ms-transform: rotate(359deg); } }
+
 @keyframes spin {
   0% {
     transform: rotate(0deg); }
 
   100% {
     transform: rotate(359deg); } }
+
 .fa-rotate-90 {
   filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=$rotation);
   -webkit-transform: rotate(90deg);
