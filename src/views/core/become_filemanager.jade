@@ -8,7 +8,7 @@ block body
   .section.primary
     .container
       .row
-        .col-md-7
+        .col-md-7.col-sm-7
           h1.h1-3d.text-shadow-white
             | BECOME A FILE
             br
@@ -17,7 +17,7 @@ block body
       br
       br
       .row
-        .col-md-3
+        .col-md-3.col-sm-5
           br
           br
           form#printer_request_form.printer_request_form(name='printer_request_form', accept-charset='UTF-8', role='form', method='POST', action='/become/filemanager')
@@ -31,7 +31,7 @@ block body
               br
               | WAS SENT
       br
-    .right-hand.middle
+    .right-hand.middle.hidden-xs
       img(src='/img/hand_register.png')
   div
     .container

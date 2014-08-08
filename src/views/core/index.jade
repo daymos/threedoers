@@ -59,17 +59,17 @@ block body
         br
         br
       .row
-        .col-md-4
+        .col-md-4.col-sm-6
           a.btn.btn-default.btn-lg.btn-block(href='/project/upload')
             span UPLOAD A PROJECT
           br
-        - if (!(user && user.printer == 'accepted'))
-          .col-md-4
+        - if (user.printer != 'accepted')
+          .col-md-4.col-sm-6
             a.btn.btn-default.btn-lg.btn-block(href='/become')
               span BECOME A PRINTER
             br
-        - if (!(user && user.filemanager == 'accepted'))
-          .col-md-4
+        - if (user.filemanager != 'accepted')
+          .col-md-4.col-sm-6
             a.btn.btn-default.btn-lg.btn-block(href='#')
               span BECOME A FILE MANAGER
   div
@@ -81,7 +81,7 @@ block body
       br
       br
       .row
-        .col-md-7
+        .col-md-8.col-sm-9
           h1.page-title
             span Are You Sure That
           h1.page-title
@@ -93,7 +93,7 @@ block body
             a.default-hover(href='#') So Click Here For A File Revision
           br
           br
-        .col-md-5
+        .col-md-4.col-sm-3
           p.text-center
             img(src='/img/icona3d_homepage.png')
 
@@ -112,7 +112,7 @@ block body
               br
               .row
                 for project in projects
-                  .col-md-4
+                  .col-md-4.col-sm-6
                     .project-single
                       img(src='/#{project.file}')
                       .info
@@ -136,7 +136,7 @@ block body
               br
               .row
                 for _user in users
-                  .col-md-2.col-md-2-5
+                  .col-md-2.col-md-2-5.col-sm-4
                     .community-single
                       a(href='#')
                       - if (_user.photo)

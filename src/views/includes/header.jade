@@ -18,23 +18,25 @@ header
       .container
         .row
           .col-md-2
-            a(href='/')
-              img(src='/img/logo.png')
+            .logo-wrapper
+              a(href='/')
+                img(src='/img/logo.png')
           .col-md-10
-            .search-form.pull-right
+            .search-form
               form
                 input.form-control(type='text', placeholder='SEARCH')
                 button(type='submit')
-                a.square-social-link(href='#')
-                  span.fa.fa-facebook
-                a.square-social-link(href='#')
-                  span.fa.fa-twitter
-                a.square-social-link(href='#')
-                  span.fa.fa-google-plus
-                a.square-social-link(href='#')
-                  span.fa.fa-heart
-                span.favorite-count
-                  span 1
+                .top-social-links
+                  a.square-social-link(href='#')
+                    span.fa.fa-facebook
+                  a.square-social-link(href='#')
+                    span.fa.fa-twitter
+                  a.square-social-link(href='#')
+                    span.fa.fa-google-plus
+                  a.square-social-link(href='#')
+                    span.fa.fa-heart
+                  span.favorite-count
+                    span 1
             .clearfix
             .simple-nav
               nav

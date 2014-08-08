@@ -130,6 +130,7 @@ hr.hr-light {
 /* Search Form */
 .search-form {
   margin-bottom: 10px;
+  float: right;
 
   .form-control {
     background-color: #000000;
@@ -154,6 +155,9 @@ hr.hr-light {
   .form-control::-webkit-input-placeholder {
     color: $primary-color;
     text-shadow: none;
+  }
+  .top-social-links {
+    display: inline;
   }
   button {
     display: none;
@@ -982,28 +986,6 @@ a.primary-hover {
   }
 }
 
-/* Flexslider */
-.flexslider .slides {
-  text-align: center;
-}
-.flexslider .slides img {
-  width: auto;
-  display: inline;
-}
-.flex-direction-nav .flex-prev,
-.flex-direction-nav .flex-next {
-	opacity: 1;
-	z-index: 9999;
-}
-.flexslider:hover .flex-prev { opacity: 0.7; left: 5%; }
-.flexslider:hover .flex-next { opacity: 0.7; right: 5%; }
-.flex-direction-nav .flex-prev {
-	left: 5%;
-}
-.flex-direction-nav .flex-next {
-	right: 5%;
-}
-
 /* Awesome Checbox & Radio */
 .radio,
 .checkbox {
@@ -1175,8 +1157,102 @@ a.primary-hover {
     background-color: #5cb85c; }
 
 /* Responsive */
+@media (max-width: 768px) {
+  .search-form {
+    float: none;
+    .form-control {
+      display: block;
+      margin-bottom: 10px;
+      width: 100%;
+    }
+    .top-social-links {
+      display: block;
+      text-align: right;
+    }
+  }
+}
+@media (max-width: 992px) {
+  .logo-wrapper {
+    margin-bottom: 20px;
+    text-align: center;
+  }
+}
 @media (min-width: 992px) {
   .col-md-2-5 {
     width: 20%;
   }
+}
+
+@media (max-width: 479px) {
+  .page-title {
+    font-size: 30px;
+    line-height: 31px;
+  }
+  .page-title.small {
+    font-size: 18px;
+  }
+  .h1-3d {
+    font-size: 48px;
+  }
+  .h2-3d {
+    font-size: 32px;
+  }
+  .h4-3d {
+    font-size: 20px;
+  }
+  a.forgot-password, a.create-account {
+    font-size: 18px;
+  }
+  .input-lg {
+    font-size: 18px;
+  }
+  .btn.btn-xlg {
+    font-size: 22px;
+    padding-bottom: 16px;
+    padding-top: 16px;
+  }
+  .file-revision {
+    font-size: 45px;
+  }
+}
+
+@media (min-width: 480px) and (max-width: 767px) {
+  .page-title {
+    font-size: 35px;
+    line-height: 36px;
+  }
+  .page-title.small {
+    font-size: 24px;
+  }
+  .h1-3d {
+    font-size: 50px;
+  }
+  a.forgot-password, a.create-account {
+    font-size: 20px;
+  }
+  .input-lg {
+    font-size: 20px;
+  }
+  .btn.btn-xlg {
+    font-size: 24px;
+    padding-bottom: 16px;
+    padding-top: 16px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  .page-title {
+    font-size: 45px;
+    line-height: 46px;
+  }
+  .input-lg {
+    font-size: 22px;
+  }
+}
+@media (min-width: 992px) and (max-width: 1199px) {
+
+}
+
+@media (min-width: 1200px) {
+
 }
