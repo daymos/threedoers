@@ -8743,6 +8743,14 @@ a.direct-link {
   font-weight: bold;
   text-shadow: 3px 3px #d8ffd2; }
 
+.comment-title {
+  position: relative; }
+
+.comment-title > img {
+  position: absolute;
+  top: -20px;
+  right: -130px; }
+
 .comment-user h3 {
   font-family: "Titillium Web", Helvetica, sans-serif;
   font-size: 41px;
@@ -9388,7 +9396,15 @@ a.primary-hover::after {
       width: 100%; }
     .search-form .top-social-links {
       display: block;
-      text-align: right; } }
+      text-align: right; }
+
+  #comment-button {
+    margin-top: 30px; }
+
+  .comment-title > img {
+    height: auto;
+    position: absolute;
+    right: 0px; } }
 @media (max-width: 992px) {
   .logo-wrapper {
     margin-bottom: 20px;
@@ -9425,7 +9441,11 @@ a.primary-hover::after {
     padding-top: 16px; }
 
   .file-revision {
-    font-size: 45px; } }
+    font-size: 45px; }
+
+  .comment-title > img {
+    top: -10px;
+    width: 20%; } }
 @media (min-width: 480px) and (max-width: 767px) {
   .page-title {
     font-size: 35px;
@@ -9453,4 +9473,8 @@ a.primary-hover::after {
     line-height: 46px; }
 
   .input-lg {
-    font-size: 22px; } }
+    font-size: 22px; }
+
+  .comment-title > img {
+    position: absolute;
+    right: 0px; } }
