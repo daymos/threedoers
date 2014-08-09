@@ -248,11 +248,12 @@ module.exports = (app, io) ->
   app.post '/project/comment/:id', decorators.loginRequired, (req, res, next) ->
     # Same as get /project/:id both printer who accepted and the owner can change this
     models.STLProject.findOne({_id: req.params.id, $or: [{user: req.user.id}, {'order.printer': req.user.id}]}).exec().then( (doc) ->
-      if doc and doc.status >= models.PROJECT_STATUSES.PRINT_ACCEPTED[0]  # test if comments allowed
+      if doc and doc.status >= models.PROJECT_STATUSES.PRINT_REVIEW[0]  # test if comments allowed
         if req.body.message
           comment =
             author: req.user.id
             username: req.user.username
+            photo: req.user.photo
             content: req.body.message
             createdAt: Date.now()
 
@@ -374,7 +375,7 @@ module.exports = (app, io) ->
 
 
   app.get '/printing/jobs', decorators.printerRequired, (req, res) ->
-    models.STLProject.find('order.printer': req.user.id, status: models.PROJECT_STATUSES.PRINT_ACCEPTED[0]).exec (err, docs) ->
+    models.STLProject.find('order.printer': req.user.id, status: { $in: [models.PROJECT_STATUSES.PRINT_ACCEPTED[0], models.PROJECT_STATUSES.PRINT_REVIEW[0]]}).exec (err, docs) ->
       if err
         logger.error err
         res.send 500
@@ -389,8 +390,28 @@ module.exports = (app, io) ->
       else
         res.render 'core/printing/archived', {projects: docs}
 
+  app.post '/printing/review/:id', decorators.printerRequired, (req, res) ->
+    models.STLProject.findOne({_id: req.params.id}).exec().then( (doc) ->
+      if doc and doc.validateNextStatus(models.PROJECT_STATUSES.PRINT_REVIEW[0])
+        auth.User.findOne(doc.user).exec (err, user) ->
+          if user
+            mailer.send('mailer/printing/accept', {project: doc, user: user, site:settings.site}, {from: settings.mailer.noReply, to:[user.email], subject: settings.printing.accept.subject}).then ->
+              doc.status = models.PROJECT_STATUSES.PRINT_REVIEW[0]
+              doc.order =
+                printer: req.user.id
+                ammount: doc.order.ammount
+                price: doc.order.price
+              doc.save()
+              res.json msg: "Accepted"
+      else
+        res.json msg: "Looks like someone accepted, try with another", 400
+    ).fail( ->
+      logger.error arguments
+      res.send 500
+    )
+
   app.post '/printing/accept/:id', decorators.printerRequired, (req, res) ->
-    models.STLProject.findOne({_id: req.params.id, editable: false}).exec().then( (doc) ->
+    models.STLProject.findOne({_id: req.params.id}).exec().then( (doc) ->
       if doc and doc.validateNextStatus(models.PROJECT_STATUSES.PRINT_ACCEPTED[0])
         auth.User.findOne(doc.user).exec (err, user) ->
           if user
@@ -411,10 +432,10 @@ module.exports = (app, io) ->
 
   app.post '/printing/deny/:id', decorators.printerRequired, (req, res) ->
     models.STLProject.findOne({_id: req.params.id, editable: false}).exec().then( (doc) ->
-      if doc and (doc.status == models.PROJECT_STATUSES.PRINT_REQUESTED[0] or doc.status == models.PROJECT_STATUSES.PRINT_ACCEPTED[0])
+      if doc and doc.validateNextStatus(models.PROJECT_STATUSES.PRINT_REQUESTED[0])
         doc.status -= 1
         doc.save()
-        res.json msg: "Accepted"
+        res.json msg: "Denied"
       if doc and doc.status == models.PROJECT_STATUSES.PRINT_ACCEPTED[0]
         res.json msg: "Looks like someone accepted, try with another", 400
     ).fail( ->

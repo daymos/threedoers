@@ -36,11 +36,10 @@ $(document).ready ->
 
 
   # $("[data-toggle=\"tooltip\"]").tooltip()
-  
-  $(".link_to_project .button").click (e) ->
+  $("a.btn.review").click (e) ->
     e.preventDefault()
     $.ajax
-      url: "/printing/accept/#{$(this).closest(".project").attr('data-project')}"
+      url: $(this).attr("href")
       method: "post"
       dataType: "json"
 

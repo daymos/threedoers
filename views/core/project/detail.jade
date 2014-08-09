@@ -115,24 +115,26 @@ block body
               p #{project.order.resolution} # this still on development
     br
     br
-    div
-      .container
-        .row
-          .col-md-3
-            a#accept.btn.btn-lg.btn-default.btn-goto(href='/printing/accept/#{project.id}')
-              | ACCEPT
+    - if (user.printer == 'accepted' && project.status == statuses.PRINT_REVIEW[0])
+      div
+        .container
+          .row
+            .col-md-3
+              a#accept.btn.btn-lg.btn-default.btn-goto(href='/printing/accept/#{project.id}')
+                | ACCEPT
+                br
+                | THIS WORK
               br
-              | THIS WORK
-            br
-            br
-            br
-          .col-md-3.col-md-offset-1
-            a#deny.btn.btn-lg.btn-red.btn-goto(href='/printing/deny/#{project.id}')
-              | DENY
               br
-              | THIS WORK
-            br
-    - if (project.status >= statuses.PRINT_ACCEPTED[0])  // if project was accepted
+              br
+            .col-md-3.col-md-offset-1
+              a#deny.btn.btn-lg.btn-red.btn-goto(href='/printing/deny/#{project.id}')
+                | DENY
+                br
+                | THIS WORK
+              br
+
+    - if (project.status >= statuses.PRINT_REVIEW[0])  // if project was accepted
         br
         br
         br
@@ -149,171 +151,163 @@ block body
         br
         br
         .row
-          .col-md-8
-            .media
-              a.pull-left(href='#')
-                img.media-object(src='img/community/picture1.png', alt='', width='78', height='78')
-              .media-body
-                p
-                  | Sesame snaps brownie topping lollipop apple pie cake jelly-o. Pudding oat cake gummies. Danish jelly biscuit jelly-o pie pie cheesecake. Chocolate pudding bonbon carrot cake. Lollipop pastry
-            .media
-              a.pull-left(href='#')
-                img.media-object(src='img/community/picture1.png', alt='', width='78', height='78')
-              .media-body
-                p
-                  | Sesame snaps brownie topping lollipop apple pie cake jelly-o. Pudding oat cake gummies.?
-            .media
-              a.pull-left(href='#')
-                img.media-object(src='img/community/picture1.png', alt='', width='78', height='78')
-              .media-body
-                p
-                  | applicake candy canes danish chocolate bar pie tiramisu. Cotton candy danish chocolate cake oat cake fruitcake candy topping cotton candy jelly beans. Oat cake pudding macaroon tart pastry cake biscuit powder. Bear claw topping sesame snaps. Carrot cake donut cookie chupa chups soufflé pastry sugar plum. Jelly carrot cake tootsie roll cupcake dragée chocolate cake liquorice jujubes cupcake. Tiramisu apple pie dessert fruitcake cake.
-    br
-    br
-    br
-    .section.primary
-      .container
-        .row
-          .col-md-10
-          .col-md-2
-            button.btn.btn-lg.btn-default.btn-goto SEND
-
-
-
-
-  .container_block
-    .payment-status_block.pay_ok
-      section.homepage.container2
-        .payment-status
-          p
-            | PAGAMENTO AVVENUTO!
-            br
-            | INIZIA LA TUA STAMPA!
-          img(alt='OK', src='images/alert_payment_ok.png')
-    .payment-status_block.confirm
-      section.homepage.container2
-        .payment-status
-          p
-            | ATTENDI IL PAGAMENTO!
-            br
-            | RICEVERAI UNA MAIL DI CONFERMA
-          img(alt='OK', src='images/alert_payment.png')
-    .title_block
-      section.homepage.container2
-        h1.title
-          p  COMMENTS HERE
-          p  FOR YOUR PROJECT
-          img(alt='3doers Hand', src='images/icons_comment_2.png')
-      .title_background.printer_page
-        .title_bar1
-        .title_bar2
-    section.homepage.container2
-      .project_comments
-        .project_comment
-          .user_image
-            img(alt='3doers Hand', src='images/edit_photo_placeholder.png')
-          p
-            | Sesame snaps brownie topping lollipop apple pie cake jelly-o. Pudding oat cake gummies. Danish jelly biscuit jelly-o pie pie cheesecake. Chocolate pudding bonbon carrot cake. Lollipop pastry
-        .project_comment
-          .user_image
-            img(alt='3doers Hand', src='images/edit_photo_placeholder.png')
-          p
-            | esame snaps brownie topping lollipop apple pie cake jelly-o. Pudding oat cake gummies.?
-        .project_comment
-          .user_image
-            img(alt='3doers Hand', src='images/edit_photo_placeholder.png')
-          p
-            | applicake candy canes danish chocolate bar pie tiramisu. Cotton candy danish chocolate cake oat cake fruitcake candy topping cotton candy jelly beans. Oat cake pudding macaroon tart pastry cake biscuit powder. Bear claw topping sesame snaps. Carrot
-            | cake donut cookie chupa chups soufflé pastry sugar plum. Jelly carrot cake tootsie roll cupcake dragée chocolate cake liquorice jujubes cupcake. Tiramisu apple pie dessert fruitcake cake.
-    .comment_textarea_block
-      section.homepage.container2
-        .container-left
-          textarea(rows='10')
-        .container-right
-          .submit
-            input#submit_comment.form(name='submit_comment', value='SEND', type='submit')
-
-
-  .container_block
-    section.homepage.container2
-      p#title.title(data-type="text", data-url="/project/title/#{project.id}", data-title="Enter the Title") #{project.title}
-      .images_data
-        .frame-1
-        .frame-2
-        .file
-          canvas#cv
-        p#message-canvas.messages.hide
-          | It seems you are using an outdated browser that does not support canvas :-(
-        .container_background
-
-      .parameters.processing-volume(class=(project.status!=1)?"hide":"")
-        p.objects
-          | OBJECT VOLUME:
-          span.object-volume
-            span#volume &nbsp;#{project.volume}
-            &nbsp
-            span#unit #{project.unit}
-            &nbsp
-            sup 3
-        //
-          /todo manca immagine di status
-
-        p.status
-          | STATUS:
-          span#status &nbsp;#{project.humanizedStatus()}
-        -if (!project.editable && project.order)
-          p.order.hide
-            | PRICE:
-            span#order-placed-order  #{project.order.price}
-
-  .block_configuration_form.row
-    section.homepage.container2
-
-
-      // if user same as owner and status payed
-      - if (project.status == statuses.PRINT_ACCEPTED[0] && user.id == project.user)
-        a(href="/project/pay/#{project.id}").btn.btn-lg.btn-primary.pull-right Pay Order
-        .clearfix
-
-      - if (project.status == statuses.PAYED[0])
-        .row
-          form.form-inline(role="form", action="/project/start-printing/#{project.id}", method="post").col-md-12
-            input(type='hidden', name='_csrf', value=csrfToken)
-            input(type="submit", value="Print Order").btn.btn-primary.pull-right
-
-      - if (project.status == statuses.PRINTING[0])
-        .row
-          form.form-inline(role="form", action="/project/printed/#{project.id}", method="post").col-md-12
-            input(type='hidden', name='_csrf', value=csrfToken)
-            input(type="submit", value="Order Printed").btn.btn-primary.pull-right
-
-      - if (project.status >= statuses.PRINT_ACCEPTED[0])  // if project was accepted
-        h5 Comments
-
-        ul#comment-list.list-group
-          - for comment in project.comments
-            li.list-group-item
-              .row
-                .col-xs-2.col-md-1
-                  img.img-circle.img-responsive(src='http://placehold.it/80', alt='')
-                .col-xs-10.col-md-11
-                  div
-                    .mic-info
-                      | By: &nbsp; &nbsp;
-                      a(href='#') #{comment.username}
-                      | &nbsp;on #{comment.createdAt}
-                  br
-                  .comment-text
+          .col-md-8#comment-list
+            - for comment in project.comments
+              .media
+                a.pull-left(href='#')
+                  img.media-object(src='/#{comment.photo}', alt='', width='78', height='78')
+                .media-body
+                  p
                     | #{comment.content}
-
-
-        textarea#comment-text.comment.col-md-12
-        .clearfix
+                .media-meta
+                  | #{comment.username} #{comment.createdAt}
         br
-        button.btn.btn-primary.pull-right#comment-button Comment
+        br
+        br
+        .section.primary
+          .container
+            .row
+              .col-md-10
+                textarea#comment-text.comment.col-md-12
+              .col-md-2
+                button.btn.btn-lg.btn-default.btn-goto#comment-button SEND
 
-    .configuration_background
-      .background
+
+
+
+  //- .container_block
+  //-   .payment-status_block.pay_ok
+  //-     section.homepage.container2
+  //-       .payment-status
+  //-         p
+  //-           | PAGAMENTO AVVENUTO!
+  //-           br
+  //-           | INIZIA LA TUA STAMPA!
+  //-         img(alt='OK', src='images/alert_payment_ok.png')
+  //-   .payment-status_block.confirm
+  //-     section.homepage.container2
+  //-       .payment-status
+  //-         p
+  //-           | ATTENDI IL PAGAMENTO!
+  //-           br
+  //-           | RICEVERAI UNA MAIL DI CONFERMA
+  //-         img(alt='OK', src='images/alert_payment.png')
+  //-   .title_block
+  //-     section.homepage.container2
+  //-       h1.title
+  //-         p  COMMENTS HERE
+  //-         p  FOR YOUR PROJECT
+  //-         img(alt='3doers Hand', src='images/icons_comment_2.png')
+  //-     .title_background.printer_page
+  //-       .title_bar1
+  //-       .title_bar2
+  //-   section.homepage.container2
+  //-     .project_comments
+  //-       .project_comment
+  //-         .user_image
+  //-           img(alt='3doers Hand', src='images/edit_photo_placeholder.png')
+  //-         p
+  //-           | Sesame snaps brownie topping lollipop apple pie cake jelly-o. Pudding oat cake gummies. Danish jelly biscuit jelly-o pie pie cheesecake. Chocolate pudding bonbon carrot cake. Lollipop pastry
+  //-       .project_comment
+  //-         .user_image
+  //-           img(alt='3doers Hand', src='images/edit_photo_placeholder.png')
+  //-         p
+  //-           | esame snaps brownie topping lollipop apple pie cake jelly-o. Pudding oat cake gummies.?
+  //-       .project_comment
+  //-         .user_image
+  //-           img(alt='3doers Hand', src='images/edit_photo_placeholder.png')
+  //-         p
+  //-           | applicake candy canes danish chocolate bar pie tiramisu. Cotton candy danish chocolate cake oat cake fruitcake candy topping cotton candy jelly beans. Oat cake pudding macaroon tart pastry cake biscuit powder. Bear claw topping sesame snaps. Carrot
+  //-           | cake donut cookie chupa chups soufflé pastry sugar plum. Jelly carrot cake tootsie roll cupcake dragée chocolate cake liquorice jujubes cupcake. Tiramisu apple pie dessert fruitcake cake.
+  //-   .comment_textarea_block
+  //-     section.homepage.container2
+  //-       .container-left
+  //-         textarea(rows='10')
+  //-       .container-right
+  //-         .submit
+  //-           input#submit_comment.form(name='submit_comment', value='SEND', type='submit')
+
+
+  //- .container_block
+  //-   section.homepage.container2
+  //-     p#title.title(data-type="text", data-url="/project/title/#{project.id}", data-title="Enter the Title") #{project.title}
+  //-     .images_data
+  //-       .frame-1
+  //-       .frame-2
+  //-       .file
+  //-         canvas#cv
+  //-       p#message-canvas.messages.hide
+  //-         | It seems you are using an outdated browser that does not support canvas :-(
+  //-       .container_background
+
+  //-     .parameters.processing-volume(class=(project.status!=1)?"hide":"")
+  //-       p.objects
+  //-         | OBJECT VOLUME:
+  //-         span.object-volume
+  //-           span#volume &nbsp;#{project.volume}
+  //-           &nbsp
+  //-           span#unit #{project.unit}
+  //-           &nbsp
+  //-           sup 3
+  //-       //
+  //-         /todo manca immagine di status
+
+  //-       p.status
+  //-         | STATUS:
+  //-         span#status &nbsp;#{project.humanizedStatus()}
+  //-       -if (!project.editable && project.order)
+  //-         p.order.hide
+  //-           | PRICE:
+  //-           span#order-placed-order  #{project.order.price}
+
+  //- .block_configuration_form.row
+  //-   section.homepage.container2
+
+
+  //-     // if user same as owner and status payed
+  //-     - if (project.status == statuses.PRINT_ACCEPTED[0] && user.id == project.user)
+  //-       a(href="/project/pay/#{project.id}").btn.btn-lg.btn-primary.pull-right Pay Order
+  //-       .clearfix
+
+  //-     - if (project.status == statuses.PAYED[0])
+  //-       .row
+  //-         form.form-inline(role="form", action="/project/start-printing/#{project.id}", method="post").col-md-12
+  //-           input(type='hidden', name='_csrf', value=csrfToken)
+  //-           input(type="submit", value="Print Order").btn.btn-primary.pull-right
+
+  //-     - if (project.status == statuses.PRINTING[0])
+  //-       .row
+  //-         form.form-inline(role="form", action="/project/printed/#{project.id}", method="post").col-md-12
+  //-           input(type='hidden', name='_csrf', value=csrfToken)
+  //-           input(type="submit", value="Order Printed").btn.btn-primary.pull-right
+
+  //-     - if (project.status >= statuses.PRINT_ACCEPTED[0])  // if project was accepted
+  //-       h5 Comments
+
+  //-       ul#comment-list.list-group
+  //-         - for comment in project.comments
+  //-           li.list-group-item
+  //-             .row
+  //-               .col-xs-2.col-md-1
+  //-                 img.img-circle.img-responsive(src='http://placehold.it/80', alt='')
+  //-               .col-xs-10.col-md-11
+  //-                 div
+  //-                   .mic-info
+  //-                     | By: &nbsp; &nbsp;
+  //-                     a(href='#') #{comment.username}
+  //-                     | &nbsp;on #{comment.createdAt}
+  //-                 br
+  //-                 .comment-text
+  //-                   | #{comment.content}
+
+
+  //-       textarea#comment-text.comment.col-md-12
+  //-       .clearfix
+  //-       br
+  //-       button.btn.btn-primary.pull-right#comment-button Comment
+
+  //-   .configuration_background
+  //-     .background
 
 
 block extra-headers

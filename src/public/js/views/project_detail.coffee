@@ -127,17 +127,12 @@ $(document).ready ->
       data: {message: $("#comment-text").val()}
 
       success: (data) ->
-        template = "<li class='list-group-item'>
-              <div class='row'>
-                <div class='col-xs-2 col-md-1'><img src='http://placehold.it/80' alt='' class='img-circle img-responsive'></div>
-                <div class='col-xs-10 col-md-11'>
-                  <div>
-                   <div class='mic-info'>By: &nbsp; &nbsp;<a href='#'>#{data.username}</a>&nbsp;on #{Date(data.createdAt)}</div>
-                  </div><br>
-                  <div class='comment-text'>#{safe_tags_replace(data.content)}</div>
-                </div>
+        template = "<div class='media'><a href='#' class='pull-left'><img src='/#{data.photo}' alt=' class='media-object' height='78' width='78'></a>
+              <div class='media-body'>
+                <p>#{safe_tags_replace(data.content)}</p>
               </div>
-            </li>"
+              <div class='media-meta'>#{data.username} #{Date(data.createdAt)}</div>
+            </div>"
 
         $("#comment-list").append($(template))
         $("#comment-text").val("")  # cleaning the textarea
