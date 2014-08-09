@@ -527,6 +527,14 @@ a.direct-link {
     width: 93px;
   }
 }
+/* Comment Form */
+.form-control.comment {
+  border-radius: 0;
+  height: 200px;
+}
+#comment-button {
+  margin-top: 152px;
+}
 
 /* Separators */
 .separator-3d {
@@ -586,6 +594,13 @@ a.direct-link {
   font-family: $font-primary-stack;
   font-size: 19px;
   font-style: italic;
+}
+.media-meta {
+  font-family: $font-secondary-stack;
+  font-size: 14px;
+  span {
+    font-weight: bold;
+  }
 }
 
 /* Preview Print */
@@ -842,7 +857,7 @@ a.direct-link {
   -webkit-transition: all 0.3s;
   -moz-transition: all 0.3s;
   transition: all 0.3s;
-  width: 100%;
+  width: 102%;
   z-index: 1;
 }
 .btn:hover:after,
@@ -877,14 +892,13 @@ a.direct-link {
 }
 .btn.btn-red {
   background-color: $bg-default-button;
-  border-color: $bg-default-button;
+  border: none;
   box-shadow: 4px -4px 0 #f2542a;
   color: #f2542a;
 }
 .btn.btn-red:hover,
 .btn.btn-red:focus {
   background-color: #f2542a;
-  border-color: #f2542a;
   box-shadow: 4px -4px 0 $bg-default-button;
   color: $default-color;
 }

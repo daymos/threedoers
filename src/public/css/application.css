@@ -8400,14 +8400,14 @@ hr.hr-light {
   line-height: 53px;
   margin-right: 2px;
   text-align: center;
-  box-shadow: inset 0 0 0 4px black, 0 0 1px transparent;
+  box-shadow: inset 0 0 0 4px black, 0 0 1px rgba(0, 0, 0, 0);
   -webkit-transition: box-shadow 0.3s;
   -moz-transition: box-shadow 0.3s;
   transition: box-shadow 0.3s;
   width: 53px; }
 
 .square-social-link:hover {
-  box-shadow: inset 0 0 0 4px #7bf282, 0 0 1px transparent;
+  box-shadow: inset 0 0 0 4px #7bf282, 0 0 1px rgba(0, 0, 0, 0);
   color: #7bf282; }
 
 .favorite-count {
@@ -8766,6 +8766,14 @@ a.direct-link {
   top: -15px;
   width: 93px; }
 
+/* Comment Form */
+.form-control.comment {
+  border-radius: 0;
+  height: 200px; }
+
+#comment-button {
+  margin-top: 152px; }
+
 /* Separators */
 .separator-3d {
   background: url("../img/separatori_lista.png") left center no-repeat;
@@ -8813,6 +8821,12 @@ a.direct-link {
   font-family: "Lato", Helvetica, sans-serif;
   font-size: 19px;
   font-style: italic; }
+
+.media-meta {
+  font-family: "Titillium Web", Helvetica, sans-serif;
+  font-size: 14px; }
+  .media-meta span {
+    font-weight: bold; }
 
 /* Preview Print */
 #clickable {
@@ -9029,7 +9043,7 @@ a.direct-link {
   -webkit-transition: all 0.3s;
   -moz-transition: all 0.3s;
   transition: all 0.3s;
-  width: 100%;
+  width: 102%;
   z-index: 1; }
 
 .btn:hover:after,
@@ -9064,14 +9078,13 @@ a.direct-link {
 
 .btn.btn-red {
   background-color: black;
-  border-color: black;
+  border: none;
   box-shadow: 4px -4px 0 #f2542a;
   color: #f2542a; }
 
 .btn.btn-red:hover,
 .btn.btn-red:focus {
   background-color: #f2542a;
-  border-color: #f2542a;
   box-shadow: 4px -4px 0 black;
   color: black; }
 

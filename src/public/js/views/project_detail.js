@@ -1,1 +1,164 @@
-(function(){var e,t,n,r,i;i=function(e){var t,n,r;r=[];for(n in e)t=$("#"+n),1===t.length&&t.text(" "+e[n]),"status"===n&&("processing"===e[n]?($(".object-volume").addClass("hide"),$(".processing-volume").removeClass("hide")):($(".object-volume").removeClass("hide"),$(".processing-volume").addClass("hide"))),"order"===n?r.push($("#order-placed-order").text(" "+e[n].price)):r.push(void 0);return r},e={black:"#000000",white:"#FFFFFF",red:"#FF0000",green:"#00FF00",blue:"#0000FF",yellow:"#FFFF00"},t=function(e){return r[e]||e},n=function(e){return e.replace(/[&<>]/g,t)},r={"&":"&amp;","<":"&lt;",">":"&gt;"},$(document).ready(function(){var t,r,o,a;return t="X-CSRF-Token",r=function(e){return jQuery.ajaxPrefilter(function(n,r,i){return i.crossDomain?void 0:i.setRequestHeader(t,e)})},r($('meta[name="csrf-token"]').attr("content")),o=io.connect(":"+port+"/project?project="+project.id),o.on("error",function(e){return console.log(e.msg)}),o.on("update",function(e){return o.emit("order-price",{ammount:$("#ammount").val()}),i(e)}),o.on("update-price-order",function(e){return $("#order-price").text(e.price)}),Modernizr.canvas||$("#message-canvas").removeClass("hide"),a=new JSC3D.Viewer($("#cv").get(0)),a.setParameter("SceneUrl","/"+project.filename),a.setParameter("ModelColor",""+e[project.color]),a.setParameter("BackgroundColor1","#E5D7BA"),a.setParameter("InitRotationX","25"),a.setParameter("InitRotationY","25"),a.setParameter("InitRotationZ","25"),a.setParameter("BackgroundColor2","#383840"),a.setParameter("RenderMode","smooth"),a.setParameter("Definition","high"),a.setParameter("MipMapping","on"),a.setParameter("CreaseAngle","30"),a.init(),a.update(),$("#color-chooser").val(""+project.color),$("#color-chooser").val(""+project.color).change(function(){return $.post("/project/color/"+project.id,{value:$(this).val()},function(){return location.reload()})}),$("#density-chooser").val(""+project.density),$("#density-chooser").val(""+project.density).change(function(){return $.post("/project/density/"+project.id,{value:$(this).val()})}),$("#title").editable("/project/title/"+project.id),$("#ammount").keyup(function(e){return(/\D/g.test(this.value)||/^0$/.test(this.value))&&(this.value=this.value.replace(/\D/g,""),this.value=this.value.replace(/^0$/,"")),/^[1-9][0-9]*$/.test(this.value)||/^\s*$/.test(this.value)?($("#order-price").text("Processing"),o.emit("order-price",{ammount:$("#ammount").val()})):e.preventDefault()}),$("#comment-button").click(function(e){return e.preventDefault(),$.ajax({url:"/project/comment/"+project.id,method:"post",dataType:"json",data:{message:$("#comment-text").val()},success:function(e){var t;return t="<div class='media'><a href='#' class='pull-left'><img src='/"+e.photo+"' alt=' class='media-object' height='78' width='78'></a>              <div class='media-body'>                <p>"+n(e.content)+"</p>              </div>              <div class='media-meta'>"+e.username+" "+Date(e.createdAt)+"</div>            </div>",$("#comment-list").append($(t)),$("#comment-text").val("")},statusCode:{400:function(e){return e=JSON.parse(e.responseText),alert(e.msg)}}})})})}).call(this);
+(function() {
+  var colors, replaceTag, safe_tags_replace, tagsToReplace, updateFrontEnd;
+
+  updateFrontEnd = function(data) {
+    var element, key, _results;
+    _results = [];
+    for (key in data) {
+      element = $("#" + key);
+      if (element.length === 1) {
+        element.text(" " + data[key]);
+      }
+      if (key === 'status') {
+        if (data[key] === 'processing') {
+          $('.object-volume').addClass('hide');
+          $('.processing-volume').removeClass('hide');
+        } else {
+          $('.object-volume').removeClass('hide');
+          $('.processing-volume').addClass('hide');
+        }
+      }
+      if (key === 'order') {
+        _results.push($('#order-placed-order').text(" " + data[key].price));
+      } else {
+        _results.push(void 0);
+      }
+    }
+    return _results;
+  };
+
+  colors = {
+    black: '#000000',
+    white: '#FFFFFF',
+    red: '#FF0000',
+    green: '#00FF00',
+    blue: '#0000FF',
+    yellow: '#FFFF00'
+  };
+
+  replaceTag = function(tag) {
+    return tagsToReplace[tag] || tag;
+  };
+
+  safe_tags_replace = function(str) {
+    return str.replace(/[&<>]/g, replaceTag);
+  };
+
+  tagsToReplace = {
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;"
+  };
+
+  $(document).ready(function() {
+    /*
+    # CSRF Protection
+    */
+
+    var CSRF_HEADER, setCSRFToken, socket, viewer;
+    CSRF_HEADER = "X-CSRF-Token";
+    setCSRFToken = function(securityToken) {
+      return jQuery.ajaxPrefilter(function(options, _, xhr) {
+        if (!xhr.crossDomain) {
+          return xhr.setRequestHeader(CSRF_HEADER, securityToken);
+        }
+      });
+    };
+    setCSRFToken($("meta[name=\"csrf-token\"]").attr("content"));
+    /*
+    # Socket IO
+    */
+
+    socket = io.connect(":" + port + "/project?project=" + project.id);
+    socket.on('error', function(data) {
+      return console.log(data.msg);
+    });
+    socket.on('update', function(data) {
+      socket.emit('order-price', {
+        ammount: $("#ammount").val()
+      });
+      return updateFrontEnd(data);
+    });
+    socket.on('update-price-order', function(data) {
+      return $('#order-price').text(data.price);
+    });
+    if (!Modernizr.canvas) {
+      $("#message-canvas").removeClass('hide');
+    }
+    /*
+    # JSC3D.Viewer
+    */
+
+    viewer = new JSC3D.Viewer($('#cv').get(0));
+    viewer.setParameter('SceneUrl', "/" + project.filename);
+    viewer.setParameter('ModelColor', "" + colors[project.color]);
+    viewer.setParameter('BackgroundColor1', '#E5D7BA');
+    viewer.setParameter('InitRotationX', '25');
+    viewer.setParameter('InitRotationY', '25');
+    viewer.setParameter('InitRotationZ', '25');
+    viewer.setParameter('BackgroundColor2', '#383840');
+    viewer.setParameter('RenderMode', 'smooth');
+    viewer.setParameter('Definition', 'high');
+    viewer.setParameter('MipMapping', 'on');
+    viewer.setParameter('CreaseAngle', '30');
+    viewer.init();
+    viewer.update();
+    /*
+    # Some controllers
+    */
+
+    $("#color-chooser").val("" + project.color);
+    $("#color-chooser").val("" + project.color).change(function() {
+      return $.post("/project/color/" + project.id, {
+        value: $(this).val()
+      }, function() {
+        return location.reload();
+      });
+    });
+    $("#density-chooser").val("" + project.density);
+    $("#density-chooser").val("" + project.density).change(function() {
+      return $.post("/project/density/" + project.id, {
+        value: $(this).val()
+      });
+    });
+    $("#title").editable("/project/title/" + project.id);
+    $("#ammount").keyup(function(event) {
+      if (/\D/g.test(this.value) || /^0$/.test(this.value)) {
+        this.value = this.value.replace(/\D/g, '');
+        this.value = this.value.replace(/^0$/, '');
+      }
+      if (/^[1-9][0-9]*$/.test(this.value) || /^\s*$/.test(this.value)) {
+        $("#order-price").text("Processing");
+        return socket.emit('order-price', {
+          ammount: $("#ammount").val()
+        });
+      } else {
+        return event.preventDefault();
+      }
+    });
+    return $("#comment-button").click(function(e) {
+      e.preventDefault();
+      return $.ajax({
+        url: "/project/comment/" + project.id,
+        method: "post",
+        dataType: "json",
+        data: {
+          message: $("#comment-text").val()
+        },
+        success: function(data) {
+          var template;
+          template = "<div class='media'><a href='#' class='pull-left'><img src='/" + data.photo + "' alt='' class='media-object' height='78' width='78'></a>              <div class='media-body'>                <p>" + (safe_tags_replace(data.content)) + "</p>              </div>              <div class='media-meta'>by <span class='author'>" + data.username + "</span> <span class='date'>" + (Date(data.createdAt)) + "</span></div>            </div>";
+          $("#comment-list").append($(template));
+          return $("#comment-text").val("");
+        },
+        statusCode: {
+          400: function(data) {
+            data = JSON.parse(data.responseText);
+            return alert(data.msg);
+          }
+        }
+      });
+    });
+  });
+
+}).call(this);

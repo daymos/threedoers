@@ -127,11 +127,11 @@ $(document).ready ->
       data: {message: $("#comment-text").val()}
 
       success: (data) ->
-        template = "<div class='media'><a href='#' class='pull-left'><img src='/#{data.photo}' alt=' class='media-object' height='78' width='78'></a>
+        template = "<div class='media'><a href='#' class='pull-left'><img src='/#{data.photo}' alt='' class='media-object' height='78' width='78'></a>
               <div class='media-body'>
                 <p>#{safe_tags_replace(data.content)}</p>
               </div>
-              <div class='media-meta'>#{data.username} #{Date(data.createdAt)}</div>
+              <div class='media-meta'>by <span class='author'>#{data.username}</span> <span class='date'>#{Date(data.createdAt)}</span></div>
             </div>"
 
         $("#comment-list").append($(template))
