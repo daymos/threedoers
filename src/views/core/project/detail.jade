@@ -115,6 +115,7 @@ block body
               p #{project.order.resolution} # this still on development
     br
     br
+    br
     - if (user.printer == 'accepted' && project.status == statuses.PRINT_REVIEW[0])
       div
         .container
@@ -133,6 +134,15 @@ block body
                   br
                   | THIS WORK
               br
+    
+    - if (project.status == statuses.PRINT_ACCEPTED[0] && user.id != project.user)
+      .section.orange
+        .container
+          h1.h1-alert-payment
+            span ATTENDI IL PAGAMENTO!
+              br
+              | RICEVERAI UNA MAIL DI CONFERMA
+            img(src='/img/alert_payment.png', alt='')
 
     - if (project.status >= statuses.PRINT_REVIEW[0])  // if project was accepted
         br
