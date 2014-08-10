@@ -134,8 +134,8 @@ block body
                   br
                   | THIS WORK
               br
-    
-    - if (project.status == statuses.PRINT_ACCEPTED[0] && user.id != project.user)
+
+    - if (project.status == statuses.PRINT_ACCEPTED[0] && user.id == project.order.printer)
       .section.orange
         .container
           h1.h1-alert-payment
@@ -144,26 +144,44 @@ block body
               | RICEVERAI UNA MAIL DI CONFERMA
             img(src='/img/alert_payment.png', alt='')
 
-    .section.blue
-      .container
-        form
-          h1.h1-blue-alert
-            img(src='/img/icon_map.png', alt='')
-            | LO STAMPATORE E A
+    - if (project.status == statuses.PRINT_ACCEPTED[0] && user.id == project.user)
+      .section.blue
+        .container
+          form(action="/project/pay/#{project.id}", method="post")
+            input(type='hidden', name='_csrf', value=csrfToken)
+            h1.h1-blue-alert
+              img(src='/img/icon_map.png', alt='')
+              | LO STAMPATORE E A
+              br
+              | 20 KM DA TE
+            .row
+              .col-md-6.col-sm-6
+                .radio.radio-large
+                  input#checkbox1(type='radio', name='shipping', value='shipping', checked)
+                  label(for='checkbox1') Richiedi spedizione
+              .col-md-6.col-sm-6
+                .radio.radio-large
+                  input#checkbox2(type='radio', name='shipping', value='pickup')
+                  label(for='checkbox2') Ritiro a mano
             br
-            | 20 KM DA TE
+            button.btn.btn-lg.btn-white.btn-small(type='submit')
+              span PAGA
+
+    - if (project.status == statuses.PAYED[0] && user.id == project.order.printer)
+      .section
+        .container
           .row
-            .col-md-6.col-sm-6
-              .radio.radio-large
-                input#checkbox1(type='radio', name='radioname')
-                label(for='checkbox1') Richiedi spedizione
-            .col-md-6.col-sm-6
-              .radio.radio-large
-                input#checkbox2(type='radio', name='radioname')
-                label(for='checkbox2') Ritiro a mano
-          br
-          button.btn.btn-lg.btn-white.btn-small(type='submit')
-            span PAGA
+            form.form-inline(role="form", action="/project/start-printing/#{project.id}", method="post").col-md-12
+              input(type='hidden', name='_csrf', value=csrfToken)
+              input(type="submit", value="Print Order").btn.btn-lg.btn-default.btn-goto
+
+    - if (project.status == statuses.PRINTING[0] && user.id == project.order.printer)
+      .section
+        .container
+          .row
+            form.form-inline(role="form", action="/project/printed/#{project.id}", method="post").col-md-12
+              input(type='hidden', name='_csrf', value=csrfToken)
+              input(type="submit", value="Order Printed").btn.btn-lg.btn-default.btn-goto
 
     - if (project.status >= statuses.PRINT_REVIEW[0])  // if project was accepted
         br
@@ -191,9 +209,9 @@ block body
                     p
                       | #{comment.content}
                   .media-meta
-                    | by 
-                    span.author #{comment.username} 
-                    | at 
+                    | by
+                    span.author #{comment.username}
+                    | at
                     span.date #{comment.createdAt}
         br
         .section.primary
@@ -211,141 +229,6 @@ block body
   br
 
   include ../../includes/publicity
-
-  //- .container_block
-  //-   .payment-status_block.pay_ok
-  //-     section.homepage.container2
-  //-       .payment-status
-  //-         p
-  //-           | PAGAMENTO AVVENUTO!
-  //-           br
-  //-           | INIZIA LA TUA STAMPA!
-  //-         img(alt='OK', src='images/alert_payment_ok.png')
-  //-   .payment-status_block.confirm
-  //-     section.homepage.container2
-  //-       .payment-status
-  //-         p
-  //-           | ATTENDI IL PAGAMENTO!
-  //-           br
-  //-           | RICEVERAI UNA MAIL DI CONFERMA
-  //-         img(alt='OK', src='images/alert_payment.png')
-  //-   .title_block
-  //-     section.homepage.container2
-  //-       h1.title
-  //-         p  COMMENTS HERE
-  //-         p  FOR YOUR PROJECT
-  //-         img(alt='3doers Hand', src='images/icons_comment_2.png')
-  //-     .title_background.printer_page
-  //-       .title_bar1
-  //-       .title_bar2
-  //-   section.homepage.container2
-  //-     .project_comments
-  //-       .project_comment
-  //-         .user_image
-  //-           img(alt='3doers Hand', src='images/edit_photo_placeholder.png')
-  //-         p
-  //-           | Sesame snaps brownie topping lollipop apple pie cake jelly-o. Pudding oat cake gummies. Danish jelly biscuit jelly-o pie pie cheesecake. Chocolate pudding bonbon carrot cake. Lollipop pastry
-  //-       .project_comment
-  //-         .user_image
-  //-           img(alt='3doers Hand', src='images/edit_photo_placeholder.png')
-  //-         p
-  //-           | esame snaps brownie topping lollipop apple pie cake jelly-o. Pudding oat cake gummies.?
-  //-       .project_comment
-  //-         .user_image
-  //-           img(alt='3doers Hand', src='images/edit_photo_placeholder.png')
-  //-         p
-  //-           | applicake candy canes danish chocolate bar pie tiramisu. Cotton candy danish chocolate cake oat cake fruitcake candy topping cotton candy jelly beans. Oat cake pudding macaroon tart pastry cake biscuit powder. Bear claw topping sesame snaps. Carrot
-  //-           | cake donut cookie chupa chups soufflé pastry sugar plum. Jelly carrot cake tootsie roll cupcake dragée chocolate cake liquorice jujubes cupcake. Tiramisu apple pie dessert fruitcake cake.
-  //-   .comment_textarea_block
-  //-     section.homepage.container2
-  //-       .container-left
-  //-         textarea(rows='10')
-  //-       .container-right
-  //-         .submit
-  //-           input#submit_comment.form(name='submit_comment', value='SEND', type='submit')
-
-
-  //- .container_block
-  //-   section.homepage.container2
-  //-     p#title.title(data-type="text", data-url="/project/title/#{project.id}", data-title="Enter the Title") #{project.title}
-  //-     .images_data
-  //-       .frame-1
-  //-       .frame-2
-  //-       .file
-  //-         canvas#cv
-  //-       p#message-canvas.messages.hide
-  //-         | It seems you are using an outdated browser that does not support canvas :-(
-  //-       .container_background
-
-  //-     .parameters.processing-volume(class=(project.status!=1)?"hide":"")
-  //-       p.objects
-  //-         | OBJECT VOLUME:
-  //-         span.object-volume
-  //-           span#volume &nbsp;#{project.volume}
-  //-           &nbsp
-  //-           span#unit #{project.unit}
-  //-           &nbsp
-  //-           sup 3
-  //-       //
-  //-         /todo manca immagine di status
-
-  //-       p.status
-  //-         | STATUS:
-  //-         span#status &nbsp;#{project.humanizedStatus()}
-  //-       -if (!project.editable && project.order)
-  //-         p.order.hide
-  //-           | PRICE:
-  //-           span#order-placed-order  #{project.order.price}
-
-  //- .block_configuration_form.row
-  //-   section.homepage.container2
-
-
-  //-     // if user same as owner and status payed
-  //-     - if (project.status == statuses.PRINT_ACCEPTED[0] && user.id == project.user)
-  //-       a(href="/project/pay/#{project.id}").btn.btn-lg.btn-primary.pull-right Pay Order
-  //-       .clearfix
-
-  //-     - if (project.status == statuses.PAYED[0])
-  //-       .row
-  //-         form.form-inline(role="form", action="/project/start-printing/#{project.id}", method="post").col-md-12
-  //-           input(type='hidden', name='_csrf', value=csrfToken)
-  //-           input(type="submit", value="Print Order").btn.btn-primary.pull-right
-
-  //-     - if (project.status == statuses.PRINTING[0])
-  //-       .row
-  //-         form.form-inline(role="form", action="/project/printed/#{project.id}", method="post").col-md-12
-  //-           input(type='hidden', name='_csrf', value=csrfToken)
-  //-           input(type="submit", value="Order Printed").btn.btn-primary.pull-right
-
-  //-     - if (project.status >= statuses.PRINT_ACCEPTED[0])  // if project was accepted
-  //-       h5 Comments
-
-  //-       ul#comment-list.list-group
-  //-         - for comment in project.comments
-  //-           li.list-group-item
-  //-             .row
-  //-               .col-xs-2.col-md-1
-  //-                 img.img-circle.img-responsive(src='http://placehold.it/80', alt='')
-  //-               .col-xs-10.col-md-11
-  //-                 div
-  //-                   .mic-info
-  //-                     | By: &nbsp; &nbsp;
-  //-                     a(href='#') #{comment.username}
-  //-                     | &nbsp;on #{comment.createdAt}
-  //-                 br
-  //-                 .comment-text
-  //-                   | #{comment.content}
-
-
-  //-       textarea#comment-text.comment.col-md-12
-  //-       .clearfix
-  //-       br
-  //-       button.btn.btn-primary.pull-right#comment-button Comment
-
-  //-   .configuration_background
-  //-     .background
-
 
 block extra-headers
   meta(name="csrf-token", content="#{csrfToken}")

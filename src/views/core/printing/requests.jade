@@ -38,7 +38,7 @@ block content-profile
                 p.info-3d
                   span.image.align-left
                     img(src='/img/icons_time_order.png')
-                  span.title QUESTO ORDINE ASPETTA DA: 2 DAYS 3H
+                  span.title QUESTO ORDINE ASPETTA DA: #{timeago(project.order.placedAt)}
                 br
                 br
 

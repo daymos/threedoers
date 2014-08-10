@@ -239,6 +239,7 @@ module.exports = (app, io) ->
         doc.order =
           ammount: ammount
           price: calculateOrderPrice(doc.price, ammount).toString()
+          placedAt: new Date()
         doc.save()
       res.redirect "/project/#{req.params.id}"
     ).fail( ->
@@ -271,7 +272,7 @@ module.exports = (app, io) ->
     )
 
 
-  app.get '/project/pay/:id', decorators.loginRequired, (req, res, next) ->
+  app.post '/project/pay/:id', decorators.loginRequired, (req, res, next) ->
     # Same as get /project/:id both printer who accepted and the owner can change this
     models.STLProject.findOne({_id: req.params.id, user: req.user.id}).exec().then( (doc) ->
       if doc and doc.validateNextStatus(models.PROJECT_STATUSES.PAYED[0])  # test if comments allowed
@@ -299,6 +300,7 @@ module.exports = (app, io) ->
           else
             if payment.payer.payment_method is "paypal"
               req.session.paymentId = payment.id
+              req.session.shippingMethod = req.body.shipping
               redirectUrl = undefined
               i = 0
 
@@ -331,11 +333,14 @@ module.exports = (app, io) ->
             if error
               logger.error error
             else
-              mailer.send('mailer/project/payed', {project: doc, user: user, site:settings.site}, {from: settings.mailer.noReply, to:[user.email], subject: settings.project.payed.subject}).then ->
-                doc.status = models.PROJECT_STATUSES.PAYED[0]
-                doc.save()
+              doc.status = models.PROJECT_STATUSES.PAYED[0]
+              doc.order.paymentId = paymentId
+              doc.order.shippingMethod = req.session.shippingMethod
+              doc.save ->
+                unless error
+                  mailer.send('mailer/project/payed', {project: doc, user: user, site:settings.site}, {from: settings.mailer.noReply, to:[user.email], subject: settings.project.payed.subject})
 
-      res.redirect "/project/#{req.params.id}"
+                res.redirect "/project/#{req.params.id}"
     ).fail( ->
       logger.error arguments
       res.send 500
