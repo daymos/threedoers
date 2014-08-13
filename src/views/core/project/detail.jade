@@ -67,14 +67,11 @@ block body
               .form-group
                 input(type='hidden', name='authenticity_token')
                 input#ammount.form-control(type='number', min='1', placeholder='HOW MANY ITEMS? *', name='ammount')
-            .col-md-4
               .form-group
                 select.form-control#density-chooser
                   option(selected='selected', disabled='disabled') SELECT A DENSITY *
                   - for density in densities
                     option(value="#{density[0]}") #{density[1]}
-          .row
-            .col-md-4
               p
                 | ORDER PRICE:&nbsp;
                 span#order-price  Processing
