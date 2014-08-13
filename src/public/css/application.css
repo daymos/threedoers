@@ -8400,14 +8400,14 @@ hr.hr-light {
   line-height: 53px;
   margin-right: 2px;
   text-align: center;
-  box-shadow: inset 0 0 0 4px black, 0 0 1px transparent;
+  box-shadow: inset 0 0 0 4px black, 0 0 1px rgba(0, 0, 0, 0);
   -webkit-transition: box-shadow 0.3s;
   -moz-transition: box-shadow 0.3s;
   transition: box-shadow 0.3s;
   width: 53px; }
 
 .square-social-link:hover {
-  box-shadow: inset 0 0 0 4px #7bf282, 0 0 1px transparent;
+  box-shadow: inset 0 0 0 4px #7bf282, 0 0 1px rgba(0, 0, 0, 0);
   color: #7bf282; }
 
 .favorite-count {
@@ -8852,9 +8852,13 @@ a.direct-link {
 
 .preview-print {
   background-color: #e8e8e8;
-  padding: 7% 5%;
+  padding: 7% 7% 7% 5%;
   position: relative;
   text-align: center; }
+  .preview-print #wrapper-canvas {
+    margin: 0 auto;
+    height: 300px;
+    width: 80%; }
   .preview-print .upload {
     font-family: "Lato", Helvetica, sans-serif;
     font-size: 44px;
@@ -9133,7 +9137,7 @@ a.direct-link {
 .btn.btn-white {
   background-color: #efefef;
   border: none;
-  box-shadow: 4px -4px 0 #000000;
+  box-shadow: 4px -4px 0 black;
   color: #000000; }
 
 .btn.btn-white:hover,

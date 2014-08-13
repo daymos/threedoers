@@ -26,7 +26,8 @@ block body
       br
       br
       .preview-print
-        canvas#cv(width='300', height='225')
+        #wrapper-canvas
+          canvas#cv
       br
       br
       br
@@ -256,4 +257,17 @@ block scripts
         );
       }
     );
+
+    var mycanvas = $('#cv');
+
+    function respondCanvas() {
+      console.log('HEY!!!');
+      mycanvas.attr('width', jQuery("#wrapper-canvas").width());
+      mycanvas.attr('height', jQuery("#wrapper-canvas").height());
+    }
+
+    $(window).resize(respondCanvas);
+
+    //Initial call
+    respondCanvas();
 

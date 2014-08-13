@@ -629,9 +629,15 @@ a.direct-link {
 }
 .preview-print {
   background-color: #e8e8e8;
-  padding: 7% 5%;
+  padding: 7% 7% 7% 5%;
   position: relative;
   text-align: center;
+
+  #wrapper-canvas {
+    margin: 0 auto;
+    height: 300px;
+    width: 80%;
+  }
 
   .upload {
   	font-family: $font-primary-stack;
