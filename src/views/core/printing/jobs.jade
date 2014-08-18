@@ -23,7 +23,7 @@ block content-profile
         .col-md-8
           p.info-3d
             span.image.align-left
-              img(src='/img/icons_printing.png')
+              img(src='/img/icons_#{project.dasherizedStatus()}.png')
             span.title STATUS
             | #{project.humanizedStatus()}
         .col-md-4
@@ -34,7 +34,7 @@ block content-profile
       .separator-3d
         img(src='/img/img_separatori_lista.png')
       br
-    
+
     br
     br
     br

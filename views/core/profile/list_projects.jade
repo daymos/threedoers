@@ -23,32 +23,14 @@ block content-profile
               span.image.align-right
                 img(src='/img/icons_#{project.dasherizedStatus()}.png')
               br
-              span.title PRICE:
-              span.price #{project.price}
-              span.currency EURO
+              - if (project.order)
+                span.title PRICE:
+                span.price #{project.order.price}
+                span.currency EURO
             br
             .separator-3d
               img(src='/img/img_separatori_lista.png')
 
-      #archived.tab-pane.fade
-        p.info-3d
-          span.title FILE NAME:
-          a(href='#') purple_spike_ring_20x20mm1.st
-        br
-        p.info-3d
-          span.title PRICE:
-          span.price 20
-          span.currency EURO
-        .separator-3d
-          img(src='/img/img_separatori_lista.png')
-        p.info-3d
-          span.title FILE NAME:
-          a(href='#') purple_spike_ring_20x20mm1.st
-        br
-        p.info-3d
-          span.title PRICE:
-          span.price 20
-          span.currency EURO
 div
   .container
     br
