@@ -10,7 +10,7 @@ block body
       .row
         .col-md-6
           h1#title.page-title(data-type="text", data-url="/project/title/#{project.id}", data-title="Enter the Title") #{ project.title }
-      - if (user.printer == 'accepted' && project.status == statuses.PRINT_REQUESTED[0])
+      - if (user.printer == 'accepted' && project.status > statuses.PRINT_REQUESTED[0])
         .row
           .col-md-6
             .back-link
