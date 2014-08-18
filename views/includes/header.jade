@@ -57,8 +57,9 @@ header
                       if user.printer == 'accepted'
                         li
                           a(href='/printing/requests') Printer
-                      li
-                        a(href='#') File manager
+                      if user.filemanager == 'accepted'
+                        li
+                          a(href='#') File manager
                       li
                         a(href='/profile/settings') Edit profile
                   li

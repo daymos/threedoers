@@ -58,9 +58,17 @@ module.exports = (app) ->
                 usr = new auth.User
                   username: req.body.username
                   email: req.body.email
-                  city: req.body.city
-                  country: req.body.country
-                  address: req.body.address
+
+                if req.body.city
+                  user.city = req.body.city
+
+                if req.body.country
+                  user.country = req.body.country
+
+                if req.body.address
+                  user.address = req.body.address
+
+                if req.body.location
                   location: req.body.location.split(',')
 
                 usr.password = req.body.password

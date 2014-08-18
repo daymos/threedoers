@@ -8852,9 +8852,13 @@ a.direct-link {
 
 .preview-print {
   background-color: #e8e8e8;
-  padding: 7% 5%;
+  padding: 7% 7% 7% 5%;
   position: relative;
   text-align: center; }
+  .preview-print #wrapper-canvas {
+    margin: 0 auto;
+    height: 300px;
+    width: 80%; }
   .preview-print .upload {
     font-family: "Lato", Helvetica, sans-serif;
     font-size: 44px;
