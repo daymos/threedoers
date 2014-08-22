@@ -973,6 +973,9 @@ a.direct-link {
   padding: 10px 60px;
   text-align: left;
 }
+.btn.btn-xsmall {
+  min-width: 150px;
+}
 .btn.btn-small {
   min-width: 250px;
 }
@@ -985,6 +988,9 @@ a.direct-link {
   color: $default-color;
   border-radius: 0;
   box-shadow: 4px -4px 0 $bg-default-button;
+  font-family: $font-primary-stack;
+  font-style: italic;
+  font-weight: bold;
 }
 .form-control::-moz-placeholder {
   color: $default-color;
@@ -1018,10 +1024,7 @@ a.direct-link {
   text-shadow: 0 1px 0 $primary-color;
 }
 .input-lg {
-  font-family: $font-primary-stack;
   font-size: 25px;
-  font-style: italic;
-  font-weight: bold;
   height: 60px;
   padding-bottom: 17px;
   padding-top: 17px;
@@ -1257,6 +1260,31 @@ a.primary-hover {
   left: 13px;
   margin-left: -40px;
   top: 13px;
+}
+
+/* Modal */
+.modal.modal-3d {
+  .modal-dialog {
+    box-shadow: 4px -4px 0 $primary-color;
+  }
+  .modal-content {
+    border-color: #ffffff;
+    border-radius: 0;
+  }
+  .modal-header {
+    border-bottom-color: transparent;
+    padding: 15px 30px 0 30px;
+
+    h4 {
+      font-family: $font-primary-stack;
+      font-size: 24px;
+      font-style: italic;
+      font-weight: bold;
+    }
+  }
+  .modal-body {
+    padding: 15px 30px 25px 30px;
+  }
 }
 
 /* Responsive */
