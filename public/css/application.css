@@ -9150,6 +9150,9 @@ a.direct-link {
   padding: 10px 60px;
   text-align: left; }
 
+.btn.btn-xsmall {
+  min-width: 150px; }
+
 .btn.btn-small {
   min-width: 250px; }
 
@@ -9160,7 +9163,10 @@ a.direct-link {
 .form-control.input-text {
   color: black;
   border-radius: 0;
-  box-shadow: 4px -4px 0 black; }
+  box-shadow: 4px -4px 0 black;
+  font-family: "Lato", Helvetica, sans-serif;
+  font-style: italic;
+  font-weight: bold; }
 
 .form-control::-moz-placeholder {
   color: black;
@@ -9194,10 +9200,7 @@ a.direct-link {
   text-shadow: 0 1px 0 #7bf282; }
 
 .input-lg {
-  font-family: "Lato", Helvetica, sans-serif;
   font-size: 25px;
-  font-style: italic;
-  font-weight: bold;
   height: 60px;
   padding-bottom: 17px;
   padding-top: 17px; }
@@ -9456,6 +9459,23 @@ a.primary-hover::after {
   left: 13px;
   margin-left: -40px;
   top: 13px; }
+
+/* Modal */
+.modal.modal-3d .modal-dialog {
+  box-shadow: 4px -4px 0 #7bf282; }
+.modal.modal-3d .modal-content {
+  border-color: #ffffff;
+  border-radius: 0; }
+.modal.modal-3d .modal-header {
+  border-bottom-color: transparent;
+  padding: 15px 30px 0 30px; }
+  .modal.modal-3d .modal-header h4 {
+    font-family: "Lato", Helvetica, sans-serif;
+    font-size: 24px;
+    font-style: italic;
+    font-weight: bold; }
+.modal.modal-3d .modal-body {
+  padding: 15px 30px 25px 30px; }
 
 /* Responsive */
 @media (max-width: 768px) {

@@ -207,9 +207,9 @@ block body
                     p
                       | #{comment.content}
                   .media-meta
-                    | by
-                    span.author #{comment.username}
-                    | at
+                    | by&nbsp;
+                    span.author #{comment.username}&nbsp;
+                    | at&nbsp;
                     span.date #{comment.createdAt}
         br
         .section.primary
@@ -227,6 +227,35 @@ block body
   br
 
   include ../../includes/publicity
+
+  .modal.modal-3d.fade.in(style='display:block')
+    .modal-dialog
+      .modal-content
+        .modal-header
+          h4 HEADER OF MODAL
+        .modal-body
+          form
+            .form-group
+              input.form-control.input-text(type='text', placeholder='CONTACT')
+            .form-group
+              input.form-control.input-text(type='text', placeholder='COMPANY')
+            .form-group
+              input.form-control.input-text(type='text', placeholder='LINE 1')
+            .form-group
+              input.form-control.input-text(type='text', placeholder='LINE 2')
+            .form-group
+              input.form-control.input-text(type='text', placeholder='LINE 3')
+            .form-group
+              input.form-control.input-text(type='text', placeholder='CITY')
+            .form-group
+              input.form-control.input-text(type='text', placeholder='STATE')
+            .form-group
+              input.form-control.input-text(type='text', placeholder='ZIP CODE')
+            .form-group
+              input.form-control.input-text(type='text', placeholder='PHONE NO.')
+            .text-right
+              button.btn.btn-default.btn-lg.btn-xsmall
+                span SEND
 
 block extra-headers
   meta(name="csrf-token", content="#{csrfToken}")

@@ -32,6 +32,7 @@
     "passport": "0.1.15",
     "passport-local": "0.1.6",
     "paypal-rest-sdk": "~0.6.4",
+    "postmaster-shipping": "^1.0.6",
     "q": "*",
     "raven": "^0.7.0",
     "session-mongoose": "0.4.1",

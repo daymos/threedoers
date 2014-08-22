@@ -1,8 +1,265 @@
 mongoose = require 'mongoose'
 crypto = require 'crypto'
 
+module.exports.EuropeCountries = EuropeCountries = [
+  {
+    abbr: "AD"
+    name: "Andorra"
+    ioc: "AND"
+  }
+  {
+    abbr: "AL"
+    name: "Albania"
+    ioc: "ALB"
+  }
+  {
+    abbr: "AM"
+    name: "Armenia"
+    ioc: "ARM"
+  }
+  {
+    abbr: "AT"
+    name: "Austria"
+    ioc: "AUT"
+  }
+  {
+    abbr: "AZ"
+    name: "Azerbaijan"
+    ioc: "AZE"
+  }
+  {
+    abbr: "BA"
+    name: "Bosnia and Herzegovina"
+    ioc: "BIH"
+  }
+  {
+    abbr: "BE"
+    name: "Belgium"
+    ioc: "BEL"
+  }
+  {
+    abbr: "BG"
+    name: "Bulgaria"
+    ioc: "BUL"
+  }
+  {
+    abbr: "BY"
+    name: "Belarus"
+    ioc: "BLR"
+  }
+  {
+    abbr: "CH"
+    name: "Switzerland"
+    ioc: "SUI"
+  }
+  {
+    abbr: "CY"
+    name: "Cyprus"
+    ioc: "CYP"
+  }
+  {
+    abbr: "CZ"
+    name: "Czech Republic"
+    ioc: "CZE"
+  }
+  {
+    abbr: "DE"
+    name: "Germany"
+    ioc: "GER"
+  }
+  {
+    abbr: "DK"
+    name: "Denmark"
+    ioc: "DEN"
+  }
+  {
+    abbr: "EE"
+    name: "Estonia"
+    ioc: "EST"
+  }
+  {
+    abbr: "ES"
+    name: "Spain"
+    ioc: "ESP"
+  }
+  {
+    abbr: "FI"
+    name: "Finland"
+    ioc: "FIN"
+  }
+  {
+    abbr: "FR"
+    name: "France"
+    ioc: "FRA"
+  }
+  {
+    abbr: "GE"
+    name: "Georgia"
+    ioc: "GEO"
+  }
+  {
+    abbr: "GR"
+    name: "Greece"
+    ioc: "GRE"
+  }
+  {
+    abbr: "HU"
+    name: "Hungary"
+    ioc: "HUN"
+  }
+  {
+    abbr: "IE"
+    name: "Ireland"
+    ioc: "IRL"
+  }
+  {
+    abbr: "IS"
+    name: "Iceland"
+    ioc: "ISL"
+  }
+  {
+    abbr: "IT"
+    name: "Italy"
+    ioc: "ITA"
+  }
+  {
+    abbr: "LI"
+    name: "Liechtenstein"
+    ioc: "LIE"
+  }
+  {
+    abbr: "LT"
+    name: "Lithuania"
+    ioc: "LTU"
+  }
+  {
+    abbr: "LU"
+    name: "Luxembourg"
+    ioc: "LUX"
+  }
+  {
+    abbr: "LV"
+    name: "Latvia"
+    ioc: "LAT"
+  }
+  {
+    abbr: "MC"
+    name: "Monaco"
+    ioc: "MON"
+  }
+  {
+    abbr: "MD"
+    name: "Moldova"
+    ioc: "MDA"
+  }
+  {
+    abbr: "MK"
+    name: "Macedonia"
+    ioc: "MKD"
+  }
+  {
+    abbr: "MT"
+    name: "Malta"
+    ioc: "MLT"
+  }
+  {
+    abbr: "NL"
+    name: "Netherlands"
+    ioc: "NED"
+  }
+  {
+    abbr: "NO"
+    name: "Norway"
+    ioc: "NOR"
+  }
+  {
+    abbr: "PL"
+    name: "Poland"
+    ioc: "POL"
+  }
+  {
+    abbr: "PT"
+    name: "Portugal"
+    ioc: "POR"
+  }
+  {
+    abbr: "RO"
+    name: "Romania"
+    ioc: "ROU"
+  }
+  {
+    abbr: "SE"
+    name: "Sweden"
+    ioc: "SWE"
+  }
+  {
+    abbr: "SI"
+    name: "Slovenia"
+    ioc: "SLO"
+  }
+  {
+    abbr: "SK"
+    name: "Slovakia"
+    ioc: "SVK"
+  }
+  {
+    abbr: "SM"
+    name: "San Marino"
+    ioc: "SMR"
+  }
+  {
+    abbr: "UA"
+    name: "Ukraine"
+    ioc: "UKR"
+  }
+  {
+    abbr: "UK"
+    name: "United Kingdom"
+    ioc: "GBR"
+  }
+]
+
 Schema = mongoose.Schema
 ObjectId = Schema.ObjectId
+
+Address = new Schema
+  contact:
+    type: String
+    required: false
+
+  company:
+    type: String
+    required: false
+
+  line1:
+    type: String
+    required: true
+
+  line2:
+    type: String
+
+  line3:
+    type: String
+
+  city:
+    type: String
+    required: true
+
+  state:
+    type: String
+    required: true
+
+  zip_code:
+    type: String
+    required: true
+
+  phone_no:
+    type: String
+    required: true
+
+  country:
+    type: String
+
 
 User = new Schema
 
@@ -69,6 +326,12 @@ User = new Schema
   createAt:
     type: Date
     default: Date.now
+
+  shippingAddresses:
+    type: [Address]
+
+  printerAddress:
+    type: Object
 
 
 User.index loc: '2d'

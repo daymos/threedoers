@@ -13,6 +13,7 @@ module.exports = (app, io) ->
   models = require('./models')
   utils = require('../utils')
   auth = require('../auth/models')
+  PostMaster = require('postmaster-shipping')
 
   paypal.configure(settings.paypal.api)
 
@@ -155,12 +156,65 @@ module.exports = (app, io) ->
     if (req.body.city && req.body.country && req.body.location)
       req.user.city = req.body.city
       req.user.country = req.body.country
-      req.user.location = req.body.location
+      req.user.location = req.body.location.split(',')
+      req.user.address = req.body.address
 
     req.user.firstName = req.body.firstName
     req.user.lastName = req.body.lastName
-    req.user.save()
-    res.render 'core/profile/settings'
+    req.user.save (error, user)->
+      res.render 'core/profile/settings'
+
+    console.log user
+
+
+  app.get '/profile/settings/printer-direction', decorators.loginRequired, (req, res) ->
+    res.render 'core/profile/address_form',
+      errors: {}
+      title: "<h1 class='page-title'><span>Printer</span></h1><h1 class='page-title'><span>Direction</span></h1>"
+      address: req.user.printerAddress || {}
+      postURL: '/profile/settings/printer-direction'
+      countries: auth.EuropeCountries
+
+
+  app.post '/profile/settings/printer-direction', decorators.loginRequired, (req, res) ->
+    address =
+      contact: req.body.contact
+      company: req.body.company
+      line1: req.body.line1
+      line2: req.body.line2
+      line3: req.body.line3
+      city: req.body.city
+      state: req.body.state
+      zip_code: req.body.zip_code
+      phone_no: req.body.phone_no
+      country: req.body.country
+
+    # validate with postmaster io
+    postmaster = PostMaster(settings.postmaster, settings.debug)
+    postmaster.v1.address.validate address, (error, response)->
+      if error
+        if typeof error == 'string'
+          error = JSON.parse(error)
+
+        res.render 'core/profile/address_form',
+          errors: error.details.body.fields
+          message: error.message
+          title: "<h1 class='page-title'><span>Printer</span></h1><h1 class='page-title'><span>Direction</span></h1>"
+          address: address
+          postURL: '/profile/settings/printer-direction'
+          countries: auth.EuropeCountries
+      else
+        if response.status == 'OK'
+          req.user.printerAddress = address
+          req.user.save()
+          res.redirect('/profile/settings')
+        else
+          res.render 'core/profile/address_form',
+            message: "Something was wrong please try again"
+            title: "<h1 class='page-title'><span>Printer</span></h1><h1 class='page-title'><span>Direction</span></h1>"
+            address: address
+            postURL: '/profile/settings/printer-direction'
+            countries: auth.EuropeCountries
 
 
   app.post '/project/title/:id', decorators.loginRequired, (req, res) ->
@@ -365,6 +419,17 @@ module.exports = (app, io) ->
         doc.status = models.PROJECT_STATUSES.PRINTED[0]
         doc.save()
       res.redirect "/project/#{req.params.id}"
+    ).fail( ->
+      logger.error arguments
+      res.send 500
+    )
+
+
+  app.post '/project/shipping-address/:id', decorators.loginRequired, (req, res, next) ->
+    models.STLProject.findOne({_id: req.params.id, user: req.user.id}).exec().then( (doc) ->
+      # test if new address or using one already used
+
+      # res.redirect "/project/#{req.params.id}"
     ).fail( ->
       logger.error arguments
       res.send 500

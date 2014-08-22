@@ -160,6 +160,7 @@ STLProject.methods.validateNextStatus = (value) ->
     6: [PROJECT_STATUSES.PRINTING[0]]
     7: [PROJECT_STATUSES.PRINTED[0]]
     8: [PROJECT_STATUSES.SHIPPING[0]]
+
   return value in states[@status]
 
 STLProject.methods.validNextStatus = ->
