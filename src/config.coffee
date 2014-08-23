@@ -75,6 +75,9 @@ config =
     apiKey: 'pp_MTA2NDEwMDE6X2sxbnlGVjZLbjdtUjZKS2Q4RFJ0THY2Y1hj'
     password: 'mattia13'
 
+  sentry:
+    DSN: 'http://5146b6fd7b08424991adcfa6a2b94ce5:e279691b1c9444d69043eaab14220e2b@sentry.linkux-it.com/6'
+
 try
   locals = require './locals'
   for key of locals

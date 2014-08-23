@@ -55,7 +55,7 @@ validator = expressValidator()
 db = mongoose.connect "#{settings.db.host}#{settings.db.name}", db: {safe: true, autoIndex: false}, (err) ->
   logger.error err if err
 
-app.use raven.middleware.express('http://5146b6fd7b08424991adcfa6a2b94ce5:e279691b1c9444d69043eaab14220e2b@sentry.linkux-it.com/6')
+app.use raven.middleware.express(settings.sentry.DSN)
 
 app.set 'port', settings.host.port
 

@@ -36,6 +36,10 @@ tagsToReplace =
   "<": "&lt;"
   ">": "&gt;"
 
+address = null
+shippingRate = null
+shippingMethod = null
+
 $(document).ready ->
   ###
   # CSRF Protection
@@ -141,3 +145,83 @@ $(document).ready ->
         400: (data) ->
           data = JSON.parse(data.responseText)
           alert(data.msg)
+
+  # this code is for payment process
+  updatePayDiv = ->
+    if address
+      $.ajax
+        url: "/validate-address-and-rate/#{ project.id }"
+        data: address
+        dataType: 'json'
+        success: (data) ->
+          if data.errors
+            for error of data.errors
+              alert("#{data.errors[error].param}: #{data.errors[error].msg}")
+
+          if data.message
+            alert(data.message)
+
+          if data.ok
+            address = data.address
+            shippingRate = parseFloat(data.charge)
+            $('#address-selection').hide()
+            $('#pay-values').show()
+            $('#pay-product-price').html("#{ project.orderPrice }")
+            $('#pay-shipping-price').html("#{ shippingRate }")
+            $('#pay-total-price').html("#{ (project.orderPrice + shippingRate).toFixed(2) }")
+          else
+            alert("Something was wrong please try again.")
+        error: ->
+          alert("Something was wrong please try again.")
+    else
+      alert("Please select and address or add new one.")
+
+  $('a.select-saved-address').click (event) ->
+    event.preventDefault()
+
+    address =
+      id: $(@).attr('data-id')
+
+    updatePayDiv()
+
+  $('button#validate-address').click (event) ->
+    event.preventDefault()
+
+    address = {}
+    a = $(@).closest('form').serializeArray()
+    $.each a, ->
+      if address[@name]
+        address[@name] = [address[@name]]  unless address[@name].push
+        address[@name].push @value or ""
+      else
+        address[@name] = @value or ""
+      return
+    updatePayDiv()
+
+  $('#payment-form').submit (event) ->
+    event.preventDefault()
+    $form = $('#payment-form')
+    shippingMethod = $form.find('input[name=shipping]:checked').val()
+
+    if shippingMethod == 'shipping'
+      $('#payment-modal').modal('show')
+    else
+      $("#hidden-pay-form #shippingMethod").val(shippingMethod)
+      $("#hidden-pay-form").submit()
+
+  $('.close-payment-modal').click (event) ->
+    $('#payment-modal').modal('hide')
+
+  # cleaning values on cancel
+  $('#payment-modal').on 'hidden.bs.modal', (event) ->
+    $('#address-selection').show()
+    $('#pay-values').hide()
+    address = null
+    shippingMethod = null
+    shippingRate = null
+
+  $('#pay-payment-modal').click (event) ->
+    $("#hidden-pay-form #shippingRate").val(shippingRate)
+    $("#hidden-pay-form #shippingMethod").val(shippingMethod)
+    $("#hidden-pay-form #shippingAddress").val(JSON.stringify(address))
+    $("#hidden-pay-form").submit()

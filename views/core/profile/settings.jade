@@ -69,16 +69,17 @@ block body
       if user.shippingAddresses
         h1 Shipping Addresses
         for direction in user.shippingAddresses
-          - for (key in direction._doc)
-            dt #{ key }
-            dd #{ direction[key] }
+          dl
+            - for (key in direction._doc)
+              dt #{ key }
+              dd #{ direction[key] }
 
-          dt
-          dd
-            a(href='/profile/settings/edit-shipping-direction/#{ direction.id }') Edit
-          dt
-          dd
-            a.remove-shipping-address(href='/profile/settings/delete-shipping-direction/#{ direction.id }') Delete
+            dt
+            dd
+              a(href='/profile/settings/edit-shipping-direction/#{ direction.id }') Edit
+            dt
+            dd
+              a.remove-shipping-address(href='/profile/settings/delete-shipping-direction/#{ direction.id }') Delete
 
           br
           br

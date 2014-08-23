@@ -4,6 +4,8 @@
 
 winston = require 'winston'
 settings = require '../config'
+raven = require 'raven'
+util = require 'util'
 
 log = logger:
   levels:
@@ -24,7 +26,52 @@ log = logger:
     warn: "yellow"
     error: "red"
 
-loggers = [new (winston.transports.Console)(level: settings.logLevel, colorize: true)]
+if settings.debug
+    loggers = [new (winston.transports.Console)(level: settings.logLevel, colorize: true)]
+else
+    ###
+    # Custom logger
+    ###
+    SentryLogger = winston.transports.CustomerLogger = (options) ->
+
+      #
+      # Name this logger
+      #
+      @name = "Sentry logs"
+
+      #
+      # Set the level from your options
+      #
+      @level = options.level or "info"
+
+      @client = new raven.Client(settings.sentry.DSN)
+      return
+
+
+    #
+    # Configure your storage backing as you see fit
+    #
+
+    #
+    # Inherit from `winston.Transport` so you can take advantage
+    # of the base functionality and `.handleExceptions()`.
+    #
+    util.inherits SentryLogger, winston.Transport
+    SentryLogger::log = (level, msg, meta, callback) ->
+
+      #
+      # Store this message and metadata, maybe use some custom logic
+      # then callback indicating success.
+      #
+      @client.captureMessage(msg, {level: level, extra: msg})
+      callback null, true
+      return
+
+    ###
+    # END Custom logger
+    ###
+
+    loggers = [new (SentryLogger)(level: settings.logLevel, colorize: true)]
 
 # unless settings.debug
 #   loggers.push(new (winston.transports.File)(filename: settings.logFile))

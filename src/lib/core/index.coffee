@@ -1,8 +1,10 @@
+
 module.exports = (app, io) ->
   fs = require 'fs'
   exec = require('child_process').exec
   decimal = require('Deci-mal').decimal
   paypal = require('paypal-rest-sdk')
+  request = require('request')
 
   decorators = require '../decorators'
   logger = require '../logger'
@@ -122,6 +124,7 @@ module.exports = (app, io) ->
           colors: models.PROJECT_COLORS
           densities: models.PROJECT_DENSITIES
           statuses: models.PROJECT_STATUSES
+          countries: auth.EuropeCountries
       else
         next()
     ).fail((reason) ->
@@ -131,7 +134,7 @@ module.exports = (app, io) ->
 
 
   app.get '/profile/projects', decorators.loginRequired, (req, res) ->
-    models.STLProject.find({user: req.user._id}).exec().then( (docs) ->
+    models.STLProject.find({user: req.user._id, status: {"$ne": models.PROJECT_STATUSES.ARCHIVED[0]}}).exec().then( (docs) ->
       res.render 'core/profile/list_projects', {projects: docs}
     ).fail( ->
       logger.error arguments
@@ -163,6 +166,108 @@ module.exports = (app, io) ->
     req.user.lastName = req.body.lastName
     req.user.save (error, user)->
       res.render 'core/profile/settings'
+
+
+  requestShippingRate = (address, project, res) ->
+    auth.User.findOne({_id: project.order.printer}).exec().then( (doc) ->
+      if doc
+        if doc.printerAddress
+          postmaster = PostMaster(settings.postmaster, settings.debug)
+          postmaster.v1.rate.list {to_zip: address.zip_code, from_zip: doc.printerAddress.zip_code, weight: project.weight}, (error, response)->
+            if error
+              res.json
+                message: "Something was wrong please try again"
+            else
+              request("http://rate-exchange.appspot.com/currency?from=USD&to=EUR", (error, data, json) ->
+                if error
+                  logger.error arguments
+                  res.send 500
+                else
+                  rate = JSON.parse(json)
+                  res.json
+                    ok: 'successes'
+                    address: address
+                    charge: decimal.fromNumber(response[response.best].charge * rate.rate, 2).toString()
+              )
+        else
+          res.json
+            message: "Printer doesn't have address, please contact support or printer to add address."
+      else
+        logger.warning "printer #{printer} do not exists"
+        res.json
+          message: "Printer don't exists, please contact support"
+    ).fail( ->
+      logger.error arguments
+      res.send 500
+    )
+
+  app.get '/validate-address-and-rate/:id', decorators.loginRequired, (req, res) ->
+    models.STLProject.findOne({_id: req.params.id}).exec().then( (doc) ->
+      if doc
+        # if has id we already validated but search for it
+        if req.query.id
+          address = req.user.shippingAddresses.id(req.query.id)
+          requestShippingRate address, doc, res
+        else
+          unless req.query.contact
+            req.assert('company', len: 'This field is required.').len(2)
+
+          unless req.query.company
+            req.assert('contact', len: 'This field is required.').len(2)
+
+          req.assert('line1', len: 'This field is required.').len(2)
+          req.assert('city', len: 'This field is required.').len(2)
+          req.assert('state', len: 'This field is required.').len(2)
+          req.assert('zip_code', len: 'This field is required.').len(2)
+          req.assert('phone_no', len: 'This field is required.').len(2)
+
+          errors = req.validationErrors(true)
+
+          if errors
+            res.json
+              errors: errors
+          else
+            address =
+              contact: req.query.contact
+              company: req.query.company
+              line1: req.query.line1
+              line2: req.query.line2
+              line3: req.query.line3
+              city: req.query.city
+              state: req.query.state
+              zip_code: req.query.zip_code
+              phone_no: req.query.phone_no
+              country: req.query.country
+
+            # validate with postmaster io
+            postmaster = PostMaster(settings.postmaster, settings.debug)
+            postmaster.v1.address.validate address, (error, response)->
+              if error
+                if typeof error == 'string'
+                  error = JSON.parse(error)
+
+                res.json
+                  message: error.message
+              else
+                if response.status == 'OK'
+                  # we have new address we have to save it
+                  req.user.shippingAddresses.push address
+                  req.user.save (error, doc) ->
+                    if error
+                      logger.error error
+                      res.send 500
+                    else
+                      requestShippingRate address, doc, res
+                else
+                  res.json
+                    message: "Something was wrong please try again"
+      else
+        res.send 400
+    ).fail( ->
+      logger.error arguments
+      res.send 500
+    )
+
 
   # used for other views
   handleDirection = (req, res, title, postURL, callback) ->
@@ -426,6 +531,10 @@ module.exports = (app, io) ->
     # Same as get /project/:id both printer who accepted and the owner can change this
     models.STLProject.findOne({_id: req.params.id, user: req.user.id}).exec().then( (doc) ->
       if doc and doc.validateNextStatus(models.PROJECT_STATUSES.PAYED[0])  # test if comments allowed
+        totalPrice = parseFloat(doc.order.price)
+        if req.body.shippingMethod == 'shipping'
+          totalPrice = decimal.fromNumber(totalPrice + parseFloat(req.body.shippingRate), 2).toString()
+
         payment =
           intent: "sale"
           payer:
@@ -437,8 +546,8 @@ module.exports = (app, io) ->
 
           transactions: [
             amount:
-              total: doc.order.price
-              currency: "USD"
+              total: totalPrice
+              currency: "EUR"
 
             description: "Payment for 3D printing in 3doers"
           ]
@@ -450,7 +559,11 @@ module.exports = (app, io) ->
           else
             if payment.payer.payment_method is "paypal"
               req.session.paymentId = payment.id
-              req.session.shippingMethod = req.body.shipping
+              req.session.shippingMethod = req.body.shippingMethod
+              if req.body.shippingMethod == 'shipping'
+                req.session.shippingRate = req.body.shippingRate
+                req.session.shippingAddress = JSON.parse(req.body.shippingAddress)
+              console.log req.session
               redirectUrl = undefined
               i = 0
 
@@ -460,7 +573,7 @@ module.exports = (app, io) ->
                 i++
               res.redirect redirectUrl
       else
-        res.redirect "/project/#{req.params.id}"
+        res.send 400
     ).fail( ->
       logger.error arguments
       res.send 500
@@ -483,10 +596,19 @@ module.exports = (app, io) ->
             if error
               logger.error error
             else
-              doc.status = models.PROJECT_STATUSES.PAYED[0]
-              doc.order.paymentId = paymentId
-              doc.order.shippingMethod = req.session.shippingMethod
-              doc.save ->
+              updatedData =
+                status: models.PROJECT_STATUSES.PRINTING[0]
+                'order.paymentId': paymentId
+                'order.shippingMethod': req.session.shippingMethod
+
+              if req.session.shippingMethod == 'shipping'
+                if req.session.shippingAddress._id
+                  delete req.session.shippingAddress._id
+
+                updatedData['order.shippingCharge'] = req.session.shippingRate
+                updatedData['order.shippingAddress'] = req.session.shippingAddress
+
+              doc.update updatedData, (error) ->
                 unless error
                   mailer.send('mailer/project/payed', {project: doc, user: user, site:settings.site}, {from: settings.mailer.noReply, to:[user.email], subject: settings.project.payed.subject})
 
@@ -508,13 +630,52 @@ module.exports = (app, io) ->
       res.send 500
     )
 
+  app.post '/project/archive/:id', decorators.loginRequired, (req, res, next) ->
+    models.STLProject.findOne({_id: req.params.id, user: req.user.id}).exec().then( (doc) ->
+      if doc and doc.validateNextStatus(models.PROJECT_STATUSES.ARCHIVED[0])
+        doc.status = models.PROJECT_STATUSES.ARCHIVED[0]
+        doc.save()
+      res.redirect "/project/#{req.params.id}"
+    ).fail( ->
+      logger.error arguments
+      res.send 500
+    )
 
   app.post '/project/printed/:id', decorators.loginRequired, (req, res, next) ->
     models.STLProject.findOne({_id: req.params.id, 'order.printer': req.user.id}).exec().then( (doc) ->
       if doc and doc.validateNextStatus(models.PROJECT_STATUSES.PRINTED[0])
-        doc.status = models.PROJECT_STATUSES.PRINTED[0]
-        doc.save()
-      res.redirect "/project/#{req.params.id}"
+
+        auth.User.findOne({_id: doc.order.printer}).exec().then( (printer) ->
+          if printer
+            if printer.printerAddress
+              if doc.order.shippingMethod == 'pickup'
+                doc.status = models.PROJECT_STATUSES.PRINTED[0]
+                doc.save ->
+                  res.redirect "/project/#{req.params.id}"
+              else
+                postmaster = PostMaster(settings.postmaster, settings.debug)
+                postmaster.v1.shipment.create
+                  to: doc.order.shippingAddress
+                  from: printer.printerAddress
+                  package:
+                    weight: doc.weight
+                  , (error, response)->
+                    if error
+                      logger.error error
+                      res.redirect "/project/#{req.params.id}"
+                    else
+                      doc.status = models.PROJECT_STATUSES.SHIPPING[0]
+                      doc.save ->
+                        res.redirect "/project/#{req.params.id}"
+            else
+              res.send "Printer doesn't have address, please contact support or printer to add address."
+          else
+            logger.warning "printer #{printer} do not exists"
+            res.send "Printer don't exists, please contact support"
+        ).fail( ->
+          logger.error arguments
+          res.send 500
+        )
     ).fail( ->
       logger.error arguments
       res.send 500
