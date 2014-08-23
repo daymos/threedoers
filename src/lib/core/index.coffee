@@ -164,19 +164,22 @@ module.exports = (app, io) ->
     req.user.save (error, user)->
       res.render 'core/profile/settings'
 
-    console.log user
+  # used for other views
+  handleDirection = (req, res, title, postURL, callback) ->
+    unless req.body.contact
+      req.assert('company', len: 'This field is required.').len(2)
 
+    unless req.body.company
+      req.assert('contact', len: 'This field is required.').len(2)
 
-  app.get '/profile/settings/printer-direction', decorators.loginRequired, (req, res) ->
-    res.render 'core/profile/address_form',
-      errors: {}
-      title: "<h1 class='page-title'><span>Printer</span></h1><h1 class='page-title'><span>Direction</span></h1>"
-      address: req.user.printerAddress || {}
-      postURL: '/profile/settings/printer-direction'
-      countries: auth.EuropeCountries
+    req.assert('line1', len: 'This field is required.').len(2)
+    req.assert('city', len: 'This field is required.').len(2)
+    req.assert('state', len: 'This field is required.').len(2)
+    req.assert('zip_code', len: 'This field is required.').len(2)
+    req.assert('phone_no', len: 'This field is required.').len(2)
 
+    errors = req.validationErrors(true)
 
-  app.post '/profile/settings/printer-direction', decorators.loginRequired, (req, res) ->
     address =
       contact: req.body.contact
       company: req.body.company
@@ -189,32 +192,125 @@ module.exports = (app, io) ->
       phone_no: req.body.phone_no
       country: req.body.country
 
-    # validate with postmaster io
-    postmaster = PostMaster(settings.postmaster, settings.debug)
-    postmaster.v1.address.validate address, (error, response)->
-      if error
-        if typeof error == 'string'
-          error = JSON.parse(error)
+    if errors
+      res.render 'core/profile/address_form',
+        errors: errors
+        title: title
+        address: address
+        postURL: postURL
+        countries: auth.EuropeCountries
+    else
+      # validate with postmaster io
+      postmaster = PostMaster(settings.postmaster, settings.debug)
+      postmaster.v1.address.validate address, (error, response)->
+        if error
+          if typeof error == 'string'
+            error = JSON.parse(error)
 
-        res.render 'core/profile/address_form',
-          errors: error.details.body.fields
-          message: error.message
-          title: "<h1 class='page-title'><span>Printer</span></h1><h1 class='page-title'><span>Direction</span></h1>"
-          address: address
-          postURL: '/profile/settings/printer-direction'
-          countries: auth.EuropeCountries
-      else
-        if response.status == 'OK'
-          req.user.printerAddress = address
-          req.user.save()
-          res.redirect('/profile/settings')
-        else
           res.render 'core/profile/address_form',
-            message: "Something was wrong please try again"
-            title: "<h1 class='page-title'><span>Printer</span></h1><h1 class='page-title'><span>Direction</span></h1>"
+            errors: error.details.body.fields
+            message: error.message
+            title: title
             address: address
-            postURL: '/profile/settings/printer-direction'
+            postURL: postURL
             countries: auth.EuropeCountries
+        else
+          if response.status == 'OK'
+            callback(address)
+          else
+            res.render 'core/profile/address_form',
+              message: "Something was wrong please try again"
+              title: title
+              address: address
+              postURL: postURL
+              countries: auth.EuropeCountries
+
+  app.get '/profile/settings/printer-direction', decorators.loginRequired, (req, res) ->
+    res.render 'core/profile/address_form',
+      errors: {}
+      title: "<h1 class='page-title'><span>Printer</span></h1><h1 class='page-title'><span>Direction</span></h1>"
+      address: req.user.printerAddress || {}
+      postURL: '/profile/settings/printer-direction'
+      countries: auth.EuropeCountries
+
+
+  app.post '/profile/settings/printer-direction', decorators.loginRequired, (req, res) ->
+    handleDirection(
+      req,
+      res,
+      "<h1 class='page-title'><span>Printer</span></h1><h1 class='page-title'><span>Direction</span></h1>",
+      '/profile/settings/printer-direction',
+      (address) ->
+        req.user.printerAddress = address
+        req.user.save()
+        res.redirect('/profile/settings')
+    )
+
+
+  app.get '/profile/settings/new-shipping-direction', decorators.loginRequired, (req, res) ->
+    res.render 'core/profile/address_form',
+      errors: {}
+      title: "<h1 class='page-title'><span>New</span></h1><h1 class='page-title'><span>Direction</span></h1>"
+      address: {}
+      postURL: '/profile/settings/new-shipping-direction'
+      countries: auth.EuropeCountries
+
+
+  app.post '/profile/settings/new-shipping-direction', decorators.loginRequired, (req, res) ->
+    handleDirection(
+      req,
+      res,
+      "<h1 class='page-title'><span>New</span></h1><h1 class='page-title'><span>Direction</span></h1>",
+      '/profile/settings/new-shipping-direction',
+      (address) ->
+        req.user.shippingAddresses.push address
+        req.user.save()
+        res.redirect('/profile/settings')
+    )
+
+
+  app.get '/profile/settings/edit-shipping-direction/:id', decorators.loginRequired, (req, res) ->
+    address = req.user.shippingAddresses.id(req.params.id)
+    res.render 'core/profile/address_form',
+      errors: {}
+      title: "<h1 class='page-title'><span>Edit</span></h1><h1 class='page-title'><span>Direction</span></h1>"
+      address: address
+      postURL: "/profile/settings/edit-shipping-direction/#{ req.params.id }"
+      countries: auth.EuropeCountries
+
+
+  app.post '/profile/settings/edit-shipping-direction/:id', decorators.loginRequired, (req, res) ->
+    address = req.user.shippingAddresses.id(req.params.id)
+    handleDirection(
+      req,
+      res,
+      "<h1 class='page-title'><span>Edit</span></h1><h1 class='page-title'><span>Direction</span></h1>",
+      "/profile/settings/edit-shipping-direction/#{ req.params.id }"
+      (newAddress) ->
+        # updateing address
+        address.contact = newAddress.contact
+        address.company = newAddress.company
+        address.line1 = newAddress.line1
+        address.line2 = newAddress.line2
+        address.line3 = newAddress.line3
+        address.city = newAddress.city
+        address.state = newAddress.state
+        address.zip_code = newAddress.zip_code
+        address.phone_no = newAddress.phone_no
+        address.country = newAddress.country
+
+        req.user.save()
+        res.redirect('/profile/settings')
+    )
+
+
+  app.post '/profile/settings/delete-shipping-direction/:id', decorators.loginRequired, (req, res) ->
+    req.user.shippingAddresses.id(req.params.id).remove()
+    req.user.save (error, user) ->
+      if error
+        res.send 400
+      else
+        res.send 200
 
 
   app.post '/project/title/:id', decorators.loginRequired, (req, res) ->

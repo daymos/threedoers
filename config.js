@@ -67,6 +67,10 @@
         client_id: "AZrTbRDZWrirQKBM6U0xlh2QbDhy-YgzhviBgD9dIhV6EoXePHBPVGD99hD6",
         client_secret: "ENKeHRBEcHZ3TdTdNUHpkKqd9ktHYwTYZQur6XrGtY-BttLKsDRc6ZRa_uE-"
       }
+    },
+    postmaster: {
+      apiKey: 'pp_MTA2NDEwMDE6X2sxbnlGVjZLbjdtUjZKS2Q4RFJ0THY2Y1hj',
+      password: 'mattia13'
     }
   };
 

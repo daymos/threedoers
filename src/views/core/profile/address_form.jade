@@ -22,15 +22,15 @@ block body
             input(type='hidden', name='authenticity_token')
             input(type='hidden', name='_csrf', value=csrfToken)
             .form-group
-              input.form-control.input-text.input-lg(value=(address.contact)?"#{address.contact}":"", type='text', placeholder='CONTACT', name='contact')
+              input.form-control.input-text.input-lg(value=(address.contact)?"#{address.contact}":"", type='text', placeholder='CONTACT (FILL THIS OR COMPANY)', name='contact')
             .form-group
-              input.form-control.input-text.input-lg(value=(address.company)?"#{address.company}":"", type='text', placeholder='COMPANY', name='company')
+              input.form-control.input-text.input-lg(value=(address.company)?"#{address.company}":"", type='text', placeholder='COMPANY (FILL THIS OR CONTACT)', name='company')
             .form-group
               input.form-control.input-text.input-lg(value=(address.line1)?"#{address.line1}":"", type='text', placeholder='LINE 1', name='line1')
             .form-group
-              input.form-control.input-text.input-lg(value=(address.line2)?"#{address.line2}":"", type='text', placeholder='LINE 2', name='line2')
+              input.form-control.input-text.input-lg(value=(address.line2)?"#{address.line2}":"", type='text', placeholder='LINE 2 (OPTIONAL)', name='line2')
             .form-group
-              input.form-control.input-text.input-lg(value=(address.line3)?"#{address.line3}":"", type='text', placeholder='LINE 3', name='line3')
+              input.form-control.input-text.input-lg(value=(address.line3)?"#{address.line3}":"", type='text', placeholder='LINE 3 (OPTIONAL)', name='line3')
             .form-group
               input.form-control.input-text.input-lg(value=(address.city)?"#{address.city}":"", type='text', placeholder='CITY', name='city')
             .form-group
@@ -42,7 +42,7 @@ block body
             .form-group
               select(name="country")
                 for country in countries
-                  option#country(value='#{ country.abbr }') #{ country.name }
+                  option#country(value='#{ country.abbr }', selected=(address.country==country.abbr)) #{ country.name }
 
             br
             br
@@ -70,8 +70,4 @@ block scripts
   if locals.errors
     - for (key in errors)
       script
-        alert("#{key}: #{errors[key]}");
-
-  if (address.country)
-    script
-      $("#country").val("#{ address.country }");
+        alert("#{key}: #{errors[key].msg}");

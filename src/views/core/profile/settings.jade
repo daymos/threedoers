@@ -57,7 +57,7 @@ block body
       br
 
       if user.printer == 'accepted'
-        h1 Printer Direction
+        h1 Printer Address
         dl
           if user.printerAddress
             - for (key in user.printerAddress)
@@ -67,14 +67,28 @@ block body
         a#link.direct-link(href='/profile/settings/printer-direction') Update
 
       if user.shippingAddresses
-        h1 Shipping Directions
+        h1 Shipping Addresses
         for direction in user.shippingAddresses
-          #{direction}
-        else
-          strong you still don't have any direction
+          - for (key in direction._doc)
+            dt #{ key }
+            dd #{ direction[key] }
+
+          dt
+          dd
+            a(href='/profile/settings/edit-shipping-direction/#{ direction.id }') Edit
+          dt
+          dd
+            a.remove-shipping-address(href='/profile/settings/delete-shipping-direction/#{ direction.id }') Delete
+
+          br
           br
 
-        a#link.direct-link(href='') Add new direction
+        else
+          strong you still don't have any direction
+
+        br
+
+        a#link.direct-link(href='/profile/settings/new-shipping-direction') Add new direction
 
 
     .right-hand.top.hidden-xs

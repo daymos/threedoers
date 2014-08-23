@@ -70,3 +70,17 @@ $(document).ready ->
 
     success: (data) ->
       location.reload()
+
+  $("a.remove-shipping-address").click (e) ->
+    e.preventDefault()
+    $.ajax
+      url: $(this).attr("href")
+      method: "post"
+
+      success: () ->
+        window.location.reload()
+
+      statusCode:
+        400: (data) ->
+          alert(data.msg)
+          location.reload(true)

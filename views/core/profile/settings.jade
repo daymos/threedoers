@@ -40,16 +40,10 @@ block body
               input#lastName.form-control.input-text.input-lg(value=(user.lastName)?"#{user.lastName}":"", placeholder='LAST NAME', name='lastName')
             .form-group
               input#address.form-control.input-text.input-lg(value=(user.address)?"#{user.address}":"", placeholder='ADDRESS', name='address')
-            .checkbox
-              input#rememberme(type='checkbox', value='1', checked='', name='rememberme')
-              label(for='rememberme') I WANT ANOTHER ADDRESS FOR DELIVERY
             .form-group
-              input#aux_address.form-control.input-text.input-lg(value='', placeholder='ADDRESS', name='aux_address')
               input#city(type='hidden', name='city')
               input#country(type='hidden', name='country')
               input#location(type='hidden', name='location')
-            .form-group
-              a#link.direct-link(href='') DIRECT LINK TO SERVICE DELIVERY
 
             br
             br
@@ -58,6 +52,44 @@ block body
             .form-group
               button#submit.btn.btn-default.btn-lg.btn-medium(type='submit')
                 span UPDATE
+
+      br
+      br
+
+      if user.printer == 'accepted'
+        h1 Printer Address
+        dl
+          if user.printerAddress
+            - for (key in user.printerAddress)
+              dt #{ key }
+              dd #{ user.printerAddress[key] }
+
+        a#link.direct-link(href='/profile/settings/printer-direction') Update
+
+      if user.shippingAddresses
+        h1 Shipping Addresses
+        for direction in user.shippingAddresses
+          - for (key in direction._doc)
+            dt #{ key }
+            dd #{ direction[key] }
+
+          dt
+          dd
+            a(href='/profile/settings/edit-shipping-direction/#{ direction.id }') Edit
+          dt
+          dd
+            a.remove-shipping-address(href='/profile/settings/delete-shipping-direction/#{ direction.id }') Delete
+
+          br
+          br
+
+        else
+          strong you still don't have any direction
+
+        br
+
+        a#link.direct-link(href='/profile/settings/new-shipping-direction') Add new direction
+
 
     .right-hand.top.hidden-xs
       img(src='/img/hand_register.png', alt='3doers Hand')
