@@ -11,25 +11,31 @@ block content-profile
           p.info-3d There is not any project yet for this list.
         - for (project in projects)
           - project = projects[project]
-            p.info-3d
-              span.title NAME:
-              a(href='/project/#{project.id}') #{project.title}
+            div
+              p.info-3d
+                span.title NAME:
+                a(href='/project/#{project.id}') #{project.title}
               br
-              span.title FILE NAME: #{project.file}
-            br
-            p.info-3d
-              span.title STATUS
-              | #{project.humanizedStatus()}
-              span.image.align-right
-                img(src='/img/icons_#{project.dasherizedStatus()}.png')
+              .row
+                .col-md-8
+                  p.info-3d
+                    span.title STATUS
+                    | #{project.humanizedStatus()}
+                    span.image.align-right
+                      img(src='/img/icons_#{project.dasherizedStatus()}.png')
+                    br
+                    - if (project.order)
+                      span.title PRICE:
+                      span.price #{project.order.price}
+                      span.currency EURO
+                .col-md-4
+                  a.btn.btn-lg.btn-default.btn-goto(href='/project/#{ project.id }')
+                    span GO TO THE
+                      br
+                      | PROJECT
               br
-              - if (project.order)
-                span.title PRICE:
-                span.price #{project.order.price}
-                span.currency EURO
-            br
-            .separator-3d
-              img(src='/img/img_separatori_lista.png')
+              .separator-3d
+                img(src='/img/img_separatori_lista.png')
 
 div
   .container

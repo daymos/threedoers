@@ -89,6 +89,9 @@ $(document).ready ->
   viewer.setParameter 'Definition','high'
   viewer.setParameter 'MipMapping','on'
   viewer.setParameter 'CreaseAngle', '30'
+  viewer.onloadingcomplete = ->
+    console.log $("#cv")[0].toDataURL()
+
   viewer.init()
   viewer.update()
 
