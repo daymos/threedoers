@@ -356,31 +356,26 @@ html {
 @-moz-keyframes spin {
   0% {
     -moz-transform: rotate(0deg); }
-
   100% {
     -moz-transform: rotate(359deg); } }
 @-webkit-keyframes spin {
   0% {
     -webkit-transform: rotate(0deg); }
-
   100% {
     -webkit-transform: rotate(359deg); } }
 @-o-keyframes spin {
   0% {
     -o-transform: rotate(0deg); }
-
   100% {
     -o-transform: rotate(359deg); } }
 @-ms-keyframes spin {
   0% {
     -ms-transform: rotate(0deg); }
-
   100% {
     -ms-transform: rotate(359deg); } }
 @keyframes spin {
   0% {
     transform: rotate(0deg); }
-
   100% {
     transform: rotate(359deg); } }
 .fa-rotate-90 {
@@ -4718,6 +4713,8 @@ div.info_projects:last-of-type .separator, div.info_archived:last-of-type .separ
 @media (min-width: 58.75em) {
   .container-gallery_homepage {
     max-width: 58.75em; } }
+
+/*# sourceMappingURL=comming.css.map */
 
 /* Space out content a bit */
 body {

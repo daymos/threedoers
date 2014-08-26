@@ -63,7 +63,10 @@ else
       # Store this message and metadata, maybe use some custom logic
       # then callback indicating success.
       #
-      @client.captureMessage(msg, {level: level, extra: msg})
+      if level == "error"
+	       @client.captureError(msg)
+      else
+        @client.captureMessage(msg, {level: level, extra: msg})
       callback null, true
       return
 

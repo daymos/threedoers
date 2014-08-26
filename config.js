@@ -2,7 +2,7 @@
   var config, key, locals;
 
   config = {
-    logLevel: 'info',
+    logLevel: 'warm',
     cookieSecret: 'This is a secret',
     debug: false,
     rootDir: __dirname,
