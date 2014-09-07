@@ -64,7 +64,7 @@ else
       # then callback indicating success.
       #
       if level == "error"
-	       @client.captureError(msg)
+        @client.captureError(msg)
       else
         @client.captureMessage(msg, {level: level, extra: msg})
       callback null, true

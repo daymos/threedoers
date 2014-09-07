@@ -1,5 +1,5 @@
 import struct
-
+import sys
 
 class STLStats:
     """Migration from STLStats.php
@@ -16,6 +16,25 @@ class STLStats:
         self.size = size
         self.binary = binary
         self.volume = 0
+
+        self.minx = sys.maxint
+        self.maxx = -sys.maxint - 1
+        self.miny = sys.maxint
+        self.maxy = -sys.maxint - 1
+        self.minz = sys.maxint
+        self.maxz = -sys.maxint - 1
+
+        self._convert_map = {
+            'mm': lambda x: x,
+            'cm': self._mmtocm,
+            'inch': self._mmtoinch,
+        }
+
+        self.box = {
+            'width': 0,
+            'height': 0,
+            'length': 0,
+        }
         if not self.binary:
             self._process_ascii()
 
@@ -24,13 +43,15 @@ class STLStats:
     def get_volume(self, unit):
         """
         Returns the calculated Volume (cc) of the 3D object represented in the binary STL.
-        If unit is "cm" then returns volume in cubic cm, but If $unit is "inch" then returns volume in cubic inches.
+        If unit is "cm" then returns volume in cubic cm, but If unit is "inch" then returns volume in cubic inches.
         """
         if not self.flag:  # boolean flag to minimize repeated volume computation overhead
             self._calculate_volume()
             self.flag = True
 
-        if unit == 'cm':
+        if unit == 'mm':
+            return self.volume
+        elif unit == 'cm':
             return self.volume/1000
         else:
             return self._inch3(self.volume/1000)
@@ -38,6 +59,26 @@ class STLStats:
     def get_weight(self):
         """Returns the calculated Weight (gm) of the 3D object represented in the binary STL."""
         return self._calculate_weight(self.get_volume('cm'))
+
+    def get_bbox(self, unit):
+        """
+        Returns a dict for the bounding box i.e. length-width-height (range x-y-z) of the 3D object represented in the binary STL.
+        If unit is "cm" then returns each value in cm, but If unit is "inch" then in inches.
+        """
+        if not self.flag:  # boolean flag to minimize repeated volume computation overhead
+            self._calculate_volume()
+            self.flag = True
+
+        self.box["length"] = self.maxx - self.minx
+        self.box["width"] = self.maxy - self.miny
+        self.box["height"] = self.maxz - self.minz
+
+        result = {}
+
+        for key in self.box:
+            result[key] = self._convert_map[unit](self.box[key])
+
+        return result
 
     # 2. Infrastructure Functions
 
@@ -100,9 +141,42 @@ class STLStats:
         self.file.seek(self.file.tell() + 12)  # skiping this
         triangle = [self._unpack('3f', 12), self._unpack('3f', 12), self._unpack('3f', 12)]
         self.file.seek(self.file.tell() + 2)  # skiping this
+        self._seek_bounds(*triangle)  # this is for calculating dimensions
         return self._signed_volume_triangle(*triangle)
 
     # 4. Math Functions
+
+    def _seek_bounds(self, p1, p2, p3):
+        """Finds the value of min and max for X,Y,Z dimensions"""
+        # x
+        lminx = min(p1[0], p2[0], p3[0])
+        lmaxx = max(p1[0], p2[0], p3[0])
+
+        if lminx < self.minx:
+            self.minx = lminx
+
+        if lmaxx > self.maxx:
+            self.maxx = lmaxx
+
+        # y
+        lminy = min(p1[1], p2[1], p3[1])
+        lmaxy = max(p1[1], p2[1], p3[1])
+
+        if lminy < self.miny:
+            self.miny = lminy
+
+        if lmaxy > self.maxy:
+            self.maxy = lmaxy
+
+        # z
+        lminz = min(p1[2], p2[2], p3[2])
+        maxz = max(p1[2], p2[2], p3[2])
+
+        if lminz < self.minz:
+            self.minz = lminz
+
+        if maxz > self.maxz:
+            self.maxz = maxz
 
     def _signed_volume_triangle(self, p1, p2, p3):
         """
@@ -139,7 +213,21 @@ class STLStats:
 
     def _read_triangle_ascii(self):
         """Reads a triangle data from the ascii STL and returns its signed volume."""
-        return self._signed_volume_triangle(*self.triangles_data.pop())
+        triangle = self.triangles_data.pop()
+        self._seek_bounds(*triangle)  # this is for calculating dimensions
+        return self._signed_volume_triangle(*triangle)
+
+    def _cm3toinch3(self, v):
+        """Converts the volume specified in cubic cm to cubic inches."""
+        return v * 0.0610237441
+
+    def _mmtocm(self, v):
+        """Converts the value specified in mm to cm"""
+        return v * 0.1
+
+    def _mmtoinch(self, v):
+        """Converts the value specified in mm to inches"""
+        return v * 0.0393701
 
 
 if __name__ == '__main__':
@@ -169,6 +257,20 @@ if __name__ == '__main__':
     _file.seek(0)
 
     s = STLStats(_file, size, binary, options.density)
-    print '{ "volume": %s, "weight": %s, "density": %s, "unit": "%s"}' % (s.get_volume(options.unit), s.get_weight(), options.density, options.unit)
+    volume = s.get_volume(options.unit)
+    weight = s.get_weight()
+    dimension = s.get_bbox(options.unit)
+
+    print """
+    { "volume": %s,
+      "weight": %s,
+      "density": %s,
+      "unit": "%s",
+      "dimension": {
+        "width": %s,
+        "height": %s,
+        "length": %s
+      }
+    }""" % (volume, weight, options.density, options.unit, dimension['width'], dimension['height'], dimension['length'])
 
     _file.close()

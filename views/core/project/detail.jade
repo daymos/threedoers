@@ -84,7 +84,7 @@ block body
           .col-md-3.col-sm-6
             .printer-properties
               h4 Volume:
-              p #{project.volume} cm3
+              p #{project.volume}
               h4 Density
               p #{project.density}
               h4 Weight
@@ -94,12 +94,14 @@ block body
               h4 Ammount:
               p #{project.order.ammount}
               h4 Dimension:
-              p #{project.order.dimension} # this still on development
+              p Width: #{project.dimension.width} Height: #{project.dimension.height} Length: #{project.dimension.length}
               h4 Price
               p
                 strong #{project.order.price} EURO
           .col-md-3.col-sm-6
             .printer-properties
+              h4 Unit
+              p #{project.unit}
               h4 Resolution
               p #{project.order.resolution} # this still on development
               if project.order.shippingCharge

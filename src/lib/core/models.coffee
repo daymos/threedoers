@@ -126,6 +126,9 @@ STLProject = new Schema
   order:
     type: {}
 
+  dimension:
+    type: {}
+
   comments:
     type: [Comment]
 

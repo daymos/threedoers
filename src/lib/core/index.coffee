@@ -117,7 +117,7 @@ module.exports = (app, io) ->
   app.get '/project/:id', decorators.loginRequired, (req, res, next) ->
     models.STLProject.findOne({_id: req.params.id, $or: [{user: req.user.id}, {'order.printer': req.user.id}]}).exec().then( (doc) ->
       if doc
-        unless doc.volume and not doc.bad
+        if not doc.volume or doc.bad or not doc.dimension
           processVolumeWeight(doc)
         res.render 'core/project/detail',
           project: doc
@@ -563,7 +563,6 @@ module.exports = (app, io) ->
               if req.body.shippingMethod == 'shipping'
                 req.session.shippingRate = req.body.shippingRate
                 req.session.shippingAddress = JSON.parse(req.body.shippingAddress)
-              console.log req.session
               redirectUrl = undefined
               i = 0
 
@@ -815,6 +814,7 @@ module.exports = (app, io) ->
           doc.volume = result.volume
           doc.weight = result.weight
           doc.unit = result.unit
+          doc.dimension = result.dimension
           doc.status = models.PROJECT_STATUSES.PROCESSED[0]
           doc.price = decimal.fromNumber((doc.volume * 1.01 * doc.density * 0.03) + 5, 2)  # formula from doc sent by mattia
           doc.bad = false
