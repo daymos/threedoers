@@ -1,0 +1,193 @@
+<!doctype html>  
+<!--[if IE 6 ]><html lang="en-us" class="ie6"> <![endif]-->
+<!--[if IE 7 ]><html lang="en-us" class="ie7"> <![endif]-->
+<!--[if IE 8 ]><html lang="en-us" class="ie8"> <![endif]-->
+<!--[if (gt IE 7)|!(IE)]><!-->
+<html lang="en-us"><!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	
+	<title>STLBox - STL Bounding Box Calculator</title>
+	
+	<meta name="description" content="STL format is popularly used for representing 3D object information for 3D printing applications. It is useful to know the Bounding Box (BBox) and the BBox Volume in some cases. This determines if the 3D object is printable on the your printer bed and the size of packing box required for shipping.
+
+The math is wrapped inside an easy to use PHP class that exposes getter functions (i.e. getBBoxVolume, getBBoxVolume) to calculate these properties. This class will be useful to a website which deals in web based 3D printing applications.
+
+The PHP code has been commented extensively. Example usage has been given at the end of this documentation as well as at the end of the class and should be commented out when the class is deployed on your server.
+
+Note:
+=====
+The function assumes that the STL file represents 3D object in a ready-to-print orientation i.e. this class does not axis-align the 3D object. Therefore, the resulting bounding box may not necessarily be a "minimum volume" box.
+
+
+Thats all!">
+	<meta name="author" content="Pushkar Paranjpe">
+	<meta name="copyright" content="Pushkar Paranjpe">
+	<meta name="generator" content="Documenter v2.0 http://rxa.li/documenter">
+	<meta name="date" content="2013-10-16T00:00:00+02:00">
+	
+	<link rel="stylesheet" href="assets/css/documenter_style.css" media="all">
+	
+	
+	
+	<script src="assets/js/jquery.js"></script>
+	
+	<script src="assets/js/jquery.scrollTo.js"></script>
+	<script src="assets/js/jquery.easing.js"></script>
+	
+	<script>document.createElement('section');var duration='500',easing='swing';</script>
+	<script src="assets/js/script.js"></script>
+	
+	<style>
+		html{background-color:#FFFFFF;color:#383838;}
+		::-moz-selection{background:#444444;color:#DDDDDD;}
+		::selection{background:#444444;color:#DDDDDD;}
+		#documenter_sidebar #documenter_logo{background-image:url();}
+		a{color:#0000FF;}
+		.btn {
+			border-radius:3px;
+		}
+		.btn-primary {
+			  background-image: -moz-linear-gradient(top, #0088CC, #0044CC);
+			  background-image: -ms-linear-gradient(top, #0088CC, #0044CC);
+			  background-image: -webkit-gradient(linear, 0 0, 0 0088CC%, from(#DDDDDD), to(#0044CC));
+			  background-image: -webkit-linear-gradient(top, #0088CC, #0044CC);
+			  background-image: -o-linear-gradient(top, #0088CC, #0044CC);
+			  background-image: linear-gradient(top, #0088CC, #0044CC);
+			  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#0088CC', endColorstr='#0044CC', GradientType=0);
+			  border-color: #0044CC #0044CC #bfbfbf;
+			  color:#FFFFFF;
+		}
+		.btn-primary:hover,
+		.btn-primary:active,
+		.btn-primary.active,
+		.btn-primary.disabled,
+		.btn-primary[disabled] {
+		  border-color: #0088CC #0088CC #bfbfbf;
+		  background-color: #0044CC;
+		}
+		hr{border-top:1px solid #EBEBEB;border-bottom:1px solid #FFFFFF;}
+		#documenter_sidebar, #documenter_sidebar ul a{background-color:#DDDDDD;color:#222222;}
+		#documenter_sidebar ul a{-webkit-text-shadow:1px 1px 0px #EEEEEE;-moz-text-shadow:1px 1px 0px #EEEEEE;text-shadow:1px 1px 0px #EEEEEE;}
+		#documenter_sidebar ul{border-top:1px solid #AAAAAA;}
+		#documenter_sidebar ul a{border-top:1px solid #EEEEEE;border-bottom:1px solid #AAAAAA;color:#444444;}
+		#documenter_sidebar ul a:hover{background:#444444;color:#DDDDDD;border-top:1px solid #444444;}
+		#documenter_sidebar ul a.current{background:#444444;color:#DDDDDD;border-top:1px solid #444444;}
+		#documenter_copyright{display:block !important;visibility:visible !important;}
+	</style>
+	
+</head>
+<body class="documenter-project-stlbox">
+	<div id="documenter_sidebar">
+		<a href="#documenter_cover" id="documenter_logo"></a>
+		<ul id="documenter_nav">
+			<li><a class="current" href="#documenter_cover">Start</a></li>
+				
+			<li><a href="#what_can_it_do" title="What Can It Do ?">What Can It Do ?</a></li>
+			<li><a href="#install" title="Install">Install</a></li>
+			<li><a href="#note" title="NOTE">NOTE</a></li>
+
+		</ul>
+		<div id="documenter_copyright">Copyright Pushkar Paranjpe 2013<br>
+		made with the <a href="http://rxa.li/documenter">Documenter v2.0</a> 
+		</div>
+	</div>
+	<div id="documenter_content">
+	<section id="documenter_cover">
+	<h1>STLBox</h1>
+	<h2>STL Bounding Box Calculator</h2>
+	<div id="documenter_buttons">
+		
+	</div>
+	<hr>
+	<ul>
+	
+	<li>latest update: 10/16/2013</li>
+	<li>by: Pushkar Paranjpe</li>
+	
+	
+	</ul>
+	<p>Calculate the bounding box and bounding box volume of 3D STL models.</p>
+	</section>
+	
+	<section id="what_can_it_do">
+	<div class="page-header"><h3>What Can It Do ?</h3><hr class="notop"></div>
+<p>
+	It can calculate:</p>
+<p>
+	&nbsp;</p>
+<ul>
+	<li>
+		Bounding Box i.e. Length, Width and Height of 3D Object</li>
+	<li>
+		Bounding Box Volume i.e.&nbsp;Length*Width*Height</li>
+</ul>
+<p>
+	&nbsp;</p>
+<p>
+	It also supports unit conversions.</p>
+</section>
+<section id="install">
+	<div class="page-header"><h3>Install</h3><hr class="notop"></div>
+<p>
+	&nbsp;</p>
+<div>
+	Follow these steps to start using this PHP class in your applications:</div>
+<div>
+	&nbsp;</div>
+<div>
+	1. Extract the contents of the STLBox.zip folder.</div>
+<div>
+	&nbsp;</div>
+<div>
+	2. Copy the STLBox.php file to your webserver folder such that your application can resolve the path and find this class file.</div>
+<div>
+	&nbsp;</div>
+<div>
+	3. A sample binary STL file - 40mmcube.stl has been provided to help you test the class right away. Copy this file such that the PHP class can find this path. Pass this path as an argument when you instantiate the STLStats class. For example: if the 40mmcube.stl file is in the directory &quot;/var/www/mystlfiles/&quot; then call this class from within your code like this:</div>
+<div>
+	&nbsp;</div>
+<div>
+	&nbsp; &nbsp; $mypath = &quot;/var/www/mystlfiles/40mmcube.stl&quot;;</div>
+<div>
+	&nbsp; &nbsp; $obj = new STLStats($mypath);</div>
+<div>
+	&nbsp; &nbsp; $unit = &quot;cm&quot;;</div>
+<div>
+	&nbsp; &nbsp; $bbox = $obj-&gt;getBBox($unit);</div>
+<div>
+	&nbsp; &nbsp; echo &quot;Bounding Box (unit: &quot;.$unit.&quot;): &lt;BR&gt;X: &quot; . $bbox[&quot;length&quot;] . &quot;&lt;BR&gt;Y: &quot; . $bbox[&quot;width&quot;] . &quot;&lt;BR&gt;Z: &quot; . $bbox[&quot;height&quot;].&quot; &lt;BR&gt;&quot;;</div>
+<div>
+	&nbsp;</div>
+<div>
+	&nbsp; &nbsp; $bbv = $obj-&gt;getBBoxVolume($unit);</div>
+<div>
+	&nbsp; &nbsp; echo &quot;Bounding Box Volume: &quot; . $bbv . &quot; cubic &quot; . $unit .&quot; &lt;BR&gt;\n&quot;;</div>
+<div>
+	&nbsp;</div>
+<div>
+	4. A sample ASCII STL file - nut-ascii.stl has also been provided to help you test the class right away.</div>
+<div>
+	&nbsp;</div>
+<div>
+	5. An example implementation of the class is also provided - files index.html and process.php.</div>
+<p>
+	&nbsp;</p>
+</section>
+<section id="note">
+	<div class="page-header"><h3>NOTE</h3><hr class="notop"></div>
+<p>
+	&nbsp;</p>
+<div>
+	Note:</div>
+<div>
+	=====</div>
+<div>
+	The function assumes that the STL file represents 3D object in a ready-to-print orientation i.e. this class does not axis-align the 3D object. Therefore, the resulting bounding box may not necessarily be a &quot;minimum volume&quot; box.</div>
+<div>
+	&nbsp;</div>
+</section>
+
+	</div>
+</body>
+</html>

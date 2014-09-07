@@ -90,7 +90,12 @@ $(document).ready ->
   viewer.setParameter 'MipMapping','on'
   viewer.setParameter 'CreaseAngle', '30'
   viewer.onloadingcomplete = ->
-    console.log $("#cv")[0].toDataURL()
+    unless project.hasImage
+      # we need to render the image before update project
+      setTimeout(->
+        $.post("/project/#{ project.id }/image/", {image: $("#cv")[0].toDataURL()})
+      , 15000 # 10 sec
+      )
 
   viewer.init()
   viewer.update()

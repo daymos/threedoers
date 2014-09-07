@@ -114,6 +114,27 @@ module.exports = (app, io) ->
         res.send redirectTo: "/project/#{project.id}"
 
 
+  app.post '/project/:id/image/', decorators.loginRequired, (req, res) ->
+    models.STLProject.findOne({_id: req.params.id, user: req.user.id}).exec().then( (doc) ->
+      if doc
+        matches = req.body.image.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/)
+        unless matches.length == 3
+          res.send 400
+        else
+          filename = doc.file.split('.')[0]
+          fs.writeFile "#{ settings.upload.to + filename }.png", matches[2], 'base64', (err) ->
+            if err
+              logger.error err
+            else
+              doc.image = "#{ filename }.png"
+              doc.save()
+            res.send 200
+    ).fail((reason) ->
+      logger.error reason
+      res.send 500
+    )
+
+
   app.get '/project/:id', decorators.loginRequired, (req, res, next) ->
     models.STLProject.findOne({_id: req.params.id, $or: [{user: req.user.id}, {'order.printer': req.user.id}]}).exec().then( (doc) ->
       if doc
@@ -693,12 +714,20 @@ module.exports = (app, io) ->
 
 
   app.get '/printing/requests', decorators.printerRequired, (req, res) ->
-    models.STLProject.find(status: models.PROJECT_STATUSES.PRINT_REQUESTED[0]).exec (err, docs) ->
+    models.STLProject.find(status: {"$lt": models.PROJECT_STATUSES.ARCHIVED[0], "$gt": models.PROJECT_STATUSES.PRINT_REQUESTED[0]}, 'order.printer': req.user.id).exec (err, docs) ->
       if err
         logger.error err
         res.send 500
       else
-        res.render 'core/printing/requests', {projects: docs}
+        if docs and docs.length > 0
+          res.render 'core/printing/requests', {projects: []}
+        else
+          models.STLProject.find(status: models.PROJECT_STATUSES.PRINT_REQUESTED[0]).exec (err, docs) ->
+            if err
+              logger.error err
+              res.send 500
+            else
+              res.render 'core/printing/requests', {projects: docs}
 
 
   app.get '/printing/jobs', decorators.printerRequired, (req, res) ->

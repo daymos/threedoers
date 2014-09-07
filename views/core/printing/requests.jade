@@ -46,6 +46,8 @@ block content-profile
                 .container
                     .row
                       .col-md-6
+                        if project.image
+                          img(src="/#{ project.image }")
                       .col-md-3
                         .printer-properties
                           h4 Volume
@@ -61,6 +63,7 @@ block content-profile
                           h4 Dimensions
                           if project.dimension
                             p Width: #{project.dimension.width} Height: #{project.dimension.height} Length: #{project.dimension.length}
+
                     //- There is no comments at this status :S
                     //- hr.hr-light
                     //- .comment-user
