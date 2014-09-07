@@ -21,3 +21,6 @@ node_modules
 # python file
 py-env
 *.py[c|o]
+
+#webstorm
+.idea
