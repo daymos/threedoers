@@ -758,7 +758,7 @@ module.exports = (app, io) ->
     )
 
   app.post '/printing/deny/:id', decorators.printerRequired, (req, res) ->
-    models.STLProject.findOne({_id: req.params.id, editable: false}).exec().then( (doc) ->
+    models.STLProject.findOne({_id: req.params.id}).exec().then( (doc) ->
       if doc and doc.validateNextStatus(models.PROJECT_STATUSES.PRINT_REQUESTED[0])
         doc.status -= 1
         doc.save()

@@ -59,7 +59,8 @@ block content-profile
                           h4 Ammount
                           p #{project.order.ammount}
                           h4 Dimensions
-                          p #{project.dimensions}
+                          if project.dimension
+                            p Width: #{project.dimension.width} Height: #{project.dimension.height} Length: #{project.dimension.length}
                     //- There is no comments at this status :S
                     //- hr.hr-light
                     //- .comment-user
