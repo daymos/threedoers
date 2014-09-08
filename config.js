@@ -9,8 +9,8 @@
     logFile: __dirname + '/log/error.log',
     site: 'http://www.3doers.it',
     host: {
-      ip: process.env.OPENSHIFT_NODEJS_IP,
-      port: process.env.OPENSHIFT_NODEJS_PORT,
+      ip: process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0',
+      port: process.env.OPENSHIFT_NODEJS_PORT || 3000,
       protocol: 'http'
     },
     io: {
