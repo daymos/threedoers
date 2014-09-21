@@ -842,7 +842,7 @@ module.exports = (app, io) ->
   processVolumeWeight = (doc) ->
     logger.error "entrando"
     exec "#{settings.python.bin} #{settings.python.path} #{settings.upload.to}#{doc.file} -d #{doc.density}", (err, stdout, stderr) ->
-      logger.error error
+      logger.error err
       logger.error stderr
       logger.error stdout
       if not err and  not stderr
