@@ -3,7 +3,7 @@
 ##############################################################################
 
 config =
-  logLevel: 'info'
+  logLevel: 5
   cookieSecret: 'This is a secret'
   debug: false
   rootDir: __dirname
