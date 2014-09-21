@@ -31,6 +31,11 @@
         subject: "Activate your account"
       }
     },
+    accounts: {
+      reset: {
+        subject: "Password Reset"
+      }
+    },
     project: {
       payed: {
         subject: "Project was payed."

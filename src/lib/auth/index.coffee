@@ -6,6 +6,8 @@ module.exports = (app) ->
   decorators = require '../decorators'
   logger = require "../logger"
   models = require "./models"
+  mailer = require('../mailer').mailer
+  settings = require '../../config'
 
   # rules for serialize sessions (we need them as common part)
   passport.serializeUser (user, done) ->
@@ -84,3 +86,78 @@ module.exports = (app) ->
         res.send 500
       else
         res.send 200
+
+  app.get '/accounts/reset-password', (req, res, next) ->
+    res.render 'accounts/reset-password'
+
+  app.post '/accounts/reset-password', (req, res, next) ->
+    req.assert('email').isEmail()
+
+    errors = req.validationErrors(true)
+
+    if errors
+      res.render 'accounts/reset-password',
+        errors: errors
+    else
+      models.User.findOne
+        email: req.body.email
+      , (err, user) ->
+        unless user
+          res.render 'accounts/reset-password', errors: email: msg: 'No account with that email address exists.'
+        else
+          user.resetPassword = true
+          user.save (err) ->
+            if err
+              logger.error err
+              res.send 500
+            else
+              context =
+                url: "http://#{ req.headers.host }/accounts/reset-password/complete/#{ user.resetPasswordToken }"
+              mailer.send('mailer/accounts/reset-password', context, {from: settings.mailer.noReply, to:[user.email], subject: settings.accounts.reset.subject}).then( ->
+                res.redirect '/accounts/reset-password/done'
+              ).fail((reason)->
+                logger.error reason
+                res.send 500
+              )
+
+  app.get '/accounts/reset-password/done', (req, res, next) ->
+    res.render 'accounts/reset-password-done'
+
+  app.get '/accounts/reset-password/complete/:token', (req, res, next) ->
+    models.User.findOne
+      resetPasswordToken: req.params.token
+      resetPasswordExpires:
+        $gt: Date.now()
+    , (err, user) ->
+      unless user
+        res.render "accounts/reset-password-complete",
+          message: 'Password reset token is invalid or has expired.'
+          token: ''
+      else
+        res.render "accounts/reset-password-complete", token: req.params.token
+
+  app.post '/accounts/reset-password/complete/:token', (req, res, next) ->
+    password = req.body.password
+    req.assert('password', regex: "Should contains from 4 to 15, letters(uppercase, downcase), digits, first should be a letter.").regex(/^[a-zA-Z]\w{3,14}$/)
+    req.assert('confirm', {regex: "Should contains from 4 to 15, letters(uppercase, downcase), digits, first should be a letter.", equals: "Passwords didn't match"}).regex(/^[a-zA-Z]\w{3,14}$/).equals(password)
+
+    errors = req.validationErrors(true)
+
+    if errors
+      res.render 'accounts/reset-password-complete',
+        errors: errors
+    else
+     models.User.findOne
+        resetPasswordToken: req.params.token
+        resetPasswordExpires:
+          $gt: Date.now()
+      , (err, user) ->
+        unless user
+          res.render "accounts/reset-password-complete",
+            message: 'Password reset token is invalid or has expired.'
+            token: req.params.token
+        user.password = req.body.password
+        user.resetPassword = false
+        user.save (err) ->
+          res.redirect '/accounts/login'
+

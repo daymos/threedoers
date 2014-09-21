@@ -22,7 +22,7 @@ Activation = mongoose.Schema
 
   createdAt:
     type: Date
-    expires: "1.5h"
+    expires: 60*60*24*2  # in two days
 
 
 Activation

@@ -333,6 +333,12 @@ User = new Schema
   printerAddress:
     type: Object
 
+  resetPasswordToken:
+    type: String
+
+  resetPasswordExpires:
+    type: Date
+
 
 User.index loc: '2d'
 
@@ -342,6 +348,17 @@ User
     @salt = @makeSalt()
     @hashedPassword = @encryptPassword(password)
 
+
+User
+  .virtual('resetPassword')
+  .set (flag) ->
+    if flag
+      salt = Math.round((new Date().valueOf() * Math.random())) + ''
+      @resetPasswordToken = crypto.createHmac('sha1', salt).update(@email).digest('hex')
+      @resetPasswordExpires = Date.now() + 3600000  # 1hour
+    else
+      @resetPasswordToken = undefined
+      @resetPasswordExpires = undefined
 
 User
   .method 'makeSalt', () ->
