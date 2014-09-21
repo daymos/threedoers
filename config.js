@@ -54,6 +54,11 @@
         subject: "Your project was accepted by a printer"
       }
     },
+    filemanager: {
+      accept: {
+        subject: "Your project was accepted by a printer"
+      }
+    },
     admins: {
       emails: ['3doers@gmail.com']
     },

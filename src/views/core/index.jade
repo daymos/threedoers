@@ -3,6 +3,9 @@ extends ../layout
 block title
   |  Home
 
+block extra-headers
+  meta(name="csrf-token", content="#{csrfToken}")
+
 block body
   div
     .container
@@ -90,7 +93,7 @@ block body
             span To Be Printed?
           h2.file-revision
             | No!
-            a.default-hover(href='#') So Click Here For A File Revision
+            a.default-hover(href='#', id='manager-clickable') So Click Here For A File Revision
           br
           br
         .col-md-4.col-sm-3
@@ -155,6 +158,8 @@ block body
 
 block scripts
   script(src='/vendor/jquery.flexslider-min.js')
+  script(src='/vendor/jquery.ajaxupload.js')
+  script(src='/js/views/index.js')
   script(type='text/javascript')
     $(window).load(function() {
       $('.flexslider').flexslider({
