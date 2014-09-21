@@ -55,7 +55,7 @@ module.exports = (app) ->
                 username: req.body.username
 
               mailer.send('mailer/accounts/registration', context, {from: settings.mailer.noReply, to:[activation.email], subject: settings.registration.activation.subject}).then ->
-                usr = new auth.User
+                user = new auth.User
                   username: req.body.username
                   email: req.body.email
 
@@ -71,10 +71,11 @@ module.exports = (app) ->
                 if req.body.location
                   location: req.body.location.split(',')
 
-                usr.password = req.body.password
+                user.password = req.body.password
 
-                usr.save (err, user, count) ->
+                user.save ->
                   res.redirect '/accounts/signup/done'
+
             else
               next(err)
 

@@ -28,7 +28,6 @@ class Mailer
         throw new Error "No options sent to mailer" unless options?
         options.html = html
         @transport.sendMail options, (err, response) ->
-          logger.debug arguments
           if err
             deferred.reject err
           else
