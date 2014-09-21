@@ -74,7 +74,7 @@ else
     # END Custom logger
     ###
 
-    loggers = [new (SentryLogger)(level: settings.logLevel, colorize: true)]
+    loggers = [new (SentryLogger)(level: settings.logLevel)]
 
 # unless settings.debug
 #   loggers.push(new (winston.transports.File)(filename: settings.logFile))
