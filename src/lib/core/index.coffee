@@ -856,6 +856,8 @@ module.exports = (app, io) ->
       else
         doc.bad = true
         doc.save()
+        logger.error err
+        logger.error stderr
 
       cloned = utils.cloneObject(doc._doc)
       cloned.status = doc.humanizedStatus()  # to show good in browser
