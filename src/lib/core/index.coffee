@@ -139,9 +139,6 @@ module.exports = (app, io) ->
     models.STLProject.findOne({_id: req.params.id, $or: [{user: req.user.id}, {'order.printer': req.user.id}]}).exec().then( (doc) ->
       if doc
         logger.error not doc.volume or doc.bad or not doc.dimension
-        logger.error doc.volume
-        logger.error doc.bad
-        logger.error doc.dimension
         if not doc.volume or doc.bad or not doc.dimension
           processVolumeWeight(doc)
         res.render 'core/project/detail',
@@ -840,11 +837,7 @@ module.exports = (app, io) ->
   ###############################################
 
   processVolumeWeight = (doc) ->
-    logger.error "entrando"
     exec "#{settings.python.bin} #{settings.python.path} #{settings.upload.to}#{doc.file} -d #{doc.density}", (err, stdout, stderr) ->
-      logger.error err
-      logger.error stderr
-      logger.error stdout
       if not err and  not stderr
         try
           result = JSON.parse(stdout)
@@ -854,6 +847,9 @@ module.exports = (app, io) ->
           doc.dimension = result.dimension
           doc.status = models.PROJECT_STATUSES.PROCESSED[0]
           doc.price = decimal.fromNumber((doc.volume * 1.01 * doc.density * 0.03) + 5, 2)  # formula from doc sent by mattia
+          logger.info(doc.price)
+          logger.info(doc.volume)
+          logger.info(doc.density)
           doc.bad = false
           doc.save()
         catch e

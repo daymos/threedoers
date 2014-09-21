@@ -3,7 +3,7 @@
 ##############################################################################
 
 config =
-  logLevel: 'warm'
+  logLevel: 'info'
   cookieSecret: 'This is a secret'
   debug: false
   rootDir: __dirname
