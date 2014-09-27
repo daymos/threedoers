@@ -32,6 +32,7 @@ $(document).ready ->
 
 
   $("#title").editable("/filemanager/project/title/#{project.id}")
+  $("#description").editable("/filemanager/project/description/#{project.id}")
 
   $("#comment-button").click (e) ->
     e.preventDefault()

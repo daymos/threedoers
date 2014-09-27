@@ -15,7 +15,7 @@ block body
     .container
       p
         p
-          - if (user.filemanager == 'accepted' && project.status > statuses.ACCEPTED[0])
+          - if (user.filemanager == 'accepted' && project.status >= statuses.PREACCEPTED[0])
             .row
               .col-md-6
                 .back-link
@@ -33,6 +33,7 @@ block body
                       | Reviewed File
                       img(src='/img/icon_download.png')
           br
+          p#description(data-type="text", data-url="/filemanager/project/description/#{project.id}", data-title="Enter the description") #{ project.description }
           br
           br
           span STATUS:&nbsp;

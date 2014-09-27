@@ -33,7 +33,7 @@ module.exports = (app, io) ->
         logger.error err
         res.send 500
       else
-        res.json redirectTo: "/filemanager/projects"
+        res.json redirectTo: "/filemanager/project/#{ project.id }"
 
 
   app.post '/filemanager/upload-review/:id', decorators.loginRequired, (req, res) ->
@@ -172,6 +172,25 @@ module.exports = (app, io) ->
       models.FileProject.findOne({_id: req.params.id}).exec().then( (doc) ->
         if doc
           doc.title = req.body.value
+          doc.save()
+          res.send req.body.value, 200
+        else
+          res.send 404
+      ).fail( ->
+        logger.error arguments
+        res.send 500
+      )
+
+  app.post '/filemanager/project/description/:id', decorators.loginRequired, (req, res) ->
+    req.assert('value').len(4)
+    errors = req.validationErrors(true)
+
+    if errors
+      res.send errors.value.msg, 400
+    else
+      models.FileProject.findOne({_id: req.params.id}).exec().then( (doc) ->
+        if doc
+          doc.description = req.body.value
           doc.save()
           res.send req.body.value, 200
         else

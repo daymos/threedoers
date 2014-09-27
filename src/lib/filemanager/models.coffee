@@ -30,6 +30,11 @@ Comment = new Schema
     type: String
     required: true
 
+  description:
+    type: String
+    required: true
+    default: "Set the description"
+
   createdAt:
     type: Date
     default: Date.now
