@@ -72,7 +72,7 @@ block body
   - if (project.status == statuses.ACCEPTED[0] && user.id == project.user)
     .section.blue
       .container
-        form#payment-form
+        form#hidden-pay-form(action="/filemanager/project/pay/#{project.id}", method="post")
           h1.h1-blue-alert
             | YOUR REVIEW REQUEST HAS
             br
@@ -81,7 +81,6 @@ block body
           button.btn.btn-lg.btn-white.btn-small(type='submit')
             span PAGA
 
-        form#hidden-pay-form(action="/filemanager/project/pay/#{project.id}", method="post")
           input(type='hidden', name='_csrf', value=csrfToken)
 
   - if (project.status == statuses.PAID[0] && user.id == project.filemanager)
