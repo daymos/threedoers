@@ -1,4 +1,5 @@
 module.exports = (app, io) ->
+  fs = require 'fs'
   models = require('./models')
   decorators = require '../decorators'
   logger = require '../logger'
@@ -22,6 +23,11 @@ module.exports = (app, io) ->
         image: "This field is required"
       return
 
+    if req.files.thumbnail.type != 'application/octet-stream' or req.files.thumbnail.path.split('/').pop().split('.').pop().toLowerCase() != 'stl'
+      res.json errors: thumbnail: msg: "Is not a valid format, you need to upload a STL file."
+      fs.unlink(req.files.thumbnail.path)
+      return
+
     # get the temporary location of the file
     tmp_path = req.files.thumbnail.path
     project = new models.FileProject
@@ -40,6 +46,11 @@ module.exports = (app, io) ->
     if req.files.thumbnail.size == 0
       res.json errors:
         image: "This field is required"
+      return
+
+    if req.files.thumbnail.type != 'application/octet-stream' or req.files.thumbnail.path.split('/').pop().split('.').pop().toLowerCase() != 'stl'
+      res.json errors: thumbnail: msg: "Is not a valid format, you need to upload a STL file."
+      fs.unlink(req.files.thumbnail.path)
       return
 
     models.FileProject.findOne({_id: req.params.id}).exec().then( (doc) ->
