@@ -101,51 +101,51 @@ block body
             img(src='/img/icona3d_homepage.png')
 
       if user
-        div
-          .container
-              br
-              br
-              br
-              br
-              h1.page-title
-                span LAST PROJECTS
-              br
-              br
-              br
-              br
-              .row
-                for project in projects
-                  .col-md-4.col-sm-6
-                    .project-single
-                      img(src='/#{project.image}')
-                      .info
-                        .info-wrapper
-                          a(href='/project/#{project.id}')
-                            | Applicake Brownie Bear Claw Sweet Sesame Snaps Wafer Soufflé. Caramels Chocolate Ice Cream Bonbon Wafer Oat Cake Bear Claw. Chocolate Bar Danish Sweet
-                br
-          div
-            .container
-              br
-              br
-              br
-              br
-              .row
-                .col-md-5.col-md-offset-7
-                  h1.page-title.right
-                    span COMMUNITY
-              br
-              br
-              br
-              br
-              .row
-                for _user in users
-                  .col-md-2.col-md-2-5.col-sm-4
-                    .community-single
-                      a(href='#')
-                      - if (_user.photo)
-                        img(src='/#{ _user.photo }', alt='#{ _user.firstName } #{ _user.lastName }')
-                      - else
-                        img(src='/img/edit_photo_placeholder.png?1396277523', alt='profile image')
+        //- div
+        //-   .container
+        //-       br
+        //-       br
+        //-       br
+        //-       br
+        //-       h1.page-title
+        //-         span LAST PROJECTS
+        //-       br
+        //-       br
+        //-       br
+        //-       br
+        //-       .row
+        //-         for project in projects
+        //-           .col-md-4.col-sm-6
+        //-             .project-single
+        //-               img(src='/#{project.image}')
+        //-               .info
+        //-                 .info-wrapper
+        //-                   a(href='/project/#{project.id}')
+        //-                     | Applicake Brownie Bear Claw Sweet Sesame Snaps Wafer Soufflé. Caramels Chocolate Ice Cream Bonbon Wafer Oat Cake Bear Claw. Chocolate Bar Danish Sweet
+        //-         br
+        //- div
+        //-   .container
+        //-     br
+        //-     br
+        //-     br
+        //-     br
+        //-     .row
+        //-       .col-md-5.col-md-offset-7
+        //-         h1.page-title.right
+        //-           span COMMUNITY
+        //-     br
+        //-     br
+        //-     br
+        //-     br
+        //-     .row
+        //-       for _user in users
+        //-         .col-md-2.col-md-2-5.col-sm-4
+        //-           .community-single
+        //-             a(href='#')
+        //-             - if (_user.photo)
+        //-               img(src='/#{ _user.photo }', alt='#{ _user.firstName } #{ _user.lastName }')
+        //-             - else
+        //-               img(src='/img/edit_photo_placeholder.png?1396277523', alt='profile image')
       br
       br
       br

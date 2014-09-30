@@ -98,8 +98,14 @@ module.exports = (app, io) ->
 
   app.post '/project/upload', decorators.loginRequired, (req, res) ->
     if req.files.thumbnail.size == 0
-      res.render 'core/project/upload', errors: thumbnail: msg: "This field is required"
+      res.json errors: thumbnail: msg: "This field is required"
       return
+
+    if req.files.thumbnail.type != 'application/octet-stream' or req.files.thumbnail.path.split('/').pop().split('.').pop().toLowerCase() != 'stl'
+      res.json errors: thumbnail: msg: "Is not a valid format, you need to upload a STL file."
+      fs.unlink(req.files.thumbnail.path)
+      return
+
     # get the temporary location of the file
     tmp_path = req.files.thumbnail.path
     project = new models.STLProject
@@ -138,7 +144,6 @@ module.exports = (app, io) ->
   app.get '/project/:id', decorators.loginRequired, (req, res, next) ->
     models.STLProject.findOne({_id: req.params.id, $or: [{user: req.user.id}, {'order.printer': req.user.id}]}).exec().then( (doc) ->
       if doc
-        logger.error not doc.volume or doc.bad or not doc.dimension
         if not doc.volume or doc.bad or not doc.dimension
           processVolumeWeight(doc)
         res.render 'core/project/detail',
@@ -847,9 +852,6 @@ module.exports = (app, io) ->
           doc.dimension = result.dimension
           doc.status = models.PROJECT_STATUSES.PROCESSED[0]
           doc.price = decimal.fromNumber((doc.volume * 1.01 * doc.density * 0.03) + 5, 2)  # formula from doc sent by mattia
-          logger.info(doc.price)
-          logger.info(doc.volume)
-          logger.info(doc.density)
           doc.bad = false
           doc.save()
         catch e

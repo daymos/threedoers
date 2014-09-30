@@ -34,5 +34,10 @@ $(document).ready ->
       $("#result").html html
 
     success: (data) ->
-      location.href = data.redirectTo
+      if data.errors
+        alert("Thumbnail: #{ data.errors.thumbnail.msg }")
+        $("#promptzone").show()
+        $(".progress-bar").parent().addClass 'hide'
+      else
+        location.href = data.redirectTo
 
