@@ -8335,7 +8335,7 @@ html[xmlns] .slides {display: block;}
 /* Colors */
 body {
   background: #f3fff4;
-  color: #000000; }
+  color: black; }
 
 img {
   vertical-align: middle;
@@ -8362,7 +8362,7 @@ hr.hr-light {
   padding: 40px 0; }
 
 #footer {
-  background: #000000;
+  background: black;
   color: #d8ffd2;
   padding: 40px 0; }
 
@@ -8385,13 +8385,13 @@ hr.hr-light {
     width: 50px; }
   .social-links a:hover {
     background-color: #7bf282;
-    color: #000000;
+    color: black;
     -webkit-transition: all 0.4s;
     -moz-transition: all 0.4s;
     transition: all 0.4s; }
 
 .square-social-link {
-  background-color: #000000;
+  background-color: black;
   color: #7bf282;
   display: inline-block;
   *display: inline;
@@ -8400,14 +8400,14 @@ hr.hr-light {
   line-height: 53px;
   margin-right: 2px;
   text-align: center;
-  box-shadow: inset 0 0 0 4px #000000, 0 0 1px transparent;
+  box-shadow: inset 0 0 0 4px black, 0 0 1px rgba(0, 0, 0, 0);
   -webkit-transition: box-shadow 0.3s;
   -moz-transition: box-shadow 0.3s;
   transition: box-shadow 0.3s;
   width: 53px; }
 
 .square-social-link:hover {
-  box-shadow: inset 0 0 0 4px #7bf282, 0 0 1px transparent;
+  box-shadow: inset 0 0 0 4px #7bf282, 0 0 1px rgba(0, 0, 0, 0);
   color: #7bf282; }
 
 .favorite-count {
@@ -8511,7 +8511,7 @@ hr.hr-light {
   position: relative;
   text-align: center; }
   .main-nav ul {
-    background: #000000;
+    background: black;
     list-style: none;
     margin: 0;
     padding: 16px 0 8px 0; }
@@ -8541,7 +8541,7 @@ hr.hr-light {
     -o-transition: none 0 ease-in;
     transition: none; }
   .main-nav:after {
-    background: #000000;
+    background: black;
     content: "";
     display: block;
     height: 100%;
@@ -8551,7 +8551,7 @@ hr.hr-light {
     width: 200%; }
 
 .simple-nav a {
-  color: #000000;
+  color: black;
   font-family: "Bebas Neue", Helvetica, sans-serif;
   font-size: 30px;
   font-weight: bold;
@@ -8567,7 +8567,7 @@ hr.hr-light {
 .simple-nav .nav > li.active > a,
 .simple-nav .nav > li > a:hover,
 .simple-nav .nav > li > a:focus {
-  color: #000000;
+  color: black;
   background-color: transparent;
   text-decoration: none; }
 .simple-nav .nav > li.active > a {
@@ -8640,10 +8640,10 @@ a.forgot-password:hover,
 a.forgot-password:focus,
 a.create-account:hover,
 a.create-account:focus {
-  color: #000000; }
+  color: black; }
 
 a.direct-link {
-  color: #000000;
+  color: black;
   font-family: "Lato", Helvetica, sans-serif;
   font-size: 19px;
   font-style: italic;
@@ -8805,7 +8805,7 @@ a.direct-link {
   font-size: 22px;
   font-weight: bold; }
   .info-3d a {
-    color: #000000;
+    color: black;
     text-decoration: none; }
   .info-3d a:hover,
   .info-3d a:focus {
@@ -8898,7 +8898,7 @@ a.direct-link {
 .photoedit {
   margin-bottom: 40px; }
   .photoedit a {
-    color: #000000;
+    color: black;
     font-family: "Titillium Web", Helvetica, sans-serif;
     font-size: 25px;
     font-style: italic;
@@ -8910,7 +8910,7 @@ a.direct-link {
 .back-link {
   margin-top: 20px; }
   .back-link a {
-    color: #000000;
+    color: black;
     font-family: "Lato", Helvetica, sans-serif;
     font-size: 21px;
     font-style: italic; }
@@ -8921,7 +8921,7 @@ a.direct-link {
   margin-top: 20px;
   text-align: right; }
   .download-link a {
-    color: #000000;
+    color: black;
     font-family: "Lato", Helvetica, sans-serif;
     font-size: 23px;
     font-weight: 900;
@@ -9099,14 +9099,14 @@ a.direct-link {
 
 .btn.btn-default {
   color: #7bf282;
-  background: #000000;
+  background: black;
   border: none;
   box-shadow: 4px -4px 0 #d8ffd2; }
 
 .btn.btn-default:hover,
 .btn.btn-default:focus {
-  box-shadow: 4px -4px 0 #000000;
-  color: #000000; }
+  box-shadow: 4px -4px 0 black;
+  color: black; }
 
 .btn.btn-lg {
   font-size: 20px;
@@ -9123,7 +9123,7 @@ a.direct-link {
   padding-top: 24px; }
 
 .btn.btn-red {
-  background-color: #000000;
+  background-color: black;
   border: none;
   box-shadow: 4px -4px 0 #f2542a;
   color: #f2542a; }
@@ -9131,20 +9131,20 @@ a.direct-link {
 .btn.btn-red:hover,
 .btn.btn-red:focus {
   background-color: #f2542a;
-  box-shadow: 4px -4px 0 #000000;
-  color: #000000; }
+  box-shadow: 4px -4px 0 black;
+  color: black; }
 
 .btn.btn-white {
   background-color: #efefef;
   border: none;
-  box-shadow: 4px -4px 0 #000000;
+  box-shadow: 4px -4px 0 black;
   color: #000000; }
 
 .btn.btn-white:hover,
 .btn.btn-white:focus {
   background-color: #efefef;
-  box-shadow: 4px -4px 0 #000000;
-  color: #000000; }
+  box-shadow: 4px -4px 0 black;
+  color: black; }
 
 .btn.btn-goto {
   padding: 10px 60px;
@@ -9161,29 +9161,29 @@ a.direct-link {
 
 /* Form */
 .form-control.input-text {
-  color: #000000;
+  color: black;
   border-radius: 0;
-  box-shadow: 4px -4px 0 #000000;
+  box-shadow: 4px -4px 0 black;
   font-family: "Lato", Helvetica, sans-serif;
   font-style: italic;
   font-weight: bold; }
 
 .form-control::-moz-placeholder {
-  color: #000000;
+  color: black;
   opacity: 1;
   text-shadow: 0 1px 0 #fff; }
 
 .form-control:-ms-input-placeholder {
-  color: #000000;
+  color: black;
   text-shadow: 0 1px 0 #7bf282; }
 
 .form-control::-webkit-input-placeholder {
-  color: #000000;
+  color: black;
   text-shadow: 0 1px 0 #7bf282; }
 
 .form-control.dark {
   color: #d8ffd2;
-  background: #000000;
+  background: black;
   box-shadow: 4px -4px 0 #d8ffd2; }
 
 .form-control.dark::-moz-placeholder {
@@ -9239,7 +9239,7 @@ a.primary-hover:focus::after {
   transform: translateY(0px); }
 
 a.default-hover::after {
-  background-color: #000000; }
+  background-color: black; }
 
 a.primary-hover::after {
   background-color: #7bf282; }
@@ -9481,6 +9481,12 @@ a.primary-hover::after {
   text-transform: uppercase;
   margin-right: 20px; }
 
+/* Home Banner */
+.container.home-banner {
+  padding-left: 0;
+  padding-right: 0;
+  width: 100%; }
+
 /* Responsive */
 @media (max-width: 768px) {
   .search-form {
@@ -9600,5 +9606,8 @@ a.primary-hover::after {
   .comment-title > img {
     position: absolute;
     right: 0px; } }
-
-/*# sourceMappingURL=application.css.map */
+@media (min-width: 1280px) {
+  .container.home-banner {
+    padding-left: 0;
+    padding-right: 0;
+    width: 1282px; } }

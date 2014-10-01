@@ -1292,6 +1292,13 @@ a.primary-hover {
   margin-right: 20px;
 }
 
+/* Home Banner */
+.container.home-banner {
+  padding-left: 0;
+  padding-right: 0;
+  width: 100%;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .search-form {
@@ -1435,7 +1442,10 @@ a.primary-hover {
 
 }
 
-@media (min-width: 1200px) {
-
+@media (min-width: 1280px) {
+  .container.home-banner {
+    padding-left: 0;
+    padding-right: 0;
+    width: 1282px;
+  }
 }
-
