@@ -39,13 +39,11 @@ block body
   - if (project.status == statuses.PROCESSING[0] || project.status == statuses.PROCESSED[0])
     .section.primary
       .container
-        p
-            span OBJECT VOLUME:&nbsp;
-            | 10.6763378264 cm3
-          p
-            span STATUS:&nbsp;
-            | PROCESSED
-            img(src='/img/icons_#{project.dasherizedStatus()}_second.png')
+        //- p
+        //-   span STATUS:&nbsp;
+        //-   span#status
+        //-     | #{ project.humanizedStatus() }
+        //-   img#status-image(src='/img/icons_#{project.dasherizedStatus()}_second.png')
         br
         form(action='/project/order/#{project.id}', method='POST', role='form', accept-charset='utf-8', name='')
           input(type='hidden', name='_csrf', value=csrfToken)
@@ -59,11 +57,13 @@ block body
               .form-group
                 input(type='hidden', name='authenticity_token')
                 input#ammount.form-control(type='number', min='1', placeholder='HOW MANY ITEMS? *', name='ammount')
-              .form-group
-                select.form-control#density-chooser
-                  option(selected='selected', disabled='disabled') SELECT A DENSITY *
-                  - for density in densities
-                    option(value="#{density[0]}") #{density[1]}
+              p
+                span MATERIAL: ABS (Only material now)
+              p
+                span OBJECT VOLUME:&nbsp;
+                span#volume.object-volume
+                  | #{project.volume}
+                span.object-volume-unit &nbsp; cm3
               p
                 | ORDER PRICE:&nbsp;
                 span#order-price  Processing
@@ -89,6 +89,8 @@ block body
               p #{project.density}
               h4 Weight
               p #{project.weight}
+              h4 Material
+              p ABS (Now only this)
           .col-md-3.col-sm-6
             .printer-properties
               h4 Ammount:

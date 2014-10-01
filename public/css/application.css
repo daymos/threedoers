@@ -9477,6 +9477,10 @@ a.primary-hover::after {
 .modal.modal-3d .modal-body {
   padding: 15px 30px 25px 30px; }
 
+#status {
+  text-transform: uppercase;
+  margin-right: 20px; }
+
 /* Responsive */
 @media (max-width: 768px) {
   .search-form {

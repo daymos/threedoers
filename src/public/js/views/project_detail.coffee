@@ -6,14 +6,16 @@ updateFrontEnd = (data) ->
 
     if key == 'status'
       if data[key] == 'processing'
-        $('.object-volume').addClass('hide')
-        $('.processing-volume').removeClass('hide')
+        $('.object-volume-unit').addClass('hide')
+        $('.object-volume').text('processing')
       else
-        $('.object-volume').removeClass('hide')
-        $('.processing-volume').addClass('hide')
+        $('.object-volume-unit').removeClass('hide')
 
     if key == 'order'
-      $('#order-placed-order').text(" #{data[key].price}")
+      $('#order-placed-order').text(" #{data[key].price}  ")
+
+    if key == 'status_image'
+      $('#status-image').attr("src", "/img/icons_#{data[key]}_second.png")
 
 
 colors =

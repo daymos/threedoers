@@ -126,6 +126,10 @@ STLProject = new Schema
     type: Boolean
     default: true
 
+  material:
+    type: String
+    default: "ABS"
+
   order:
     type: {}
 

@@ -816,8 +816,15 @@ module.exports = (app, io) ->
         {title: 1, volume:1, status: 1, editable: 1}).exec().then( (doc) ->
         if doc
           socket.join(doc._id.toHexString())
-          doc._doc.status = doc.humanizedStatus()
-          io.of('/project').in(doc._id.toHexString()).emit 'update', doc._doc
+
+          # doc retrieve
+          response = {}
+          for key of doc._doc
+            response[key] = doc._doc[key]
+          response.status = doc.humanizedStatus()
+          response.status_image = doc.dasherizedStatus()
+
+          io.of('/project').in(doc._id.toHexString()).emit 'update', response
 
           # for calculating order
           socket.on('order-price', (data) ->
