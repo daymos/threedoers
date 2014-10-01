@@ -9481,6 +9481,12 @@ a.primary-hover::after {
   text-transform: uppercase;
   margin-right: 20px; }
 
+/* Home Banner */
+.container.home-banner {
+  padding-left: 0;
+  padding-right: 0;
+  width: 100%; }
+
 /* Responsive */
 @media (max-width: 768px) {
   .search-form {
@@ -9600,5 +9606,10 @@ a.primary-hover::after {
   .comment-title > img {
     position: absolute;
     right: 0px; } }
+@media (min-width: 1280px) {
+  .container.home-banner {
+    padding-left: 0;
+    padding-right: 0;
+    width: 1282px; } }
 
 /*# sourceMappingURL=application.css.map */
