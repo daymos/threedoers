@@ -74,8 +74,11 @@ FileProject = new Schema
   comments:
     type: [Comment]
 
+  description:
+    type: String
+
   filemanager:
-    type:String
+    type: String
 
   createdAt:
     type: Date

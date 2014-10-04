@@ -55,10 +55,11 @@ block body
                   - for color in colors
                     option(value="#{color}") #{color}
               .form-group
+                select.form-control
+                  option(value="abs") ABS
+              .form-group
                 input(type='hidden', name='authenticity_token')
                 input#ammount.form-control(type='number', min='1', placeholder='HOW MANY ITEMS? *', name='ammount')
-              p
-                span MATERIAL: ABS (Only material now)
               p
                 span OBJECT VOLUME:&nbsp;
                 span#volume.object-volume

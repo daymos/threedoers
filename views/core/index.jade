@@ -45,15 +45,9 @@ block body
     .container
       if user
         h2.h2-3d
-          | APPLICAKE BROWNIE
-          br
-          | BEAR CLAW SWEET
-          h5.h5-3d
-            | Snaps wafer soufflé. Caramels chocolate ice
-            br
-            | cream bonbon wafer oat cake bear claw. Choco-
-            br
-            | late bar danish sweet
+          | WHAT CAN I DO WITH 3DOERS?
+        br
+        br
       else
         h2.h2-3d.text-shadow-white SIGN UP!
         h3.h3-3d
@@ -64,18 +58,28 @@ block body
         br
       .row
         .col-md-4.col-sm-6
+          p FIND A DESIGNER TO HELP YOU CREATE SOMETHING FROM SCRATCH
+        .col-md-4.col-sm-6
+          p UPLOAD AN EXISTING 3D MODEL AND FIND A PRINTER
+        - if (user && user.printer != 'accepted')
+          .col-md-4.col-sm-6
+            p
+              span DO YOU HAVE A 3D PRINTER?
+              br
+              span JOING US AND START PRINTING FOR OTHER PEOPLE
+      .row
+        .col-md-4.col-sm-6
+          a.btn.btn-default.btn-lg.btn-block(href='#', title="Is not active")
+            span(title="Is not active") CREATE SOMETHING
+          br
+        .col-md-4.col-sm-6
           a.btn.btn-default.btn-lg.btn-block(href='/project/upload')
-            span UPLOAD A PROJECT
+            span PRINT SOMETHING
           br
         - if (user && user.printer != 'accepted')
           .col-md-4.col-sm-6
             a.btn.btn-default.btn-lg.btn-block(href='/become')
               span BECOME A PRINTER
-            br
-        - if (user && user.filemanager != 'accepted')
-          .col-md-4.col-sm-6
-            a.btn.btn-default.btn-lg.btn-block(href='#')
-              span BECOME A FILE MANAGER
   div
     .container
       br

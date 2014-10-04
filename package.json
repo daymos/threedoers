@@ -31,11 +31,11 @@
     "nodemailer": "~0.6.0",
     "passport": "0.1.15",
     "passport-local": "0.1.6",
-    "paypal-rest-sdk": "~0.6.4",
-    "postmaster-shipping": "^1.0.6",
+    "paypal-adaptive": "^0.4.2",
     "q": "1.0.1",
     "raven": "^0.7.0",
     "session-mongoose": "0.4.1",
+    "shippo": "^1.0.0",
     "socket.io": "~0.9.16",
     "socket.io-session": "0.0.5",
     "timeago": "^0.1.0",
@@ -57,7 +57,7 @@
   },
   "engines": {
     "node": "0.10",
-    "npm":"~1.4.0"
+    "npm": "~1.4.0"
   },
   "subdomain": "me3doers",
   "scripts": {

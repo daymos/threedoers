@@ -78,6 +78,12 @@ config =
       port: ""
       client_id: "AZrTbRDZWrirQKBM6U0xlh2QbDhy-YgzhviBgD9dIhV6EoXePHBPVGD99hD6"
       client_secret: "ENKeHRBEcHZ3TdTdNUHpkKqd9ktHYwTYZQur6XrGtY-BttLKsDRc6ZRa_uE-"
+    adaptive:
+      user: 'mattia_api1.3doers.it'
+      password: 'WW6BZJ85ZEX2FKSY'
+      signature: 'AFcWxV21C7fd0v3bYYYRCpSSRl31AAU4YSg1okO-jRUbIO44qSUP4rdP'
+      appId: 'APP-80W284485P519543T',
+      debug: true
 
   postmaster:
     apiKey: 'pp_MTA2NDEwMDE6X2sxbnlGVjZLbjdtUjZKS2Q4RFJ0THY2Y1hj'

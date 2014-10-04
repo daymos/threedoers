@@ -6,8 +6,7 @@ module.exports = (app, io) ->
   mailer = require('../mailer').mailer
   settings = require('../../config')
   auth = require('../auth/models')
-  paypal = require('paypal-rest-sdk')
-
+  Paypal = require('paypal-adaptive')
 
   app.get '/filemanager/projects', decorators.loginRequired, (req, res) ->
     models.FileProject.find({user: req.user._id, status: {"$ne": models.PROJECT_STATUSES.FINISHED[0]}}).exec().then( (docs) ->
@@ -246,38 +245,45 @@ module.exports = (app, io) ->
     models.FileProject.findOne({_id: req.params.id, user: req.user.id}).exec().then( (doc) ->
       if doc and doc.validateNextStatus(models.PROJECT_STATUSES.PAID[0])  # test if comments allowed
         totalPrice = parseFloat(doc.price)
-        payment =
-          intent: "sale"
-          payer:
-            payment_method: "paypal"
+        paypalSdk = new Paypal
+          userId: settings.paypal.adaptive.user
+          password:  settings.paypal.adaptive.password,
+          signature: settings.paypal.adaptive.signature,
+          appId: settings.paypal.adaptive.appId,
+          sandbox:   settings.paypal.adaptive.debug
 
-          redirect_urls:
-            return_url: "#{settings.site}/filemanager/project/pay/execute/#{doc.id}"
-            cancel_url: "#{settings.site}/filemanager/project/pay/cancel/#{doc.id}"
+        auth.User.findOne({_id: doc.filemanager}).exec().then (user) ->
+          if user
+            payload =
+              requestEnvelope:
+                errorLanguage:  'en_US'
+              actionType:     'PAY'
+              currencyCode:   'EUR'
+              feesPayer:      'EACHRECEIVER',
+              memo:           'Payment for 3D filemanager in 3doers'
+              cancelUrl:      "#{settings.site}/filemanager/project/pay/cancel/#{doc.id}"
+              returnUrl:      "#{settings.site}/filemanager/project/pay/execute/#{doc.id}"
+              receiverList:
+                receiver: [
+                  {
+                      email:  'info@3doers.it',
+                      amount: '2.5',
+                      primary:'true'
+                  },
+                  {
+                      email:  user.email,
+                      amount: '7.5',
+                      primary:'false'
+                  }
+                ]
+            paypalSdk.pay payload, (err, response) ->
+              if err
+                console.log  err
+                console.log response
+                res.send 500
+              else
+                res.redirect response.paymentApprovalUrl
 
-          transactions: [
-            amount:
-              total: totalPrice
-              currency: "EUR"
-
-            description: "Payment for 3D printing in 3doers"
-          ]
-
-        paypal.payment.create payment, (error, payment) ->
-          if error
-            logger.error error
-            res.send 500
-          else
-            if payment.payer.payment_method is "paypal"
-              req.session.paymentFilemanagerId = payment.id
-              redirectUrl = undefined
-              i = 0
-
-              while i < payment.links.length
-                link = payment.links[i]
-                redirectUrl = link.href  if link.method is "REDIRECT"
-                i++
-              res.redirect redirectUrl
       else
         res.send 400
     ).fail( ->
@@ -295,21 +301,14 @@ module.exports = (app, io) ->
     models.FileProject.findOne({_id: req.params.id, user: req.user.id}).exec().then( (doc) ->
       if doc and doc.validateNextStatus(models.PROJECT_STATUSES.PAID[0])  # test if next state is allowed
         auth.User.findOne(doc.filemanager).exec (err, user) ->
-          paymentFilemanagerId = req.session.paymentFilemanagerId
-          payerId = req.param("PayerID")
-          details = payer_id: payerId
-          paypal.payment.execute paymentFilemanagerId, details, (error, payment) ->
-            if error
-              logger.error error
-            else
-              updatedData =
-                status: models.PROJECT_STATUSES.PAID[0]
+          updatedData =
+            status: models.PROJECT_STATUSES.PAID[0]
 
-              doc.update updatedData, (error) ->
-                unless error
-                  mailer.send('mailer/filemanager/payed', {project: doc, user: user, site:settings.site}, {from: settings.mailer.noReply, to:[user.email], subject: settings.project.payed.subject})
+          doc.update updatedData, (error) ->
+            unless error
+              mailer.send('mailer/filemanager/payed', {project: doc, user: user, site:settings.site}, {from: settings.mailer.noReply, to:[user.email], subject: settings.project.payed.subject})
 
-                res.redirect "/filemanager/project/#{req.params.id}"
+            res.redirect "/filemanager/project/#{req.params.id}"
     ).fail( ->
       logger.error arguments
       res.send 500
