@@ -101,7 +101,10 @@ block body
                 p Width: #{project.dimension.width} Height: #{project.dimension.height} Length: #{project.dimension.length}
               h4 Price
               p
-                strong #{project.order.price} EURO
+                if user.id == project.order.printer
+                  strong #{project.order.printerPayment} EURO
+                else
+                  strong #{project.order.price} EURO
           .col-md-3.col-sm-6
             .printer-properties
               h4 Unit

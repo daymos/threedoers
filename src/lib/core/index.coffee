@@ -517,11 +517,16 @@ module.exports = (app, io) ->
     models.STLProject.findOne({_id: req.params.id, editable: true}).exec().then( (doc) ->
       if doc and doc.validateNextStatus(models.PROJECT_STATUSES.PRINT_REQUESTED[0])
         ammount =  Math.abs(if (req.body.ammount and parseInt(req.body.ammount)) then parseInt(req.body.ammount) else 1)
+        price = calculateOrderPrice(doc.price, ammount)
+        printerPayment = decimal.fromNumber(price * 0.75, 2)
         doc.status = models.PROJECT_STATUSES.PRINT_REQUESTED[0]
         doc.order =
           ammount: ammount
-          price: calculateOrderPrice(doc.price, ammount).toString()
+          price: price.toString()
+          printerPayment: printerPayment.toString()
+          businessPayment: decimal.fromNumber(price - printerPayment, 2).toString()
           placedAt: new Date()
+
         doc.save()
       res.redirect "/project/#{req.params.id}"
     ).fail( ->
@@ -763,6 +768,9 @@ module.exports = (app, io) ->
                 printer: req.user.id
                 ammount: doc.order.ammount
                 price: doc.order.price
+                printerPayment: doc.order.printerPayment
+                businessPayment: doc.order.businessPayment
+                placedAt: doc.order.placedAt
               doc.save()
               res.json msg: "Accepted"
       else
@@ -779,10 +787,6 @@ module.exports = (app, io) ->
           if user
             mailer.send('mailer/printing/accept', {project: doc, user: user, site:settings.site}, {from: settings.mailer.noReply, to:[user.email], subject: settings.printing.accept.subject}).then ->
               doc.status = models.PROJECT_STATUSES.PRINT_ACCEPTED[0]
-              doc.order =
-                printer: req.user.id
-                ammount: doc.order.ammount
-                price: doc.order.price
               doc.save()
               res.json msg: "Accepted"
       else
