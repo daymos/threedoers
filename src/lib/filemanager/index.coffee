@@ -266,20 +266,22 @@ module.exports = (app, io) ->
               receiverList:
                 receiver: [
                   {
-                      email:  'info@3doers.it',
-                      amount: '2.5',
-                      primary:'true'
+                      email:  '3doers@gmail.com',
+                      amount: '10.0',
+                      primary: 'true'
                   },
                   {
                       email:  user.email,
                       amount: '7.5',
-                      primary:'false'
+                      primary: 'false'
                   }
+
                 ]
             paypalSdk.pay payload, (err, response) ->
               if err
-                console.log  err
+                console.log err
                 console.log response
+                logger.error err
                 res.send 500
               else
                 res.redirect response.paymentApprovalUrl

@@ -22,23 +22,23 @@ block body
             input(type='hidden', name='authenticity_token')
             input(type='hidden', name='_csrf', value=csrfToken)
             .form-group
-              input.form-control.input-text.input-lg(value=(address.contact)?"#{address.contact}":"", type='text', placeholder='CONTACT (FILL THIS OR COMPANY)', name='contact')
+              input.form-control.input-text.input-lg(value=(address.name)?"#{address.name}":"", type='text', placeholder='CONTACT', name='name')
             .form-group
-              input.form-control.input-text.input-lg(value=(address.company)?"#{address.company}":"", type='text', placeholder='COMPANY (FILL THIS OR CONTACT)', name='company')
+              input.form-control.input-text.input-lg(value=(address.company)?"#{address.company}":"", type='text', placeholder='COMPANY', name='company')
             .form-group
-              input.form-control.input-text.input-lg(value=(address.line1)?"#{address.line1}":"", type='text', placeholder='LINE 1', name='line1')
+              input.form-control.input-text.input-lg(value=(address.street1)?"#{address.street1}":"", type='text', placeholder='ADDRESS 1', name='street1')
             .form-group
-              input.form-control.input-text.input-lg(value=(address.line2)?"#{address.line2}":"", type='text', placeholder='LINE 2 (OPTIONAL)', name='line2')
+              input.form-control.input-text.input-lg(value=(address.street_no)?"#{address.street_no}":"", type='text', placeholder='BUILDING NO (OPTIONAL)', name='street_no')
             .form-group
-              input.form-control.input-text.input-lg(value=(address.line3)?"#{address.line3}":"", type='text', placeholder='LINE 3 (OPTIONAL)', name='line3')
+              input.form-control.input-text.input-lg(value=(address.street2)?"#{address.street2}":"", type='text', placeholder='ADDRESS 2 (OPTIONAL)', name='street2')
             .form-group
               input.form-control.input-text.input-lg(value=(address.city)?"#{address.city}":"", type='text', placeholder='CITY', name='city')
             .form-group
               input.form-control.input-text.input-lg(value=(address.state)?"#{address.state}":"", type='text', placeholder='STATE', name='state')
             .form-group
-              input.form-control.input-text.input-lg(value=(address.zip_code)?"#{address.zip_code}":"", type='text', placeholder='ZIP CODE', name='zip_code')
+              input.form-control.input-text.input-lg(value=(address.zip)?"#{address.zip}":"", type='text', placeholder='ZIP CODE', name='zip_code')
             .form-group
-              input.form-control.input-text.input-lg(value=(address.phone_no)?"#{address.phone_no}":"", type='text', placeholder='PHONE NO.', name='phone_no')
+              input.form-control.input-text.input-lg(value=(address.phone)?"#{address.phone}":"", type='text', placeholder='PHONE NO.', name='phone_no')
             .form-group
               select(name="country")
                 for country in countries

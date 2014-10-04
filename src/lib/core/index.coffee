@@ -15,7 +15,7 @@ module.exports = (app, io) ->
   models = require('./models')
   utils = require('../utils')
   auth = require('../auth/models')
-  PostMaster = require('postmaster-shipping')
+  shippo = require('shippo')('mattia.spinelli@zoho.com', 'mattia13')
 
   paypal.configure(settings.paypal.api)
 
@@ -196,26 +196,61 @@ module.exports = (app, io) ->
 
 
   requestShippingRate = (address, project, res) ->
-    auth.User.findOne({_id: project.order.printer}).exec().then( (doc) ->
-      if doc
-        if doc.printerAddress
-          postmaster = PostMaster(settings.postmaster, settings.debug)
-          postmaster.v1.rate.list {to_zip: address.zip_code, from_zip: doc.printerAddress.zip_code, weight: project.weight}, (error, response)->
-            if error
-              res.json
-                message: "Something was wrong please try again"
+    auth.User.findOne({_id: project.order.printer}).exec().then( (printer) ->
+      if printer
+        shipping = (shipping) ->
+          shippo.rate.list(object_id: shipping.object_id, currency: 'EUR').then((rates)->
+            if rates.length > 0
+              rate = null
+              price = 9999999999.0 # a lot
+              for rate_tmp in rates
+                price_tmp = parseFloat(rate_tmp.amount)
+                if rate_tmp.object_purpose == "PURCHASE" and price > price_tmp
+                  rate = rate_tmp
+                  price = price_tmp
+
+              if rate
+                project.update 'order.rate': rate
+                res.json
+                  ok: 'successes'
+                  address: address
+                  charge: rate.ammount
             else
-              request("http://rate-exchange.appspot.com/currency?from=USD&to=EUR", (error, data, json) ->
+              res.json
+                message: "There is not rate, use another address"
+          )
+
+        if printer.printerAddress
+          # if created and address is same
+          if project.order.shipping and project.order.shipping.address_to == address.object_id
+            logger.debug("Parcel already created")
+            shipping(project.order.shipping)
+          else
+            data = {}
+            shippo.parcel.create(
+              length: decimal.fromNumber(project.dimension.length, 4).toString()
+              width: decimal.fromNumber(project.dimension.width, 4).toString()
+              height: decimal.fromNumber(project.dimension.height, 4).toString()
+              distance_unit: project.unit
+              weight: decimal.fromNumber(project.weight, 4).toString()
+              mass_unit: 'g'
+            ).then( (parcel) ->
+              data['order.parcel'] = parcel
+              shippo.shipment.create(
+                object_purpose: "PURCHASE"
+                address_from: printer.printerAddress.object_id
+                address_to: address.object_id
+                parcel: parcel.object_id
+                submission_type: 'DROPOFF')
+
+            ).then( (shipping_tmp) ->
+              data['order.shipping'] = shipping_tmp
+              project.update data, (error) ->
                 if error
-                  logger.error arguments
-                  res.send 500
-                else
-                  rate = JSON.parse(json)
-                  res.json
-                    ok: 'successes'
-                    address: address
-                    charge: decimal.fromNumber(response[response.best].charge * rate.rate, 2).toString()
-              )
+                  logger.error error
+              shipping_tmp(shipping)
+            )
+
         else
           res.json
             message: "Printer doesn't have address, please contact support or printer to add address."
@@ -223,8 +258,8 @@ module.exports = (app, io) ->
         logger.warning "printer #{printer} do not exists"
         res.json
           message: "Printer don't exists, please contact support"
-    ).fail( ->
-      logger.error arguments
+    ).fail( (reason) ->
+      logger.error reason
       res.send 500
     )
 
@@ -235,94 +270,87 @@ module.exports = (app, io) ->
         if req.query.id
           address = req.user.shippingAddresses.id(req.query.id)
           requestShippingRate address, doc, res
+          return
         else
-          unless req.query.contact
-            req.assert('company', len: 'This field is required.').len(2)
-
-          unless req.query.company
-            req.assert('contact', len: 'This field is required.').len(2)
-
-          req.assert('line1', len: 'This field is required.').len(2)
+          req.assert('name', len: 'This field is required.').len(2)
+          req.assert('street1', len: 'This field is required.').len(2)
           req.assert('city', len: 'This field is required.').len(2)
           req.assert('state', len: 'This field is required.').len(2)
           req.assert('zip_code', len: 'This field is required.').len(2)
           req.assert('phone_no', len: 'This field is required.').len(2)
+          req.assert('country', len: 'This field is required.').len(2)
 
           errors = req.validationErrors(true)
 
+          address =
+            object_purpose: "PURCHASE"
+            name: req.query.name
+            company: req.query.company
+            street1: req.query.street1
+            street_no: req.query.street_no
+            street2: req.query.street2
+            city: req.query.city
+            state: req.query.state
+            zip: req.query.zip_code
+            phone: req.query.phone_no
+            country: req.query.country
+            email: req.user.email
+
           if errors
-            res.json
+            res.render 'core/profile/address_form',
               errors: errors
+              title: title
+              address: address
+              postURL: postURL
+              countries: auth.EuropeCountries
           else
-            address =
-              contact: req.query.contact
-              company: req.query.company
-              line1: req.query.line1
-              line2: req.query.line2
-              line3: req.query.line3
-              city: req.query.city
-              state: req.query.state
-              zip_code: req.query.zip_code
-              phone_no: req.query.phone_no
-              country: req.query.country
-
-            # validate with postmaster io
-            postmaster = PostMaster(settings.postmaster, settings.debug)
-            postmaster.v1.address.validate address, (error, response)->
-              if error
-                if typeof error == 'string'
-                  error = JSON.parse(error)
-
-                res.json
-                  message: error.message
-              else
-                if response.status == 'OK'
-                  # we have new address we have to save it
-                  req.user.shippingAddresses.push address
-                  req.user.save (error, doc) ->
-                    if error
-                      logger.error error
-                      res.send 500
-                    else
-                      requestShippingRate address, doc, res
+            shippo.address.create(address).then( (address) ->
+              req.user.shippingAddresses.push address
+              req.user.save (error, user) ->
+                if error
+                  logger.error error
+                  res.send 500
                 else
-                  res.json
-                    message: "Something was wrong please try again"
+                  requestShippingRate address, doc, res
+            , (error) ->
+              logger.error error
+              res.json
+                message: error.raw.message
+              return
+            )
       else
         res.send 400
-    ).fail( ->
-      logger.error arguments
+    ).fail( (reason) ->
+      logger.error reason
       res.send 500
     )
 
 
   # used for other views
   handleDirection = (req, res, title, postURL, callback) ->
-    unless req.body.contact
-      req.assert('company', len: 'This field is required.').len(2)
-
-    unless req.body.company
-      req.assert('contact', len: 'This field is required.').len(2)
-
-    req.assert('line1', len: 'This field is required.').len(2)
+    req.assert('name', len: 'This field is required.').len(2)
+    req.assert('street1', len: 'This field is required.').len(2)
     req.assert('city', len: 'This field is required.').len(2)
     req.assert('state', len: 'This field is required.').len(2)
     req.assert('zip_code', len: 'This field is required.').len(2)
     req.assert('phone_no', len: 'This field is required.').len(2)
+    req.assert('country', len: 'This field is required.').len(2)
 
     errors = req.validationErrors(true)
 
     address =
-      contact: req.body.contact
+      object_purpose: "PURCHASE"
+      name: req.body.name
       company: req.body.company
-      line1: req.body.line1
-      line2: req.body.line2
-      line3: req.body.line3
+      street1: req.body.street1
+      street_no: req.body.street_no
+      street2: req.body.street2
       city: req.body.city
       state: req.body.state
-      zip_code: req.body.zip_code
-      phone_no: req.body.phone_no
+      zip: req.body.zip_code
+      phone: req.body.phone_no
       country: req.body.country
+      email: req.user.email
 
     if errors
       res.render 'core/profile/address_form',
@@ -333,29 +361,18 @@ module.exports = (app, io) ->
         countries: auth.EuropeCountries
     else
       # validate with postmaster io
-      postmaster = PostMaster(settings.postmaster, settings.debug)
-      postmaster.v1.address.validate address, (error, response)->
-        if error
-          if typeof error == 'string'
-            error = JSON.parse(error)
-
-          res.render 'core/profile/address_form',
-            errors: error.details.body.fields
-            message: error.message
-            title: title
-            address: address
-            postURL: postURL
-            countries: auth.EuropeCountries
-        else
-          if response.status == 'OK'
-            callback(address)
-          else
-            res.render 'core/profile/address_form',
-              message: "Something was wrong please try again"
+      shippo.address.create(address).then( (address) ->
+        callback(address)
+      , (error) ->
+        logger.error(error)
+        res.render 'core/profile/address_form',
+              message: error.raw.message
               title: title
               address: address
               postURL: postURL
               countries: auth.EuropeCountries
+      )
+
 
   app.get '/profile/settings/printer-direction', decorators.loginRequired, (req, res) ->
     res.render 'core/profile/address_form',
@@ -396,7 +413,10 @@ module.exports = (app, io) ->
       '/profile/settings/new-shipping-direction',
       (address) ->
         req.user.shippingAddresses.push address
-        req.user.save()
+        req.user.save((error, doc) ->
+          if error
+            logger.error error
+        )
         res.redirect('/profile/settings')
     )
 
@@ -563,46 +583,51 @@ module.exports = (app, io) ->
     # Same as get /project/:id both printer who accepted and the owner can change this
     models.STLProject.findOne({_id: req.params.id, user: req.user.id}).exec().then( (doc) ->
       if doc and doc.validateNextStatus(models.PROJECT_STATUSES.PAYED[0])  # test if comments allowed
-        totalPrice = parseFloat(doc.order.price)
-        if req.body.shippingMethod == 'shipping'
-          totalPrice = decimal.fromNumber(totalPrice + parseFloat(req.body.shippingRate), 2).toString()
+        printerPayment = parseFloat(doc.order.printerPayment)
+        totalPayment = parseFloat(doc.order.price)
 
-        payment =
-          intent: "sale"
-          payer:
-            payment_method: "paypal"
+        if req.body.shippingMethod == 'shipping' and doc.order.rate
+          totalPayment = decimal.fromNumber(totalPayment + parseFloat(doc.order.rate.amount), 2).toString()
+          totalPayment = parseFloat(totalPayment)
 
-          redirect_urls:
-            return_url: "#{settings.site}/project/pay/execute/#{doc.id}"
-            cancel_url: "#{settings.site}/project/pay/cancel/#{doc.id}"
+        paypalSdk = new Paypal
+          userId: settings.paypal.adaptive.user
+          password:  settings.paypal.adaptive.password,
+          signature: settings.paypal.adaptive.signature,
+          appId: settings.paypal.adaptive.appId,
+          sandbox:   settings.paypal.adaptive.debug
 
-          transactions: [
-            amount:
-              total: totalPrice
-              currency: "EUR"
+        auth.User.findOne({_id: doc.order.printer}).exec().then (user) ->
+          if user
+            payload =
+              requestEnvelope:
+                errorLanguage:  'en_US'
+              actionType:     'PAY'
+              currencyCode:   'EUR'
+              feesPayer:      'EACHRECEIVER',
+              memo:           'Payment for 3D printing in 3doers'
+              cancelUrl:      "#{settings.site}/project/pay/execute/#{doc.id}"
+              returnUrl:      "#{settings.site}/project/pay/cancel/#{doc.id}"
+              receiverList:
+                receiver: [
+                  {
+                      email:  '3doers@gmail.com',
+                      amount: totalPayment,
+                      primary: 'true'
+                  },
+                  {
+                      email:  user.email,
+                      amount: printerPayment,
+                      primary: 'false'
+                  }
 
-            description: "Payment for 3D printing in 3doers"
-          ]
-
-        paypal.payment.create payment, (error, payment) ->
-          if error
-            logger.error error
-            res.send 500
-          else
-            if payment.payer.payment_method is "paypal"
-              req.session.paymentId = payment.id
-              req.session.shippingMethod = req.body.shippingMethod
-              if req.body.shippingMethod == 'shipping'
-                req.session.shippingRate = req.body.shippingRate
-                req.session.shippingAddress = JSON.parse(req.body.shippingAddress)
-              redirectUrl = undefined
-              i = 0
-
-              while i < payment.links.length
-                link = payment.links[i]
-                redirectUrl = link.href  if link.method is "REDIRECT"
-                i++
-              res.redirect redirectUrl
+                ]
+            paypalSdk.pay payload, (err, response) ->
+              if err
+                logger.error err
+                res.send 500
+              else
+                res.redirect response.paymentApprovalUrl
       else
         res.send 400
     ).fail( ->

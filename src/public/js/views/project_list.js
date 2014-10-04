@@ -1,1 +1,27 @@
-(function(){$(document).ready(function(){var e,t;return e=$(".user-infos"),t=$(".dropdown-user"),e.hide(),t.click(function(){var e,t,n;return t=$(this).attr("data-for"),n=$("."+t),e=$(this),n.slideToggle(400,function(){return n.is(":visible")?e.html('<i class="glyphicon glyphicon-chevron-up text-muted"></i>'):e.html('<i class="glyphicon glyphicon-chevron-down text-muted"></i>')})}),$('[data-toggle="tooltip"]').tooltip(),$("button").click(function(e){return e.preventDefault(),alert("This is a demo.\n :-)")})})}).call(this);
+(function() {
+  $(document).ready(function() {
+    var panels, panelsButton;
+    panels = $(".user-infos");
+    panelsButton = $(".dropdown-user");
+    panels.hide();
+    panelsButton.click(function() {
+      var currentButton, dataFor, idFor;
+      dataFor = $(this).attr("data-for");
+      idFor = $("." + dataFor);
+      currentButton = $(this);
+      return idFor.slideToggle(400, function() {
+        if (idFor.is(":visible")) {
+          return currentButton.html("<i class=\"glyphicon glyphicon-chevron-up text-muted\"></i>");
+        } else {
+          return currentButton.html("<i class=\"glyphicon glyphicon-chevron-down text-muted\"></i>");
+        }
+      });
+    });
+    $("[data-toggle=\"tooltip\"]").tooltip();
+    return $("button").click(function(e) {
+      e.preventDefault();
+      return alert("This is a demo.\n :-)");
+    });
+  });
+
+}).call(this);

@@ -279,8 +279,9 @@ block body
                       div
                         dl
                           - for (key in address._doc)
-                            dt #{ key }
-                            dd #{ address[key] }
+                            if !key.match(/^object_/)
+                              dt #{ key }
+                              dd #{ address[key] }
 
                         a.select-saved-address(data-id="#{ address.id }", href="#") Select
                   - else
@@ -289,15 +290,15 @@ block body
                 #new.tab-pane.fade
                   form
                     .form-group
-                      input.form-control.input-text(type='text', placeholder='CONTACT (FILL THIS OR COMPANY)', name='contact')
+                      input.form-control.input-text(type='text', placeholder='CONTACT', name='name')
                     .form-group
-                      input.form-control.input-text(type='text', placeholder='COMPANY (FILL THIS OR CONTACT)', name='company')
+                      input.form-control.input-text(type='text', placeholder='COMPANY', name='company')
                     .form-group
-                      input.form-control.input-text(type='text', placeholder='LINE 1', name='line1')
+                      input.form-control.input-text(type='text', placeholder='ADDRESS 1', name='street1')
                     .form-group
-                      input.form-control.input-text(type='text', placeholder='LINE 2 (OPTIONAL)', name='line2')
+                      input.form-control.input-text(type='text', placeholder='BUILDING NO (OPTIONAL)', name='street_no')
                     .form-group
-                      input.form-control.input-text(type='text', placeholder='LINE 3 (OPTIONAL)', name='line3')
+                      input.form-control.input-text(type='text', placeholder='ADDRESS 2 (OPTIONAL)', name='street2')
                     .form-group
                       input.form-control.input-text(type='text', placeholder='CITY', name='city')
                     .form-group
@@ -310,6 +311,7 @@ block body
                       select(name="country")
                         for country in countries
                           option#country(value='#{ country.abbr }') #{ country.name }
+
                     .text-right
                       button#validate-address.btn.btn-default.btn-lg.btn-xsmall
                         span Validate

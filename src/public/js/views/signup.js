@@ -1,1 +1,43 @@
-(function(){$(document).ready(function(){var e,t;return e=$("#address"),e.bind("keypress",function(e){return 13===e.which?e.preventDefault():void 0}),e.val(""),t=new google.maps.places.Autocomplete(e.get(0)),google.maps.event.addListener(t,"place_changed",function(){var n,r,a,o,i,s,c,l;for(o=t.getPlace(),n=!1,a=!1,i=!1,l=o.address_components,s=0,c=l.length;c>s;s++)r=l[s],"locality"===r.types[0]&&(n=r.long_name),"country"===r.types[0]&&(a=r.long_name);return o.geometry&&o.geometry.location&&(i=[o.geometry.location.lng(),o.geometry.location.lat()]),n&&a&&i?($("#city").val(n),$("#country").val(a),$("#location").val(i)):(e.siblings(".help-block").remove(),e.parent().append($("<span>").addClass("help-block").text("Is not a valid address.")),e.closest(".form-group").addClass("has-error"))})})}).call(this);
+(function() {
+  $(document).ready(function() {
+    var $input, searchAddressBox;
+    $input = $('#address');
+    $input.bind('keypress', function(e) {
+      if (e.which === 13) {
+        return e.preventDefault();
+      }
+    });
+    $input.val('');
+    searchAddressBox = new google.maps.places.Autocomplete($input.get(0));
+    return google.maps.event.addListener(searchAddressBox, 'place_changed', function() {
+      var city, component, country, place, point, _i, _len, _ref;
+      place = searchAddressBox.getPlace();
+      city = false;
+      country = false;
+      point = false;
+      _ref = place.address_components;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        component = _ref[_i];
+        if (component.types[0] === 'locality') {
+          city = component.long_name;
+        }
+        if (component.types[0] === 'country') {
+          country = component.long_name;
+        }
+      }
+      if (place.geometry && place.geometry.location) {
+        point = [place.geometry.location.lng(), place.geometry.location.lat()];
+      }
+      if (city && country && point) {
+        $('#city').val(city);
+        $('#country').val(country);
+        return $('#location').val(point);
+      } else {
+        $input.siblings('.help-block').remove();
+        $input.parent().append($('<span>').addClass('help-block').text("Is not a valid address."));
+        return $input.closest('.form-group').addClass('has-error');
+      }
+    });
+  });
+
+}).call(this);

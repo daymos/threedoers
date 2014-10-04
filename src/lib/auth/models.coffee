@@ -223,7 +223,35 @@ Schema = mongoose.Schema
 ObjectId = Schema.ObjectId
 
 Address = new Schema
-  contact:
+  object_state:
+    type: String
+    required: false
+
+  object_purpose:
+    type: String
+    required: false
+
+  object_source:
+    type: String
+    required: false
+
+  object_created:
+    type: String
+    required: false
+
+  object_updated:
+    type: String
+    required: false
+
+  object_id:
+    type: String
+    required: false
+
+  object_owner:
+    type: String
+    required: false
+
+  name:
     type: String
     required: false
 
@@ -231,14 +259,14 @@ Address = new Schema
     type: String
     required: false
 
-  line1:
+  street1:
     type: String
     required: true
 
-  line2:
+  street2:
     type: String
 
-  line3:
+  street_no:
     type: String
 
   city:
@@ -249,16 +277,31 @@ Address = new Schema
     type: String
     required: true
 
-  zip_code:
+  zip:
     type: String
     required: true
 
-  phone_no:
+  phone:
     type: String
     required: true
 
   country:
     type: String
+
+  email:
+    type: String
+    required: false
+
+  ip:
+    type: String
+    required: false
+
+  metadata:
+    type: String
+    required: false
+
+  messages:
+    type: []
 
 
 User = new Schema
