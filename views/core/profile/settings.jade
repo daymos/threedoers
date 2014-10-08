@@ -61,8 +61,9 @@ block body
         dl
           if user.printerAddress
             - for (key in user.printerAddress)
-              dt #{ key }
-              dd #{ user.printerAddress[key] }
+              if !key.match(/^object_/)
+                dt #{ key }
+                dd #{ user.printerAddress[key] }
 
         a#link.direct-link(href='/profile/settings/printer-direction') Update
 
@@ -71,12 +72,13 @@ block body
         for direction in user.shippingAddresses
           dl
             - for (key in direction._doc)
-              dt #{ key }
-              dd #{ direction[key] }
+              if !key.match(/^object_/)
+                dt #{ key }
+                dd #{ direction[key] }
 
-            dt
-            dd
-              a(href='/profile/settings/edit-shipping-direction/#{ direction.id }') Edit
+            //- dt
+            //- dd
+            //-   a(href='/profile/settings/edit-shipping-direction/#{ direction.id }') Edit
             dt
             dd
               a.remove-shipping-address(href='/profile/settings/delete-shipping-direction/#{ direction.id }') Delete

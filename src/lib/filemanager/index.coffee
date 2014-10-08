@@ -267,8 +267,8 @@ module.exports = (app, io) ->
                 receiver: [
                   {
                       email:  '3doers@gmail.com',
-                      amount: '10.0',
-                      primary: 'true'
+                      amount: '2.5',
+                      primary: 'false'
                   },
                   {
                       email:  user.email,
@@ -279,8 +279,6 @@ module.exports = (app, io) ->
                 ]
             paypalSdk.pay payload, (err, response) ->
               if err
-                console.log err
-                console.log response
                 logger.error err
                 res.send 500
               else
