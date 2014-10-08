@@ -3,7 +3,7 @@ module.exports = (app, io) ->
   fs = require 'fs'
   exec = require('child_process').exec
   decimal = require('Deci-mal').decimal
-  paypal = require('paypal-rest-sdk')
+  Paypal = require('paypal-adaptive')
   request = require('request')
 
   decorators = require '../decorators'
@@ -16,8 +16,6 @@ module.exports = (app, io) ->
   utils = require('../utils')
   auth = require('../auth/models')
   shippo = require('shippo')('mattia.spinelli@zoho.com', 'mattia13')
-
-  paypal.configure(settings.paypal.api)
 
   app.get '/', (req, res) ->
     if req.user
@@ -584,11 +582,13 @@ module.exports = (app, io) ->
     models.STLProject.findOne({_id: req.params.id, user: req.user.id}).exec().then( (doc) ->
       if doc and doc.validateNextStatus(models.PROJECT_STATUSES.PAYED[0])  # test if comments allowed
         printerPayment = parseFloat(doc.order.printerPayment)
-        totalPayment = parseFloat(doc.order.price)
+        businessPayment = parseFloat(doc.order.businessPayment)
 
         if req.body.shippingMethod == 'shipping' and doc.order.rate
-          totalPayment = decimal.fromNumber(totalPayment + parseFloat(doc.order.rate.amount), 2).toString()
-          totalPayment = parseFloat(totalPayment)
+          businessPayment = decimal.fromNumber(businessPayment + parseFloat(doc.order.rate.amount), 2).toString()
+          businessPayment = parseFloat(businessPayment)
+
+        req.session.deliveryMethod = req.body.shippingMethod
 
         paypalSdk = new Paypal
           userId: settings.paypal.adaptive.user
@@ -606,14 +606,14 @@ module.exports = (app, io) ->
               currencyCode:   'EUR'
               feesPayer:      'EACHRECEIVER',
               memo:           'Payment for 3D printing in 3doers'
-              cancelUrl:      "#{settings.site}/project/pay/execute/#{doc.id}"
-              returnUrl:      "#{settings.site}/project/pay/cancel/#{doc.id}"
+              returnUrl:      "#{settings.site}/project/pay/execute/#{doc.id}"
+              cancelUrl:      "#{settings.site}/project/pay/cancel/#{doc.id}"
               receiverList:
                 receiver: [
                   {
                       email:  '3doers@gmail.com',
-                      amount: totalPayment,
-                      primary: 'true'
+                      amount: businessPayment,
+                      primary: 'false'
                   },
                   {
                       email:  user.email,
@@ -630,14 +630,13 @@ module.exports = (app, io) ->
                 res.redirect response.paymentApprovalUrl
       else
         res.send 400
-    ).fail( ->
-      logger.error arguments
+    ).fail( (reason) ->
+      logger.error reason
       res.send 500
     )
 
 
   app.get '/project/pay/cancel/:id', decorators.loginRequired, (req, res) ->
-    delete req.session.paymentId
     res.redirect "/project/#{req.params.id}"
 
 
@@ -645,30 +644,18 @@ module.exports = (app, io) ->
     models.STLProject.findOne({_id: req.params.id, user: req.user.id}).exec().then( (doc) ->
       if doc and doc.validateNextStatus(models.PROJECT_STATUSES.PAYED[0])  # test if next state is allowed
         auth.User.findOne(doc.order.printer).exec (err, user) ->
-          paymentId = req.session.paymentId
-          payerId = req.param("PayerID")
-          details = payer_id: payerId
-          paypal.payment.execute paymentId, details, (error, payment) ->
-            if error
-              logger.error error
-            else
-              updatedData =
-                status: models.PROJECT_STATUSES.PRINTING[0]
-                'order.paymentId': paymentId
-                'order.shippingMethod': req.session.shippingMethod
+          if err
+            logger.error err
+            res.send 500
+          else
+            updatedData =
+              status: models.PROJECT_STATUSES.PRINTING[0]
+              'order.deliveryMethod': req.session.deliveryMethod
+            doc.update updatedData, (error) ->
+              unless error
+                mailer.send('mailer/project/payed', {project: doc, user: user, site:settings.site}, {from: settings.mailer.noReply, to:[user.email], subject: settings.project.payed.subject})
 
-              if req.session.shippingMethod == 'shipping'
-                if req.session.shippingAddress._id
-                  delete req.session.shippingAddress._id
-
-                updatedData['order.shippingCharge'] = req.session.shippingRate
-                updatedData['order.shippingAddress'] = req.session.shippingAddress
-
-              doc.update updatedData, (error) ->
-                unless error
-                  mailer.send('mailer/project/payed', {project: doc, user: user, site:settings.site}, {from: settings.mailer.noReply, to:[user.email], subject: settings.project.payed.subject})
-
-                res.redirect "/project/#{req.params.id}"
+              res.redirect "/project/#{req.params.id}"
     ).fail( ->
       logger.error arguments
       res.send 500
@@ -704,25 +691,20 @@ module.exports = (app, io) ->
         auth.User.findOne({_id: doc.order.printer}).exec().then( (printer) ->
           if printer
             if printer.printerAddress
-              if doc.order.shippingMethod == 'pickup'
+              if doc.order.deliveryMethod == 'pickup'
                 doc.status = models.PROJECT_STATUSES.PRINTED[0]
                 doc.save ->
                   res.redirect "/project/#{req.params.id}"
               else
-                postmaster = PostMaster(settings.postmaster, settings.debug)
-                postmaster.v1.shipment.create
-                  to: doc.order.shippingAddress
-                  from: printer.printerAddress
-                  package:
-                    weight: doc.weight
-                  , (error, response)->
-                    if error
-                      logger.error error
-                      res.redirect "/project/#{req.params.id}"
-                    else
-                      doc.status = models.PROJECT_STATUSES.SHIPPING[0]
-                      doc.save ->
-                        res.redirect "/project/#{req.params.id}"
+                shippo.transaction.create(rate: doc.order.rate.object_id).then((transaction)->
+                  updatedData =
+                    status: models.PROJECT_STATUSES.SHIPPING[0]
+                    'order.transaction': transaction
+
+                  doc.update updatedData, (error) ->
+                    res.redirect "/project/#{req.params.id}"
+                )
+
             else
               res.send "Printer doesn't have address, please contact support or printer to add address."
           else
