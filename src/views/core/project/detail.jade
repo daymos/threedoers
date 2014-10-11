@@ -355,6 +355,7 @@ block scripts
             $.post($(this).attr('href'), function(){location.reload();})
           }
         );
+        $(window).resize(respondCanvas);
       }
     );
 
@@ -366,7 +367,7 @@ block scripts
       mycanvas.attr('height', jQuery("#wrapper-canvas").height());
     }
 
-    $(window).resize(respondCanvas);
+
 
     //Initial call
     respondCanvas();

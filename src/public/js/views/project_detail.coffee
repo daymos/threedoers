@@ -83,14 +83,16 @@ $(document).ready ->
   viewer.setParameter 'SceneUrl', "/#{project.filename}"
   viewer.setParameter 'ModelColor', "#{colors[project.color]}"
   viewer.setParameter 'BackgroundColor1', '#E5D7BA'
-  viewer.setParameter 'InitRotationX', '25'
-  viewer.setParameter 'InitRotationY', '25'
-  viewer.setParameter 'InitRotationZ', '25'
+  # viewer.setParameter 'InitRotationX', '25'
+  # viewer.setParameter 'InitRotationY', '25'
+  # viewer.setParameter 'InitRotationZ', '25'
   viewer.setParameter 'BackgroundColor2', '#383840'
   viewer.setParameter 'RenderMode', 'smooth'
   viewer.setParameter 'Definition','high'
   viewer.setParameter 'MipMapping','on'
   viewer.setParameter 'CreaseAngle', '30'
+  # viewer.setMouseUsage 'default'
+  # viewer.enableDefaultInputHandler(true)
   viewer.onloadingcomplete = ->
     unless project.hasImage
       # we need to render the image before update project
