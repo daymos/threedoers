@@ -102,7 +102,9 @@ block body
               h4 Price
               p
                 if user.id == project.order.printer
-                  strong #{project.order.printerPayment} EURO
+                  strong 3Doers: #{project.order.businessPayment} EURO
+                  br
+                  strong You: #{project.order.printerPayment} EURO
                 else
                   strong #{project.order.price} EURO
           .col-md-3.col-sm-6
