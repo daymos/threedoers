@@ -259,7 +259,7 @@ module.exports = (app, io) ->
     ).fail( (reason) ->
       logger.error reason
       res.json
-        message: error.raw.message
+        message: reason.raw.message
     )
 
   app.get '/validate-address-and-rate/:id', decorators.loginRequired, (req, res) ->
