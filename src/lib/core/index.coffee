@@ -257,9 +257,9 @@ module.exports = (app, io) ->
         res.json
           message: "Printer don't exists, please contact support"
     ).fail( (reason) ->
-      console.log reason
       logger.error reason
-      res.send 500
+      res.json
+        message: error.raw.message
     )
 
   app.get '/validate-address-and-rate/:id', decorators.loginRequired, (req, res) ->
