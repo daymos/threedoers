@@ -83,14 +83,14 @@ module.exports = (app, io) ->
         res.send 500
       else
         if docs and docs.length > 0
-          res.render 'filemanager/requests', {projects: []}
+          res.render 'filemanager/requests', {projects: docs, toApply:false}
         else
           models.FileProject.find(status: models.PROJECT_STATUSES.UPLOADED[0]).exec (err, docs) ->
             if err
               logger.error err
               res.send 500
             else
-              res.render 'filemanager/requests', {projects: docs}
+              res.render 'filemanager/requests', {projects: docs, toApply:true}
 
 
   app.get '/filemanager/jobs', decorators.filemanagerRequired, (req, res) ->

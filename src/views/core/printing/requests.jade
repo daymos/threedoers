@@ -79,12 +79,13 @@ block content-profile
 
               br
               br
-              .container
-                a(href="/printing/review/#{ project.id }", class="btn btn-default btn-lg btn-medium review")
-                  span ACCEPT
-                br
-                br
-                br
+              if toApply
+                .container
+                  a(href="/printing/review/#{ project.id }", class="btn btn-default btn-lg btn-medium review")
+                    span ACCEPT
+                  br
+                  br
+                  br
         .container
           .divider
 

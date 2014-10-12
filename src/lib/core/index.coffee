@@ -738,14 +738,14 @@ module.exports = (app, io) ->
         res.send 500
       else
         if docs and docs.length > 0
-          res.render 'core/printing/requests', {projects: []}
+          res.render 'core/printing/requests', {projects: docs, toApply: false}
         else
           models.STLProject.find(status: models.PROJECT_STATUSES.PRINT_REQUESTED[0]).exec (err, docs) ->
             if err
               logger.error err
               res.send 500
             else
-              res.render 'core/printing/requests', {projects: docs}
+              res.render 'core/printing/requests', {projects: docs, toApply: true}
 
 
   app.get '/printing/jobs', decorators.printerRequired, (req, res) ->
