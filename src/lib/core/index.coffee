@@ -675,9 +675,9 @@ module.exports = (app, io) ->
 
   app.post '/project/archive/:id', decorators.loginRequired, (req, res, next) ->
     models.STLProject.findOne({_id: req.params.id, user: req.user.id}).exec().then( (doc) ->
-      if doc and doc.validateNextStatus(models.PROJECT_STATUSES.ARCHIVED[0])
-        doc.status = models.PROJECT_STATUSES.ARCHIVED[0]
-        doc.save()
+      # if doc and doc.validateNextStatus(models.PROJECT_STATUSES.ARCHIVED[0])
+      doc.status = models.PROJECT_STATUSES.ARCHIVED[0]
+      doc.save()
       res.redirect "/project/#{req.params.id}"
     ).fail( ->
       logger.error arguments
