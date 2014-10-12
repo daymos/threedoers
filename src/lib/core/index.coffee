@@ -246,7 +246,7 @@ module.exports = (app, io) ->
               project.update data, (error) ->
                 if error
                   logger.error error
-              shipping_tmp(shipping)
+              shipping(shipping_tmp)
             )
 
         else
@@ -257,6 +257,7 @@ module.exports = (app, io) ->
         res.json
           message: "Printer don't exists, please contact support"
     ).fail( (reason) ->
+      console.log reason
       logger.error reason
       res.send 500
     )
