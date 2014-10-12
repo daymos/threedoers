@@ -22,7 +22,7 @@ $(document).ready ->
 
     onprogress: (e) ->
       if e.lengthComputable
-        percentComplete = ((e.loaded / e.total) * 100)toFixed(2)
+        percentComplete = ((e.loaded / e.total) * 100).toFixed(2)
 
         # Show in progressbar
         $(".progress-bar").css('width', "#{percentComplete}%")
