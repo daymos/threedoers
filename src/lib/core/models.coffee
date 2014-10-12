@@ -96,6 +96,9 @@ STLProject = new Schema
   weight:
     type: Number
 
+  surface:
+    type: Number
+
   unit:
     type: String
 

@@ -274,7 +274,6 @@ module.exports = (app, io) ->
           req.assert('name', len: 'This field is required.').len(2)
           req.assert('street1', len: 'This field is required.').len(2)
           req.assert('city', len: 'This field is required.').len(2)
-          req.assert('state', len: 'This field is required.').len(2)
           req.assert('zip_code', len: 'This field is required.').len(2)
           req.assert('phone_no', len: 'This field is required.').len(2)
           req.assert('country', len: 'This field is required.').len(2)
@@ -330,7 +329,6 @@ module.exports = (app, io) ->
     req.assert('name', len: 'This field is required.').len(2)
     req.assert('street1', len: 'This field is required.').len(2)
     req.assert('city', len: 'This field is required.').len(2)
-    req.assert('state', len: 'This field is required.').len(2)
     req.assert('zip_code', len: 'This field is required.').len(2)
     req.assert('phone_no', len: 'This field is required.').len(2)
     req.assert('country', len: 'This field is required.').len(2)
@@ -871,6 +869,7 @@ module.exports = (app, io) ->
           doc.dimension = result.dimension
           doc.status = models.PROJECT_STATUSES.PROCESSED[0]
           doc.price = decimal.fromNumber((doc.volume * 1.01 * doc.density * 0.03) + 5, 2)  # formula from doc sent by mattia
+          doc.surface = result.surface
           doc.bad = false
           doc.save()
         catch e

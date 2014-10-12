@@ -16,6 +16,7 @@ class STLStats:
         self.size = size
         self.binary = binary
         self.volume = 0
+        self.surface = 0
 
         self.minx = sys.maxint
         self.maxx = -sys.maxint - 1
@@ -104,6 +105,12 @@ class STLStats:
 
         self.volume = abs(self.volume)
 
+    def _calculate_triangle_area(self, p1, p2, p3):
+        return 0.5 * abs((p1[0] * p2[1]) + (p2[0] * p3[1]) + (p3[0] * p1[1]) - (p2[0] * p1[1]) - (p3[0] * p2[1]) - (p1[0] * p3[1]))
+
+    def _add_sum_surface(self, p1, p2, p3):
+        self.surface += self._calculate_triangle_area(p1, p2, p3)
+
     def _unpack(self, fmt, size):
         """
         Wrapper around PHP's unpack() function which decodes binary numerical data to float, int, etc types.
@@ -142,6 +149,7 @@ class STLStats:
         triangle = [self._unpack('3f', 12), self._unpack('3f', 12), self._unpack('3f', 12)]
         self.file.seek(self.file.tell() + 2)  # skiping this
         self._seek_bounds(*triangle)  # this is for calculating dimensions
+        self._add_sum_surface(*triangle)
         return self._signed_volume_triangle(*triangle)
 
     # 4. Math Functions
@@ -215,6 +223,7 @@ class STLStats:
         """Reads a triangle data from the ascii STL and returns its signed volume."""
         triangle = self.triangles_data.pop()
         self._seek_bounds(*triangle)  # this is for calculating dimensions
+        self._add_sum_surface(*triangle)
         return self._signed_volume_triangle(*triangle)
 
     def _cm3toinch3(self, v):
@@ -270,7 +279,8 @@ if __name__ == '__main__':
         "width": %s,
         "height": %s,
         "length": %s
-      }
-    }""" % (volume, weight, options.density, options.unit, dimension['width'], dimension['height'], dimension['length'])
+      },
+      "surface": %s
+    }""" % (volume, weight, options.density, options.unit, dimension['width'], dimension['height'], dimension['length'], s.surface)
 
     _file.close()
