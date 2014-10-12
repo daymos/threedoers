@@ -6,6 +6,11 @@ block title
 
 block content-profile
   .tab-content
+    if !toApply
+      .container
+        h3 You need to complete the previous order before you can accept another one.
+        br
+        br
     #projects.panel-group.panel-group-3d
       - if (projects.length == 0)
         .container
@@ -44,7 +49,7 @@ block content-profile
               br
               if toApply
                 .container
-                  a(href="/filemanager/pre-accept/#{ project.id }", class="btn btn-default btn-lg btn-medium review")
+                  a(href=toApply?"/filemanager/pre-accept/#{ project.id }":"#", class="btn btn-default btn-lg btn-medium review")
                     span ACCEPT
                   br
                   br
