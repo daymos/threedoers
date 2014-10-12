@@ -268,6 +268,7 @@ module.exports = (app, io) ->
         # if has id we already validated but search for it
         if req.query.id
           address = req.user.shippingAddresses.id(req.query.id)
+          console.log address
           requestShippingRate address, doc, res
           return
         else
