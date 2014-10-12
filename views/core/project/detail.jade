@@ -151,18 +151,15 @@ block body
           form#payment-form
             h1.h1-blue-alert
               img(src='/img/icon_map.png', alt='')
-              | LO STAMPATORE E A
-              br
-              | 20 KM DA TE
             .row
               .col-md-6.col-sm-6
                 .radio.radio-large
                   input#checkbox1(type='radio', name='shipping', value='shipping', checked)
                   label(for='checkbox1') Richiedi spedizione
               .col-md-6.col-sm-6
-                .radio.radio-large
-                  input#checkbox2(type='radio', name='shipping', value='pickup')
-                  label(for='checkbox2') Ritiro a mano
+                //- .radio.radio-large
+                //-   input#checkbox2(type='radio', name='shipping', value='pickup')
+                //-   label(for='checkbox2') Ritiro a mano
             br
             button.btn.btn-lg.btn-white.btn-small(type='submit')
               span PAGA
