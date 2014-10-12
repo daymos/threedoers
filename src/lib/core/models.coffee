@@ -34,7 +34,7 @@ module.exports.PROJECT_DENSITIES = PROJECT_DENSITIES =
   LOW: [0.25, 'low']
   MEDIUM: [0.5, 'medium']
   HIGH: [0.75, 'high']
-  COMPLETE: [1, 'complete']
+  COMPLETE: [1.01, 'complete']
 
 ###############################################
 # Models

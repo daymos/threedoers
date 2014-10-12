@@ -1,5 +1,7 @@
 import struct
 import sys
+import math
+
 
 class STLStats:
     """Migration from STLStats.php
@@ -106,7 +108,14 @@ class STLStats:
         self.volume = abs(self.volume)
 
     def _calculate_triangle_area(self, p1, p2, p3):
-        return 0.5 * abs((p1[0] * p2[1]) + (p2[0] * p3[1]) + (p3[0] * p1[1]) - (p2[0] * p1[1]) - (p3[0] * p2[1]) - (p1[0] * p3[1]))
+        # vectors
+        ab = (p1[0] - p2[0], p1[1] - p2[1], p1[2] - p2[2])
+        ac = (p1[0] - p3[0], p1[1] - p3[1], p1[2] - p3[2])
+        # cross product
+        c = (ab[1]*ac[2] - ab[2]*ac[1], ab[2]*ac[0] - ab[0]*ac[2], ab[0]*ac[1] - ab[1]*ac[0])
+        # module
+        m = math.sqrt(sum(i**2 for i in c))
+        return 0.5 * m
 
     def _add_sum_surface(self, p1, p2, p3):
         self.surface += self._calculate_triangle_area(p1, p2, p3)
@@ -248,7 +257,7 @@ if __name__ == '__main__':
 
     parser = OptionParser(usage=usage)
 
-    parser.add_option("-d", "--density", dest="density", default=1.04, type="float",
+    parser.add_option("-d", "--density", dest="density", default=1.01, type="float",
                       help="Density for object", metavar="DENSITY")
 
     parser.add_option("-u", "--unit", dest="unit", default='cm',

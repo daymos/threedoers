@@ -863,12 +863,41 @@ module.exports = (app, io) ->
       if not err and  not stderr
         try
           result = JSON.parse(stdout)
+
+          # Calculate price
+          material_price = 0.5  # ABS
+          density = doc.density
+          fixed_cost = 8
+          # outer shell volume - this calculate the ammount of material used for
+          # the outher shell of the object that is printed at full density
+          # I assume a thickness of 0.09 mm sperimentally checked
+
+          v_s = result.surface * 0.09
+
+          # calculate price for outer shell
+          p_vs = v_s * density * material_price
+
+          # volume infill - here I subtract the volume of the outer shell to the
+          # total volume of object. This part of the object can be printed at
+          # lower density
+
+          v_i = (result.volume - v_s)
+          p_vi = v_i * 0.20 * material_price
+
+          # base price - just sum price for outer shell and inner filling
+
+          pb = p_vs + p_vi
+
+          # final price - add fixed cost then this is multiplied by amount
+          price = pb + fixed_cost
+
+          # another values
           doc.volume = result.volume
           doc.weight = result.weight
           doc.unit = result.unit
           doc.dimension = result.dimension
           doc.status = models.PROJECT_STATUSES.PROCESSED[0]
-          doc.price = decimal.fromNumber((doc.volume * 1.01 * doc.density * 0.03) + 5, 2)  # formula from doc sent by mattia
+          doc.price = decimal.fromNumber(price, 2)  # formula from doc sent by mattia
           doc.surface = result.surface
           doc.bad = false
           doc.save()
@@ -880,7 +909,7 @@ module.exports = (app, io) ->
       else
         doc.bad = true
         doc.save()
-        logger.error err
+        logger.error e
         logger.error stderr
 
       cloned = utils.cloneObject(doc._doc)
