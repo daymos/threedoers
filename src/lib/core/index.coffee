@@ -871,8 +871,9 @@ module.exports = (app, io) ->
           # outer shell volume - this calculate the ammount of material used for
           # the outher shell of the object that is printed at full density
           # I assume a thickness of 0.09 mm sperimentally checked
+          # surface is in mm2 need to convert to cm2 for mattia formula
 
-          v_s = result.surface * 0.09
+          v_s = result.surface / 100 * 0.09
 
           # calculate price for outer shell
           p_vs = v_s * density * material_price
@@ -898,7 +899,7 @@ module.exports = (app, io) ->
           doc.dimension = result.dimension
           doc.status = models.PROJECT_STATUSES.PROCESSED[0]
           doc.price = decimal.fromNumber(price, 2)  # formula from doc sent by mattia
-          doc.surface = result.surface
+          doc.surface = result.surface / 100
           doc.bad = false
           doc.save()
         catch e
