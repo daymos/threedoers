@@ -8856,9 +8856,11 @@ a.direct-link {
   position: relative;
   text-align: center; }
   .preview-print #wrapper-canvas {
+    position: relative;
     margin: 0 auto;
     height: 300px;
-    width: 80%; }
+    width: 80%;
+    z-index: 999999; }
   .preview-print .upload {
     font-family: "Lato", Helvetica, sans-serif;
     font-size: 44px;
