@@ -634,9 +634,11 @@ a.direct-link {
   text-align: center;
 
   #wrapper-canvas {
+    position: relative;
     margin: 0 auto;
     height: 300px;
     width: 80%;
+    z-index: 999999;
   }
 
   .upload {
