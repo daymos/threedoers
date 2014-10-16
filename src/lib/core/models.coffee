@@ -36,6 +36,10 @@ module.exports.PROJECT_DENSITIES = PROJECT_DENSITIES =
   HIGH: [0.75, 'high']
   COMPLETE: [1.01, 'complete']
 
+module.exports.PROJECT_MATERIALS = PROJECT_MATERIALS =
+  ABS: [1.01, 'ABS']
+  PLA: [1.24, 'PLA']
+
 ###############################################
 # Models
 ###############################################
@@ -90,7 +94,7 @@ STLProject = new Schema
 
   density:
     type: Number
-    default: PROJECT_DENSITIES.COMPLETE[0]
+    default: PROJECT_MATERIALS.ABS[0]
     required: true
 
   weight:
@@ -212,7 +216,7 @@ module.exports.STLProject.schema.path('color').validate( (value) ->
 
 module.exports.STLProject.schema.path('density').validate( (value) ->
   return true unless value?  # allowing empty
-  return value in [PROJECT_DENSITIES.LOW[0], PROJECT_DENSITIES.MEDIUM[0], PROJECT_DENSITIES.HIGH[0], PROJECT_DENSITIES.COMPLETE[0], 1.04]  # 1.04 fallback for already created proejcts
+  return value in [PROJECT_MATERIALS.ABS[0], PROJECT_MATERIALS.PLA[0]]
 , 'Invalid Density')
 
 ###

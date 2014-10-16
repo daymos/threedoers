@@ -114,9 +114,9 @@ $(document).ready ->
   )
 
 
-  $("#density-chooser").val("#{project.density}")
-  $("#density-chooser").val("#{project.density}").change(->
-    $.post("/project/density/#{project.id}", value: $(this).val())
+  $("#material-chooser").val("#{project.material}")
+  $("#material-chooser").val("#{project.material}").change(->
+    $.post("/project/material/#{project.id}", value: $(this).val())
   )
 
   $("#title").editable("/project/title/#{project.id}")

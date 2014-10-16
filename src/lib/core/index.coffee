@@ -147,7 +147,7 @@ module.exports = (app, io) ->
         res.render 'core/project/detail',
           project: doc
           colors: models.PROJECT_COLORS
-          densities: models.PROJECT_DENSITIES
+          materials: models.PROJECT_MATERIALS
           statuses: models.PROJECT_STATUSES
           countries: auth.EuropeCountries
       else
@@ -513,6 +513,32 @@ module.exports = (app, io) ->
       models.STLProject.findOne({_id: req.params.id, editable: true}).exec().then( (doc) ->
         if doc
           doc.density = value
+          doc.status = models.PROJECT_STATUSES.PROCESSING[0]
+
+          cloned = utils.cloneObject(doc._doc)
+          cloned.status = doc.humanizedStatus()  # to show good in browser
+          delete cloned.comments
+          io.of('/project').in(doc._id.toHexString()).emit('update', cloned)
+
+          processVolumeWeight(doc)
+          res.send 200
+        else
+          res.send 404
+      ).fail( ->
+        logger.error arguments
+        res.send 500
+      )
+
+
+  app.post '/project/material/:id', decorators.loginRequired, (req, res) ->
+    value = req.body.value
+    unless value of models.PROJECT_MATERIALS
+      res.send 400
+    else
+      models.STLProject.findOne({_id: req.params.id, editable: true}).exec().then( (doc) ->
+        if doc
+          doc.density = models.PROJECT_MATERIALS[value][0]
+          doc.material = value
           doc.status = models.PROJECT_STATUSES.PROCESSING[0]
 
           cloned = utils.cloneObject(doc._doc)
