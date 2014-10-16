@@ -929,10 +929,7 @@ module.exports = (app, io) ->
 
 
   calculateOrderPrice = (basePrice, ammount) ->
-    if (basePrice<=10)
-      decimal.fromNumber((3 + 2*basePrice) * ammount, 2)
-    else
-      decimal.fromNumber((23 + 10*Math.log(basePrice-9)) * ammount, 2)
+      decimal.fromNumber(basePrice * ammount, 2)
 
 # app.get "/", (req, res) ->
 
