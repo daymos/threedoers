@@ -891,7 +891,7 @@ module.exports = (app, io) ->
           result = JSON.parse(stdout)
 
           # Calculate price
-          material_price = 0.5  # ABS
+          material_price = if doc.material == 'ABS' then 0.5 else 0.5 * 1.1  # ABS
           density = doc.density
           fixed_cost = 8
           # outer shell volume - this calculate the ammount of material used for
