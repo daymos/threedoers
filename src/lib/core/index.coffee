@@ -898,16 +898,11 @@ module.exports = (app, io) ->
           # the outher shell of the object that is printed at full density
           # I assume a thickness of 0.09 mm sperimentally checked
           # surface is in mm2 need to convert to cm2 for mattia formula
-          console.log "material_price: #{material_price}"
-          console.log "density: #{density}"
-          console.log "fixed_cost: #{fixed_cost}"
 
           v_s = result.surface / 100 * 0.09
-          console.log "v_s: #{v_s}"
 
           # calculate price for outer shell
           p_vs = v_s * density * material_price
-          console.log "p_vs: #{p_vs}"
 
           # volume infill - here I subtract the volume of the outer shell to the
           # total volume of object. This part of the object can be printed at
@@ -915,17 +910,13 @@ module.exports = (app, io) ->
 
           v_i = (result.volume - v_s)
           p_vi = v_i * 0.20 * material_price
-          console.log "v_i: #{v_i}"
-          console.log "p_vi: #{p_vi}"
 
           # base price - just sum price for outer shell and inner filling
 
           pb = p_vs + p_vi
-          console.log "pb: #{pb}"
 
           # final price - add fixed cost then this is multiplied by amount
           price = pb + fixed_cost
-          console.log "price: #{price}"
 
           # another values
           doc.volume = result.volume

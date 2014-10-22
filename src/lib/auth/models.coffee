@@ -65,12 +65,12 @@ module.exports.EuropeCountries = EuropeCountries = [
   {
     abbr: "DE"
     name: "Germany"
-    ioc: "GER"
+    ioc: "DEU"
   }
   {
     abbr: "DK"
     name: "Denmark"
-    ioc: "DEN"
+    ioc: "DNK"
   }
   {
     abbr: "EE"
@@ -100,7 +100,7 @@ module.exports.EuropeCountries = EuropeCountries = [
   {
     abbr: "GR"
     name: "Greece"
-    ioc: "GRE"
+    ioc: "GRC"
   }
   {
     abbr: "HU"
@@ -140,12 +140,12 @@ module.exports.EuropeCountries = EuropeCountries = [
   {
     abbr: "LV"
     name: "Latvia"
-    ioc: "LAT"
+    ioc: "LVA"
   }
   {
     abbr: "MC"
     name: "Monaco"
-    ioc: "MON"
+    ioc: "MCO"
   }
   {
     abbr: "MD"
@@ -165,7 +165,7 @@ module.exports.EuropeCountries = EuropeCountries = [
   {
     abbr: "NL"
     name: "Netherlands"
-    ioc: "NED"
+    ioc: "NLD"
   }
   {
     abbr: "NO"
@@ -180,12 +180,12 @@ module.exports.EuropeCountries = EuropeCountries = [
   {
     abbr: "PT"
     name: "Portugal"
-    ioc: "POR"
+    ioc: "PRT"
   }
   {
     abbr: "RO"
     name: "Romania"
-    ioc: "ROU"
+    ioc: "ROM"
   }
   {
     abbr: "SE"
@@ -195,7 +195,7 @@ module.exports.EuropeCountries = EuropeCountries = [
   {
     abbr: "SI"
     name: "Slovenia"
-    ioc: "SLO"
+    ioc: "SVN"
   }
   {
     abbr: "SK"
@@ -213,7 +213,7 @@ module.exports.EuropeCountries = EuropeCountries = [
     ioc: "UKR"
   }
   {
-    abbr: "UK"
+    abbr: "GB"
     name: "United Kingdom"
     ioc: "GBR"
   }
