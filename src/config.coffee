@@ -20,7 +20,7 @@ config =
 
   db:
     name: 'imake'
-    host: 'mongodb://imake:3m1k2M4ng4@ds033617.mongolab.com:33617/'
+    host: 'mongodb://imake:3m1k2M4ng4@ds063789.mongolab.com:63789/'
 
   mailer:
     service: 'Mandrill'
