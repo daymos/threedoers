@@ -359,6 +359,10 @@ User = new Schema
   printer:
     type: String
 
+  printerJobs:
+    type: Number
+    default: 1
+
   filemanager:
     type: String
 

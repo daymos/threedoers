@@ -762,15 +762,16 @@ module.exports = (app, io) ->
         logger.error err
         res.send 500
       else
-        if docs and docs.length > 0
-          res.render 'core/printing/requests', {projects: docs, toApply: false}
-        else
-          models.STLProject.find(status: models.PROJECT_STATUSES.PRINT_REQUESTED[0]).exec (err, docs) ->
-            if err
-              logger.error err
-              res.send 500
+        printerJobs = req.user.printerJobs || 1  # backward compatibility
+        models.STLProject.find(status: models.PROJECT_STATUSES.PRINT_REQUESTED[0]).exec (err, available) ->
+          if err
+            logger.error err
+            res.send 500
+          else
+            if docs and docs.length > printerJobs
+              res.render 'core/printing/requests', {projects: available, toApply: false}
             else
-              res.render 'core/printing/requests', {projects: docs, toApply: true}
+              res.render 'core/printing/requests', {projects: available, toApply: true}
 
 
   app.get '/printing/jobs', decorators.printerRequired, (req, res) ->
