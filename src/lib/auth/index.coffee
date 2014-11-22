@@ -24,10 +24,7 @@ module.exports = (app) ->
     },
     (username, password, done) ->
       User = models.User
-      console.log username
       User.findOne {$or: [{username: username}, {email: username}], active: true}, (err, user) ->
-        console.log err
-        console.log user
         if err
           return done(err)
         if not user
@@ -49,7 +46,7 @@ module.exports = (app) ->
 
   app.post '/accounts/login', (req, res, next) ->
 
-    req.assert('username', regex: "Invalid username.").regex(/^[a-z0-9_-]{3,16}$/)
+    req.assert('username', regex: "Is required.").len(2)
     req.assert('password', len: 'Should have between 6 - 20 characters.').len(6, 20)
 
     errors = req.validationErrors(true)
