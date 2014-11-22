@@ -24,7 +24,9 @@ module.exports = (app) ->
     },
     (username, password, done) ->
       User = models.User
+      console.log username
       User.findOne {$or: [{username: username}, {email: username}], active: true}, (err, user) ->
+        console.log err
         console.log user
         if err
           return done(err)
