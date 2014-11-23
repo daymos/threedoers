@@ -110,12 +110,6 @@
 
   app.use(express.csrf());
 
-  app.use(function(req, res, next) {
-    res.cookie("XSRF-TOKEN", req.csrfToken());
-    res.locals.csrftoken = req.csrfToken();
-    next();
-  });
-
   app.use(gzippo.compress());
 
   app.disable("x-powered-by");
