@@ -108,8 +108,6 @@
 
   app.use(passport.session());
 
-  app.use(express.csrf());
-
   app.use(gzippo.compress());
 
   app.disable("x-powered-by");

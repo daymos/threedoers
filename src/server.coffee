@@ -83,7 +83,7 @@ app.use express.session(
 app.use passport.initialize()
 app.use passport.session()
 
-app.use express.csrf()
+# app.use express.csrf()
 # app.use (req, res, next) ->
 #   res.cookie "XSRF-TOKEN", req.csrfToken()
 #   res.locals.csrftoken = req.csrfToken()
