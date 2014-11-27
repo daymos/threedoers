@@ -42,7 +42,13 @@ header
               nav
                 ul.nav.nav-pills.navbar-right
                   li
-                    a(href='/project/upload') Upload A Project
+                    - if (user.printer == 'accepted')
+                      a(href='/printing/requests') Available Jobs
+                    - else if (user.filemanager == 'accepted')
+                      a(href='/filemanager/requests') Available Files
+                    - else
+                      a(href='/project/upload') Upload A Project
+
                   - if (user.printer != 'accepted')
                     li.dropdown
                       a(href='/become') Become A Printer
