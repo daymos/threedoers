@@ -64,10 +64,10 @@ html.no-js(lang="en", "xmlns:fb"="http://ogp.me/ns/fb#")
       script(src='https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js')
       script(src='https://oss.maxcdn.com/respond/1.4.2/respond.min.js')
 
-    if user._id
+    if user
       script.
         var user = {
-          id: "#{ user._id }"
+          id: "#{ user ? user._id : '' }"
         };
 
     script.
