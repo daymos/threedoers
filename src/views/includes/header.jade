@@ -41,12 +41,14 @@ header
             .simple-nav
               nav
                 ul.nav.nav-pills.navbar-right
-                  li
-                    - if (user.printer == 'accepted')
+                  - if (user.printer == 'accepted')
+                    li
                       a(href='/printing/requests') Available Jobs
-                    - else if (user.filemanager == 'accepted')
+                  - if (user.filemanager == 'accepted')
+                    li
                       a(href='/filemanager/requests') Available Files
-                    - else
+                  - if (user.filemanager != 'accepted' && user.printer != 'accepted')
+                    li
                       a(href='/project/upload') Upload A Project
 
                   - if (user.printer != 'accepted')
