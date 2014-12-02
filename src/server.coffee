@@ -150,7 +150,6 @@ for appName in ['admin', 'filemanager', 'core', 'auth', 'registration']
   logger.debug "Loading app #{appName}"
   require("./lib/#{appName}")(app, io)
 
-
 # # db connection
 
 # app.use '/api/v1', (req, res, next) ->

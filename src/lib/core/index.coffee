@@ -571,8 +571,16 @@ module.exports = (app, io) ->
           placedAt: new Date()
 
         doc.save()
+
+        # send notification
+        auth.User.find(printer: 'accepted').exec().then (docs)->
+          if docs.length
+            utils.sendNotification(io, docs, "Project <a href='/project/#{doc.id}'>#{doc.title}</a> is waiting for you.", 'New project', 'info')
+            for user in docs
+              mailer.send('mailer/project/status', {project: doc, user: user, site:settings.site}, {from: settings.mailer.noReply, to:[user.email], subject: settings.project.status.subject})
       res.redirect "/project/#{req.params.id}"
     ).fail( ->
+      console.log arguments
       logger.error arguments
       res.send 500
     )
@@ -873,6 +881,19 @@ module.exports = (app, io) ->
 
         else
           socket.emit 'error', msg: "Document not found"
+      ).fail( (reason) ->
+        logger.error reason
+        socket.emit 'error', msg: "Error searching for project. Mongo Error"
+      )
+    else
+      socket.emit 'error', msg: "No project was not sent"
+  )
+
+  io.of('/notification').on('connection', (socket) ->
+    if socket.handshake.query.user?
+      auth.User.findOne(_id: socket.handshake.query.user).exec().then( (doc) ->
+        if doc
+          socket.join("notification-#{doc._id.toHexString()}")
       ).fail( (reason) ->
         logger.error reason
         socket.emit 'error', msg: "Error searching for project. Mongo Error"

@@ -39,6 +39,8 @@ config =
   project:
     payed:
       subject: "Project was payed."
+    status:
+      subject: "Project Notification - Status"
 
   printer:
     accepted:

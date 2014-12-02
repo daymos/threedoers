@@ -59,16 +59,15 @@ $(document).ready ->
   # Socket IO
   ###
 
-  socket = io.connect(":#{port}/project?project=#{project.id}")
-
-  socket.on 'error', (data) ->
+  socket_project = io.connect(":#{port}/project")
+  socket_project.on 'error', (data) ->
     console.log data.msg
 
-  socket.on 'update', (data) ->
-    socket.emit 'order-price', {ammount: $("#ammount").val()}
+  socket_project.on 'update', (data) ->
+    socket_project.emit 'order-price', {ammount: $("#ammount").val()}
     updateFrontEnd(data)
 
-  socket.on 'update-price-order', (data) ->
+  socket_project.on 'update-price-order', (data) ->
     $('#order-price').text(data.price)
 
   unless Modernizr.canvas
@@ -129,7 +128,7 @@ $(document).ready ->
 
     if /^[1-9][0-9]*$/.test(@value) or /^\s*$/.test(@value)
       $("#order-price").text("Processing")
-      socket.emit 'order-price', {ammount: $("#ammount").val()}
+      socket_project.emit 'order-price', {ammount: $("#ammount").val()}
     else
       event.preventDefault()
   )
