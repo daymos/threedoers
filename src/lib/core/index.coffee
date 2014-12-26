@@ -198,21 +198,22 @@ module.exports = (app, io) ->
       if printer
         shipping = (shipping) ->
           shippo.rate.list(object_id: shipping.object_id, currency: 'EUR').then((rates)->
-            if rates.length > 0
+            if rates.count and rates.count > 0
               rate = null
               price = 9999999999.0 # a lot
-              for rate_tmp in rates
-                price_tmp = parseFloat(rate_tmp.amount)
+              for rate_tmp in rates.results
+                price_tmp = parseFloat(rate_tmp.amount_local)
                 if rate_tmp.object_purpose == "PURCHASE" and price > price_tmp
                   rate = rate_tmp
                   price = price_tmp
 
               if rate
-                project.update 'order.rate': rate
+                project.update 'order.rate': rate, ->
+                  return
                 res.json
                   ok: 'successes'
                   address: address
-                  charge: rate.ammount
+                  charge: rate.amount_local
             else
               res.json
                 message: "There is not rate, use another address"
@@ -736,7 +737,6 @@ module.exports = (app, io) ->
   app.post '/project/printed/:id', decorators.loginRequired, (req, res, next) ->
     models.STLProject.findOne({_id: req.params.id, 'order.printer': req.user.id}).exec().then( (doc) ->
       if doc and doc.validateNextStatus(models.PROJECT_STATUSES.PRINTED[0])
-
         auth.User.findOne({_id: doc.order.printer}).exec().then( (printer) ->
           if printer
             if printer.printerAddress
@@ -751,11 +751,12 @@ module.exports = (app, io) ->
                     'order.transaction': transaction
 
                   doc.update updatedData, (error) ->
-                    res.redirect "/project/#{req.params.id}"
+                    unless error
+                      res.redirect "/project/#{req.params.id}"
                 )
 
               # send notification
-              auth.User.where('_id').in([req.user.id, doc.printer]).exec().then (docs)->
+              auth.User.where('id').in([req.user.id, doc.printer]).exec().then (docs)->
                 if docs.length
                   utils.sendNotification(io, docs, "Project <a href='/project/#{doc.id}'>#{doc.title}</a> was printed.", 'Status changed', 'info')
                   for user in docs
@@ -767,11 +768,13 @@ module.exports = (app, io) ->
             logger.warning "printer #{printer} do not exists"
             res.send "Printer don't exists, please contact support"
         ).fail( ->
-          logger.error arguments
+          console.log arguments
           res.send 500
         )
+      else
+        res.redirect "/project/#{req.params.id}"
     ).fail( ->
-      logger.error arguments
+      console.log arguments
       res.send 500
     )
 
