@@ -235,12 +235,16 @@ module.exports = (app, io) ->
               mass_unit: 'g'
             ).then( (parcel) ->
               data['order.parcel'] = parcel
+              submission_date = new Date()
+              submission_date.setDate(submission_date.getDate() + 2)
+
               shippo.shipment.create(
                 object_purpose: "PURCHASE"
                 address_from: printer.printerAddress.object_id
                 address_to: address.object_id
                 parcel: parcel.object_id
-                submission_type: 'DROPOFF')
+                submission_type: 'DROPOFF'
+                submission_date: submission_date)
 
             ).then( (shipping_tmp) ->
               data['order.shipping'] = shipping_tmp
