@@ -1,4 +1,5 @@
-header
+.row
+ header
   #header
     unless user
       .container
@@ -15,32 +16,13 @@ header
                   li
                     a(href='/accounts/signup') SIGN UP
     else
-      .container
+       .container
         .row
-          .col-md-2
-            .logo-wrapper
-              a(href='/')
-                img(src='/img/logo.png')
-          .col-md-10
-            //- .search-form
-              //- form
-              //-   input.form-control(type='text', placeholder='SEARCH')
-              //-   button(type='submit')
-              //- .top-social-links
-              //-   a.square-social-link(href='#')
-              //-     span.fa.fa-facebook
-              //-   a.square-social-link(href='#')
-              //-     span.fa.fa-twitter
-              //-   a.square-social-link(href='#')
-              //-     span.fa.fa-google-plus
-              //-   a.square-social-link(href='#')
-              //-     span.fa.fa-heart
-                //- span.favorite-count
-                //-   span 1
             .clearfix
             .simple-nav
               nav
-                ul.nav.nav-pills.navbar-right
+                ul.nav.nav-pills.pull-right
+
                   - if (user && user.printer == 'accepted')
                     li
                       a(href='/printing/requests') Available Jobs
@@ -52,10 +34,10 @@ header
                       a(href='/project/upload') Upload A Project
 
                   - if (user && user.printer != 'accepted')
-                    li.dropdown
+                    li
                       a(href='/become') Become A Printer
                   - if (user && user.filemanager != 'accepted')
-                    li.dropdown
+                    li
                       a(href='/become/filemanager') Become A File Manager
                   li.dropdown
                     a.dropdown-toggle(href='#', data-toggle='dropdown') My Profile
@@ -70,5 +52,5 @@ header
                           a(href='/filemanager/requests') File manager
                       li
                         a(href='/profile/settings') Edit profile
-                  li
-                    a(href='/accounts/logout') Sign Out
+                      li
+                        a(href='/accounts/logout') Sign Out

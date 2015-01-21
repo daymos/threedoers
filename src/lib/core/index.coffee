@@ -179,6 +179,8 @@ module.exports = (app, io) ->
   app.get '/profile/settings', decorators.loginRequired, (req, res) ->
     res.render 'core/profile/settings', {errors: {}}
 
+  app.get '/profile/notifications', decorators.loginRequired, (req, res) ->
+    res.render 'core/profile/notifications'
 
   app.post '/profile/settings', decorators.loginRequired, (req, res) ->
     if (req.body.city && req.body.country && req.body.location)

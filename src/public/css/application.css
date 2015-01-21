@@ -959,6 +959,18 @@ img {
 .img-circle {
   border-radius: 50%;
 }
+.nav-bar-logo{
+    width: 40%;
+}
+.margin-header-10{
+    margin-top: 2%;
+}
+.black-3doers, .green-3doers a{
+    color: black;
+}
+.icon-dimension{
+    font-size: 30px;
+}
 hr {
   margin-top: 20px;
   margin-bottom: 20px;
@@ -3132,7 +3144,7 @@ tbody.collapse.in {
   z-index: 1000;
   display: none;
   float: left;
-  min-width: 160px;
+  //min-width: 160px;
   padding: 5px 0;
   margin: 2px 0 0;
   font-size: 14px;

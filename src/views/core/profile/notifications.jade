@@ -1,0 +1,29 @@
+
+extends ../base
+
+block title
+    | Notifications
+
+
+block body
+  .section.primary
+    .container
+      .row
+          if user
+            h1 Notifications Page of #{user.username}
+
+
+
+  div
+    .container
+      br
+      br
+      br
+      br
+      br
+      br
+      include ../../includes/publicity
+      br
+      br
+      br
+      br
