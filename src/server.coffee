@@ -146,7 +146,7 @@ unless settings.debug
     io.set 'polling duration', 30
 
 # loading modules
-for appName in ['admin', 'filemanager', 'core', 'auth', 'registration']
+for appName in ['admin', 'filemanager', 'core', 'auth', 'registration','notification']
   logger.debug "Loading app #{appName}"
   require("./lib/#{appName}")(app, io)
 
