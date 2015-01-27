@@ -2,14 +2,14 @@ mongoose = require 'mongoose'
 gridfs = require '../gridfs'
 inflection = require 'inflection'
 
-
-
+Schema = mongoose.Schema
+ObjectId = Schema.ObjectId
 
 ###############################################
 # Constants
 ###############################################
 
-module.exports.NOTIFICATION_STATE=
+module.exports.NOTIFICATION_STATE= NOTIFICATION_STATE =
   MESSAGE: [1, 'message']
   CHANGE_STATUS: [2, 'change_status']
 
@@ -20,7 +20,7 @@ module.exports.NOTIFICATION_STATE=
 
 
 
-Notification = mongoose.Schema
+Notification = new Schema
   read:
     type:Boolean
     default: false
@@ -47,4 +47,4 @@ Notification = mongoose.Schema
     require:true
 
 # Expose Activation Status
-exports.Notification = mongoose.model("Notification", Notification)
+module.exports.Notification = mongoose.model 'Notification', Notification

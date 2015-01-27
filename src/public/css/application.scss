@@ -91,6 +91,16 @@ hr.hr-light {
     transition: all 0.4s;
   }
 }
+.circle{
+    width:9px;
+    height:9px;
+    border-radius:25px;
+    font-size:5px;
+    color:red;
+    text-align:center;
+    background:red;
+    z-index: 1;
+}
 .square-social-link {
   background-color: $default-color;
   color: $primary-color;

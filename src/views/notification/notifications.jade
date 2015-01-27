@@ -12,6 +12,15 @@ block body
           if user
             h1 Notifications Page of #{user.username}
 
+  .container.margin-header-10
+    .col-lg-12
+      if (userNotif.length == 0)
+        p.info-3d There is not any notification
+
+      ul#list-group-notif.list-group
+        - each notify in userNotif.reverse()
+          a(href= '#{notify.refertourl}')
+            li(id=notify.id).list-group-item.col-lg-10 Change Status #{notify.createAt}
 
 
   div

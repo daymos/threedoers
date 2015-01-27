@@ -1,6 +1,8 @@
 mongoose = require 'mongoose'
 gridfs = require '../gridfs'
 inflection = require 'inflection'
+models = require('./models')
+modelsNot = require('../notification/models')
 
 Schema = mongoose.Schema
 ObjectId = Schema.ObjectId
@@ -201,6 +203,19 @@ STLProject.pre 'save', (next) ->
   @editable = @status in [PROJECT_STATUSES.PROCESSED[0], PROJECT_STATUSES.PRINT_REVIEW[0]]
   now = new Date()
   @createdAt = now  unless @createdAt
+  that = @
+  models.STLProject.findOne({_id: @id}).exec().then( (doc) ->
+    if (doc.status != that.status)
+
+      notif = new modelsNot.Notification()
+      notif.type = modelsNot.NOTIFICATION_STATE.CHANGE_STATUS[0]
+      notif.creator = that.id
+      notif.recipient = that.user
+      notif.refertourl="/project/"+that.id
+      notif.save()
+
+  )
+
   next()
 
 

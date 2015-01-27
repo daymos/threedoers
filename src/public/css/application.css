@@ -8390,6 +8390,16 @@ hr.hr-light {
     -moz-transition: all 0.4s;
     transition: all 0.4s; }
 
+.circle {
+  width: 9px;
+  height: 9px;
+  border-radius: 25px;
+  font-size: 5px;
+  color: red;
+  text-align: center;
+  background: red;
+  z-index: 1; }
+
 .square-social-link {
   background-color: #000000;
   color: #7bf282;
