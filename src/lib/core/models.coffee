@@ -205,11 +205,11 @@ STLProject.pre 'save', (next) ->
   @createdAt = now  unless @createdAt
   that = @
   models.STLProject.findOne({_id: @id}).exec().then( (doc) ->
-    if (doc.status != that.status)
-
+    if (doc.status != that.status and doc.status != 1)
       notif = new modelsNot.Notification()
       notif.type = modelsNot.NOTIFICATION_STATE.CHANGE_STATUS[0]
       notif.creator = that.id
+      notif.title = that.title
       notif.recipient = that.user
       notif.refertourl="/project/"+that.id
       notif.save()

@@ -34,6 +34,10 @@ Notification = new Schema
     type: ObjectId
     required: true
 
+  title:
+    type: String
+    required: true
+
   createAt:
     type: Date
     default: Date.now

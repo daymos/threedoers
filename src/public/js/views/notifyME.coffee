@@ -1,11 +1,15 @@
 $(document).ready ->
-  console.log "Getting notification"
   $.post('/getNotifications')
   .done( (response) ->
-    console.log response.notifications
     if response.notifications.length == 0
       $('#notifID').hide()
   )
   .fail ->
-    console.log "MISERABLE"
+    console.log "error"
 
+$('#list-group-notif').click ->
+  $.post('/notification/read/'+event.target.id)
+  .done( (response) ->
+    console.log "read "+response
+  ).fail ->
+    console.log "error"
