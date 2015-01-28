@@ -1,0 +1,38 @@
+
+extends ../core/base
+
+block title
+    | Notifications
+
+
+block body
+  .section.primary
+    .container
+      .row
+          if user
+            h1 Upload resources
+
+  .container.margin-header-10
+    .col-lg-12
+        div#maindiv
+          div#formdiv
+            h2 Multiple upload
+              form(enctype="multipart/form-data",action="",method="post")
+                p First Field is Compulsory
+                  div#filediv
+                    input#file(name="file[]",type="file")
+                  input#add_more.upload(type="button", value="Add More Files")
+                  input#upload.upload(type="submit",value="Upload File",name="submit")
+  div
+    .container
+      br
+      br
+      br
+      br
+      br
+      br
+      include ../includes/publicity
+      br
+      br
+      br
+      br

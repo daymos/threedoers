@@ -1,0 +1,48 @@
+mongoose = require 'mongoose'
+gridfs = require '../gridfs'
+inflection = require 'inflection'
+
+Schema = mongoose.Schema
+ObjectId = Schema.ObjectId
+
+###############################################
+# Constants
+###############################################
+
+
+
+
+###############################################
+# Models
+###############################################
+
+
+
+STLDesign = new Schema
+  read:
+    type:Boolean
+    default: false
+
+
+  creator:
+    type: ObjectId
+    required: true
+
+  title:
+    type: String
+    required: true
+
+  createAt:
+    type: Date
+    default: Date.now
+
+  recipient:
+    type: ObjectId
+    required: true
+
+  refertourl:
+    type:String
+    require:true
+
+# Expose Activation Status
+module.exports.STLDesign = mongoose.model 'STLDesign', STLDesign
