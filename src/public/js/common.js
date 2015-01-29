@@ -1,1 +1,113 @@
-(function(){$(document).ready(function(){var t;return user.id?(t=io.connect(":"+port+"/notification",{query:"user="+user.id+("undefined"!=typeof project&&null!==project?"&project="+project.id:"")}),t.on("new",function(t){return $.growl({title:""+(t.title||"")+"<br>",message:t.message},{type:t.type})})):void 0})}).call(this),function(){var t;t=function(){function t(t,e){var n=this;this.form=t,this.validations=e,this.form=$(this.form),this.form.submit(function(){return n.validate()})}return t.prototype._required=function(t,e){var n,i;return i=t.val(),n=t.siblings("label").text(),this.message=e.message||"This field is required.",i?!0:!1},t.prototype._regexp=function(t,e){var n,i;return i=t.val(),n=t.siblings("label").text(),this.message=e.message||"This field is not valid.",i.match(e.test)?!0:!1},t.prototype._match=function(t,e){var n,i,r;return i=t.val(),r=$(e.test).val(),n=t.siblings("label").text(),this.message=e.message||"Value didn't match",i===r?!0:!1},t.prototype.formatOptions=function(t){return t.test||(t={tests:t}),t},t.prototype.validate=function(){var t,e,n,i;n=!0;for(i in this.validations){t=this.form.find(i);for(e in this.validations[i])if(this["_"+e]){if(!this["_"+e](t,this.formatOptions(this.validations[i][e]))){this.form.trigger("error",[t,this.message]),n=!1;break}this.form.trigger("valid",[t])}else this.form.trigger("error",[t,"Validator '"+e+"' is not implemented"]),n=!1}return n},t}(),this.Validator=t}.call(this);
+(function() {
+  $(document).ready(function() {
+    /*
+    # Socket IO
+    */
+
+    var socket;
+    if (user.id) {
+      socket = io.connect(":" + port + "/notification", {
+        query: "user=" + user.id + ((typeof project !== "undefined" && project !== null) ? '&project=' + project.id : '')
+      });
+      return socket.on('new', function(data) {
+        return $.growl({
+          title: "" + (data.title || '') + "<br>",
+          message: data.message
+        }, {
+          type: data.type
+        });
+      });
+    }
+  });
+
+}).call(this);
+;(function() {
+  var Validator;
+
+  Validator = (function() {
+    function Validator(form, validations) {
+      var _this = this;
+      this.form = form;
+      this.validations = validations;
+      this.form = $(this.form);
+      this.form.submit(function(event) {
+        return _this.validate();
+      });
+    }
+
+    Validator.prototype._required = function($element, options) {
+      var label, val;
+      val = $element.val();
+      label = $element.siblings('label').text();
+      this.message = options.message || "This field is required.";
+      if (val) {
+        return true;
+      } else {
+        return false;
+      }
+    };
+
+    Validator.prototype._regexp = function($element, options) {
+      var label, val;
+      val = $element.val();
+      label = $element.siblings('label').text();
+      this.message = options.message || "This field is not valid.";
+      if (val.match(options.test)) {
+        return true;
+      } else {
+        return false;
+      }
+    };
+
+    Validator.prototype._match = function($element, options) {
+      var label, val1, val2;
+      val1 = $element.val();
+      val2 = $(options.test).val();
+      label = $element.siblings('label').text();
+      this.message = options.message || "Value didn't match";
+      if (val1 === val2) {
+        return true;
+      } else {
+        return false;
+      }
+    };
+
+    Validator.prototype.formatOptions = function(options) {
+      if (!options.test) {
+        options = {
+          tests: options
+        };
+      }
+      return options;
+    };
+
+    Validator.prototype.validate = function() {
+      var $element, method, result, selector;
+      result = true;
+      for (selector in this.validations) {
+        $element = this.form.find(selector);
+        for (method in this.validations[selector]) {
+          if (this["_" + method]) {
+            if (!this["_" + method]($element, this.formatOptions(this.validations[selector][method]))) {
+              this.form.trigger('error', [$element, this.message]);
+              result = false;
+              break;
+            } else {
+              this.form.trigger('valid', [$element]);
+            }
+          } else {
+            this.form.trigger('error', [$element, "Validator '" + method + "' is not implemented"]);
+            result = false;
+          }
+        }
+      }
+      return result;
+    };
+
+    return Validator;
+
+  })();
+
+  this.Validator = Validator;
+
+}).call(this);

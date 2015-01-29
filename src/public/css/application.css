@@ -8400,6 +8400,9 @@ hr.hr-light {
   background: red;
   z-index: 1; }
 
+.active-greeen-3doers {
+  background-color: #7bf282; }
+
 .square-social-link {
   background-color: #000000;
   color: #7bf282;
@@ -8428,6 +8431,21 @@ hr.hr-light {
 
 .black-3doers, .green-3doers a {
   color: black; }
+
+#img-multi-upload {
+  width: 25px;
+  border: none;
+  height: 25px;
+  margin-bottom: 91px; }
+
+.multi-upload {
+  text-align: center; }
+
+.multi-upload img {
+  height: 100px;
+  width: 100px;
+  padding: 5px;
+  border: 1px solid #e8debd; }
 
 .icon-dimension {
   font-size: 30px; }
