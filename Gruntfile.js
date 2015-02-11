@@ -116,6 +116,10 @@ module.exports = function(grunt) {
         files: ['src/public/js/**/*.coffee'],
         tasks: ['coffee:frontend', 'coffee:frontendStandalone', 'concat:js', 'concat:commonJS']
       },
+      coffee: {
+            files: ['src/public/js/lib/*'],
+            tasks: ['coffee:frontend', 'coffee:frontendStandalone', 'concat:js', 'concat:commonJS']
+        },
 
       sass: {
         files: ['src/public/css/**/*.scss'],

@@ -51,5 +51,11 @@ $(document).ready(function() {
             alert("At least one file must be selected");
             e.preventDefault();
         }
+
+        var title = $('input[name=title]').val();
+        if(!title){
+            alert("you must enter a title");
+            e.preventDefault();
+        }
     });
 });

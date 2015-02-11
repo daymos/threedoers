@@ -10,6 +10,5 @@ module.exports = (app) ->
 
 
   app.post '/ask/stl/upload', decorators.loginRequired, (req, res) ->
-    console.log req.body
-    console.log req.files.length
+
     console.log req.files

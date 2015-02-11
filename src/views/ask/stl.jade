@@ -14,10 +14,13 @@ block body
 
   .container.margin-header-10
     .col-lg-10
-        h2.margin-header-10 Multiple upload
         div#maindiv
           div#formdiv
             form.form-horizontal(enctype="multipart/form-data",action="/ask/stl/upload",method="post")
+              div.form-group
+                input.form-control(name="title",type="text",placeholder="Insert a title for this project")
+              div.form-group
+                textarea.form-control(rows="2",name="abstract",placeholder="Insert an abstract")
               div.form-group#filediv
                 input.form-control#file(name="file[]",type="file")
               div.form-group
