@@ -1,5 +1,5 @@
 
-extends ../core/base
+extends ../base
 
 block title
     | Notifications
@@ -14,9 +14,11 @@ block body
 
   .container.margin-header-10
     .col-lg-10
+      - if (error.length != 0)
+            p.info-3d #{error}
         div#maindiv
           div#formdiv
-            form.form-horizontal(enctype="multipart/form-data",action="/ask/stl/upload",method="post")
+            form.form-horizontal(enctype="multipart/form-data",action="/design/stl/upload",method="post")
               div.form-group
                 input.form-control(name="title",type="text",placeholder="Insert a title for this project")
               div.form-group
@@ -35,7 +37,7 @@ block body
       br
       br
       br
-      include ../includes/publicity
+      include ../../includes/publicity
       br
       br
       br

@@ -1,0 +1,29 @@
+extends ../core/base
+
+block base-scripts
+  script.
+    $(document).ready(
+      function(event) {
+        $(".header a[href='/profile/projects']").parent().addClass('active');
+        $(".subnav a[href='#{ nav }']").parent().addClass('active');
+      }
+    );
+
+block body
+  div.subnav
+    .container
+      ul.nav.nav-tabs
+        li#printing_request
+          a(href="/printing/requests")
+            span Available Jobs
+        li#jobs_available
+          a(href="/printing/jobs")
+            span Accepted Jobs
+        li#archived
+          a(href="/printing/archived")
+            span Archived
+      .line
+
+    block content-profile
+
+  include ../includes/publicity

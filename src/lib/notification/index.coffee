@@ -29,7 +29,6 @@ module.exports = (app) ->
   app.post '/notification/read/:id', decorators.loginRequired, (req,res) ->
     models.Notification.findOne({_id: req.params.id, read: false}).exec().then((notf) ->
       if notf
-        console.log notf
         notf.read = true
         notf.save()
     ).fail((reason) ->
