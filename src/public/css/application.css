@@ -9508,6 +9508,16 @@ a.primary-hover::after {
   margin-left: -40px;
   top: 13px; }
 
+/*Chat*/
+.mine-chat > .pull-left {
+  margin-right: initial;
+  margin-left: 30px;
+  float: right !important; }
+.mine-chat > .media-body {
+  text-align: right; }
+.mine-chat > .media-meta {
+  text-align: right; }
+
 /* Modal */
 .modal.modal-3d .modal-dialog {
   box-shadow: 4px -4px 0 #7bf282; }

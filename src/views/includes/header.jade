@@ -28,8 +28,8 @@
                       a(href='/printing/requests') Available Jobs
                   - if (user && user.filemanager == 'accepted')
                     li
-                      a(href='/filemanager/requests') Available Files
-                  - if (user && user.filemanager != 'accepted' && user.printer != 'accepted')
+                      a(href='/design/requests') Available Files
+                  - if (user && user.filemanager != 'accepted' || user.printer != 'accepted')
                     li
                       a(href='/project/upload') Upload A Project
 
@@ -38,7 +38,7 @@
                       a(href='/become') Become A Printer
                   - if (user && user.filemanager != 'accepted')
                     li
-                      a(href='/become/filemanager') Become A File Manager
+                      a(href='/become/filemanager') Become A Designer
                   - if (user)
                     li
                       a(href='/design/stl') Ask for a STL
@@ -52,7 +52,7 @@
                           a(href='/printing/requests') Printer
                       if user.filemanager == 'accepted'
                         li
-                          a(href='/filemanager/requests') File manager
+                          a(href='/design/requests') File manager
                       li
                         a(href='/profile/settings') Edit profile
                       li

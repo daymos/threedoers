@@ -50,8 +50,8 @@ STLDesign = new Schema
     default: DESIGN_STATUSES.PROCESSING[0]
     required: true
 
-  order:
-    type:{}
+  proposal:
+    type:[{}]
 
   createAt:
     type: Date
@@ -60,6 +60,18 @@ STLDesign = new Schema
   resources:
     type: [String]
     require: true
+
+
+STLDesign.methods.humanizedStatus = ->
+  for key of DESIGN_STATUSES
+    console.log @status
+    if DESIGN_STATUSES[key][0] == @status
+      return DESIGN_STATUSES[key][1]
+
+STLDesign.methods.dasherizedStatus = ->
+  for key of DESIGN_STATUSES
+    if DESIGN_STATUSES[key][0] == @status
+      return inflection.dasherize(DESIGN_STATUSES[key][1]).replace('-', '_')
 
 
 

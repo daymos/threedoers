@@ -1309,7 +1309,20 @@ a.primary-hover {
   margin-left: -40px;
   top: 13px;
 }
-
+/*Chat*/
+.mine-chat{
+  > .pull-left{
+    margin-right: initial;
+    margin-left: 30px;
+    float: right!important;
+  }
+  > .media-body{
+    text-align: right;
+  }
+  >.media-meta{
+    text-align: right;
+  }
+}
 /* Modal */
 .modal.modal-3d {
   .modal-dialog {
