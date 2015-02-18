@@ -170,7 +170,7 @@
     });
   }
 
-  _ref = ['admin', 'filemanager', 'core', 'auth', 'registration', 'notification', 'ask'];
+  _ref = ['admin', 'filemanager', 'core', 'auth', 'registration', 'notification', 'design'];
   for (_i = 0, _len = _ref.length; _i < _len; _i++) {
     appName = _ref[_i];
     logger.debug("Loading app " + appName);

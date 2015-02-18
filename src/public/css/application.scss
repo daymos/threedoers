@@ -1309,6 +1309,11 @@ a.primary-hover {
   margin-left: -40px;
   top: 13px;
 }
+.design-base{
+  > li>a{
+    font-size: 29px;
+  }
+}
 /*Chat*/
 .mine-chat{
   > .pull-left{

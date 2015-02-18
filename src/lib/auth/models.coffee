@@ -316,6 +316,9 @@ User = new Schema
   lastName:
     type: String
 
+  token:
+    type:String
+
   email:
     type: String
     required: true

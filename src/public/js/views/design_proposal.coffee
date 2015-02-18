@@ -31,9 +31,7 @@ $(document).ready ->
 
     submitHandler: (form) ->
 
-      alert('valid form submitted')
-
-      false
+      true
 
 
 

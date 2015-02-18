@@ -26,6 +26,30 @@ module.exports.DESIGN_STATUSES = DESIGN_STATUSES =
 # Models
 ###############################################
 
+Proposal = new Schema
+  creator:
+    type: ObjectId
+    required: true
+
+  username:
+    type:String
+    required: true
+
+  hour:
+    type: Number
+    required: true
+
+  cost:
+    type: Number
+    required: true
+
+  createAt:
+    type: Date
+    default: Date.now
+
+  accepted:
+    type:Boolean
+    default:false
 
 
 STLDesign = new Schema
@@ -51,7 +75,7 @@ STLDesign = new Schema
     required: true
 
   proposal:
-    type:[{}]
+    type:[Proposal]
 
   createAt:
     type: Date
@@ -78,3 +102,4 @@ STLDesign.methods.dasherizedStatus = ->
 
 # Expose Activation Status
 module.exports.STLDesign = mongoose.model 'STLDesign', STLDesign
+module.exports.Proposal = mongoose.model 'Proposal', Proposal

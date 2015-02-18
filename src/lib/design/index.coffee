@@ -12,7 +12,7 @@ module.exports = (app) ->
 
   app.get '/design/requests', decorators.loginRequired, (req, res) ->
     #models.STLDesign.find({status:{"$lt":models.DESIGN_STATUSES.ARCHIVED[0]}}).elemMatch("proposal",{'user':req.user.id}).exec().then(( docs) ->
-    models.STLDesign.find("$and":[{status:{"$lt":models.DESIGN_STATUSES.ARCHIVED[0]}}, {"proposal":{"$not":{"$elemMatch":{"user":req.user.id}}}}]).exec().then(( docs) ->
+    models.STLDesign.find("$and":[{status:{"$lt":models.DESIGN_STATUSES.ARCHIVED[0]}}, {"proposal":{"$not":{"$elemMatch":{"creator":req.user._id}}}}]).exec().then(( docs) ->
       if docs
          res.render 'design/requests', {projects: docs, toApply:true, error:""}
 #      else
@@ -34,12 +34,13 @@ module.exports = (app) ->
     models.STLDesign.findOne({_id: req.params.id}).exec().then( (doc) ->
       if doc
         if req.body.hours and req.body.cost
-          console.log "parameter filled"
-          proposal={}
-          proposal.user = req.user.id
+          proposal= new models.Proposal
+          proposal.creator = req.user.id
+          proposal.username = req.user.username
           proposal.hour = req.body.hours
           proposal.cost = req.body.cost
           proposal.createAt = Date.now()
+          proposal.save()
           doc.proposal.push(proposal)
           doc.save (err, doc) ->
             if err
@@ -57,6 +58,17 @@ module.exports = (app) ->
       res.send 500
     )
 
+  app.get '/design/proposal', decorators.loginRequired, (req, res) ->
+    models.STLDesign.find({"creator": req.user.id}).exec().then( (doc) ->
+      if doc.proposal
+        res.render('design/proposal', {projects: doc, toApply:true, error:""})
+
+      else
+        res.render('design/proposal', {projects: doc, toApply:true, error:"GHGHGJHGJHGJHGHJGHJGJHGJHG"})
+    ).fail( ->
+      logger.error arguments
+      res.send 500
+    )
 
 
   app.post '/design/stl/upload', decorators.loginRequired, (req, res) ->

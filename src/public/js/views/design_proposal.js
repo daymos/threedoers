@@ -26,8 +26,7 @@
         }
       },
       submitHandler: function(form) {
-        alert('valid form submitted');
-        return false;
+        return true;
       }
     });
     return $("button.fire-modal-proposal").click(function(event) {
