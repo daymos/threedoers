@@ -30,6 +30,11 @@ module.exports = (app) ->
         res.send 500
       )
 
+  app.post '/design/proposal/accept/:id', decorators.loginRequired, (req, res) ->
+    console.log req.body.project_id
+    console.log req.params.id
+    return
+
   app.post '/design/proposal/:id', decorators.loginRequired, (req, res) ->
     models.STLDesign.findOne({_id: req.params.id}).exec().then( (doc) ->
       if doc
@@ -60,7 +65,7 @@ module.exports = (app) ->
 
   app.get '/design/proposal', decorators.loginRequired, (req, res) ->
     models.STLDesign.find({"creator": req.user.id}).exec().then( (doc) ->
-      if doc.proposal
+      if doc
         res.render('design/proposal', {projects: doc, toApply:true, error:""})
 
       else

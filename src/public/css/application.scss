@@ -1515,3 +1515,13 @@ a.primary-hover {
     width: 1282px;
   }
 }
+.tile {
+  padding: 5px;
+  border: 2px solid;
+  margin-left: 10px;
+  border-radius: 5px;
+}
+  .tile > footer > form>input{
+    margin-top: 13px;
+    margin-left: 18%;
+  }
