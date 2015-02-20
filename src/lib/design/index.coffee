@@ -30,10 +30,38 @@ module.exports = (app) ->
         res.send 500
       )
 
-  app.post '/design/proposal/accept/:id', decorators.loginRequired, (req, res) ->
-    console.log req.body.project_id
+  app.post '/design/proposal/review/:id', decorators.filemanagerRequired, (req, res) ->
+    models.Proposal.findOne({_id: req.params.id, accepted:false}).exec().then( (prop) ->
+      if prop
+        prop.accepted = true
+        prop.save()
+        res.redirect "design/jobs"
+      else
+        models.STLDesign.find({"creator": req.user.id}).exec().then( (doc) ->
+          if doc
+            res.render('design/proposal', {projects: doc, toApply:true, error:"Some errors for this proposal"})
+        ).fail( ->
+          logger.error arguments
+          res.send 500
+        )
+    ).fail( ->
+      logger.error arguments
+      res.send 500
+    )
+
+
+  app.get '/design/jobs', decorators.filemanagerRequired, (req, res) ->
+    models.STLProject.find('order.printer': req.user.id, status: {"$lt": models.PROJECT_STATUSES.ARCHIVED[0], "$gt": models.PROJECT_STATUSES.PRINT_REQUESTED[0]}).exec (err, docs) ->
+      if err
+        logger.error err
+        res.send 500
+      else
+        res.render 'core/printing/jobs', {projects: docs}
+
+
+  app.get '/design/detail/:id', decorators.loginRequired, (req, res) ->
     console.log req.params.id
-    return
+
 
   app.post '/design/proposal/:id', decorators.loginRequired, (req, res) ->
     models.STLDesign.findOne({_id: req.params.id}).exec().then( (doc) ->
@@ -43,6 +71,7 @@ module.exports = (app) ->
           proposal.creator = req.user.id
           proposal.username = req.user.username
           proposal.hour = req.body.hours
+          proposal.backref = req.params.id
           proposal.cost = req.body.cost
           proposal.createAt = Date.now()
           proposal.save()
@@ -66,10 +95,10 @@ module.exports = (app) ->
   app.get '/design/proposal', decorators.loginRequired, (req, res) ->
     models.STLDesign.find({"creator": req.user.id}).exec().then( (doc) ->
       if doc
-        res.render('design/proposal', {projects: doc, toApply:true, error:""})
+        res.render('core/profile/proposal', {projects: doc, toApply:true, error:""})
 
       else
-        res.render('design/proposal', {projects: doc, toApply:true, error:"GHGHGJHGJHGJHGHJGHJGJHGJHG"})
+        res.render('design/proposal', {projects: doc, toApply:true, error:"No Design Proposal for you"})
     ).fail( ->
       logger.error arguments
       res.send 500
@@ -77,10 +106,9 @@ module.exports = (app) ->
 
 
   app.post '/design/stl/upload', decorators.loginRequired, (req, res) ->
-
     files = [].concat(req.files.file);
     resources = []
-
+    console.log "lenght: "+files[0].length
     if files[0].length>4
       res.render 'design/ask/stl', {error: "Too files"}
     else

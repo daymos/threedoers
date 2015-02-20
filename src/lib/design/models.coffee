@@ -1,6 +1,7 @@
 mongoose = require 'mongoose'
 gridfs = require '../gridfs'
 inflection = require 'inflection'
+models = require('./models')
 
 Schema = mongoose.Schema
 ObjectId = Schema.ObjectId
@@ -34,6 +35,10 @@ Proposal = new Schema
   username:
     type:String
     required: true
+
+  backref:
+    type:ObjectId
+    require:true
 
   hour:
     type: Number
@@ -98,7 +103,21 @@ STLDesign.methods.dasherizedStatus = ->
       return inflection.dasherize(DESIGN_STATUSES[key][1]).replace('-', '_')
 
 
+Proposal.pre 'save', (next) ->
+  that = @
+  models.STLDesign.findOne({_id: @backref}).exec().then( (doc) ->
+    i = 0
+    while i < doc.proposal.length
+      if (Boolean 'doc.proposal[i].accepted' != Boolean 'that.accepted' and doc.proposal[i]._id == that._id)
+        doc.proposal[i].accepted = that.accepted
+        doc.save()
+        i++
+      else
+        i++
 
+  )
+
+  next()
 
 # Expose Activation Status
 module.exports.STLDesign = mongoose.model 'STLDesign', STLDesign
