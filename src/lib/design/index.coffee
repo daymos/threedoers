@@ -5,6 +5,9 @@ module.exports = (app) ->
   decorators = require '../decorators'
   models = require('./models')
   settings = require('../../config')
+  utils = require('../utils')
+  mailer = require('../mailer').mailer
+  settings = require('../../config')
 
   app.get '/design/stl', decorators.loginRequired, (req, res) ->
       res.render 'design/ask/stl',{error:""}
@@ -12,7 +15,7 @@ module.exports = (app) ->
 
   app.get '/design/requests', decorators.loginRequired, (req, res) ->
     #models.STLDesign.find({status:{"$lt":models.DESIGN_STATUSES.ARCHIVED[0]}}).elemMatch("proposal",{'user':req.user.id}).exec().then(( docs) ->
-    models.STLDesign.find("$and":[{status:{"$lt":models.DESIGN_STATUSES.ARCHIVED[0]}}, {"proposal":{"$not":{"$elemMatch":{"creator":req.user._id}}}}]).exec().then(( docs) ->
+    models.STLDesign.find("$and":[{status:{"$lt":models.DESIGN_STATUSES.PREACCEPTED[0]}}, {"proposal":{"$not":{"$elemMatch":{"creator":req.user._id}}}}]).exec().then(( docs) ->
       if docs
          res.render 'design/requests', {projects: docs, toApply:true, error:""}
 #      else
@@ -30,12 +33,28 @@ module.exports = (app) ->
         res.send 500
       )
 
-  app.post '/design/proposal/review/:id', decorators.filemanagerRequired, (req, res) ->
+  #User accept id proposal
+  app.post '/design/proposal/review/:id', decorators.loginRequired, (req, res) ->
     models.Proposal.findOne({_id: req.params.id, accepted:false}).exec().then( (prop) ->
       if prop
         prop.accepted = true
         prop.save()
-        res.redirect "design/jobs"
+        models.STLDesign.findOne({_id:prop.backref}).exec().then( (stldes) ->
+
+          stldes.order =
+            preAmount:prop.cost
+            preHourly:prop.hour
+            designer:prop.creator
+            placedAt: new Date()
+          stldes.status = models.DESIGN_STATUSES.PREACCEPTED[0]
+          stldes.designer = prop.creator
+          stldes.save()
+
+        ).fail( ->
+          logger.error arguments
+          res.send 500
+        )
+        res.redirect "design/projects"
       else
         models.STLDesign.find({"creator": req.user.id}).exec().then( (doc) ->
           if doc
@@ -49,14 +68,22 @@ module.exports = (app) ->
       res.send 500
     )
 
-
-  app.get '/design/jobs', decorators.filemanagerRequired, (req, res) ->
-    models.STLProject.find('order.printer': req.user.id, status: {"$lt": models.PROJECT_STATUSES.ARCHIVED[0], "$gt": models.PROJECT_STATUSES.PRINT_REQUESTED[0]}).exec (err, docs) ->
+  #User side TODO status
+  app.get '/design/projects', decorators.loginRequired, (req, res) ->
+    models.STLDesign.find({'creator': req.user.id }).exec (err, docs) ->
       if err
         logger.error err
         res.send 500
       else
-        res.render 'core/printing/jobs', {projects: docs}
+        res.render 'design/project/list_projects', {projects: docs}
+
+  app.get '/design/jobs', decorators.filemanagerRequired, (req, res) ->
+    models.STLDesign.find(designer: req.user.id, status: {"$lt": models.DESIGN_STATUSES.PAID[0], "$gte": models.DESIGN_STATUSES.PREACCEPTED[0]}).exec (err, docs) ->
+      if err
+        logger.error err
+        res.send 500
+      else
+        res.render 'design/jobs', {projects: docs}
 
 
   app.get '/design/detail/:id', decorators.loginRequired, (req, res) ->
@@ -103,6 +130,94 @@ module.exports = (app) ->
       logger.error arguments
       res.send 500
     )
+
+  app.get '/design/project/:id', decorators.loginRequired, (req, res, next) ->
+    models.STLDesign.findOne({_id: req.params.id, $or: [{creator: req.user.id}, {designer: req.user.id}]}).exec().then( (doc) ->
+      if doc
+        res.render 'design/project/detail',
+          statuses: models.DESIGN_STATUSES
+          project: doc
+      else
+        next()
+    ).fail((reason) ->
+      logger.error reason
+      res.send 500
+    )
+  app.post '/design/accept/:id', decorators.filemanagerRequired, (req, res) ->
+    console.log "i'm accepting this job"
+    models.STLDesign.findOne({_id: req.params.id}).exec().then( (doc) ->
+      if doc
+        auth.User.findOne(doc.creator).exec (err, user) ->
+          if user
+#            mailer.send('mailer/printing/accept', {project: doc, user: user, site:settings.site}, {from: settings.mailer.noReply, to:[user.email], subject: settings.printing.accept.subject}).then ->
+            doc.status = models.DESIGN_STATUSES.ACCEPTED[0]
+            doc.save()
+            res.json msg: "Accepted"
+#
+#            # send notification
+#            auth.User.where('_id').in([req.user.id, user.id]).exec().then (docs)->
+#              if docs.length
+#                utils.sendNotification(io, docs, "Project <a href='/project/#{doc.id}'>#{doc.title}</a> was accepted.", 'Status changed', 'info')
+#                for user in docs
+#                  mailer.send('mailer/project/status', {project: doc, user: user, site:settings.site}, {from: settings.mailer.noReply, to:[user.email], subject: settings.project.status.subject})
+      else
+        res.json msg: "Looks like someone accepted, try with another", 400
+    ).fail( ->
+      logger.error arguments
+      res.send 500
+    )
+
+  app.post '/printing/deny/:id', decorators.printerRequired, (req, res) ->
+    models.STLProject.findOne({_id: req.params.id}).exec().then( (doc) ->
+      if doc and doc.validateNextStatus(models.PROJECT_STATUSES.PRINT_REQUESTED[0])
+        doc.status -= 1
+        doc.save()
+        res.json msg: "Denied"
+        # send notification
+        auth.User.where('_id').in([doc.user]).exec().then (docs)->
+          if docs.length
+            utils.sendNotification(io, docs, "Project <a href='/project/#{doc.id}'>#{doc.title}</a> is denied.", 'Status changed', 'info')
+
+      if doc and doc.status == models.PROJECT_STATUSES.PRINT_ACCEPTED[0]
+        res.json msg: "Looks like someone accepted, try with another", 400
+    ).fail( ->
+      logger.error arguments
+      res.send 500
+    )
+
+
+  app.post '/design/project/comment/:id', decorators.loginRequired, (req, res, next) ->
+    models.STLDesign.findOne({_id: req.params.id, $or: [{creator: req.user.id}, {'designer': req.user.id}]}).exec().then( (doc) ->
+      if doc
+        if req.body.message
+          console.log "before creating comment"
+          comment =
+            author: req.user.id
+            username: req.user.username
+            photo: req.user.photo
+            content: req.body.message
+            createdAt: Date.now()
+
+          console.log "before pushing"
+          doc.comments.push(comment)
+          console.log "before save"
+          doc.save()
+          res.json comment, 200
+          console.log "after save"
+          # send notification
+#          auth.User.where('_id').in([req.user.id, doc.designer]).exec().then (docs)->
+#            if docs.length
+#              utils.sendNotification(io, docs, "Project <a href='/project/#{doc.id}'>#{doc.title}</a> has new comment.", 'New Comment', 'info')
+        else
+          res.json msg: "The message is required.", 400
+      else
+        res.json msg: "Not allowed comments at this moment.", 400
+    ).fail( ->
+      logger.error arguments
+      res.send 500
+    )
+
+
 
 
   app.post '/design/stl/upload', decorators.loginRequired, (req, res) ->

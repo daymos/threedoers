@@ -1,5 +1,5 @@
 
-extends ../printing/base
+extends base
 
 block title
   |  Your Projects
@@ -27,7 +27,7 @@ block content-profile
             span.title STATUS
             | #{project.humanizedStatus()}
         .col-md-4
-          a.btn.btn-lg.btn-default.btn-goto(href='/project/#{ project.id }')
+          a.btn.btn-lg.btn-default.btn-goto(href='/design/project/#{ project.id }')
             span GO TO THE
               br
               | PROJECT

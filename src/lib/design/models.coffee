@@ -2,6 +2,7 @@ mongoose = require 'mongoose'
 gridfs = require '../gridfs'
 inflection = require 'inflection'
 models = require('./models')
+modelComment = require('../core/models')
 
 Schema = mongoose.Schema
 ObjectId = Schema.ObjectId
@@ -12,16 +13,12 @@ ObjectId = Schema.ObjectId
 
 
 module.exports.DESIGN_STATUSES = DESIGN_STATUSES =
-  PROCESSING: [1, 'processing']
-  PROCESSED: [2, 'processed']
-  PRINT_REQUESTED: [3, 'print requested']
-  PRINT_REVIEW: [4, 'print review']
-  PRINT_ACCEPTED: [5, 'print accepted']
-  PAYED: [6, 'payed']
-  PRINTING: [7, 'printing']
-  PRINTED: [8, 'printed']
-  SHIPPING: [9, 'shipping']
-  ARCHIVED: [10, 'archived']
+  UPLOADED: [1, 'uploaded']
+  PREACCEPTED: [2, 'preaccepted']
+  ACCEPTED: [3, 'accepted']
+  PAID: [4, 'payed']
+  FINISHED: [5, 'archived']
+
 
 ###############################################
 # Models
@@ -57,6 +54,29 @@ Proposal = new Schema
     default:false
 
 
+
+Comment = new Schema
+
+  author:
+    type: ObjectId
+    required: true
+
+  username:
+    type: String
+    required: true
+
+  photo:
+    type: String
+
+  content:
+    type: String
+    required: true
+
+  createdAt:
+    type: Date
+    default: Date.now
+
+
 STLDesign = new Schema
 
   creator:
@@ -74,9 +94,12 @@ STLDesign = new Schema
   description:
     type: String
 
+  order:
+    type:{}
+
   status:
     type: Number
-    default: DESIGN_STATUSES.PROCESSING[0]
+    default: DESIGN_STATUSES.UPLOADED[0]
     required: true
 
   proposal:
@@ -85,6 +108,12 @@ STLDesign = new Schema
   createAt:
     type: Date
     default: Date.now
+
+  comments:
+    type: [Comment]
+
+  designer:
+    type: String
 
   resources:
     type: [String]
@@ -99,6 +128,8 @@ STLDesign.methods.humanizedStatus = ->
 
 STLDesign.methods.dasherizedStatus = ->
   for key of DESIGN_STATUSES
+    console.log "key"+key
+    console.log "status"+@status
     if DESIGN_STATUSES[key][0] == @status
       return inflection.dasherize(DESIGN_STATUSES[key][1]).replace('-', '_')
 

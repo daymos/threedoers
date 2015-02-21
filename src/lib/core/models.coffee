@@ -223,6 +223,8 @@ module.exports.Subscription = mongoose.model 'Subscription', Subscription
 
 module.exports.STLProject = mongoose.model 'STLProject', STLProject
 
+module.exports.Comment = mongoose.model 'Comment', Comment
+
 
 module.exports.STLProject.schema.path('color').validate( (value) ->
   return true unless value?  # allowing empty
