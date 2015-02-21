@@ -6,6 +6,16 @@ block title
 
 block body
   div
+      -function prettyDate(dateString){
+      -var date = new Date(dateString);
+      -var d = date.getDate();
+      -var monthNames = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ];
+      -var m = monthNames[date.getMonth()];
+      -var y = date.getFullYear();
+      -var h = date.getHours()
+      -var mm = date.getMinutes()
+      -return d+'/'+m+'/'+y+' at '+h+':'+mm;
+      -}
     .container
       .row
         .col-md-6
@@ -135,28 +145,29 @@ block body
         br
         br
         .row
-          .col-md-8#comment-list
-            - for comment in project.comments
-              .media
-                a.pull-left(href='#')
-                  img.media-object(src='/#{comment.photo}', alt='', width='78', height='78')
-                .media-body
-                  p
-                    | #{comment.content}
-                .media-meta
-                  | by&nbsp;
-                  span.author #{comment.username}&nbsp;
-                  | at&nbsp;
-                  span.date #{comment.createdAt}
+          .col-md-12#comment-list
+              - for comment in project.comments
+                - var myclass=(user.username===comment.username ? 'mine-chat':'other-chat')
+                  div(class=myclass).media
+                      a.pull-left(href='#')
+                          img.media-object(src='/#{comment.photo}', alt='', width='78', height='78')
+                      .media-body
+                       p
+                          | #{comment.content}
+                      .media-meta
+                          | by&nbsp;
+                          span.author #{comment.username==user.username?"you":comment.username}&nbsp;
+                          | at&nbsp;
+                          span.date #{prettyDate(comment.createdAt)}
       br
       .section.primary
-        .container
-          .row
-            .col-md-10.col-sm-10
-              textarea#comment-text.comment.form-control(rows=6)
-            .col-md-2.col-sm-2
-              button.btn.btn-lg.btn-default.btn-goto#comment-button
-                span SEND
+          .container
+              .row
+                  .col-md-10.col-sm-10
+                      textarea#comment-text.comment.form-control(rows=6)
+                  .col-md-2.col-sm-2
+                      button.btn.btn-lg.btn-default.btn-goto#comment-button
+                          span SEND
 
   br
   br
