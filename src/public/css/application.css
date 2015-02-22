@@ -9682,4 +9682,7 @@ a.primary-hover::after {
   margin-top: 13px;
   margin-left: 18%; }
 
+.rejected_true {
+  background-color: red; }
+
 /*# sourceMappingURL=application.css.map */

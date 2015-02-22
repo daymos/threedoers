@@ -37,6 +37,10 @@ Proposal = new Schema
     type:ObjectId
     require:true
 
+  rejected:
+    type:Boolean
+    default:false
+
   hour:
     type: Number
     required: true
@@ -140,6 +144,8 @@ Proposal.pre 'save', (next) ->
     i = 0
     while i < doc.proposal.length
       if (Boolean 'doc.proposal[i].accepted' != Boolean 'that.accepted' and doc.proposal[i]._id == that._id)
+        if doc.proposal[i].accepted
+          doc.proposal[i].rejected = true
         doc.proposal[i].accepted = that.accepted
         doc.save()
         i++

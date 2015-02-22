@@ -70,7 +70,7 @@ module.exports = (app) ->
 
   #User side TODO status
   app.get '/design/projects', decorators.loginRequired, (req, res) ->
-    models.STLDesign.find({'creator': req.user.id }).exec (err, docs) ->
+    models.STLDesign.find({'creator': req.user.id, status: {"$lt": models.DESIGN_STATUSES.PAID[0], "$gte": models.DESIGN_STATUSES.PREACCEPTED[0]} }).exec (err, docs) ->
       if err
         logger.error err
         res.send 500
@@ -120,12 +120,12 @@ module.exports = (app) ->
     )
 
   app.get '/design/proposal', decorators.loginRequired, (req, res) ->
-    models.STLDesign.find({"creator": req.user.id}).exec().then( (doc) ->
+    models.STLDesign.find({"creator": req.user.id, status: {"$lt": models.DESIGN_STATUSES.PREACCEPTED[0]}}).exec().then( (doc) ->
       if doc
         res.render('core/profile/proposal', {projects: doc, toApply:true, error:""})
 
       else
-        res.render('design/proposal', {projects: doc, toApply:true, error:"No Design Proposal for you"})
+        res.render('core/profile/proposal', {projects: doc, toApply:true, error:"No Design Proposal for you"})
     ).fail( ->
       logger.error arguments
       res.send 500
@@ -138,13 +138,12 @@ module.exports = (app) ->
           statuses: models.DESIGN_STATUSES
           project: doc
       else
-        next()
+        res.redirect "/profile/projects"
     ).fail((reason) ->
       logger.error reason
       res.send 500
     )
   app.post '/design/accept/:id', decorators.filemanagerRequired, (req, res) ->
-    console.log "i'm accepting this job"
     models.STLDesign.findOne({_id: req.params.id}).exec().then( (doc) ->
       if doc
         auth.User.findOne(doc.creator).exec (err, user) ->
@@ -167,19 +166,26 @@ module.exports = (app) ->
       res.send 500
     )
 
-  app.post '/printing/deny/:id', decorators.printerRequired, (req, res) ->
-    models.STLProject.findOne({_id: req.params.id}).exec().then( (doc) ->
-      if doc and doc.validateNextStatus(models.PROJECT_STATUSES.PRINT_REQUESTED[0])
+  app.post '/design/deny/:id', decorators.filemanagerRequired, (req, res) ->
+    models.STLDesign.findOne({_id: req.params.id}).exec().then( (doc) ->
+      if doc
         doc.status -= 1
+        doc.designer = ""
+        models.Proposal.findOne({'backref': req.params.id}).exec().then( (prop) ->
+          if prop
+            prop.accepted = false
+            prop.rejected = true
+            prop.save()
+        ).fail( ->
+          logger.error arguments
+          res.send 500
+        )
         doc.save()
         res.json msg: "Denied"
         # send notification
-        auth.User.where('_id').in([doc.user]).exec().then (docs)->
-          if docs.length
-            utils.sendNotification(io, docs, "Project <a href='/project/#{doc.id}'>#{doc.title}</a> is denied.", 'Status changed', 'info')
-
-      if doc and doc.status == models.PROJECT_STATUSES.PRINT_ACCEPTED[0]
-        res.json msg: "Looks like someone accepted, try with another", 400
+#        auth.User.where('_id').in([doc.user]).exec().then (docs)->
+#          if docs.length
+#            utils.sendNotification(io, docs, "Project <a href='/project/#{doc.id}'>#{doc.title}</a> is denied.", 'Status changed', 'info')
     ).fail( ->
       logger.error arguments
       res.send 500
@@ -190,7 +196,6 @@ module.exports = (app) ->
     models.STLDesign.findOne({_id: req.params.id, $or: [{creator: req.user.id}, {'designer': req.user.id}]}).exec().then( (doc) ->
       if doc
         if req.body.message
-          console.log "before creating comment"
           comment =
             author: req.user.id
             username: req.user.username
@@ -198,12 +203,9 @@ module.exports = (app) ->
             content: req.body.message
             createdAt: Date.now()
 
-          console.log "before pushing"
           doc.comments.push(comment)
-          console.log "before save"
           doc.save()
           res.json comment, 200
-          console.log "after save"
           # send notification
 #          auth.User.where('_id').in([req.user.id, doc.designer]).exec().then (docs)->
 #            if docs.length
@@ -223,7 +225,6 @@ module.exports = (app) ->
   app.post '/design/stl/upload', decorators.loginRequired, (req, res) ->
     files = [].concat(req.files.file);
     resources = []
-    console.log "lenght: "+files[0].length
     if files[0].length>4
       res.render 'design/ask/stl', {error: "Too files"}
     else
@@ -231,7 +232,6 @@ module.exports = (app) ->
       while i<files[0].length
         resources.push files[0][i].path.replace(/^.*[\\\/]/, '')
         i++
-      console.log resources.length
       design = new models.STLDesign
       design.resources = resources
       design.creator = req.user.id
@@ -243,4 +243,4 @@ module.exports = (app) ->
           logger.error reason
           res.send 500
         else
-          res.redirect "/home"
+          res.redirect "/design/proposal"
