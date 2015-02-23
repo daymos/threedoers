@@ -8,27 +8,49 @@ module.exports = (app) ->
   decorators = require '../decorators'
   models = require('./models')
   userModel = require('../auth/models')
+  desigModel = require('../design/models.coffee')
   settings = require('../../config')
 
 
   app.post '/api/get_projects_for_user',(req,res) ->
-    console.log '/api/get_projects_for_user'
-    console.log req.query
+    console.log '/api/get_projects_for_user'+req.query.token
     userModel.User.findOne({token: req.query.token}).exec().then( (user) ->
       if not user
         res.json
         status: -1
         error: 'No User found with this Access Token'
       else
+        console.log "id user:"+user.id
+        desigModel.STLDesign.findOne({"designer": user.id}).exec().then( (docs) ->
+          if docs
+            project=
+             project_name: docs.title
+            projects = []
+            projects.push(project)
+            res.json
+              status: 0
+              error: null
+              projects:projects
+          else
+            console.log "i DON'T have projects"
+            res.json
+              status: -1
+              error: 'No Projects for this User'
+        ).fail((reason) ->
+            logger.error reason
+            console.log "SERVER ERROR 1"
+            res.json
+              status: -1
+              error: 'Server Error, please retry later'
+        )
+
+    ).fail((reason) ->
+        logger.error reason
+        console.log "SERVER ERROR 2"
         res.json
           status: -1
-          error: 'No Projects for this User'
-    ).fail((reason) ->
-      logger.error reason
-      res.json
-        status: -1
-        error: 'Server Error, please retry later'
-)
+          error: 'Server Error, please retry later'
+    )
 
 
 
@@ -45,10 +67,13 @@ module.exports = (app) ->
             error: 'Wrong Username or Password'
         else
           user.token = uuid.v4()
-          console.log user.token
           user.save (err) ->
             if err
+              res.json
+              status: -1
+              error: 'Server Error, please retry later'
               console.log err
+
           res.json
             status: 0
             error: null
