@@ -8,6 +8,7 @@ ObjectID = mongoose.mongo.BSONPure.ObjectID
 
 
 exports.putFile = (path, name, options...) ->
+  console.log "called"
   deferred = q.defer()
 
   db = mongoose.connection.db
@@ -16,10 +17,12 @@ exports.putFile = (path, name, options...) ->
 
   new GridStore(db, name, "w", options).open (err, file) ->
     if err
+      console.log "error 1"
       deferred.reject err
     else
       file.writeFile path, (err, doc) ->
         if err
+          console.log "error 2"+path
           deferred.reject err
         else
           deferred.resolve doc

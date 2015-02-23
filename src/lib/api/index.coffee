@@ -7,6 +7,8 @@ module.exports = (app) ->
   passport = require "passport"
   decorators = require '../decorators'
   models = require('./models')
+  fs = require('fs')
+  gridfs = require '../gridfs'
   userModel = require('../auth/models')
   desigModel = require('../design/models.coffee')
   settings = require('../../config')
@@ -24,7 +26,13 @@ module.exports = (app) ->
         desigModel.STLDesign.findOne({"designer": user.id}).exec().then( (docs) ->
           if docs
             project=
+             project_id: docs.id
              project_name: docs.title
+             project_description: docs.description
+             project_total_time_logged: 0
+             project_status:true
+             project_total_amount: 1000
+             project_estimated_time: docs.hour
             projects = []
             projects.push(project)
             res.json
@@ -52,7 +60,27 @@ module.exports = (app) ->
           error: 'Server Error, please retry later'
     )
 
+  app.post '/api/create_work_session',(req,res) ->
+    console.log '/api/create_work_session'+req.query
+    console.log req.query
+    console.log req.files.image.name
+    userModel.User.findOne({token: req.query.token}).exec().then( (user) ->
+      if not user
+        res.json
+        status: -1
+        error: 'No User found with this Access Token'
+      else
+        console.log "gridfs test"
+        a = gridfs.putFile(req.files.image.path,req.files.image.name+"1")
+        console.dir a
 
+    ).fail((reason) ->
+      logger.error reason
+      console.log "SERVER ERROR 2"
+      res.json
+        status: -1
+        error: 'Server Error, please retry later'
+    )
 
   app.post '/api/login',(req, res) ->
     console.log '/api/login'
