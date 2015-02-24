@@ -1,5 +1,5 @@
 module.exports = (app) ->
-
+  fs = require 'fs'
   auth = require '../auth/models'
   logger = require '../logger'
   decorators = require '../decorators'
@@ -10,7 +10,11 @@ module.exports = (app) ->
   settings = require('../../config')
 
   app.get '/design/stl', decorators.loginRequired, (req, res) ->
-      res.render 'design/ask/stl',{error:""}
+      stringerror =""
+      if req.query.error
+        stringerror = req.query.error
+
+      res.render 'design/ask/stl',{error:stringerror}
 
 
   app.get '/design/requests', decorators.loginRequired, (req, res) ->
@@ -68,7 +72,7 @@ module.exports = (app) ->
       res.send 500
     )
 
-  #User side TODO status
+
   app.get '/design/projects', decorators.loginRequired, (req, res) ->
     models.STLDesign.find({'creator': req.user.id, status: {"$lt": models.DESIGN_STATUSES.PAID[0], "$gte": models.DESIGN_STATUSES.PREACCEPTED[0]} }).exec (err, docs) ->
       if err
@@ -223,24 +227,43 @@ module.exports = (app) ->
 
 
   app.post '/design/stl/upload', decorators.loginRequired, (req, res) ->
-    files = [].concat(req.files.file);
+
+    files = req.files.file;
     resources = []
-    if files[0].length>4
-      res.render 'design/ask/stl', {error: "Too files"}
+
+    if (Array.isArray(req.files.file[0]))
+      console.log "more then one file"
+      if req.files.file[0].length>2
+        i = 0;
+        while i<files[0].length
+          fs.unlinkSync files[0][i].path
+
+          console.log "Removed"+files[0][i].path
+          i++
+        stringerror = encodeURIComponent("Too files")
+        return res.redirect('/design/stl/?error='+stringerror)
+      else
+        i = 0;
+        while i<files[0].length
+          resources.push files[0][i].path.replace(/^.*[\\\/]/, '')
+          console.log files[0][i].path.replace(/^.*[\\\/]/, '')
+          i++
     else
-      i = 0;
-      while i<files[0].length
-        resources.push files[0][i].path.replace(/^.*[\\\/]/, '')
-        i++
-      design = new models.STLDesign
-      design.resources = resources
-      design.creator = req.user.id
-      design.title = req.body.title
-      design.abstract = req.body.abstract
-      design.description = req.body.stl_desc
-      design.save (err) ->
-        if err
-          logger.error reason
-          res.send 500
-        else
-          res.redirect "/design/proposal"
+      console.log "just one file"
+      resources.push files[0].path.replace(/^.*[\\\/]/, '')
+      console.log files[0].path.replace(/^.*[\\\/]/, '')
+
+    console.log "RESOURCE FILE"
+    console.log resources
+    design = new models.STLDesign
+    design.resources = resources
+    design.creator = req.user.id
+    design.title = req.body.title
+    design.abstract = req.body.abstract
+    design.description = req.body.stl_desc
+    design.save (err) ->
+      if err
+        logger.error reason
+        res.send 500
+      else
+        res.redirect "/design/proposal"

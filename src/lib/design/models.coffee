@@ -119,6 +119,10 @@ STLDesign = new Schema
   designer:
     type: String
 
+  project_total_time_logged:
+    type: Number
+    default: 0
+
   resources:
     type: [String]
     require: true
