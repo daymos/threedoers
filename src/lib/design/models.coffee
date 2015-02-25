@@ -130,35 +130,33 @@ STLDesign = new Schema
 
 STLDesign.methods.humanizedStatus = ->
   for key of DESIGN_STATUSES
-    console.log @status
     if DESIGN_STATUSES[key][0] == @status
       return DESIGN_STATUSES[key][1]
 
 STLDesign.methods.dasherizedStatus = ->
   for key of DESIGN_STATUSES
-    console.log "key"+key
-    console.log "status"+@status
     if DESIGN_STATUSES[key][0] == @status
       return inflection.dasherize(DESIGN_STATUSES[key][1]).replace('-', '_')
 
 
-Proposal.pre 'save', (next) ->
-  that = @
-  models.STLDesign.findOne({_id: @backref}).exec().then( (doc) ->
-    i = 0
-    while i < doc.proposal.length
-      if (Boolean 'doc.proposal[i].accepted' != Boolean 'that.accepted' and doc.proposal[i]._id == that._id)
-        if doc.proposal[i].accepted
-          doc.proposal[i].rejected = true
-        doc.proposal[i].accepted = that.accepted
-        doc.save()
-        i++
-      else
-        i++
-
-  )
-
-  next()
+#Proposal.pre 'save', (next) ->
+#  that = @
+#  models.STLDesign.findOne({_id: @backref}).exec().then( (doc) ->
+#    i = 0
+#    while i < doc.proposal.length
+#      if (Boolean 'doc.proposal[i].accepted' != Boolean 'that.accepted' and doc.proposal[i]._id == that._id)
+#        if doc.proposal[i].accepted
+#          console.log "Set propasal rejected for"+doc.proposal[i]._id
+#          doc.proposal[i].rejected = true
+#        doc.proposal[i].accepted = that.accepted
+#        doc.save()
+#        i++
+#      else
+#        i++
+#
+#  )
+#
+#  next()
 
 # Expose Activation Status
 module.exports.STLDesign = mongoose.model 'STLDesign', STLDesign

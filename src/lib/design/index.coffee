@@ -39,6 +39,7 @@ module.exports = (app) ->
 
   #User accept id proposal
   app.post '/design/proposal/review/:id', decorators.loginRequired, (req, res) ->
+    console.log "/design/proposal/review/:id"
     models.Proposal.findOne({_id: req.params.id, accepted:false}).exec().then( (prop) ->
       if prop
         prop.accepted = true
@@ -52,6 +53,19 @@ module.exports = (app) ->
             placedAt: new Date()
           stldes.status = models.DESIGN_STATUSES.PREACCEPTED[0]
           stldes.designer = prop.creator
+          i = 0
+          while i < stldes.proposal.length
+            console.log "INSIDE THE WHILE"
+            console.log "stldes.proposal[i]._id "+stldes.proposal[i]._id
+            console.log "prop._id"+prop._id
+            console.log "check---->"+(stldes.proposal[i]._id).toString() == (prop._id).toString()
+            if ((stldes.proposal[i]._id).toString() == (prop._id).toString())
+              console.log "Set accepted in proposal"
+              console.log "proj "+stldes.proposal[i].accepted
+              console.log "prop "+prop.accepted
+              stldes.proposal[i].accepted = prop.accepted
+              break
+            i++
           stldes.save()
 
         ).fail( ->
@@ -171,10 +185,22 @@ module.exports = (app) ->
     )
 
   app.post '/design/deny/:id', decorators.filemanagerRequired, (req, res) ->
+    console.log "/design/deny/:id"
     models.STLDesign.findOne({_id: req.params.id}).exec().then( (doc) ->
       if doc
+        console.log "got a project"
         doc.status -= 1
         doc.designer = ""
+        i = 0
+        console.log "I have "+doc.proposal.length+" proposal for this project"
+        while i < doc.proposal.length
+          if doc.proposal[i].accepted
+            console.log "proposal "+i+" was accepted and now rejected"
+            doc.proposal[i].accepted = false
+            doc.proposal[i].rejected = true
+            break
+          else
+            i++
         models.Proposal.findOne({'backref': req.params.id}).exec().then( (prop) ->
           if prop
             prop.accepted = false
@@ -233,7 +259,7 @@ module.exports = (app) ->
 
     if (Array.isArray(req.files.file[0]))
       console.log "more then one file"
-      if req.files.file[0].length>2
+      if req.files.file[0].length>4
         i = 0;
         while i<files[0].length
           fs.unlinkSync files[0][i].path
