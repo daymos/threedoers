@@ -1,6 +1,6 @@
 /* Backgrounds */
 $bg-body: #f3fff4;
-$bg-footer: #000000;
+$bg-footer: #dde5de;
 $bg-primary: #7bf282;
 $bg-orange: #f2542a;
 $bg-blue: #3fa6f2;
@@ -18,7 +18,16 @@ $default-color: #000000;
 $primary-color: #7bf282;
 $footer-color: #d8ffd2;
 
-
+html,
+body {
+  margin:0;
+  padding:0;
+  height:100%;
+}
+#wrapper {
+  min-height:100%;
+  position:relative;
+}
 body {
   background: $bg-body;
   color: $default-color;
@@ -61,6 +70,9 @@ hr.hr-light {
   background: $bg-footer;
   color: $footer-color;
   padding: 40px 0;
+  width: 100%;
+  bottom: 0px;
+  position: absolute;
 }
 
 .copyright {
@@ -74,11 +86,13 @@ hr.hr-light {
   text-align: right;
 
   a {
+    background-color: $primary-color;
     border-radius: 50%;
     color: inherit;
     display: inline-block;
     *display: inline;
     height: 50px;
+    margin-right: 5px;
     text-align: center;
     width: 50px;
   }
@@ -125,13 +139,32 @@ hr.hr-light {
   color: $primary-color;
 }
 .nav-bar-logo{
-   width: 40%;
+   width: 65%;
+}
+.margin-top-navbar{
+
+  margin-top: 1.3%;
+
+}
+.profile-thumb{
+  width: 120%;
 }
 .margin-header-10{
   margin-top: 2%;
+  margin-bottom: 2%;
 }
 .black-3doers, .green-3doers a{
     color: black;
+}
+.white-3doers {
+  color:#f3fff4;
+}
+.grey-3doers{
+  background-color: #dde5de;
+}
+.no-padding{
+  padding: initial;
+  width: 100%;
 }
 .focused{
   border-color: red;
@@ -155,7 +188,7 @@ hr.hr-light {
   border:1px solid #e8debd
 }
 .icon-dimension{
-    font-size: 30px;
+    font-size: 42px;
 }
 .favorite-count {
   background: url('../img/bg-favorite.png') left top no-repeat;
