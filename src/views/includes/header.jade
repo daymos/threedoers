@@ -21,39 +21,40 @@
             .clearfix
             .simple-nav
               nav
-                ul.nav.nav-pills.pull-right
+                ul.nav.nav-pills.col-md-offset-3
 
-                  - if (user && user.printer == 'accepted')
-                    li
-                      a(href='/printing/requests') Available Jobs
-                  - if (user && user.filemanager == 'accepted')
-                    li
-                      a(href='/design/requests') Available Files
+                  //- if (user && user.printer == 'accepted')
+                  //  li
+                  //    a(href='/printing/requests') Available Jobs
+                  //- if (user && user.filemanager == 'accepted')
+                  //  li
+                  //    a(href='/design/requests') Available Files
                   - if (user && user.filemanager != 'accepted' || user.printer != 'accepted')
                     li
-                      a(href='/project/upload') Upload A Project
+                      a(href='/project/upload') Send to Print
 
-                  - if (user && user.printer != 'accepted')
-                    li
-                      a(href='/become') Become A Printer
+                  //- if (user && user.printer != 'accepted')
+                  //  li
+                  //    a(href='/become') Become A Printer
+                  //- if (user && user.filemanager != 'accepted')
+                  //  li
+                  //    a(href='/become/filemanager') Become A Designer
                   - if (user && user.filemanager != 'accepted')
                     li
-                      a(href='/become/filemanager') Become A Designer
+                      a(href='/design/stl') Find a Designer
                   - if (user)
                     li
-                      a(href='/design/stl') Ask for a STL
-                  li.dropdown
-                    a.dropdown-toggle(href='#', data-toggle='dropdown') #{user.username}
-                    ul.dropdown-menu.align-top-menu(role='menu')
-                      li
-                        a(href='/profile/projects') User
-                      if user.printer == 'accepted'
-                        li
-                          a(href='/printing/requests') Printer
-                      if user.filemanager == 'accepted'
-                        li
-                          a(href='/design/requests') File manager
-                      li
-                        a(href='/profile/settings') Edit profile
-                      li
-                        a(href='/accounts/logout') Sign Out
+                        a(href='/design/stl') Upgrade Profile
+
+            .simple-nav.description-to-hide
+                nav
+                    ul.nav.nav-pills.col-md-offset-3
+                        - if (user && user.filemanager != 'accepted' || user.printer != 'accepted')
+                            li
+                                p some ugly text
+                        - if (user && user.filemanager != 'accepted')
+                            li
+                                p some ugly text
+                        - if (user)
+                            li
+                                p some ugly text

@@ -122,3 +122,14 @@ html.no-js(lang="en", "xmlns:fb"="http://ogp.me/ns/fb#")
           // $(".fittext").fitText();
         }
       );
+    script.
+      $(document).ready(
+        $(window).scroll(function() {
+
+            if ($(this).scrollTop()>10){
+                $('.description-to-hide').fadeOut();
+            }
+            else
+                $('.description-to-hide').fadeIn();
+            })
+      );

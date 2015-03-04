@@ -8371,6 +8371,9 @@ hr.hr-light {
 #header {
   padding: 40px 0; }
 
+#content {
+  margin-bottom: 7%; }
+
 #footer {
   background: #dde5de;
   color: #d8ffd2;
@@ -8439,7 +8442,8 @@ hr.hr-light {
   color: #7bf282; }
 
 .nav-bar-logo {
-  width: 65%; }
+  width: 60%;
+  margin-top: 3%; }
 
 .margin-top-navbar {
   margin-top: 1.3%; }
