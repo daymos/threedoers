@@ -163,13 +163,17 @@ module.exports = (app, io) ->
 
 
   app.get '/profile/projects', decorators.loginRequired, (req, res) ->
-    models.STLProject.find({user: req.user._id, status: {"$ne": models.PROJECT_STATUSES.ARCHIVED[0]}}).exec().then( (docs) ->
-      res.render 'core/profile/list_projects', {projects: docs}
-    ).fail( ->
-      logger.error arguments
-      res.send 500
-    )
-
+    if req.user.printer!="accepted" and req.user.filemanager!="accepted"
+      models.STLProject.find({user: req.user._id, status: {"$ne": models.PROJECT_STATUSES.ARCHIVED[0]}}).exec().then( (docs) ->
+        res.render 'core/profile/list_projects', {projects: docs}
+      ).fail( ->
+        logger.error arguments
+        res.send 500
+      )
+    else if req.user.printer=='accepted' and req.user.filemanager!="accepted"
+      res.redirect "/printing/requests"
+    else if req.user.printer!='accepted' and req.user.filemanager=="accepted"
+      res.redirect "/design/requests"
 
   app.get '/profile/archived', decorators.loginRequired, (req, res) ->
     models.STLProject.find({user: req.user._id, status: models.PROJECT_STATUSES.ARCHIVED[0]}).exec().then( (docs) ->

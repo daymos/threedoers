@@ -12,7 +12,7 @@
     setCSRFToken($("meta[name=\"csrf-token\"]").attr("content"));
     $.ajaxUploadSettings.name = "thumbnail";
     return $("#clickable").ajaxUploadPrompt({
-      url: "./upload",
+      url: "/project/upload",
       beforeSend: function() {
         $("#promptzone").hide();
         return $(".progress-bar").parent().removeClass('hide');

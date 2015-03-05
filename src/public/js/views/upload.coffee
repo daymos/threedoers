@@ -14,7 +14,7 @@ $(document).ready ->
 
   # Set promptzone
   $("#clickable").ajaxUploadPrompt
-    url: "./upload"
+    url: "/project/upload"
 
     beforeSend: ->
       $("#promptzone").hide()
