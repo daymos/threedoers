@@ -17,7 +17,7 @@ module.exports = (app) ->
       res.render 'design/ask/stl',{error:stringerror}
 
 
-  app.get '/design/requests', decorators.loginRequired, (req, res) ->
+  app.get '/design/requests', decorators.filemanagerRequired, (req, res) ->
     #models.STLDesign.find({status:{"$lt":models.DESIGN_STATUSES.ARCHIVED[0]}}).elemMatch("proposal",{'user':req.user.id}).exec().then(( docs) ->
     models.STLDesign.find("$and":[{status:{"$lt":models.DESIGN_STATUSES.PREACCEPTED[0]}}, {"proposal":{"$not":{"$elemMatch":{"creator":req.user._id}}}}]).exec().then(( docs) ->
       if docs
@@ -55,14 +55,8 @@ module.exports = (app) ->
           stldes.designer = prop.creator
           i = 0
           while i < stldes.proposal.length
-            console.log "INSIDE THE WHILE"
-            console.log "stldes.proposal[i]._id "+stldes.proposal[i]._id
-            console.log "prop._id"+prop._id
-            console.log "check---->"+(stldes.proposal[i]._id).toString() == (prop._id).toString()
+
             if ((stldes.proposal[i]._id).toString() == (prop._id).toString())
-              console.log "Set accepted in proposal"
-              console.log "proj "+stldes.proposal[i].accepted
-              console.log "prop "+prop.accepted
               stldes.proposal[i].accepted = prop.accepted
               break
             i++

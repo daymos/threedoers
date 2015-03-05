@@ -884,14 +884,14 @@ a.direct-link {
   border-bottom-color: $primary-color;
 }
 .nav-tabs > li > a {
-  color: #000000;
+  color: #bab9b9;
   font-family: $font-secondary-stack;
   font-size: 41px;
   font-style: italic;
-  font-weight: bold;
+  //font-weight: bold;
   line-height: 43px;
   padding: 10px 30px;
-  text-transform: uppercase;
+//  text-transform: uppercase;
 }
 .nav-tabs > li > a:hover,
 .nav-tabs > li > a:focus {
@@ -901,10 +901,10 @@ a.direct-link {
   background-color: $bg-body;
   border-color: $primary-color;
   border-bottom-color: transparent;
-  color: #000000;
+  color: #bab9b9;
 }
 .nav-tabs > li.active > a span {
-  background: url('../img/bg-active-tab.png') left center repeat-x;
+  //background: url('../img/bg-active-tab.png') left center repeat-x;
 }
 .tab-content {
   padding-bottom: 80px;
@@ -1345,7 +1345,7 @@ a.primary-hover {
 }
 .design-base{
   > li>a{
-    font-size: 29px;
+    font-size: 39px;
   }
 }
 /*Chat*/
