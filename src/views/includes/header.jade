@@ -23,38 +23,42 @@
               nav
                 ul.nav.nav-pills.col-md-offset-3
 
-                  //- if (user && user.printer == 'accepted')
-                  //  li
-                  //    a(href='/printing/requests') Available Jobs
-                  //- if (user && user.filemanager == 'accepted')
-                  //  li
-                  //    a(href='/design/requests') Available Files
+
                   - if (user && user.filemanager != 'accepted' || user.printer != 'accepted')
                     li
-                      a(href='/project/upload') Send to Print
+                      a(href='/project/upload')
+                          img(src='/img/icons_printing.png')
 
-                  //- if (user && user.printer != 'accepted')
-                  //  li
-                  //    a(href='/become') Become A Printer
-                  //- if (user && user.filemanager != 'accepted')
-                  //  li
-                  //    a(href='/become/filemanager') Become A Designer
                   - if (user && user.filemanager != 'accepted')
                     li
-                      a(href='/design/stl') Find a Designer
+                      a(href='/design/stl')
+                          img(src='/img/icon-1.png')
                   - if (user)
                     li
-                        a(href='/design/stl') Upgrade Profile
+                        a(href='/design/stl')
+                            img(src='/img/icon-22.png')
 
             .simple-nav.description-to-hide
                 nav
                     ul.nav.nav-pills.col-md-offset-3
                         - if (user && user.filemanager != 'accepted' || user.printer != 'accepted')
                             li
-                                p some ugly text
+                                p
+                                b Send to Print
+                                p Upload an STL file,
+                                p see price and order
+                                p your print
                         - if (user && user.filemanager != 'accepted')
                             li
-                                p some ugly text
+                                p
+                                b Find a Designer
+                                p Describe your project
+                                p and see the best
+                                p Designer for you
                         - if (user)
                             li
-                                p some ugly text
+                                p
+                                b Upgrade your Profile
+                                p Are you a Printer or a Designer?
+                                p Click here to Upgrade your profile
+                                p and start print or design for other
