@@ -8339,6 +8339,14 @@ body {
   padding: 0;
   height: 100%; }
 
+.circular {
+  width: 115px;
+  height: 115px;
+  border-radius: 150px;
+  -webkit-border-radius: 150px;
+  -moz-border-radius: 150px;
+  border: solid; }
+
 #wrapper {
   min-height: 100%;
   position: relative; }
@@ -8370,6 +8378,10 @@ hr.hr-light {
 
 #header {
   padding: 40px 0; }
+
+.small-circular {
+  width: 80px;
+  height: 80px; }
 
 #content {
   margin-bottom: 7%; }
@@ -8553,10 +8565,10 @@ hr.hr-light {
   text-transform: uppercase; }
   .page-title span {
     display: inline-block;
-    background-color: #7bf282;
+    background-color: #f3fff4;
     padding-right: 40px; }
   .page-title:before {
-    background: #7bf282;
+    background: #f3fff4;
     content: "";
     display: block;
     height: 100%;
@@ -8566,7 +8578,7 @@ hr.hr-light {
     width: 200%; }
 
 #title.page-title {
-  background-color: #7bf282; }
+  background-color: #f3fff4; }
 
 .page-title.small {
   font-size: 28px;
@@ -8579,7 +8591,7 @@ hr.hr-light {
 .page-title.right:before {
   display: none; }
 .page-title.right:after {
-  background: #7bf282;
+  background: #f3fff4;
   content: "";
   display: block;
   height: 100%;
@@ -8731,6 +8743,14 @@ a.direct-link {
   font-style: italic;
   font-weight: bold; }
 
+a.direct-link-ship-address {
+  color: #000000;
+  font-family: "Lato", Helvetica, sans-serif;
+  font-size: 19px;
+  font-style: italic;
+  font-weight: bold;
+  margin-left: 15px; }
+
 /* Tools */
 .clean-left {
   clear: left; }
@@ -8745,7 +8765,7 @@ a.direct-link {
   position: relative; }
 
 .section.primary {
-  background: #7bf282; }
+  background: #f3fff4; }
 
 .section.orange {
   background: #f2542a; }
@@ -8963,7 +8983,6 @@ a.direct-link {
 
 .preview-print:after,
 .preview-print:before {
-  border: 4px dashed #000000;
   content: '';
   position: absolute; }
 
@@ -8981,14 +9000,14 @@ a.direct-link {
 
 .photoedit {
   margin-bottom: 40px; }
-  .photoedit a {
+  .photoedit a, .photoedit button {
     color: #000000;
     font-family: "Titillium Web", Helvetica, sans-serif;
-    font-size: 25px;
+    font-size: 19px;
     font-style: italic;
     font-weight: bold;
     margin-left: 30px;
-    vertical-align: top; }
+    vertical-align: bottom; }
 
 /* Back & Download Links */
 .back-link {
@@ -9239,10 +9258,16 @@ a.direct-link {
   min-width: 300px; }
 
 /* Form */
+.resize-input-form {
+  font-size: 20px;
+  height: 40px; }
+
+.margin-address {
+  margin-top: 108px; }
+
 .form-control.input-text {
   color: #000000;
-  border-radius: 0;
-  box-shadow: 4px -4px 0 #000000;
+  border-radius: 15px;
   font-family: "Lato", Helvetica, sans-serif;
   font-style: italic;
   font-weight: bold; }

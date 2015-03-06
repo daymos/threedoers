@@ -1,7 +1,7 @@
 /* Backgrounds */
 $bg-body: #f3fff4;
 $bg-footer: #dde5de;
-$bg-primary: #7bf282;
+$bg-primary: #f3fff4;
 $bg-orange: #f2542a;
 $bg-blue: #3fa6f2;
 $bg-default-button: #000000;
@@ -23,6 +23,14 @@ body {
   margin:0;
   padding:0;
   height:100%;
+}
+.circular {
+  width: 115px;
+  height: 115px;
+  border-radius: 150px;
+  -webkit-border-radius: 150px;
+  -moz-border-radius: 150px;
+  border: solid;
 }
 #wrapper {
   min-height:100%;
@@ -60,6 +68,10 @@ hr.hr-light {
 #header {
   padding: 40px 0;
 
+}
+.small-circular{
+  width: 80px;
+  height: 80px;
 }
 
 #content {
@@ -468,6 +480,14 @@ a.direct-link {
 	font-style: italic;
 	font-weight: bold;
 }
+a.direct-link-ship-address {
+  color: $default-color;
+  font-family: $font-primary-stack;
+  font-size: 19px;
+  font-style: italic;
+  font-weight: bold;
+  margin-left: 15px;
+}
 
 /* Tools */
 .clean-left {
@@ -745,7 +765,7 @@ a.direct-link {
 }
 .preview-print:after,
 .preview-print:before {
-  border: 4px dashed #000000;
+  //border: 4px dashed #000000;
   content: '';
   position: absolute;
 }
@@ -765,14 +785,14 @@ a.direct-link {
 .photoedit {
 	margin-bottom: 40px;
 
-	a {
+	a, button {
 		color: $default-color;
 		font-family: $font-secondary-stack;
-		font-size: 25px;
+		font-size: 19px;
 		font-style: italic;
 		font-weight: bold;
 		margin-left: 30px;
-		vertical-align: top;
+		vertical-align: bottom;
 	}
 }
 
@@ -1066,10 +1086,17 @@ a.direct-link {
 }
 
 /* Form */
+.resize-input-form{
+  font-size: 20px;
+  height: 40px;
+}
+.margin-address{
+  margin-top:108px;
+}
 .form-control.input-text {
   color: $default-color;
-  border-radius: 0;
-  box-shadow: 4px -4px 0 $bg-default-button;
+  border-radius: 15px;
+  //box-shadow: 4px -4px 0 $bg-default-button;
   font-family: $font-primary-stack;
   font-style: italic;
   font-weight: bold;

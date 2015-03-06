@@ -11,7 +11,7 @@
     };
     setCSRFToken($("meta[name=\"csrf-token\"]").attr("content"));
     $.ajaxUploadSettings.name = "thumbnail";
-    return $("#clickable").ajaxUploadPrompt({
+    return $("#clickable-stl").ajaxUploadPrompt({
       url: "/project/upload",
       beforeSend: function() {
         $("#promptzone").hide();

@@ -8,14 +8,6 @@ block extra-headers
   meta(name="csrf-token", content="#{csrfToken}")
 
 block body
-  .container
-    .row
-      .col-md-6
-        h1.page-title
-          span Edit Your
-        h1.page-title
-          span Profile
-  br
   .section.primary
     .container
       .row
@@ -26,83 +18,62 @@ block body
             input(type='hidden', name='_csrf', value=csrfToken)
             .photoedit
               - if (user.photo)
-                img#profile_image(width='142', height='142', src='/#{ user.photo }', alt='#{ user.firstName } #{ user.lastName }')
+                img#profile_image.circular(width='142', height='142', src='/#{ user.photo }', alt='#{ user.firstName } #{ user.lastName }')
               - else
-                img#profile_image(width='142', height='142', src='/img/edit_photo_placeholder.png?1396277523', alt='profile image')
-              a#clickable(href='#') EDIT PHOTO
+                img#profile_image.circular(width='142', height='142', src='/img/edit_photo_placeholder.png?1396277523', alt='profile image')
+              button#clickable.btn-default.btn-xs.grey-3doers(href='#') Edit Photo
             .form-group
-              input#username.form-control.input-text.input-lg(value=(user.username)?"#{user.username}":"", placeholder='USERNAME', name='username')
+              input#username.form-control.input-text.resize-input-form(value=(user.username)?"#{user.username}":"", placeholder='Username', name='username')
             .form-group
-              input#email.form-control.input-text.input-lg(value=(user.email)?"#{user.email}":"", placeholder='EMAIL', name='email')
+              input#email.form-control.input-text.resize-input-form(value=(user.email)?"#{user.email}":"", placeholder='Email', name='email')
             .form-group
-              input#firstName.form-control.input-text.input-lg(value=(user.firstName)?"#{user.firstName}":"", placeholder='FIRST NAME', name='firstName')
+              input#firstName.form-control.input-text.resize-input-form(value=(user.firstName)?"#{user.firstName}":"", placeholder='First name', name='firstName')
             .form-group
-              input#lastName.form-control.input-text.input-lg(value=(user.lastName)?"#{user.lastName}":"", placeholder='LAST NAME', name='lastName')
+              input#lastName.form-control.input-text.resize-input-form(value=(user.lastName)?"#{user.lastName}":"", placeholder='Last name', name='lastName')
             .form-group
-              input#address.form-control.input-text.input-lg(value=(user.address)?"#{user.address}":"", placeholder='ADDRESS', name='address')
+              input#address.form-control.input-text.resize-input-form(value=(user.address)?"#{user.address}":"", placeholder='Address', name='address')
             .form-group
               input#city(type='hidden', name='city')
               input#country(type='hidden', name='country')
               input#location(type='hidden', name='location')
 
+            .photoedit
+              button#submit.btn-default.btn-xs.grey-3doers(type='submit') Edit profile info
+
+        .col-md-6.col-sm-7
+          if user.printer == 'accepted'
+            h1 Printer Address
+            dl
+              if user.printerAddress
+                - for (key in user.printerAddress)
+                  if !key.match(/^object_/)
+                    dt #{ key }
+                    dd #{ user.printerAddress[key] }
+
+            a#link.direct-link(href='/profile/settings/printer-direction') Update
+
+          if user.shippingAddresses
+            h2 Shipping Addresses
+            .margin-address
+            for direction in user.shippingAddresses
+                address.col-md-5
+                 strong #{direction['company']}
+                 br
+                 |#{direction['street1']}
+                 br
+                 |#{direction['city']}, #{direction['zip']}, #{direction['country']}
+                 br
+                 |#{direction['phone']}
+                 br
+                 a.remove-shipping-address.btn-default.btn-xs.grey-3doers(href='/profile/settings/delete-shipping-direction/#{ direction.id }') Delete
+
+            else
+              strong you still don't have any direction
+
             br
-            br
-            br
 
-            .form-group
-              button#submit.btn.btn-default.btn-lg.btn-medium(type='submit')
-                span UPDATE
+        a#link.direct-link-ship-address.btn-default.btn-xs.grey-3doers(href='/profile/settings/new-shipping-direction') Add new direction
 
-      br
-      br
-
-      if user.printer == 'accepted'
-        h1 Printer Address
-        dl
-          if user.printerAddress
-            - for (key in user.printerAddress)
-              if !key.match(/^object_/)
-                dt #{ key }
-                dd #{ user.printerAddress[key] }
-
-        a#link.direct-link(href='/profile/settings/printer-direction') Update
-
-      if user.shippingAddresses
-        h1 Shipping Addresses
-        for direction in user.shippingAddresses
-          dl
-            - for (key in direction._doc)
-              if !key.match(/^object_/)
-                dt #{ key }
-                dd #{ direction[key] }
-
-            //- dt
-            //- dd
-            //-   a(href='/profile/settings/edit-shipping-direction/#{ direction.id }') Edit
-            dt
-            dd
-              a.remove-shipping-address(href='/profile/settings/delete-shipping-direction/#{ direction.id }') Delete
-
-          br
-          br
-
-        else
-          strong you still don't have any direction
-
-        br
-
-        a#link.direct-link(href='/profile/settings/new-shipping-direction') Add new direction
-
-
-    .right-hand.top.hidden-xs
-      img(src='/img/hand_register.png', alt='3doers Hand')
-
-  br
-  br
-  br
-  br
-
-  include ../../includes/publicity
 
 block scripts
   script(src='/vendor/jquery.ajaxupload.js')

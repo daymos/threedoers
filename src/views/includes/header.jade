@@ -21,22 +21,22 @@
             .clearfix
             .simple-nav
               nav
-                ul.nav.nav-pills.col-md-offset-3
+                ul.nav.nav-pills.col-md-12
 
 
                   - if (user && user.filemanager == 'accepted' || user.printer != 'accepted')
-                    li
-                      a(data-toggle="modal", data-target="#uploadSTLModal")
-                          img(src='/img/icons_printing.png')
+                    li.col-md-2
+                      a(href="/project/upload")
+                          img(src='/img/icons_printing.png').circular.small-circular
 
                   - if (user && user.printer == 'accepted' || user.filemanager != 'accepted')
-                    li
+                    li.col-md-2.col-md-offset-2
                       a(href='/design/stl')
-                          img(src='/img/icon-1.png')
+                          img(src='/img/icon-1.png').circular.small-circular
                   - if (user)
-                    li
+                    li.col-md-2
                         a(href='/profile/settings')
-                            img(src='/img/icon-22.png')
+                            img(src='/img/icon-22.png').circular.small-circular
 
             .simple-nav.description-to-hide
                 nav
@@ -62,5 +62,3 @@
                                 p Are you a Printer or a Designer?
                                 p Click here to Upgrade your profile
                                 p and start print or design for other
-
-include ../modals/upload-stl
