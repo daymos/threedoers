@@ -203,7 +203,7 @@ module.exports = (app, io) ->
               price = 9999999999.0 # a lot
               for rate_tmp in rates.results
                 price_tmp = parseFloat(rate_tmp.amount_local)
-                if rate_tmp.object_purpose == "PURCHASE" and price > price_tmp and price_tmp > 0
+                if rate_tmp.object_purpose == "PURCHASE" and rate_tmp.currency_local == 'EUR' and price > price_tmp and price_tmp > 0
                   rate = rate_tmp
                   price = price_tmp
 
@@ -567,7 +567,7 @@ module.exports = (app, io) ->
         ammount =  Math.abs(if (req.body.ammount and parseInt(req.body.ammount)) then parseInt(req.body.ammount) else 1)
         total_price = calculateOrderPrice(doc.price, ammount)
         taxes = decimal.fromNumber(total_price * 0.21, 2)
-        price = decimal.fromNumber(total_price - price, 2)
+        price = decimal.fromNumber(total_price - taxes, 2)
         printerPayment = decimal.fromNumber(price * 0.75, 2)
         doc.status = models.PROJECT_STATUSES.PRINT_REQUESTED[0]
         doc.order =
@@ -578,6 +578,8 @@ module.exports = (app, io) ->
           printerPayment: printerPayment.toString()
           businessPayment: decimal.fromNumber(price - printerPayment, 2).toString()
           placedAt: new Date()
+
+        console.log doc.order
 
         doc.save()
 
