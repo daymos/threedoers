@@ -227,9 +227,9 @@ module.exports = (app, io) ->
           else
             data = {}
             shippo.parcel.create(
-              length: decimal.fromNumber(project.dimension.length, 4).toString()
-              width: decimal.fromNumber(project.dimension.width, 4).toString()
-              height: decimal.fromNumber(project.dimension.height, 4).toString()
+              length: if project.dimension.length > 10 then decimal.fromNumber(project.dimension.length, 4).toString() else 10
+              width: if project.dimension.width > 10 then decimal.fromNumber(project.dimension.width, 4).toString() else 10
+              height: if project.dimension.height > 10 then decimal.fromNumber(project.dimension.height, 4).toString() else 10
               distance_unit: project.unit
               weight: decimal.fromNumber(project.weight, 4).toString()
               mass_unit: 'g'
