@@ -11,18 +11,17 @@ block body
   .section.primary
     .container#content
       h1.page-header Send to Print
-
-      .preview-print#clickable-stl.col-md-8
+          h2.subtitle-upload Upload your STL and let us take care of the rest
+      .preview-print#clickable-stl.col-md-6.col-md-offset-3
         p#promptzone.upload
-          | CLICK HERE TO CHOOSE
-          br
-          | FILE TO UPLOAD
+         img(src="/img/stl_icon.png")
+         br
+         a.btn-default.btn-lg Choose File
         #result
         .progress.hide
           .progress-bar(aria-valuemax='100', aria-valuemin='0', aria-valuenow='0', role='progressbar')
             span.sr-only  0% Complete
-      .col-md-4
-          p Ciao
+
 
       br
       br

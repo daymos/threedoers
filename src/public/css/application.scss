@@ -67,6 +67,7 @@ hr.hr-light {
 
 #header {
   padding: 40px 0;
+  background-color: #ffffff;
 
 }
 .small-circular{
@@ -501,7 +502,7 @@ a.direct-link-ship-address {
 
 /* Sections */
 .section {
-  padding: 48px 0;
+  padding: 10px 0 48px;
   position: relative;
 }
 .section.primary {
@@ -724,11 +725,18 @@ a.direct-link-ship-address {
 }
 
 /* Preview Print */
+
+.subtitle-upload{
+  font-weight: normal;
+  margin: 30px auto 50px;
+  color: #676767;
+}
+
 #clickable {
 	cursor: pointer;
 }
 .preview-print {
-  background-color: #e8e8e8;
+  background-color: #dde5de;
   padding: 7% 7% 7% 5%;
   position: relative;
   text-align: center;
@@ -746,8 +754,8 @@ a.direct-link-ship-address {
   	font-size: 44px;
   	font-style: italic;
   	font-weight: 900;
-  	margin: 70px auto;
-  	text-align: left;
+  	margin: 30px auto 70px;
+  	text-align: center;
   	width: 70%;
   }
 
