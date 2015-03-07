@@ -126,9 +126,9 @@ block body
               p #{project.unit}
               h4 Resolution
               p #{project.order.resolution} # this still on development
-              if project.order.shippingCharge
+              if project.order.rate
                 h4 Shipping
-                p #{project.order.shippingCharge}
+                p #{project.order.rate.amount_local} #{project.order.rate.currency_local}
     br
     br
     br
