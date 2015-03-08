@@ -82,10 +82,10 @@ hr.hr-light {
 #footer {
   background: $bg-footer;
   color: $footer-color;
-  padding: 40px 0;
+  padding: 15px 0;
   width: 100%;
   bottom: 0px;
-  position: absolute;
+ // position: absolute;
 }
 
 .copyright {
@@ -96,7 +96,7 @@ hr.hr-light {
 }
 .social-links {
   font-size: 32px;
-  text-align: right;
+  text-align: center;
 
   a {
     background-color: $primary-color;
@@ -1590,6 +1590,16 @@ a.primary-hover {
   margin-left: 10px;
   border-radius: 5px;
 }
+.tile-projects{
+  padding: 16px;
+  margin-right: 4%;
+  margin-bottom: 5%;
+  border-color: #bab9b9;
+}
+.tile-projects:first-child{
+  margin-left: 4%;
+}
+
   .tile > footer > form>input{
     margin-top: 13px;
     margin-left: 18%;

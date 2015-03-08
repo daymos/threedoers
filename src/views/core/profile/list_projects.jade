@@ -11,49 +11,16 @@ block content-profile
           p.info-3d There is not any project yet for this list.
         - for (project in projects)
           - project = projects[project]
-            div
-              p.info-3d
-                span.title NAME:
-                a(href='/project/#{project.id}') #{project.title}
-              br
-              .row
-                .col-md-8
-                  p.info-3d
-                    span.title STATUS
-                    | #{project.humanizedStatus()}
-                    span.image.align-right
-                      img(src='/img/icons_#{project.dasherizedStatus()}.png')
-                    br
-                    - if (project.order)
-                      span.title PRICE:
-                      span.price #{project.order.price}
-                      span.currency EURO
-                .col-md-4
-                  a.btn.btn-lg.btn-default.btn-goto(href='/project/#{ project.id }')
-                    span GO TO THE
-                      br
-                      | PROJECT
-              br
-              .separator-3d
-                img(src='/img/img_separatori_lista.png')
+              a.black-3doers(href='/project/#{ project.id }')
+               div.tile.col-md-3.tile-projects
+                  h3 #{project.title}
+                  p Status
+                   b  #{project.humanizedStatus()}
+                  img(src='/img/icons_#{project.dasherizedStatus()}.png')
 
-div
-  .container
-    br
-    br
-    br
-    .row
-      .col-md-5
-        p.text-center
-          img(src='/img/publicity_homepage.png')
-        br
-      .col-md-7
-        h1.page-title.small.right
-          span Welcome To 3Doers
-        h1.page-title.small.right
-          span Find A 3D Printer For Your Project
-        h1.page-title.small.right
-          span Or Start Printing Others
+
+
+
     br
     br
     br
