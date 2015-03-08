@@ -213,7 +213,7 @@ module.exports = (app, io) ->
               price = 9999999999.0 # a lot
               for rate_tmp in rates.results
                 price_tmp = parseFloat(rate_tmp.amount_local)
-                if rate_tmp.object_purpose == "PURCHASE" and price > price_tmp
+                if rate_tmp.object_purpose == "PURCHASE" and price > price_tmp and price_tmp > 0
                   rate = rate_tmp
                   price = price_tmp
 
@@ -237,20 +237,24 @@ module.exports = (app, io) ->
           else
             data = {}
             shippo.parcel.create(
-              length: decimal.fromNumber(project.dimension.length, 4).toString()
-              width: decimal.fromNumber(project.dimension.width, 4).toString()
-              height: decimal.fromNumber(project.dimension.height, 4).toString()
+              length: if project.dimension.length > 10 then decimal.fromNumber(project.dimension.length, 4).toString() else 10
+              width: if project.dimension.width > 10 then decimal.fromNumber(project.dimension.width, 4).toString() else 10
+              height: if project.dimension.height > 10 then decimal.fromNumber(project.dimension.height, 4).toString() else 10
               distance_unit: project.unit
               weight: decimal.fromNumber(project.weight, 4).toString()
               mass_unit: 'g'
             ).then( (parcel) ->
               data['order.parcel'] = parcel
+              submission_date = new Date()
+              submission_date.setDate(submission_date.getDate() + 2)
+
               shippo.shipment.create(
                 object_purpose: "PURCHASE"
                 address_from: printer.printerAddress.object_id
                 address_to: address.object_id
                 parcel: parcel.object_id
-                submission_type: 'DROPOFF')
+                submission_type: 'DROPOFF'
+                submission_date: submission_date)
 
             ).then( (shipping_tmp) ->
               data['order.shipping'] = shipping_tmp

@@ -113,11 +113,19 @@ block body
               h4 Price
               p
                 if user.id == project.order.printer
+                  
+                  strong Taxes: #{project.order.businessPayment} EURO
+                  br
                   strong 3Doers: #{project.order.businessPayment} EURO
                   br
                   strong You: #{project.order.printerPayment} EURO
                 else
-                  strong #{project.order.price} EURO
+                  
+                  strong Taxes: #{project.order.businessPayment} EURO
+                  br
+                  strong 3Doers: #{project.order.businessPayment} EURO
+                  br
+                  strong Printer: #{project.order.printerPayment} EURO
           .col-md-3.col-sm-6
             .printer-properties
               h4 Unit
@@ -383,4 +391,3 @@ block scripts
 
     //Initial call
     respondCanvas();
-

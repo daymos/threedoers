@@ -99,12 +99,13 @@ module.exports = (app) ->
           user.save (err) ->
             if err
               logger.error err
-              res.render 'registration/activation_done', activated: null
+              res.render 'registration/activation_done', activated: {}
             else
               res.render 'registration/activation_done', activated: user
       else
-        res.render 'registration/activation_done', activated: null
+        res.render 'registration/activation_done', activated: {}
     ).fail( (reason) ->
+      console.log reason
       logger.error reason
       res.send 500
     )

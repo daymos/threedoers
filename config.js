@@ -82,10 +82,9 @@
       },
       adaptive: {
         user: 'mattia_api1.3doers.it',
-        password: 'WW6BZJ85ZEX2FKSY',
-        signature: 'AFcWxV21C7fd0v3bYYYRCpSSRl31AAU4YSg1okO-jRUbIO44qSUP4rdP',
-        appId: 'APP-80W284485P519543T',
-        debug: true
+        password: 'DPEEDAHG8T45RB6B',
+        signature: 'An5ns1Kso7MWUdW4ErQKJJJ4qi4-AY0LS6hHOHeEY9lfmz9BXg.ZRbx1',
+        appId: 'APP-6YS565683F194310E'
       }
     },
     postmaster: {
