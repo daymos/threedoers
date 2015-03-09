@@ -86,6 +86,7 @@ block body
                 | Here you can Upgrade your profile for FREE!
 
         ul.nav-circles
+          -if(user.filemanager!="accepted")
             li.tiles
                 a(href="/#")
                     img(src='/img/icons_printing.png').circular.small-circular
@@ -95,6 +96,7 @@ block body
                         | Are you a Designer?
                         | Updgrade your profile
                         | and earn money!
+          -if(user.printer!="accepted")
             li.tiles
                 a(href='/#')
                     img(src='/img/icon-1.png').circular.small-circular
