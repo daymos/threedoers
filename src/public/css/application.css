@@ -8476,6 +8476,10 @@ hr.hr-light {
 .grey-3doers {
   background-color: #dde5de; }
 
+.btn-3doers-new {
+  background: #dde5de;
+  border-radius: 15px; }
+
 .no-padding {
   padding: initial;
   width: 100%; }
