@@ -8867,6 +8867,10 @@ a.direct-link-ship-address {
   font-weight: bold;
   font-size: 31px; }
 
+.resize-title {
+  font-size: 37px;
+  font-style: normal; }
+
 .comment-title {
   position: relative; }
 
@@ -8965,6 +8969,14 @@ a.direct-link-ship-address {
   font-weight: normal;
   margin: 30px auto 50px;
   color: #676767; }
+
+.margin-img-10 {
+  margin-bottom: 7%; }
+
+.project-tile-status {
+  font-weight: normal;
+  font-size: 16px;
+  margin-top: 3%; }
 
 #clickable {
   cursor: pointer; }
