@@ -8467,6 +8467,10 @@ hr.hr-light {
   margin-top: 2%;
   margin-bottom: 2%; }
 
+.margin-header-30 {
+  margin-top: 8%;
+  margin-bottom: 2%; }
+
 .black-3doers, .green-3doers a {
   color: black; }
 
@@ -8858,6 +8862,10 @@ a.direct-link-ship-address {
   font-style: italic;
   font-weight: bold;
   text-shadow: 3px 3px #d8ffd2; }
+
+.comment-title-new {
+  font-weight: bold;
+  font-size: 31px; }
 
 .comment-title {
   position: relative; }

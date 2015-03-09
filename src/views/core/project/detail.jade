@@ -161,18 +161,11 @@ block body
               input#shippingMethod(type='hidden', name='shippingMethod')
               input#shippingRate(type='hidden', name='shippingRate')
       - if (project.status >= statuses.PRINT_REVIEW[0])  // if project was accepted
-          .container.margin-header-10
+          .container.margin-header-30
               .row
                 .col-md-7
                   .comment-title
-                    img(src='/img/icons_comment_2.png', alt='')
-                    h1.page-title
-                      span Comments Here
-                    h1.page-title
-                      span For Your Project
-              br
-              br
-              br
+                    h4.comment-title-new Comments
               .row
                 .col-md-12#comment-list
                   - for comment in project.comments
@@ -192,11 +185,10 @@ block body
               .section.primary
                 .container
                   .row
-                    .col-md-10.col-sm-10
+                    .col-md-6
                       textarea#comment-text.comment.form-control(rows=6)
                     .col-md-2.col-sm-2
-                      button.btn.btn-lg.btn-default.btn-goto#comment-button
-                        span SEND
+                      button.btn-default.btn-lg.btn-3doers-new#comment-button SEND
 
 block extra-headers
   meta(name="csrf-token", content="#{csrfToken}")
