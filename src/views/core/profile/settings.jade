@@ -45,12 +45,16 @@ block body
             h1 Printer Address
             dl
               if user.printerAddress
-                - for (key in user.printerAddress)
-                  if !key.match(/^object_/)
-                    dt #{ key }
-                    dd #{ user.printerAddress[key] }
+                address
+                    strong #{user.printerAddress['company']}
+                    br
+                    |#{user.printerAddress['street1']}
+                    br
+                    |#{user.printerAddress['city']}, #{user.printerAddress['zip']}, #{user.printerAddress['country']}
+                    br
+                    |#{user.printerAddress['phone']}
 
-            a#link.direct-link(href='/profile/settings/printer-direction') Update
+            a#link.direct-link-ship-address.btn-default.btn-xs.grey-3doers(href='/profile/settings/printer-direction') Update
 
           if user.shippingAddresses
             h2 Shipping Addresses
