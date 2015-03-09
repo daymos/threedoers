@@ -21,7 +21,7 @@ block body
                 img#profile_image.circular(width='142', height='142', src='/#{ user.photo }', alt='#{ user.firstName } #{ user.lastName }')
               - else
                 img#profile_image.circular(width='142', height='142', src='/img/edit_photo_placeholder.png?1396277523', alt='profile image')
-              button#clickable.btn-default.btn-xs.grey-3doers(href='#') Edit Photo
+              a#clickable.btn-default.btn-xs.grey-3doers Edit Photo
             .form-group
               input#username.form-control.input-text.resize-input-form(value=(user.username)?"#{user.username}":"", placeholder='Username', name='username')
             .form-group
