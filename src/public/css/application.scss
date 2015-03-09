@@ -1607,3 +1607,23 @@ a.primary-hover {
 .rejected_true{
   background-color: red;
 }
+.nav-circles{
+
+  display:table;
+  margin:auto;
+
+  li{
+    text-align: center;
+    width: 250px;
+    padding: 10px;
+    display:table-cell;
+    a{
+      display: table;
+      margin:auto;
+    }
+    h4{
+      text-align: center;
+    }
+  }
+
+}

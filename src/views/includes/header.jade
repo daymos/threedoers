@@ -1,64 +1,54 @@
 .row
- header
-  #header
-    unless user
-      .container
-        .row
-          .col-md-6
-            a(href='/')
-              img(src='/img/logo.png')
-          .col-md-6
-            nav
-              .main-nav
-                ul
-                  li
-                    a(href='/accounts/login') LOG IN
-                  li
-                    a(href='/accounts/signup') SIGN UP
-    else
-       .container
-        .row
-            .clearfix
-            .simple-nav
-              nav
-                ul.nav.nav-pills.col-md-12
+    header
+        #header
+            unless user
+                .container
+                    .row
+                        .col-md-6
+                            a(href='/')
+                                img(src='/img/logo.png')
+                        .col-md-6
+                            nav
+                                .main-nav
+                                    ul
+                                        li
+                                            a(href='/accounts/login') LOG IN
+                                        li
+                                            a(href='/accounts/signup') SIGN UP
+            else
+                .container
+                    ul.nav-circles
 
 
-                  - if (user && user.filemanager == 'accepted' || user.printer != 'accepted')
-                    li.col-md-2
-                      a(href="/project/upload")
-                          img(src='/img/icons_printing.png').circular.small-circular
-
-                  - if (user && user.printer == 'accepted' || user.filemanager != 'accepted')
-                    li.col-md-2.col-md-offset-2
-                      a(href='/design/stl')
-                          img(src='/img/icon-1.png').circular.small-circular
-                  - if (user)
-                    li.col-md-2
-                        a(href='/profile/settings')
-                            img(src='/img/icon-22.png').circular.small-circular
-
-            .simple-nav.description-to-hide
-                nav
-                    ul.nav.nav-pills.col-md-offset-3
                         - if (user && user.filemanager == 'accepted' || user.printer != 'accepted')
-                            li
+                        li.tiles
+                            a(href="/project/upload")
+                                img(src='/img/icons_printing.png').circular.small-circular
+                            div.description-to-hide
+                                h4 Send to Print
                                 p
-                                b Send to Print
-                                p Upload an STL file,
-                                p see price and order
-                                p your print
-                        - if (user && user.filemanager != 'accepted')
-                            li
+                                    |Upload an STL file,
+                                    |see price and order
+                                    |your print
+
+                        - if (user && user.printer == 'accepted' || user.filemanager != 'accepted')
+                        li.tiles
+                            a(href='/design/stl')
+                                img(src='/img/icon-1.png').circular.small-circular
+                            div.description-to-hide
+                                h4 Find a Designer
                                 p
-                                b Find a Designer
-                                p Describe your project
-                                p and see the best
-                                p Designer for you
+                                    |Describe your project
+                                    |and see the best
+                                    |Designer for you
+
                         - if (user)
-                            li
+                        li.tiles
+                            a(href='/profile/settings')
+                                img(src='/img/icon-22.png').circular.small-circular
+                            div.description-to-hide
+                                h4 Upgrade your Profile
                                 p
-                                b Upgrade your Profile
-                                p Are you a Printer or a Designer?
-                                p Click here to Upgrade your profile
-                                p and start print or design for other
+                                    |Are you a Printer or a Designer?
+                                    |Click here to Upgrade your profile
+                                    |and start print or design for other

@@ -9755,4 +9755,18 @@ a.primary-hover::after {
 .rejected_true {
   background-color: red; }
 
+.nav-circles {
+  display: table;
+  margin: auto; }
+  .nav-circles li {
+    text-align: center;
+    width: 250px;
+    padding: 10px;
+    display: table-cell; }
+    .nav-circles li a {
+      display: table;
+      margin: auto; }
+    .nav-circles li h4 {
+      text-align: center; }
+
 /*# sourceMappingURL=application.css.map */
