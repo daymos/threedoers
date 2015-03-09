@@ -33,7 +33,7 @@
 
                         - if (user && user.printer == 'accepted' || user.filemanager != 'accepted')
                         li.tiles
-                            a(href='/design/stl')
+                            a(data-toggle="modal",data-target="#comingsoonModal",href="#")
                                 img(src='/img/icon-1.png').circular.small-circular
                             div.description-to-hide
                                 h4 Find a Designer
@@ -52,3 +52,7 @@
                                     |Are you a Printer or a Designer?
                                     |Click here to Upgrade your profile
                                     |and start print or design for other
+
+
+
+include ../modals/coming-soon
