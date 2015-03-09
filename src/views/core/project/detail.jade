@@ -160,6 +160,39 @@ block body
               input#shippingAddress(type='hidden', name='shippingAddress')
               input#shippingMethod(type='hidden', name='shippingMethod')
               input#shippingRate(type='hidden', name='shippingRate')
+      - if (project.status == statuses.PAYED[0] && user.id == project.order.printer)
+        .section
+          .container
+            .row
+              form.form-inline(role="form", action="/project/start-printing/#{project.id}", method="post").col-md-12
+                input(type='hidden', name='_csrf', value=csrfToken)
+                input(type="submit", value="Print Order").btn-default.btn-lg.btn-3doers-new
+
+      - if (project.status == statuses.PRINTING[0] && user.id == project.order.printer)
+        .section
+          .container
+            .row
+              form.form-inline(role="form", action="/project/printed/#{project.id}", method="post").col-md-12
+                input(type='hidden', name='_csrf', value=csrfToken)
+                input(type="submit", value="Order Printed").btn-default.btn-lg.btn-3doers-new
+
+      - if (project.status == statuses.SHIPPING[0] && user.id == project.user)
+        .section
+          .container
+            .row
+              form.form-inline(role="form", action="/project/archive/#{project.id}", method="post").col-md-12
+                input(type='hidden', name='_csrf', value=csrfToken)
+                input(type="submit", value="Archive").btn-default.btn-lg.btn-3doers-new
+
+      - if (project.status == statuses.PRINTED[0] && user.id == project.order.printer)
+        .section
+          .container
+            .row
+              form.form-inline(role="form", action="/project/archive/#{project.id}", method="post").col-md-12
+                input(type='hidden', name='_csrf', value=csrfToken)
+                input(type="submit", value="Picked up").btn-default.btn-lg.btn-3doers-new
+
+
       - if (project.status >= statuses.PRINT_REVIEW[0])  // if project was accepted
           .container.margin-header-30
               .row
