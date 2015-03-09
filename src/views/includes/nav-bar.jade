@@ -14,4 +14,7 @@
             .col-md-1
                 .logo-wrapper.pull-right.thumbnail.profile-thumb
                     a(href='/')
+                      - if (user.photo)
                         img(src='/#{ user.photo }')
+                      - else
+                        img(src='/img/edit_photo_placeholder.png?1396277523', alt='profile image')
