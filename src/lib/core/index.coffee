@@ -174,6 +174,8 @@ module.exports = (app, io) ->
       res.redirect "/printing/requests"
     else if req.user.printer!='accepted' and req.user.filemanager=="accepted"
       res.redirect "/design/requests"
+    else if req.user.printer=='accepted' and req.user.filemanager=="accepted"
+      res.redirect "/printing/requests"
 
   app.get '/profile/onprint', decorators.loginRequired, (req, res) ->
     models.STLProject.find({user: req.user._id, status: {"$lt": models.PROJECT_STATUSES.ARCHIVED[0], "$gt": models.PROJECT_STATUSES.PRINT_REQUESTED[0]}}).exec().then((docs) ->

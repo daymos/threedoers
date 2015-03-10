@@ -6,10 +6,8 @@ block title
 block body
   div
     .container
-        h1.page-title
-          span Login
-        h1.page-title
-          span Form
+        h1.page-header Login
+
     br
     br
     .section.primary
@@ -19,30 +17,19 @@ block body
             form#registration(action='/accounts/login', method='POST', role='form', accept-charset='utf-8', name='signup-form')
               input(type='hidden', name='_csrf', value=csrfToken)
               .form-group
-                input.form-control.dark.input-text.input-lg(type='text', placeholder='USERNAME', name='username')
+                input.form-control.input-text.resize-input-form(type='text', placeholder='username', name='username')
               .form-group
-                input.form-control.dark.input-text.input-lg(type='password', placeholder='PASSWORD', name='password')
+                input.form-control.input-text.resize-input-form(type='password', placeholder='password', name='password')
               br
               .form-group
-                a.default-hover.forgot-password(href='/accounts/reset-password') FORGOT YOUR PASSWORD?
+                a.default-hover.forgot-password(href='/accounts/reset-password') Forgot your Password?
                 br
-                a.default-hover.create-account(href='/accounts/signup') CREATE AN ACCOUNT
-              br
-              br
-              br
-              br
+                a.default-hover.create-account(href='/accounts/signup') Create an Account
               .form-group
                 .row
                   .col-md-8.col-sm-7
                     button.btn.btn-xlg.btn-default.btn-block(type='submit')
-                      span SIGN IN
-      .right-hand.middle.hidden-xs
-        img(src='/img/hand_register.png')
-    br
-    br
-    br
-    include ../includes/publicity
-    br
+                      span Login
     br
     br
 
