@@ -9776,6 +9776,16 @@ a.primary-hover::after {
 .tile-projects:first-child {
   margin-left: 4%; }
 
+.fluo-3doers {
+  color: #1BF22D; }
+
+.pending-request {
+  line-height: 80px;
+  display: inline-block;
+  vertical-align: middle;
+  font-weight: bold;
+  text-decoration: none; }
+
 .tile > footer > form > input {
   margin-top: 13px;
   margin-left: 18%; }

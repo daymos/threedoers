@@ -148,7 +148,6 @@ module.exports = (app, io) ->
       if doc
         if not doc.volume or doc.bad or not doc.dimension
           processVolumeWeight(doc)
-        console.log doc
         res.render 'core/project/detail',
           project: doc
           colors: models.PROJECT_COLORS

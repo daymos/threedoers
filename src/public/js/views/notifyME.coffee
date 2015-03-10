@@ -1,8 +1,8 @@
 $(document).ready ->
   $.post('/getNotifications')
   .done( (response) ->
-    if response.notifications.length == 0
-      $('#notifID').hide()
+    if response.notifications.length != 0
+      $('#notifID').addClass("fluo-3doers")
   )
   .fail ->
     console.log "error"

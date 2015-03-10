@@ -89,7 +89,11 @@ block body
           -if(user.filemanager!="accepted")
             li.tiles
                 a(href="/#")
-                    img(src='/img/icons_printing.png').circular.small-circular
+                  - if(user.filemanager=="request")
+                      div.pending-request.circular.small-circular
+                        |Pending
+                  - else
+                      img(src='/img/icons_printing.png').circular.small-circular
                 div
                     h4 Become a Designer
                     p
@@ -99,11 +103,15 @@ block body
           -if(user.printer!="accepted")
             li.tiles
                 a(href='/#')
-                    img(src='/img/icon-1.png').circular.small-circular
+                  - if(user.printer=="request")
+                      div.pending-request.circular.small-circular
+                        |Pending
+                  - else
+                      img(src='/img/icon-1.png').circular.small-circular
                 div
                     h4 Become a Printer
                     p
-                        | Are you a Printer
+                        | Are you a Printer?
                         | Upgrade your profile
                         | and earn money!
 
