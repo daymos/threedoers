@@ -978,7 +978,6 @@ module.exports = (app, io) ->
       if not err and  not stderr
         try
           result = JSON.parse(stdout)
-          console.log "processVolumeWeight called"
           # Calculate price
           material_price = if doc.material == 'ABS' then 0.5 else 0.5 * 1.1  # ABS
           density = doc.density
@@ -1016,6 +1015,17 @@ module.exports = (app, io) ->
           doc.price = decimal.fromNumber(price, 2)  # formula from doc sent by mattia
           doc.surface = result.surface / 100
           doc.bad = false
+
+          if result.dimension.width > models.PROJECT_BOUNDARIES.WIDTH[0]
+            doc.checkWidth = false
+
+          if result.dimension.length > models.PROJECT_BOUNDARIES.LENGTH[0]
+            doc.checkLenght = false
+
+          if result.dimension.height > models.PROJECT_BOUNDARIES.HEIGHT[0]
+            doc.checkHeight = false
+
+
           doc.save()
         catch e
           logger.error e

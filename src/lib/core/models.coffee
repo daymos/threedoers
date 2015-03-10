@@ -24,6 +24,12 @@ module.exports.PROJECT_STATUSES = PROJECT_STATUSES =
   SHIPPING: [9, 'shipping']
   ARCHIVED: [10, 'archived']
 
+module.exports.PROJECT_BOUNDARIES = PROJECT_BOUNDARIES =
+  WIDTH:  [1, 'width boundary']
+  HEIGHT: [1,'height boundary']
+  LENGTH: [1,'lenght boundary']
+
+
 module.exports.PROJECT_COLORS = PROJECT_COLORS =
   BLACK: 'black'
   WHITE: 'white'
@@ -150,6 +156,18 @@ STLProject = new Schema
 
   createdAt:
     type: Date
+
+  checkWidth:
+    type: Boolean
+    default: true
+
+  checkLenght:
+    type: Boolean
+    default: true
+
+  checkHeight:
+    type: Boolean
+    default: true
 
 
 

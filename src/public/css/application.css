@@ -9793,6 +9793,11 @@ a.primary-hover::after {
 .rejected_true {
   background-color: red; }
 
+.error-message {
+  color: red;
+  font-weight: bold;
+  font-size: 17px; }
+
 .nav-circles {
   display: table;
   margin: auto; }

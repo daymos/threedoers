@@ -72,6 +72,13 @@ block body
                 span#order-price  Processing
             .col-md-4
               button.btn-default.btn-lg.grey-3doers(type='submit') Place Order
+            .col-md-4.margin-header-10.error-message
+              - if (! project.checkHeight)
+                  p too height
+              - if (! project.checkLenght)
+                  p too lenght
+              - if (! project.checkWidth)
+                 p too width
         br
 
       - if (!(project.status == statuses.PROCESSING[0] || project.status == statuses.PROCESSED[0]))

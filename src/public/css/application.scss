@@ -1634,7 +1634,9 @@ a.primary-hover {
 .pending-request{
   line-height: 80px;
   display: inline-block;
-  vertical-align: ;
+  vertical-align: middle;
+  font-weight: bold;
+  text-decoration: none;
 }
 
   .tile > footer > form>input{
@@ -1643,6 +1645,11 @@ a.primary-hover {
   }
 .rejected_true{
   background-color: red;
+}
+.error-message{
+  color: red;
+  font-weight: bold;
+  font-size: 17px;
 }
 .nav-circles{
 
