@@ -1614,6 +1614,9 @@ a.primary-hover {
   margin-left: 10px;
   border-radius: 5px;
 }
+#payment-modal{
+  z-index: 99999999999;
+}
 .tile-projects{
   padding: 16px;
   margin-right: 4%;

@@ -148,6 +148,7 @@ module.exports = (app, io) ->
       if doc
         if not doc.volume or doc.bad or not doc.dimension
           processVolumeWeight(doc)
+        console.log doc
         res.render 'core/project/detail',
           project: doc
           colors: models.PROJECT_COLORS
@@ -164,7 +165,7 @@ module.exports = (app, io) ->
 
   app.get '/profile/projects', decorators.loginRequired, (req, res) ->
     if req.user.printer!="accepted" and req.user.filemanager!="accepted"
-      models.STLProject.find({user: req.user._id, status: {"$ne": models.PROJECT_STATUSES.ARCHIVED[0]}}).exec().then( (docs) ->
+      models.STLProject.find({user: req.user._id, status: {"$lte": models.PROJECT_STATUSES.PRINT_REVIEW[0]}}).exec().then( (docs) ->
         res.render 'core/profile/list_projects', {projects: docs}
       ).fail( ->
         logger.error arguments
@@ -174,6 +175,14 @@ module.exports = (app, io) ->
       res.redirect "/printing/requests"
     else if req.user.printer!='accepted' and req.user.filemanager=="accepted"
       res.redirect "/design/requests"
+
+  app.get '/profile/onprint', decorators.loginRequired, (req, res) ->
+    models.STLProject.find({user: req.user._id, status: {"$lt": models.PROJECT_STATUSES.ARCHIVED[0], "$gt": models.PROJECT_STATUSES.PRINT_REQUESTED[0]}}).exec().then((docs) ->
+      res.render 'core/profile/list_projects', {projects: docs}
+    ).fail( ->
+      logger.error arguments
+      res.send 500
+    )
 
   app.get '/profile/archived', decorators.loginRequired, (req, res) ->
     models.STLProject.find({user: req.user._id, status: models.PROJECT_STATUSES.ARCHIVED[0]}).exec().then( (docs) ->
@@ -968,7 +977,7 @@ module.exports = (app, io) ->
       if not err and  not stderr
         try
           result = JSON.parse(stdout)
-
+          console.log "processVolumeWeight called"
           # Calculate price
           material_price = if doc.material == 'ABS' then 0.5 else 0.5 * 1.1  # ABS
           density = doc.density

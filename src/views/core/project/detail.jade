@@ -222,6 +222,86 @@ block body
                       textarea#comment-text.comment.form-control(rows=6)
                     .col-md-2.col-sm-2
                       button.btn-default.btn-lg.btn-3doers-new#comment-button SEND
+      
+
+      - if (project.status == statuses.PRINT_ACCEPTED[0] && user.id == project.user)
+        #payment-modal.modal.modal-3d.fade.in
+          .modal-dialog
+            .modal-content
+              .modal-header
+                button.close(type='button', data-dismiss='modal')
+                  span(aria-hidden='true') &times;
+                    span.sr-only Close
+                h4.modal-title Shipping
+              .modal-body
+                div#address-selection
+                  h5 Select the address where we has to ship.
+                  // Nav tabs
+                  ul.nav.nav-tabs(role='tablist')
+                    li.active
+                      a(href='#saved', role='tab', data-toggle='tab') Saved
+                    li
+                      a(href='#new', role='tab', data-toggle='tab') New
+                  //
+                     Tab panes
+                  .tab-content
+                    #saved.tab-pane.active.fade.in
+                      - if (user.shippingAddresses.length > 0)
+                        for address in user.shippingAddresses
+                          address.col-md-4
+                            strong #{address['company']}
+                            br
+                            |#{address['street1']}
+                            br
+                            |#{address['city']}, #{address['zip']}, #{address['country']}
+                            br
+                            |#{address['phone']}
+                            br
+                            a.select-saved-address.btn-default.btn-xs.grey-3doers(data-id="#{ address.id }", href="#") Select
+                      - else
+                        | you don't have saved any address
+                      button.close-payment-modal Cancel
+                    #new.tab-pane.fade
+                      form
+                        .form-group
+                          input.form-control.input-text(type='text', placeholder='CONTACT', name='name')
+                        .form-group
+                          input.form-control.input-text(type='text', placeholder='COMPANY', name='company')
+                        .form-group
+                          input.form-control.input-text(type='text', placeholder='ADDRESS 1', name='street1')
+                        .form-group
+                          input.form-control.input-text(type='text', placeholder='BUILDING NO (OPTIONAL)', name='street_no')
+                        .form-group
+                          input.form-control.input-text(type='text', placeholder='ADDRESS 2 (OPTIONAL)', name='street2')
+                        .form-group
+                          input.form-control.input-text(type='text', placeholder='CITY', name='city')
+                        .form-group
+                          input.form-control.input-text(type='text', placeholder='STATE', name='state')
+                        .form-group
+                          input.form-control.input-text(type='text', placeholder='ZIP CODE', name='zip_code')
+                        .form-group
+                          input.form-control.input-text(type='text', placeholder='PHONE NO.', name='phone_no')
+                        .form-group
+                          select(name="country")
+                            for country in countries
+                              option#country(value='#{ country.abbr }') #{ country.name }
+
+                        .text-right
+                          button#validate-address.btn.btn-default.btn-lg.btn-xsmall
+                            span Validate
+                      button.close-payment-modal Cancel
+                div#pay-values(style='display: none;')
+                  h5 Pay Now
+                  p Price:&nbsp;
+                    span#pay-product-price
+                  p Estimated Shipping:&nbsp;
+                    span#pay-shipping-price
+                  hr
+                  p Estimated Total:&nbsp;
+                    span#pay-total-price
+
+                  button.close-payment-modal Cancel
+                  button#pay-payment-modal.btn.btn-default.btn-lg.btn-xsmall Pay
 
 block extra-headers
   meta(name="csrf-token", content="#{csrfToken}")
@@ -241,6 +321,7 @@ block scripts
       orderPrice: #{project.order?project.order.price:0},
       hasImage: #{project.image?true:false}
     };
+    console.dir(project);
     var port = "#{io.port}";
     $(document).ready(
       function() {
