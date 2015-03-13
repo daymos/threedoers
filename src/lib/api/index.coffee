@@ -10,7 +10,7 @@ module.exports = (app) ->
   fs = require('fs')
   gridfs = require '../gridfs'
   userModel = require('../auth/models')
-  desigModel = require('../design/models.coffee')
+  desigModel = require('../design/models')
   settings = require('../../config')
 
 
