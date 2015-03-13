@@ -84,7 +84,6 @@ block body
       - if (!(project.status == statuses.PROCESSING[0] || project.status == statuses.PROCESSED[0]))
        .row
           .col-md-3.col-sm-6
-
               h4 Volume
               p #{project.volume}
               h4 Density
@@ -94,10 +93,13 @@ block body
               h4 Material
               p #{project.material} (Now only this)
               h4 Dimension
+
               if project.dimension
                 p Width: #{project.dimension.width}
                 p Height: #{project.dimension.height}
                 p Length: #{project.dimension.length}
+
+
           .col-md-3.col-sm-6
               h4 Ammount
               p #{project.order.ammount}
@@ -105,26 +107,39 @@ block body
               p #{project.unit}
               h4 Resolution
               p #{project.order.resolution} # this still on development
+
               h4.tile Price
                 p
                   if user.id == project.order.printer
 
-                    strong Taxes: #{project.order.businessPayment} EURO
+                    strong Taxes: #{project.order.taxes} EURO
                     br
                     strong 3Doers: #{project.order.businessPayment} EURO
                     br
                     strong You: #{project.order.printerPayment} EURO
+                    br
+                    strong Total Price: #{project.order.totalPrice}
                   else
 
-                    strong Taxes: #{project.order.businessPayment} EURO
+                    strong Taxes: #{project.order.taxes} EURO
                     br
                     strong 3Doers: #{project.order.businessPayment} EURO
                     br
                     strong Printer: #{project.order.printerPayment} EURO
+                    br
+                    strong Total Price: #{project.order.totalPrice}
 
               if project.order.shippingCharge
                 h4 Shipping
                 p #{project.order.shippingCharge}
+
+              if project.order.rate
+                h4 Shipping
+                p #{project.order.rate.amount_local} #{project.order.rate.currency_local}
+      br
+      br
+      br
+
 
       - if (user.printer == 'accepted' && project.status == statuses.PRINT_REVIEW[0])
           .row.margin-header-10

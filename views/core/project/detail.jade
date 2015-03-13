@@ -103,28 +103,32 @@ block body
               h4 Price
               p
                 if user.id == project.order.printer
-                  
-                  strong Taxes: #{project.order.businessPayment} EURO
+
+                  strong Taxes: #{project.order.taxes} EURO
                   br
                   strong 3Doers: #{project.order.businessPayment} EURO
                   br
                   strong You: #{project.order.printerPayment} EURO
+                  br
+                  strong Total Price: #{project.order.totalPrice}
                 else
-                  
-                  strong Taxes: #{project.order.businessPayment} EURO
+
+                  strong Taxes: #{project.order.taxes} EURO
                   br
                   strong 3Doers: #{project.order.businessPayment} EURO
                   br
                   strong Printer: #{project.order.printerPayment} EURO
+                  br
+                  strong Total Price: #{project.order.totalPrice}
           .col-md-3.col-sm-6
             .printer-properties
               h4 Unit
               p #{project.unit}
               h4 Resolution
               p #{project.order.resolution} # this still on development
-              if project.order.shippingCharge
+              if project.order.rate
                 h4 Shipping
-                p #{project.order.shippingCharge}
+                p #{project.order.rate.amount_local} #{project.order.rate.currency_local}
     br
     br
     br

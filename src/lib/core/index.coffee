@@ -588,15 +588,21 @@ module.exports = (app, io) ->
     models.STLProject.findOne({_id: req.params.id}).exec().then( (doc) ->
       if doc and doc.validateNextStatus(models.PROJECT_STATUSES.PRINT_REQUESTED[0])
         ammount =  Math.abs(if (req.body.ammount and parseInt(req.body.ammount)) then parseInt(req.body.ammount) else 1)
-        price = calculateOrderPrice(doc.price, ammount)
+        total_price = calculateOrderPrice(doc.price, ammount)
+        taxes = decimal.fromNumber(total_price * 0.21, 2)
+        price = decimal.fromNumber(total_price - taxes, 2)
         printerPayment = decimal.fromNumber(price * 0.75, 2)
         doc.status = models.PROJECT_STATUSES.PRINT_REQUESTED[0]
         doc.order =
           ammount: ammount
           price: price.toString()
+          totalPrice: total_price.toString()
+          taxes: taxes.toString()
           printerPayment: printerPayment.toString()
           businessPayment: decimal.fromNumber(price - printerPayment, 2).toString()
           placedAt: new Date()
+
+        console.log doc.order
 
         doc.save()
 
