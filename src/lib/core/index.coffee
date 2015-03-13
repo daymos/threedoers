@@ -90,7 +90,7 @@ module.exports = (app, io) ->
       printer_howlong = req.body.howlong
       mailer.send('mailer/core/become',
                   {user: req.user,printer_model, printer_city, printer_howlong},
-                  {from: req.user.email, to: "andreabeccaris88@gmail.com",
+                  {from: req.user.email, to: settings.admins.emails,
                   subject: "New Become a Printer Request"}).then ->
         req.user.printer = 'request'
         req.user.save()
