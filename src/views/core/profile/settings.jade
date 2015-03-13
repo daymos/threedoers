@@ -88,12 +88,13 @@ block body
         ul.nav-circles
           -if(user.filemanager!="accepted")
             li.tiles
-                a(href="/#")
-                  - if(user.filemanager=="request")
-                      div.pending-request.circular.small-circular
-                        |Pending
-                  - else
-                      img(src='/img/icons_printing.png').circular.small-circular
+                - if(user.filemanager=="request")
+                  a(href="#")
+                    div.pending-request.circular.small-circular
+                      |Pending
+                - else
+                  a(data-toggle="modal",data-target="#comingsoonModal",href="#")
+                    img(src='/img/icons_printing.png').circular.small-circular
                 div
                     h4 Become a Designer
                     p
@@ -102,11 +103,12 @@ block body
                         | and earn money!
           -if(user.printer!="accepted")
             li.tiles
-                a(href='/#')
-                  - if(user.printer=="request")
+                - if(user.printer=="request")
+                  a(href='#')
                       div.pending-request.circular.small-circular
                         |Pending
-                  - else
+                - else
+                  a(data-toggle="modal",data-target="#becomePrinter",href="#")
                       img(src='/img/icon-1.png').circular.small-circular
                 div
                     h4 Become a Printer
@@ -114,7 +116,6 @@ block body
                         | Are you a Printer?
                         | Upgrade your profile
                         | and earn money!
-
 
 block scripts
   script(src='/vendor/jquery.ajaxupload.js')

@@ -83,15 +83,18 @@ module.exports = (app, io) ->
 
   app.post '/become', decorators.loginRequired, (req, res) ->
     if req.user.printer
-      res.render 'core/become'
+      res.render 'core/profile/settings'
     else
+      printer_model = req.body.printer_model
+      printer_city = req.body.city
+      printer_howlong = req.body.howlong
       mailer.send('mailer/core/become',
-                  {user: req.user},
-                  {from: req.user.email, to: settings.admins.emails,
+                  {user: req.user,printer_model, printer_city, printer_howlong},
+                  {from: req.user.email, to: "andreabeccaris88@gmail.com",
                   subject: "New Become a Printer Request"}).then ->
         req.user.printer = 'request'
         req.user.save()
-      res.render 'core/become'
+      res.redirect '/profile/settings'
 
 
   app.get '/project/upload', decorators.loginRequired, (req, res) ->
@@ -639,7 +642,6 @@ module.exports = (app, io) ->
       res.send 500
     )
 
-
   app.post '/project/pay/:id', decorators.loginRequired, (req, res, next) ->
     # Same as get /project/:id both printer who accepted and the owner can change this
     models.STLProject.findOne({_id: req.params.id, user: req.user.id}).exec().then( (doc) ->
@@ -898,6 +900,8 @@ module.exports = (app, io) ->
       logger.error arguments
       res.send 500
     )
+
+  app.post '/'
 
   app.post '/printing/deny/:id', decorators.printerRequired, (req, res) ->
     models.STLProject.findOne({_id: req.params.id}).exec().then( (doc) ->
