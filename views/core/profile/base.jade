@@ -12,21 +12,20 @@ block base-scripts
 block body
   div.subnav
     .container
-      ul.nav.nav-tabs
+      ul.nav.nav-tabs.design-base
         li#projects
           a(href='/profile/projects')
-            span Projects
+            span All Projects
+        li#proposal
+          a(href='/profile/onprint')
+              span On Print
+        li#projects
+          a(data-toggle="modal",data-target="#comingsoonModal",href="#")
+            span On Design
         li#archived
           a(href='/profile/archived')
             span Archived
 
-        li#projects
-          a(href='/filemanager/projects')
-            span Files
-        li#archived
-          a(href='/filemanager/profile/archived')
-            span Archived Files
-
       block content-profile
 
-  include ../../includes/publicity
+

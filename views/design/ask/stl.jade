@@ -1,0 +1,44 @@
+
+extends ../base
+
+block title
+    | Notifications
+
+
+block body
+  .section.primary
+    .container
+      .row
+          if user
+            h1 Upload resources to design your STL
+
+  .container.margin-header-10
+    .col-lg-10
+      - if (error.length != 0)
+            p.info-3d #{error}
+        div#maindiv
+          div#formdiv
+            form.form-horizontal(enctype="multipart/form-data",action="/design/stl/upload",method="post")
+              div.form-group
+                input.form-control(name="title",type="text",placeholder="Insert a title for this project")
+              div.form-group
+                textarea.form-control(rows="2",name="abstract",placeholder="Insert an abstract")
+              div.form-group#filediv
+                input.form-control#file(name="file[]",type="file")
+              div.form-group
+                textarea#textarea-id.form-control(rows="3",name="stl_desc",placeholder="Insert a description")
+              input.btn.active-greeen-3doers#add_more.upload(type="button", value="Add More Files")
+              input.btn.active-greeen-3doers#upload.upload(type="submit",value="Upload File",name="submit")
+  div
+    .container
+      br
+      br
+      br
+      br
+      br
+      br
+      include ../../includes/publicity
+      br
+      br
+      br
+      br

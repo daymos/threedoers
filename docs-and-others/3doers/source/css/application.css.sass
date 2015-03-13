@@ -1,0 +1,51 @@
+@import compass/utilities/sprites
+@import "compass/utilities/general/clearfix"
+@import compass/typography
+@import h5bp
+@import susy
+@import compass/typography/vertical_rhythm
+@import compass/css3/hyphenation
+@import compass/support
+@import "compass/css3"
+
+
++h5bp-normalize
++establish-baseline
+
+$legacy-support-for-ie: true
+
+
+$black: #000000
+$black-shadow: #1A1A1A
+$blue: #3FA6F2
+$opaque_body: #f3fff4
+$gray:  #D8FFD2
+$gray_paybutton: #E3E3E3
+$gray_upload: #E8E8E8
+$green: #7BF282
+$green_status: #035E05
+$green_shadow: #D8FFD2
+$pink:  #FF4D67
+$orange: #F2542A
+$white: #FFFFFF
+
+
+@import "partials/custom_mixins"
+@import "partials/fonts"
+@import "partials/grid"
+@import partials/awesome/font-awesome
+@import "partials/_placeholder_color"
+@import "partials/_submit_button"
+@import "partials/320grid"
+@import "partials/640grid"
+@import "partials/960grid"
+@import "partials/vendor/jquery.bxslider"
+
+
+*:focus
+  outline-style: none
+  outline-width: 0px
+
+
+.container-gallery_homepage
+  +container($total-columns, $break1, $break2)

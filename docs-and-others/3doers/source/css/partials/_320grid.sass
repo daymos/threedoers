@@ -1,0 +1,353 @@
+@import "compass/css3/hyphenation"
+@import "compass/layout/stretching"
+
+.container1,.container2, .container3,.container4,.container5,.container6,.container7
+
+  //+susy-grid-background
+
+
+.bebasneue
+  font-family: Bebasneue, "Helvetica Neue", Helvetica, Arial, sans-serif
+.lato
+  font-family: Lato, "Helvetica Neue", Helvetica, Arial, sans-serif
+
+.titillium
+  font-family: Titillium, "Helvetica Neue", Helvetica, Arial, sans-serif
+
+body
+  background: $opaque_body
+
+.hide
+  display: none
+
+.header_block
+  position: relative
+  header
+    +span-columns(7,7)
+    position: relative
+    margin-top: 35px
+    margin-bottom: 0
+
+    .container-left
+      +span-columns(3,7)
+      img
+        width: 62%
+        max-width: 74.391px
+        height: auto
+        max-height: 72px
+
+    .container-right
+      +span-columns(4 omega,7)
+      margin-top: 32px
+      ul.login
+        //+span-columns(5,5)
+        //position: relative
+        +float-right
+        +horizontal-list(27px)
+        li
+          p
+            margin: 0
+            @extend .bebasneue
+            font-size: px-to-em(17px, 16px)
+            font-weight: 700
+            font-style: normal
+            color: $white
+            line-height: 1em
+            a
+              text-decoration: none
+              +link-colors($white,$white,$white,$white,$white)
+
+
+  .login_background
+    width: 50%
+    .login_bar
+      position: absolute
+      height: 37px
+      width: 55%
+      background: $black
+      top: 56px
+      right: 0
+      z-index: -10
+
+.title_block
+  position: relative
+  .title
+    +span-columns(7,7)
+    position: relative
+    margin: 21px auto 12px
+    p
+      padding: 0
+      margin: 0
+      @extend .lato
+      font-size: px-to-em(11.8px,16px)
+      font-weight: 700
+      font-style: italic
+      color: $black
+      line-height: 1.3em
+
+
+  .title_background
+    .title_bar1, .title_bar2,.title_bar3,.title_bar4
+      background: $green
+      height: 27px
+      z-index: -10
+    .title_bar1
+      width: 82%
+      min-width: 263px
+      max-width: 384px
+      position: absolute
+      top: 21px
+    .title_bar2
+      width: 86%
+      min-width: 276px
+      max-width: 403px
+      position: absolute
+      top: 51px
+    .title_bar3
+      width: 93%
+      min-width: 296px
+      max-width: 428px
+      position: absolute
+      top: 81px
+    .title_bar4
+      width: 68%
+      min-width: 218px
+      max-width: 340px
+      position: absolute
+      top: 111px
+
+h3.subtitle
+  margin: 0
+  margin-bottom: 25px
+  @extend .titillium
+  font-size: px-to-em(10.82px,16px)
+  font-weight: 700
+  font-style: italic
+  color: $black
+  line-height: 1em
+
+
+.gallery
+  position: relative
+  +box-sizing(border-box)
+  overflow: hidden
+  margin: 0
+
+
+  .bx-viewport
+    border: 2px solid $green
+    +box-sizing(border-box)
+  #bxslider
+    margin: 0 auto
+    img
+      width: 100%
+      height: auto
+
+  .bx-pager, .bx-default-pager
+    display: none!important
+
+  .bx-wrapper
+    margin: 0 auto 8px
+
+  .bx-wrapper .bx-prev
+    left: 23px
+
+  .bx-wrapper .bx-next
+    right: 23px
+
+  .gallery_image
+    margin-top: -8px
+    text-align: right
+    img
+      width: 70%
+      max-width: 210px
+      height: auto
+
+  .square
+    +stretch(1em, 1em, 2.6em, 1em)
+    border: 2px solid $green
+
+
+.beta_email_block
+  position: relative
+  background: $green
+  margin-top: 18px
+  .container-left
+    +span-columns(3,7)
+    margin-top: 20px
+    h3.title
+      margin: 20px auto 0
+      @extend .lato
+      font-size: px-to-em(11px,16px)
+      font-weight: 900
+      font-style: italic
+      color: $black
+      line-height: 1em
+
+  .container-right
+    +span-columns(4 omega,7)
+    margin-top: 20px
+    form
+      +span-columns(4,4)
+      //margin-top: 50px
+      input
+        +border-radius(0px)
+        +box-sizing(content-box)
+      fieldset
+        border: none
+        margin: 0
+        padding: 0
+        p
+          +span-columns(4,4)
+          margin: 0
+          padding: 0
+
+          .form
+            +span-columns(4,4)
+            height: 34px
+            margin: 0px
+            margin-bottom: 9px
+            border: none
+            +box-shadow($black 2px -2px 0px)
+            @extend .titillium
+            font-size: px-to-em(16px,16px)
+            font-weight: 700
+            font-style: italic
+            text-indent: 1em
+            +nowrap
+            overflow: hidden
+            text-overflow: ellipsis
+            padding: 0
+            +placeholder
+              color: $black
+              +text-shadow($green 1px 3px 1px)
+
+
+          #submit
+            +span-columns(3,4)
+            margin-top: 6px!important
+            +box-shadow($green_shadow 2px -2px 0px)
+            &:hover
+              +box-shadow($black-shadow 2px -2px 0px)
+            +submit_button
+
+    .status_messages
+      +span-columns(4,4)
+      margin: 0px auto
+      p
+        margin: 0 auto
+        padding: 0
+        @extend .titillium
+        font-size: px-to-em(11px,16px)
+        font-weight: 700
+        font-style: normal
+        line-height: 1em
+
+    .ok
+      margin-bottom: 10px
+      color: $green_status
+    .error
+      margin-bottom: 10px
+      color: $pink
+
+  //.beta_email_background
+  //  position: absolute
+  //  background: $green
+  //  height: 122px
+  //  top: 0
+  //  z-index: -10
+  //  +stretch-x
+
+.publicity_block
+  position: relative
+  .publicity
+    +span-columns(7, 7)
+    margin-top: 30px
+    position: relative
+
+    .container-left
+      +span-columns(3, 7)
+      margin-top: 1.5%
+      text-align: center
+      img
+        width: 70%
+        height: auto
+
+    .container-right
+      +span-columns(4 omega, 7)
+
+      p
+        @extend .lato
+        font-size: px-to-em(9.4px,16px)
+        font-weight: 700
+        font-style: italic
+        color: $black
+        line-height: 1.5em
+
+  .publicity_comment_background
+    .publicity_bar1, .publicity_bar2,.publicity_bar3
+      background: $green
+      height: 14px
+      width: 57%
+      max-width: 350px
+      right: 0
+      z-index: -10
+    .publicity_bar1
+      position: absolute
+      top: 38px
+    .publicity_bar2
+      position: absolute
+      top: 53px
+    .publicity_bar3
+      position: absolute
+      top: 68px
+
+
+.footer_block
+  position: relative
+  margin-top: 8px
+  footer
+    +span-columns(7,7)
+    margin-top: 23px
+    .container-left
+      +span-columns(7,7)
+      text-align: center
+      .copyright
+        @extend .lato
+        font-size: 8px
+        font-weight: 400
+        font-style: normal
+        color: $white
+        line-height: 1em
+    .container-right
+      +span-columns(0 omega,7)
+      text-align: center
+      .share
+        margin-top: -7px
+        display: block
+        .addthis_toolbox
+          a
+            cursor: pointer
+            border: none
+            text-decoration: none
+            width: 34px
+            height: 34px
+            display: inline-block
+            text-align: center
+            font-size: px-to-em(20px,16px)
+            line-height: px-to-em(22px,16px)
+            +link-colors($white, $white, $white, $white, $white)
+
+
+  .footer_background
+    background: $black
+    position: absolute
+    top: 11px
+    height: 30px
+    z-index: -10
+    +stretch-x
+
+
+
+
+

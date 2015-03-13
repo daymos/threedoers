@@ -1,0 +1,20 @@
+.grey-3doers
+  .container
+     .row
+        .col-md-2
+          .logo-wrapper.nav-bar-logo
+            a(href='/')
+              img(src='/img/logo.png')
+        .margin-top-navbar
+            .col-md-1.col-md-offset-8.margin-top-navbar
+              .logo-wrapper.pull-right
+                 a(href='/notifications')
+                    i#notifID.glyphicon.glyphicon-bell.white-3doers.icon-dimension
+                        //div#notifID.circle.pull-right
+            .col-md-1
+                .logo-wrapper.pull-right.thumbnail.profile-thumb
+                    a(href='/')
+                      - if (user.photo)
+                        img(src='/#{ user.photo }')
+                      - else
+                        img(src='/img/edit_photo_placeholder.png?1396277523', alt='profile image')

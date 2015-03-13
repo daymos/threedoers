@@ -1,0 +1,138 @@
+= partial "partials/menuheader"
+
+%section.page.container1
+  //todo piattaforma2 adattare le flangie, js + reviews available e jobs available + chiedere a Manu si devono occupare tutta la finestra o con righa
+  .flange.file_manager
+    %ul
+      %li#reviews_request
+        REVIEWS REQUEST
+        .background1.activeline
+
+      %li#reviews_request
+        REVIEWS AVAILABLE
+        .background2.activeline
+
+      %li#archived
+        ARCHIVED
+        .background.activeline
+
+    .line
+
+  .info
+    .info_reviews_request
+      %img{id:"division1", alt: "division figure", src: "images/separatori_lista.png"}
+
+      .file_data
+        %p
+          FILE NAME:&nbsp;&nbsp;
+          %span#name
+            purple_spike_ring_20x20mm1.stl
+        %img{alt: " ", src: "images/button_accordion.png"}
+
+
+      .review_content
+        .reviews_request
+          %p.filename
+            FILE NAME:&nbsp;&nbsp;
+            %span#name
+              purple_spike_ring_20x20mm1.stl
+          .status
+            %img{id: "status_img" ,alt: "Request status ", src: "images/icons_print_requested.png"}
+            %p
+              STATUS:&nbsp;&nbsp;
+              %span#status
+                review requested
+          .time
+            %img{alt: "Time icon ", src: "images/icons_time_order.png"}
+              %p
+                THIS ORDER IS EXPECTED FROM:&nbsp;&nbsp;
+                %span#time
+                  2DAYS 3H
+
+        .file_info_block
+          %section.homepage.container2
+            //todo piattaforma2 guardare il form di questo dentro il backend
+            .file_info
+              .container-left
+                .images_data
+                  .frame-1
+
+                  .frame-2
+
+                  .file
+                    %canvas#cv
+
+                  .container_background
+
+              .container-right
+                .column-left
+                  .volume
+                    %p
+                      VOLUME:
+                    %p
+                      %span#volume
+                        81.80047863cm3
+
+                  .density
+                    %p
+                      DENSITY:
+                    %p
+                      %span#density
+                        1
+
+                  .weight
+                    %p
+                      WEIGHT:
+                    %p
+                      %span#weight
+                        81.80047863
+
+                .column-right
+                  .ammount
+                    %p
+                      AMMOUNT:
+                    %p
+                      %span#ammount
+                        4
+
+                  .dimension
+                    %p
+                      DIMENSION:
+                    %p
+                      %span#dimension
+                        24X30X2
+
+            .comments
+              %h3
+                COMMENT BY THE USER
+              .comment
+                %p
+                  Liquorice jelly beans applicake gummi bears candy canes. Dragée bear claw candy canes. Pie muffin cheesecake. Candy jelly biscuit marzipan gummi bears muffin chupa chups danish liquorice. Applicake pastry applicake biscuit.
+                %img{alt: "Comment ", src: "images/icons_comment.png"}
+
+
+            .submit
+              = submit_tag :name, :name => "submit", :id => 'submit',:class=> "form", :value=>'ACCEPT'
+
+
+
+      %img{id: "division2", alt: "division figure", src: "images/separatori_lista.png"}
+
+    .info_reviews_request
+      %img{id: "division1", alt: "division figure", src: "images/separatori_lista.png"}
+
+      .file_data
+        %p.filename
+          FILE NAME:&nbsp;&nbsp;
+          %span#name
+            purple_spike_ring_20x20mm1.stl
+        %img{alt: " ", src: "images/button_accordion.png"}
+
+      %img{id: "division2", alt: "division figure", src: "images/separatori_lista.png"}
+
+
+
+
+= partial "partials/publicity"
+= partial "partials/footer"
+
