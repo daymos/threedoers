@@ -8392,7 +8392,8 @@ hr.hr-light {
   color: #d8ffd2;
   padding: 15px 0;
   width: 100%;
-  bottom: 0px; }
+  bottom: 0px;
+  position: absolute; }
 
 .copyright {
   font-family: "Lato", Helvetica, sans-serif;
