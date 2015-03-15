@@ -602,8 +602,6 @@ module.exports = (app, io) ->
           businessPayment: decimal.fromNumber(price - printerPayment, 2).toString()
           placedAt: new Date()
 
-        console.log doc.order
-
         doc.save()
 
         # send notification
@@ -653,7 +651,8 @@ module.exports = (app, io) ->
     models.STLProject.findOne({_id: req.params.id, user: req.user.id}).exec().then( (doc) ->
       if doc and doc.validateNextStatus(models.PROJECT_STATUSES.PAYED[0])  # test if comments allowed
         printerPayment = parseFloat(doc.order.printerPayment)
-        businessPayment = parseFloat(doc.order.businessPayment)
+        businessPayment = parseFloat(doc.order.totalPrice)
+        console.log doc.order
 
         if req.body.shippingMethod == 'shipping' and doc.order.rate
           businessPayment = decimal.fromNumber(businessPayment + parseFloat(doc.order.rate.amount), 2).toString()
@@ -684,8 +683,8 @@ module.exports = (app, io) ->
                 receiver: [
                   {
                       email:  '3doers@gmail.com',
-                      amount: businessPayment,
-                      primary: 'false'
+                      amount: businessPayment,  # total price
+                      primary: 'true'
                   },
                   {
                       email:  user.email,
@@ -696,6 +695,7 @@ module.exports = (app, io) ->
                 ]
             paypalSdk.pay payload, (err, response) ->
               if err
+                console.log response.error
                 logger.error err
                 res.send 500
               else
@@ -707,6 +707,7 @@ module.exports = (app, io) ->
       else
         res.send 400
     ).fail( (reason) ->
+      console.log reason
       logger.error reason
       res.send 500
     )
@@ -872,6 +873,7 @@ module.exports = (app, io) ->
                 printer: req.user.id
                 ammount: doc.order.ammount
                 price: doc.order.price
+                totalPrice: doc.order.totalPrice
                 printerPayment: doc.order.printerPayment
                 businessPayment: doc.order.businessPayment
                 placedAt: doc.order.placedAt
