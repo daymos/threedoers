@@ -673,7 +673,8 @@ module.exports = (app, io) ->
             payload =
               requestEnvelope:
                 errorLanguage:  'en_US'
-              actionType:     'PAY'
+              actionType:     'PAY_PRIMARY'
+              payKeyDuration: 'P29D'
               currencyCode:   'EUR'
               feesPayer:      'EACHRECEIVER',
               memo:           'Payment for 3D printing in 3doers'
@@ -698,7 +699,11 @@ module.exports = (app, io) ->
                 logger.error err
                 res.send 500
               else
-                res.redirect response.paymentApprovalUrl
+                doc.update {'order.payKey': response.payKey, 'order.secundaryPaid': false}, (error) ->
+                  if error
+                    logger.error error
+                  else
+                    res.redirect response.paymentApprovalUrl
       else
         res.send 400
     ).fail( (reason) ->
@@ -926,6 +931,42 @@ module.exports = (app, io) ->
       logger.error arguments
       res.send 500
     )
+
+  app.post '/goshippo-webhook/', (req, res) ->
+    if req.body.object_id
+      models.STLProject.findOne('order.shipping.object_id': req.body.object_id).exec().then( (doc) ->
+        if doc
+          data = {}
+          data['order.shipping'] = req.body
+          if req.body.tracking_status and not doc.order.secundaryPaid
+            data['order.secundaryPaid'] = true
+
+            paypalSdk = new Paypal
+              userId: settings.paypal.adaptive.user
+              password:  settings.paypal.adaptive.password
+              signature: settings.paypal.adaptive.signature
+              appId: settings.paypal.adaptive.appId
+              sandbox:   settings.paypal.adaptive.debug
+
+            payload =
+              payKey: doc.order.payKey
+              requestEnvelope:
+                errorLanguage:  'en_US'
+
+            paypalSdk.executePayment payload
+
+          doc.update data, (error) ->
+            if error
+              logger.error error
+            else
+              res.send 200
+        else
+          res.send 404
+      ).fail( ->
+        res.send 500
+      )
+    else
+      res.send 400
 
   ###############################################
   # Socket IO event handlers

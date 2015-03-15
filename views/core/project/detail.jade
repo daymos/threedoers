@@ -210,6 +210,8 @@ block body
         .section
           .container
             .row
+              -if project.order.shipping.label_url
+                a(href="#{project.order.shipping.label_url}") Shipping label
               form.form-inline(role="form", action="/project/archive/#{project.id}", method="post").col-md-12
                 input(type='hidden', name='_csrf', value=csrfToken)
                 input(type="submit", value="Picked up").btn-default.btn-lg.btn-3doers-new
