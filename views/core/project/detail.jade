@@ -210,7 +210,7 @@ block body
         .section
           .container
             .row
-              -if project.order.shipping.label_url
+              -if project.order and project.order.shipping and project.order.shipping.label_url
                 a(href="#{project.order.shipping.label_url}") Shipping label
               form.form-inline(role="form", action="/project/archive/#{project.id}", method="post").col-md-12
                 input(type='hidden', name='_csrf', value=csrfToken)
