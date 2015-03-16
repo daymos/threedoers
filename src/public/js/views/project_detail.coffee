@@ -63,6 +63,8 @@ $(document).ready ->
   socket_project.on 'error', (data) ->
     console.log data.msg
 
+
+
   socket_project.on 'update', (data) ->
     socket_project.emit 'order-price', {ammount: $("#ammount").val()}
     updateFrontEnd(data)

@@ -72,8 +72,8 @@ module.exports = (app, io) ->
                   {user: req.user},
                   {from: req.user.email, to: settings.admins.emails,
                   subject: "New Become a File manager Request"}).then ->
-        req.user.filemanager = 'request'
-        req.user.save()
+      req.user.filemanager = 'request'
+      req.user.save()
       res.render 'core/become_filemanager'
 
 
@@ -92,16 +92,16 @@ module.exports = (app, io) ->
                   {user: req.user,printer_model, printer_city, printer_howlong},
                   {from: req.user.email, to: settings.admins.emails,
                   subject: "New Become a Printer Request"}).then ->
-        req.user.printer = 'request'
-        req.user.save()
+      req.user.printer = 'request'
+      req.user.save()
       res.redirect '/profile/settings'
 
 
-  app.get '/project/upload', decorators.loginRequired, (req, res) ->
+  app.get '/project/upload',  (req, res) ->
     res.render 'core/project/upload'
 
 
-  app.post '/project/upload', decorators.loginRequired, (req, res) ->
+  app.post '/project/upload', (req, res) ->
     if req.files.thumbnail.size == 0
       res.json errors: thumbnail: msg: "This field is required"
       return
@@ -114,7 +114,11 @@ module.exports = (app, io) ->
     # get the temporary location of the file
     tmp_path = req.files.thumbnail.path
     project = new models.STLProject
-    project.user = req.user.id
+    try
+      project.user = req.user.id
+    catch e
+
+
     project.title = req.files.thumbnail.name
     project.file = req.files.thumbnail.path.split('/').pop()
     project.save (err, doc) ->
@@ -125,8 +129,14 @@ module.exports = (app, io) ->
         res.send redirectTo: "/project/#{project.id}"
 
 
-  app.post '/project/:id/image/', decorators.loginRequired, (req, res) ->
-    models.STLProject.findOne({_id: req.params.id, user: req.user.id}).exec().then( (doc) ->
+  app.post '/project/:id/image/',  (req, res) ->
+    filter_params
+    try
+      filter_params={_id: req.params.id, user: req.user.id}
+    catch e
+      filter_params={_id: req.params.id}
+
+    models.STLProject.findOne(filter_params).exec().then( (doc) ->
       if doc
         matches = req.body.image.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/)
         unless matches.length == 3
@@ -146,8 +156,13 @@ module.exports = (app, io) ->
     )
 
 
-  app.get '/project/:id', decorators.loginRequired, (req, res, next) ->
-    models.STLProject.findOne({_id: req.params.id, $or: [{user: req.user.id}, {'order.printer': req.user.id}]}).exec().then( (doc) ->
+  app.get '/project/:id', (req, res, next) ->
+    filter_params
+    try
+      filter_params={_id: req.params.id, user: req.user.id}
+    catch e
+      filter_params={_id: req.params.id}
+    models.STLProject.findOne(filter_params).exec().then( (doc) ->
       if doc
         if not doc.volume or doc.bad or not doc.dimension
           processVolumeWeight(doc)
@@ -932,7 +947,9 @@ module.exports = (app, io) ->
   ###############################################
 
   io.of('/project').on('connection', (socket) ->
+
     if socket.handshake.query.project?
+
       models.STLProject.findOne(
         {_id: socket.handshake.query.project, user: socket.handshake.session.passport.user},
         {title: 1, volume:1, status: 1, editable: 1}).exec().then( (doc) ->

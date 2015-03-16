@@ -23,7 +23,7 @@ block body
           h1#title.page-header(data-type="text", data-url="/project/title/#{project.id}", data-title="Enter the Title") #{ project.title }
         .col-md-6.margin-header-10
           h2.subtitle-upload Status: #{project.humanizedStatus()}
-      - if (user.printer == 'accepted' && project.status > statuses.PRINT_REQUESTED[0])
+      - if (typeof(user) !== 'undefined'&&user.printer == 'accepted' && project.statusß > statuses.PRINT_REQUESTED[0])
         .row.margin-header-10
           .col-md-6
             .back-link
@@ -141,7 +141,7 @@ block body
       br
 
 
-      - if (user.printer == 'accepted' && project.status == statuses.PRINT_REVIEW[0])
+      - if (typeof(user) !== 'undefined'&&user.printer == 'accepted' && project.status == statuses.PRINT_REVIEW[0])
           .row.margin-header-10
             .col-md-3.col-sm-6.margin-header-10
               a#accept.btn-default.btn-lg.btn-3doers-new(href='/printing/accept/#{project.id}')
@@ -343,7 +343,7 @@ block scripts
       orderPrice: #{project.order?project.order.price:0},
       hasImage: #{project.image?true:false}
     };
-    console.dir(project);
+
     var port = "#{io.port}";
     $(document).ready(
       function() {

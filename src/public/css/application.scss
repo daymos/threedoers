@@ -1,11 +1,12 @@
 /* Backgrounds */
 $bg-body: #f3fff4;
-$bg-footer: #dde5de;
-$bg-primary: #f3fff4;
+$bg-footer: #f3fff4;
+$bg-footer-grey: #dde5de;
+$bg-primary: #88D6A7;
 $bg-orange: #f2542a;
-$bg-blue: #3fa6f2;
+$bg-blue: #77B3D4;
 $bg-default-button: #000000;
-$bg-main-nav: #000000;
+$bg-main-nav: white;
 
 /* Fonts */
 $font-default-stack: "Helvetica Neue", Helvetica, sans-serif;
@@ -17,6 +18,11 @@ $font-nav-stack: "Bebas Neue", Helvetica, sans-serif;
 $default-color: #000000;
 $primary-color: #7bf282;
 $footer-color: #d8ffd2;
+$green-color:#4EB476;
+$link-color:#77B3D4;
+$lite-blue:#B8F1CE;
+$menu-item-color:#4A4A4A;
+$shadow-color:#B8F1CE;
 
 html,
 body {
@@ -67,7 +73,6 @@ hr.hr-light {
 
 #header {
   padding: 40px 0;
-  background-color: #ffffff;
 
 }
 .small-circular{
@@ -81,11 +86,14 @@ hr.hr-light {
 
 #footer {
   background: $bg-footer;
-  color: $footer-color;
+  color: $menu-item-color;
   padding: 15px 0;
   width: 100%;
   bottom: 0px;
   position: absolute;
+}
+.grey-footer{
+  background-color:$bg-footer-grey!important;
 }
 
 .copyright {
@@ -155,10 +163,31 @@ hr.hr-light {
    width: 60%;
    margin-top: 3%;
 }
-.margin-top-navbar{
-
+.margin-top-navbar {
   margin-top: 1.3%;
-
+  .menu-item {
+    font-size: 16px;
+    color: $menu-item-color;
+    font-family: $font-default-stack;
+  }
+  .menu-item-green {
+    @extend .menu-item;
+    color: $green-color;
+  }
+  span {
+    @extend .menu-item-green;
+    padding-bottom: 15px;
+    padding-top:15px;
+    display: block;
+  }
+}
+.margin-top-navbar .menu-item:hover{
+  background-color:inherit;
+}
+.bottom-line{
+  border: solid #126F76;
+  border-bottom-width: 1px;
+  margin-top:4px;
 }
 .profile-thumb{
   width: 120%;
@@ -175,6 +204,7 @@ hr.hr-light {
 .black-3doers, .green-3doers a{
     color: black;
 }
+
 .white-3doers {
   color:#f3fff4;
 }
@@ -350,6 +380,7 @@ hr.hr-light {
     padding-right: 5px;
     text-transform: uppercase;
   }
+
   a:hover,
   a:focus {
     text-decoration: none;
