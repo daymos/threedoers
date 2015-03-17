@@ -4,19 +4,24 @@
     # Socket IO
     */
 
-    var socket;
-    if (user.id) {
-      socket = io.connect(":" + port + "/notification", {
-        query: "user=" + user.id + ((typeof project !== "undefined" && project !== null) ? '&project=' + project.id : '')
-      });
-      return socket.on('new', function(data) {
-        return $.growl({
-          title: "" + (data.title || '') + "<br>",
-          message: data.message
-        }, {
-          type: data.type
+    var e, socket;
+    try {
+      if (user.id) {
+        socket = io.connect(":" + port + "/notification", {
+          query: "user=" + user.id + ((typeof project !== "undefined" && project !== null) ? '&project=' + project.id : '')
         });
-      });
+        return socket.on('new', function(data) {
+          return $.growl({
+            title: "" + (data.title || '') + "<br>",
+            message: data.message
+          }, {
+            type: data.type
+          });
+        });
+      }
+    } catch (_error) {
+      e = _error;
+      return console.log(e);
     }
   });
 
