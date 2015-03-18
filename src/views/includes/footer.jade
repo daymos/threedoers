@@ -1,13 +1,25 @@
+
 footer
   #footer(class=(user?'grey-footer':''))
     .container
       .row
-          .social-links
-            a(href='#')
-              span.fa.fa-google-plus
-            a(href='#')
-              span.fa.fa-facebook
-            a(href='#')
-              span.fa.fa-twitter
-            a(href='#')
-              span.fa.fa-linkedin-square
+          ul.nav.navbar-nav.navbar-left
+              li
+                a(href='#').menu-item 3doers s.r.l. copyright 2015
+              li
+                a(href='#').menu-item Terms and Conditions
+              li
+                a(href='#').menu-item Privacy Policy
+
+          ul.nav.navbar-nav.navbar-right.social-links
+              li
+                a(href='#')
+                    i.fa.fa-facebook
+
+              li
+                a(href='#')
+                    i.fa.fa-twitter
+
+              li
+                a(href='#')
+                  i.fa.fa-pinterest

@@ -8389,6 +8389,8 @@ hr.hr-light {
 #footer {
   background: #f3fff4;
   color: #4A4A4A;
+  border: 0px solid;
+  border-top-width: 1px;
   padding: 15px 0;
   width: 100%;
   bottom: 0px;
@@ -8407,24 +8409,25 @@ hr.hr-light {
   line-height: 16px; }
 
 .social-links {
-  font-size: 32px;
-  text-align: center; }
-  .social-links a {
-    background-color: #7bf282;
-    border-radius: 50%;
-    color: inherit;
-    display: inline-block;
-    *display: inline;
-    height: 50px;
-    margin-right: 5px;
-    text-align: center;
-    width: 50px; }
-  .social-links a:hover {
-    background-color: #7bf282;
-    color: #000000;
-    -webkit-transition: all 0.4s;
-    -moz-transition: all 0.4s;
-    transition: all 0.4s; }
+  margin-top: 15px;
+  font-size: 20px;
+  text-align: center;
+  margin-right: 0px !important; }
+  .social-links li {
+    padding-right: 10px; }
+    .social-links li a {
+      padding: 7px 10px;
+      background-color: #88D6A7;
+      border-radius: 50%;
+      display: inline !important;
+      text-align: center;
+      color: #f3fff4; }
+    .social-links li a:hover {
+      background-color: #88D6A7 !important;
+      color: #f3fff4 !important; }
+  .social-links li:first-child a {
+    padding-left: 14px;
+    padding-right: 14px; }
 
 .circle {
   width: 9px;
@@ -8473,50 +8476,68 @@ hr.hr-light {
 .weight-medium {
   font-weight: 500; }
 
+.weight-lite {
+  font-weight: lighter; }
+
 .margin-top-navbar {
   margin-top: 2.3%; }
-  .margin-top-navbar .menu-item, .margin-top-navbar .menu-item-green, .margin-top-navbar span {
-    font-weight: lighter;
-    font-size: 16px;
-    color: #4A4A4A;
-    font-family: "Helvetica Neue", Helvetica, sans-serif; }
-  .margin-top-navbar .menu-item-green, .margin-top-navbar span {
-    color: #4EB476; }
-  .margin-top-navbar span {
-    padding-bottom: 15px;
-    padding-top: 15px;
-    display: block; }
+
+.menu-item, .menu-item-green {
+  font-weight: lighter;
+  font-size: 16px;
+  color: #4A4A4A;
+  font-family: "Helvetica Neue", Helvetica, sans-serif; }
+
+.menu-item-green {
+  color: #4EB476; }
+
+.menu-item-green:hover {
+  color: #4EB476 !important; }
+
+.menu-span {
+  padding-bottom: 15px;
+  padding-top: 15px;
+  display: block; }
 
 .padding-left-20 {
   padding-top: 0px;
   padding-left: 20px; }
 
-.margin-top-navbar .menu-item:hover, .margin-top-navbar .menu-item-green:hover, .margin-top-navbar span:hover {
-  background-color: inherit; }
+.nav > li > a:hover {
+  background-color: transparent; }
+
+.menu-item:hover, .menu-item-green:hover {
+  color: #4A4A4A;
+  background-color: #f3fff4; }
 
 .intro-text {
   min-height: 300px;
-  color: #ffffff;
   background-image: url("../img/background/2x_main_pattern.png");
   padding-top: 100px;
   padding-bottom: 55px;
-  font-size: 20px;
-  font-weight: normal;
-  color: #FFFFFF; }
+  color: #ffffff; }
+  .intro-text > span {
+    padding-top: 0px;
+    color: #ffffff; }
   .intro-text .intro-heading {
+    font-size: 36px;
+    padding-bottom: 0px;
     text-shadow: 1px 1px 0px #7BF282;
-    margin-bottom: 25px;
     font-family: "Helvetica Neue", Helvetica, sans-serif;
-    font-size: 50px;
+    font-size: 36px;
     font-weight: 700;
     line-height: 50px; }
 
 .text-16 {
   font-size: 16px; }
 
+.text-14 {
+  font-size: 14px; }
+
 .bottom-line {
   border: solid #126F76;
   border-bottom-width: 1px;
+  border-top-width: 0px;
   margin-top: 14px; }
 
 .profile-thumb {
@@ -8547,6 +8568,22 @@ hr.hr-light {
   border-radius: 5px;
   font-size: 16px;
   padding: 10px 16px; }
+
+#contact-us-container {
+  background: url("../img/background/contactus_background.png") no-repeat;
+  background-size: cover;
+  padding-top: 40px;
+  padding-bottom: 50px; }
+  #contact-us-container p {
+    color: #A5CFD2; }
+    #contact-us-container p a {
+      color: #B8F1CE; }
+  #contact-us-container p:first-child {
+    color: #ffffff; }
+  #contact-us-container div div p {
+    color: #88D6A7; }
+  #contact-us-container div div p:first-child {
+    color: #ffffff; }
 
 .btn-landing:hover, .btn-primary-landing:hover, .btn-secondary-landing:hover, .btn-secondary-reverse:hover {
   text-decoration: none; }
@@ -8583,11 +8620,17 @@ hr.hr-light {
   .btn-secondary-reverse:hover {
     color: #f3fff4; }
 
+.margin-top-20 {
+  margin-top: 20px; }
+
 .margin-top-40 {
   margin-top: 40px; }
 
+.margin-top-60 {
+  margin-top: 60px; }
+
 .margin-top-80 {
-  margin-top: 40px; }
+  margin-top: 80px; }
 
 .btn-3doers-new {
   background: #f3fff4;
@@ -8596,6 +8639,9 @@ hr.hr-light {
 .no-padding {
   padding: initial;
   width: 100%; }
+
+.margin-bottom-20 {
+  margin-bottom: 20px; }
 
 .padding-bottom-50 {
   padding-bottom: 50px; }

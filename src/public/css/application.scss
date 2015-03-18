@@ -24,6 +24,8 @@ $lite-blue:#B8F1CE;
 $lite-grey:#BAB9B9;
 $menu-item-color:#4A4A4A;
 $shadow-color:#B8F1CE;
+$contact-us-color:#A5CFD2;
+$line-color :#126F76;
 
 html,
 body {
@@ -86,8 +88,10 @@ hr.hr-light {
 }
 
 #footer {
-  background: $bg-footer;
+  background: $bg-body;
   color: $menu-item-color;
+  border: 0px solid;
+  border-top-width: 1px;
   padding: 15px 0;
   width: 100%;
   bottom: 0px;
@@ -106,29 +110,35 @@ hr.hr-light {
   margin: 13px 0;
   line-height: 16px;
 }
+
 .social-links {
-  font-size: 32px;
+  margin-top:15px;
+  font-size: 20px;
   text-align: center;
-
-  a {
-    background-color: $primary-color;
+  margin-right: 0px!important;
+  li {
+    padding-right: 10px;
+    a {
+    padding: 7px 10px;
+    background-color: $bg-primary;
     border-radius: 50%;
-    color: inherit;
-    display: inline-block;
-    *display: inline;
-    height: 50px;
-    margin-right: 5px;
+    display: inline!important;
     text-align: center;
-    width: 50px;
+    color:$bg-body;
+    }
+    a:hover {
+      background-color: $bg-primary!important;
+      color:$bg-body!important;
+    }
+  }
+  li:first-child{
+    a {
+      padding-left: 14px;
+      padding-right: 14px;
+    }
   }
 
-  a:hover {
-    background-color: $primary-color;
-    color: $default-color;
-    -webkit-transition: all 0.4s;
-    -moz-transition: all 0.4s;
-    transition: all 0.4s;
-  }
+
 }
 .circle{
     width:9px;
@@ -167,6 +177,7 @@ hr.hr-light {
    width: 60%;
    margin-top: 3%;
 }
+
 .menu-item-color{
   font-weight: lighter;
   color:$menu-item-color;
@@ -177,59 +188,74 @@ hr.hr-light {
 .weight-medium{
   font-weight: 500;
 }
+.weight-lite{
+  font-weight: lighter;
+}
 
 .margin-top-navbar {
   margin-top: 2.3%;
-  .menu-item {
-    font-weight: lighter;
-    font-size: 16px;
-    color: $menu-item-color;
-    font-family: $font-default-stack;
-  }
-  .menu-item-green {
-    @extend .menu-item;
-    color: $green-color;
-  }
-  span {
-    @extend .menu-item-green;
-    padding-bottom: 15px;
-    padding-top:15px;
-    display: block;
-  }
+}
+.menu-item {
+  font-weight: lighter;
+  font-size: 16px;
+  color: $menu-item-color;
+  font-family: $font-default-stack;
+}
+.menu-item-green {
+  @extend .menu-item;
+  color: $green-color;
+}
+.menu-item-green:hover{
+  color:$green-color!important;
+}
+.menu-span {
+  padding-bottom: 15px;
+  padding-top:15px;
+  display: block;
 }
 .padding-left-20{
   padding-top:0px;
   padding-left: 20px;
 }
-.margin-top-navbar .menu-item:hover{
-  background-color:inherit;
+.nav > li > a:hover{
+  background-color: transparent;
 }
+.menu-item:hover{
+  color:$menu-item-color;
+  background-color: $bg-body;
+}
+
 .intro-text {
   min-height: 300px;
-  color: #ffffff;
   background-image: url('../img/background/2x_main_pattern.png');
   padding-top: 100px;
   padding-bottom: 55px;
-  font-size:20px;
-  font-weight: normal;
-  color: #FFFFFF;
-
-
+  color: #ffffff;
+  &>span{
+    padding-top:0px;
+    color: #ffffff;
+  }
   .intro-heading{
+    font-size: 36px;
+    padding-bottom: 0px;
     text-shadow: 1px 1px 0px #7BF282;
-    margin-bottom: 25px;
     font-family: $font-default-stack;
-    font-size: 50px;
+    font-size: 36px;
     font-weight: 700;
     line-height: 50px;
   }
+
 }
 .text-16{
   font-size: 16px;
 }
+.text-14{
+  font-size: 14px;
+}
 .bottom-line{
-  border: solid #126F76;
+  border: solid $line-color;
   border-bottom-width: 1px;
+  border-top-width: 0px;
   margin-top:14px;
 }
 .profile-thumb{
@@ -263,6 +289,33 @@ hr.hr-light {
   border-radius: 5px;
   font-size: 16px;
   padding: 10px 16px;
+}
+#contact-us-container{
+  background: url('../img/background/contactus_background.png') no-repeat;
+  background-size: cover;
+  padding-top: 40px;
+  padding-bottom: 50px;
+
+  p{
+    color:$contact-us-color;
+    a {
+      color:$lite-blue;
+
+    }
+  }
+  p:first-child{
+    color:#ffffff;
+  }
+  div{
+    div{
+      p {
+        color:$bg-primary;
+      }
+      p:first-child{
+        color:#ffffff;
+      }
+    }
+  }
 }
 .btn-landing:hover{
   text-decoration: none;
@@ -307,11 +360,17 @@ hr.hr-light {
     color:$bg-body;
   }
 }
+.margin-top-20{
+  margin-top:20px;
+}
 .margin-top-40{
   margin-top:40px;
 }
+.margin-top-60{
+  margin-top:60px;
+}
 .margin-top-80{
-  margin-top:40px;
+  margin-top:80px;
 }
 .btn-3doers-new{
   background: $bg-footer;
@@ -320,6 +379,9 @@ hr.hr-light {
 .no-padding{
   padding: initial;
   width: 100%;
+}
+.margin-bottom-20{
+  margin-bottom:20px;
 }
 .padding-bottom-50{
   padding-bottom:50px;

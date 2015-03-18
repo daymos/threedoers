@@ -10,16 +10,16 @@ block body
     .container
         .row
             div.intro-text.text-center
-                div.intro-heading
-                    span SIMPLE 3D PRINTING
-                span Turn your ideas into real objects
+
+                p.intro-heading SIMPLE 3D PRINTING
+                p Turn your ideas into real objects
     .container#howItWorks
         .row.text-center.margin-header-30.menu-item-color
-            span.h3.weight-normal.menu-item-color HOW IT WORKS
-        .row.text-center
-            span.text-16.menu-item-color 3doers is a collective 3d printing service.
-        .row.text-center
-            span.text-16.menu-item-color Here you can print your objects or find a designer to model your ideas.
+            p.h3.weight-normal.menu-item-color.margin-bottom-20 HOW IT WORKS
+
+            p.text-16.menu-item-color 3doers is a collective 3d printing service.
+
+            p.text-16.menu-item-color Here you can print your objects or find a designer to model your ideas.
 
         .row.margin-header-30.green-color
             div.col-sm-4.text-center
@@ -37,10 +37,10 @@ block body
                 div.h3 3. Your object is delivered to you
 
         .row.text-center
-            a(href='#').btn-landing.btn-primary-landing START PRINTING
+            a(href='/project/upload').btn-landing.btn-primary-landing START PRINTING
 
-    .container.margin-header-30#join
-        .row.blue-box
+    .container.margin-header-30
+        .row.blue-box#join
             .col-sm-8.blue-border
                 .row-fluid.padding-left-20.padding-bottom-50
                     p.h3.weight-normal DO YOU HAVE A 3D PRINTER?
@@ -53,9 +53,9 @@ block body
                     br
                     br
                     .row-fluid.clearfix
-                        .col-sm-6.margin-top-80.text-center
-                            a(href='#').btn-landing.btn-secondary-landing Become a printer
-                        .col-sm-4
+                        .col-sm-4.col-sm-offset-1.text-center
+                            a(href='/become').btn-landing.btn-block.btn-secondary-landing.margin-top-60 Become a printer
+                        .col-sm-5.col-sm-offset-2
                             img(src='/img/icon/printer_icon.svg').img-responsive.center-block
             .col-sm-4.blue-box
                 .row-fluid.padding-left-20
@@ -69,162 +69,177 @@ block body
                     br
                     br
                     br
-                    .text-center
-                        a(href='#').btn-landing.btn-secondary-landing.btn-secondary-reverse.margin-top-80 Start designing
+                    .text-center.col-sm-8.col-sm-offset-2
+                        a(href='#').btn-landing.btn-secondary-landing.btn-block.btn-secondary-reverse.margin-top-20 Start designing
+    .container.margin-header-30#contact
+        .row#contact-us-container
+            .col-sm-2
+                p.h3.weight-normal CONTACT US
+                br
+                p.text-16.weight-lite Need help using our service?
+                p.text-16.weight-lite For business to business enquiries or any other requests, feel free to contact us at this address
+                    a(href='mailto:info@3doers.it')  info@3doers.it
 
-  div
-    .container
-      h1.page-title
-        span Welcome To 3Doers
-      h1.page-title
-        span Find A 3D Printer For
-      h1.page-title
-        span Your Project Or Start
-      h1.page-title
-        span Printing Others
-      h4.h4-3d
-        | 3DOERS IS A FAST COLLECTIVE 3D PRINTING SERVICE.
-        br
-        | YOU CAN UPLOAD, PRINT OR WORK ON THE FILES.
-        br
-        | LEARN HOW TO DO IT HERE.
-      br
+            .col-sm-8.col-sm-offset-2
+                img(src='/img/background/worldmap.svg').img-responsive.col-sm-offset-2
+                .col-sm-offset-5.col-sm-4
+                    p.text-14.weight-lite Printing service in US and Europe
+                    p.text-14.weight-lite Design service worlwide
 
-    .container.home-banner
-      .slider-3d
+
+  //div
+  //  .container
+  //    h1.page-title
+  //      span Welcome To 3Doers
+  //    h1.page-title
+  //      span Find A 3D Printer For
+  //    h1.page-title
+  //      span Your Project Or Start
+  //    h1.page-title
+  //      span Printing Others
+  //    h4.h4-3d
+  //      | 3DOERS IS A FAST COLLECTIVE 3D PRINTING SERVICE.
+  //      br
+  //      | YOU CAN UPLOAD, PRINT OR WORK ON THE FILES.
+  //      br
+  //      | LEARN HOW TO DO IT HERE.
+  //    br
+  //
+  //  .container.home-banner
+  //    .slider-3d
         //- .flexslider
         //-   ul.slides
         //-     li: img(src="/img/yoda_gallery_img.png", alt='3d printer')
         //-     li: img(src="/img/user_gallery_img.png", alt='3d printer')
         //-     li: img(src="/img/printer_gallery_img.png", alt='3d printer')
         //-     li: img(src="/img/filemanager_gallery_img.png", alt='3d printer')
-        .square
-      .main-slider-bottom
-        img(src='img/gallery_image.png')
-
-    br
-    br
-    br
-
-  .section.primary
-    .container
-      if user
-        h2.h2-3d
-          | WHAT CAN I DO WITH 3DOERS?
-        br
-        br
-      else
-        h2.h2-3d.text-shadow-white SIGN UP!
-        h3.h3-3d
-          | Join to our community and start the collective
-          br
-          | 3D printing.
-        br
-        br
-      .row
-        .col-md-4.col-sm-6
-          p FIND A DESIGNER TO HELP YOU CREATE SOMETHING FROM SCRATCH
-        .col-md-4.col-sm-6
-          p UPLOAD AN EXISTING 3D MODEL AND FIND A PRINTER
-        - if (user && user.printer != 'accepted')
-          .col-md-4.col-sm-6
-            p
-              span DO YOU HAVE A 3D PRINTER?
-              br
-              span JOING US AND START PRINTING FOR OTHER PEOPLE
-      .row
-        .col-md-4.col-sm-6
-          a.btn.btn-default.btn-lg.btn-block(href='#', title="Is not active")
-            span(title="Is not active") CREATE SOMETHING
-          br
-        .col-md-4.col-sm-6
-          a.btn.btn-default.btn-lg.btn-block(href='/project/upload')
-            span PRINT SOMETHING
-          br
-        - if (user && user.printer != 'accepted')
-          .col-md-4.col-sm-6
-            a.btn.btn-default.btn-lg.btn-block(href='/become')
-              span BECOME A PRINTER
-  div
-    .container
-      br
-      br
-      br
-      br
-      br
-      br
-      .row
-        .col-md-8.col-sm-9
-          h1.page-title
-            span Are You Sure That
-          h1.page-title
-            span Your File Is Ready
-          h1.page-title
-            span To Be Printed?
-          h2.file-revision
-            | No!
-            a.default-hover(href='#', id='manager-clickable') So Click Here For A File Revision
-          br
-          br
-        .col-md-4.col-sm-3
-          p.text-center
-            img(src='/img/icona3d_homepage.png')
-
-      if user
-        //- div
-        //-   .container
-        //-       br
-        //-       br
-        //-       br
-        //-       br
-        //-       h1.page-title
-        //-         span LAST PROJECTS
-        //-       br
-        //-       br
-        //-       br
-        //-       br
-        //-       .row
-        //-         for project in projects
-        //-           .col-md-4.col-sm-6
-        //-             .project-single
-        //-               img(src='/#{project.image}')
-        //-               .info
-        //-                 .info-wrapper
-        //-                   a(href='/project/#{project.id}')
-        //-                     | Applicake Brownie Bear Claw Sweet Sesame Snaps Wafer Soufflé. Caramels Chocolate Ice Cream Bonbon Wafer Oat Cake Bear Claw. Chocolate Bar Danish Sweet
-        //-         br
-        //- div
-        //-   .container
-        //-     br
-        //-     br
-        //-     br
-        //-     br
-        //-     .row
-        //-       .col-md-5.col-md-offset-7
-        //-         h1.page-title.right
-        //-           span COMMUNITY
-        //-     br
-        //-     br
-        //-     br
-        //-     br
-        //-     .row
-        //-       for _user in users
-        //-         .col-md-2.col-md-2-5.col-sm-4
-        //-           .community-single
-        //-             a(href='#')
-        //-             - if (_user.photo)
-        //-               img(src='/#{ _user.photo }', alt='#{ _user.firstName } #{ _user.lastName }')
-        //-             - else
-        //-               img(src='/img/edit_photo_placeholder.png?1396277523', alt='profile image')
-      br
-      br
-      br
-      br
-      include ../includes/publicity
-      br
-      br
-      br
-      br
+  //      .square
+  //    .main-slider-bottom
+  //      img(src='img/gallery_image.png')
+  //
+  //  br
+  //  br
+  //  br
+  //
+  //.section.primary
+  //  .container
+  //    if user
+  //      h2.h2-3d
+  //        | WHAT CAN I DO WITH 3DOERS?
+  //      br
+  //      br
+  //    else
+  //      h2.h2-3d.text-shadow-white SIGN UP!
+  //      h3.h3-3d
+  //        | Join to our community and start the collective
+  //        br
+  //        | 3D printing.
+  //      br
+  //      br
+  //    .row
+  //      .col-md-4.col-sm-6
+  //        p FIND A DESIGNER TO HELP YOU CREATE SOMETHING FROM SCRATCH
+  //      .col-md-4.col-sm-6
+  //        p UPLOAD AN EXISTING 3D MODEL AND FIND A PRINTER
+  //      - if (user && user.printer != 'accepted')
+  //        .col-md-4.col-sm-6
+  //          p
+  //            span DO YOU HAVE A 3D PRINTER?
+  //            br
+  //            span JOING US AND START PRINTING FOR OTHER PEOPLE
+  //    .row
+  //      .col-md-4.col-sm-6
+  //        a.btn.btn-default.btn-lg.btn-block(href='#', title="Is not active")
+  //          span(title="Is not active") CREATE SOMETHING
+  //        br
+  //      .col-md-4.col-sm-6
+  //        a.btn.btn-default.btn-lg.btn-block(href='/project/upload')
+  //          span PRINT SOMETHING
+  //        br
+  //      - if (user && user.printer != 'accepted')
+  //        .col-md-4.col-sm-6
+  //          a.btn.btn-default.btn-lg.btn-block(href='/become')
+  //            span BECOME A PRINTER
+  //div
+  //  .container
+  //    br
+  //    br
+  //    br
+  //    br
+  //    br
+  //    br
+  //    .row
+  //      .col-md-8.col-sm-9
+  //        h1.page-title
+  //          span Are You Sure That
+  //        h1.page-title
+  //          span Your File Is Ready
+  //        h1.page-title
+  //          span To Be Printed?
+  //        h2.file-revision
+  //          | No!
+  //          a.default-hover(href='#', id='manager-clickable') So Click Here For A File Revision
+  //        br
+  //        br
+  //      .col-md-4.col-sm-3
+  //        p.text-center
+  //          img(src='/img/icona3d_homepage.png')
+  //
+  //    if user
+  //      - div
+  //      -   .container
+  //      -       br
+  //      -       br
+  //      -       br
+  //      -       br
+  //      -       h1.page-title
+  //      -         span LAST PROJECTS
+  //      -       br
+  //      -       br
+  //      -       br
+  //      -       br
+  //      -       .row
+  //      -         for project in projects
+  //      -           .col-md-4.col-sm-6
+  //      -             .project-single
+  //      -               img(src='/#{project.image}')
+  //      -               .info
+  //      -                 .info-wrapper
+  //      -                   a(href='/project/#{project.id}')
+  //      -                     | Applicake Brownie Bear Claw Sweet Sesame Snaps Wafer Soufflé. Caramels Chocolate Ice Cream Bonbon Wafer Oat Cake Bear Claw. Chocolate Bar Danish Sweet
+  //      -         br
+  //      - div
+  //      -   .container
+  //      -     br
+  //      -     br
+  //      -     br
+  //      -     br
+  //      -     .row
+  //      -       .col-md-5.col-md-offset-7
+  //      -         h1.page-title.right
+  //      -           span COMMUNITY
+  //      -     br
+  //      -     br
+  //      -     br
+  //      -     br
+  //      -     .row
+  //      -       for _user in users
+  //      -         .col-md-2.col-md-2-5.col-sm-4
+  //      -           .community-single
+  //      -             a(href='#')
+  //      -             - if (_user.photo)
+  //      -               img(src='/#{ _user.photo }', alt='#{ _user.firstName } #{ _user.lastName }')
+  //      -             - else
+  //      -               img(src='/img/edit_photo_placeholder.png?1396277523', alt='profile image')
+  //    br
+  //    br
+  //    br
+  //    br
+  //    include ../includes/publicity
+  //    br
+  //    br
+  //    br
+  //    br
 
 block scripts
   script(src='/vendor/jquery.flexslider-min.js')
