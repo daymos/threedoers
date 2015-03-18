@@ -8,11 +8,10 @@ block body
     .container
         h1.page-header Registration
 
-
-    .section.primary
       .container
+        p.signup-message To become a printer your need to be a 3doers user first. Once you sign up you'll be able to upgrade your profile anytime.
         .row
-          .col-md-6.col-sm-7
+          .col-md-5.col-sm-6
             form#registration(action='/accounts/signup', method='POST', role='form', accept-charset='utf-8', name='signup-form')
               input(type='hidden', name='_csrf', value=csrfToken)
               .form-group
@@ -31,16 +30,14 @@ block body
               br
               br
               .form-group
-                .row
-                  .col-md-8.col-sm-8
                     input(type='checkbox',name='term_condition') &nbsp;
-                    span Sign in you accept
+                    span   I accept 3doers
                     a(href="/docs/pp.pdf", target="_blank")  Privacy Policy &nbsp;
                     a(href="/docs/terms.pdf", target="_blank") Terms and Condition
                     br
                     br
-                    button.btn.btn-xlg.btn-default.btn-block(type='submit')
-                      span Register
+                    button.btn-landing.btn-primary-landing.btn-block.no-border(type='submit') SIGN UP
+
 
 block scripts
   script(src='http://maps.googleapis.com/maps/api/js?key=AIzaSyDRQ1Ct3DCGBOzXsr0nGNIHwNjKp7FNaKQ&sensor=false&libraries=places')

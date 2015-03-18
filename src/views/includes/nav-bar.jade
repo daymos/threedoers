@@ -1,17 +1,18 @@
-.container
-         .row
-            .col-md-2
-              .logo-wrapper.nav-bar-logo
-                a(href='/')
-                  img(src='/img/logo.png')
-            .margin-top-navbar
+
+nav.navbar.nav-3doers(class=(nav!='/home'?'grey-bg':''))
+    .container
+
+        .row#navbar-content
+                a(href='/').col-sm-1.margin-top-20
+                    img(src='/img/logo.png').img-responsive
+                .col-sm-11.row
                 if user
-                        .col-md-1.col-md-offset-8.margin-top-navbar
-                          .logo-wrapper.pull-right
+                        .col-md-1.col-sm-2.col-md-offset-8.col-sm-offset-7
+                          .logo-wrapper.pull-right.margin-top-20
                              a(href='/notifications')
                                  i#notifID.glyphicon.glyphicon-bell.grey-3doers.icon-dimension
                                     //div#notifID.circle.pull-right
-                        .col-md-1
+                        .col-sm-1
                             .logo-wrapper.pull-right.thumbnail.profile-thumb
                                 a(href='/')
                                   - if (user.photo)
@@ -19,22 +20,24 @@
                                   - else
                                     img(src='/img/edit_photo_placeholder.png?1396277523', alt='profile image')
                 else
-                    ul.nav.navbar-nav.navbar-left
-                        li
-                            a(href='#howItWorks').menu-item How it works
-                        li
-                            a(href='#join').menu-item Join 3doers
-                        li
-                            a(href='#contact').menu-item Contact us
 
-                    ul.nav.navbar-nav.navbar-right
+                    if nav=='/home'||nav=='/'
+                        ul.nav.navbar-nav.navbar-left.margin-top-15
+                            li
+                                a(href='#howItWorks').menu-item How it works
+                            li
+                                a(href='#join').menu-item Join 3doers
+                            li
+                                a(href='#contact').menu-item Contact us
+
+                    ul.nav.navbar-nav.navbar-right.margin-top-15
                         li
-                            a(href='/accounts/login').menu-item-green Log in
+                            a(href='/accounts/login',class=(nav=='/accounts/login'?'menu-item-green-active':'')).menu-item-green Log in
 
                         li
                             span.menu-span.menu-item-green /
 
                         li
-                            a(href='/accounts/signup').menu-item-green Sign in
-.bottom-line
+                            a(href='/accounts/signup',class=(nav=='/accounts/signup'?'menu-item-green-active':'')).menu-item-green Sign in
+
 
