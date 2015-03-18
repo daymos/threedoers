@@ -8396,7 +8396,7 @@ hr.hr-light {
   bottom: 0px;
   position: absolute; }
 
-.grey-footer {
+.grey-bg {
   background-color: #dde5de !important; }
 
 .lite-grey-color {
@@ -8891,10 +8891,15 @@ hr.hr-light {
 /* Links */
 a.forgot-password,
 a.create-account {
-  color: #ff4d67;
   font-family: "Titillium Web", Helvetica, sans-serif;
-  font-size: 22px;
-  line-height: 40px; }
+  font-size: 16px;
+  font-weight: lighter;
+  line-height: 40px;
+  color: #BAB9B9;
+  text-decoration: underline; }
+
+a.create-account {
+  color: #77B3D4; }
 
 a.forgot-password:hover,
 a.forgot-password:focus,
