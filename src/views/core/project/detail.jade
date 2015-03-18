@@ -20,7 +20,7 @@ block body
     .section.primary
       .row
         .col-md-6
-          h1#title.page-header(data-type="text", data-url="/project/title/#{project.id}", data-title="Enter the Title") #{ project.title }
+          h1#title.page-header.text-ellipsis(data-type="text", data-url="/project/title/#{project.id}", data-title="Enter the Title") #{ project.title }
         .col-md-6.margin-header-10
           h2.subtitle-upload Status: #{project.humanizedStatus()}
       - if (typeof(user) !== 'undefined'&&user.printer == 'accepted' && project.statusß > statuses.PRINT_REQUESTED[0])

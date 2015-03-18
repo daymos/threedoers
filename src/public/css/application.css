@@ -8650,6 +8650,11 @@ hr.hr-light {
   background: #f3fff4;
   border-radius: 15px; }
 
+.text-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap; }
+
 .no-padding {
   padding: initial;
   width: 100%; }

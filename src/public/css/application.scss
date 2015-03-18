@@ -395,6 +395,11 @@ hr.hr-light {
   background: $bg-footer;
   border-radius: 15px;
 }
+.text-ellipsis{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 .no-padding{
   padding: initial;
   width: 100%;
