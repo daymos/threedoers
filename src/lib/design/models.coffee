@@ -17,7 +17,9 @@ module.exports.DESIGN_STATUSES = DESIGN_STATUSES =
   PREACCEPTED: [2, 'preaccepted']
   ACCEPTED: [3, 'accepted']
   PAID: [4, 'payed']
-  FINISHED: [5, 'archived']
+  TIMEEEXPIRED: [5, 'time expired']
+  DELIVERED: [6, 'delivered']
+  ARCHIVED: [7, 'archived']
 
 
 ###############################################
@@ -137,7 +139,6 @@ STLDesign.methods.dasherizedStatus = ->
   for key of DESIGN_STATUSES
     if DESIGN_STATUSES[key][0] == @status
       return inflection.dasherize(DESIGN_STATUSES[key][1]).replace('-', '_')
-
 
 #Proposal.pre 'save', (next) ->
 #  that = @

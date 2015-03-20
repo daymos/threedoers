@@ -72,8 +72,8 @@ module.exports = (app, io) ->
                   {user: req.user},
                   {from: req.user.email, to: settings.admins.emails,
                   subject: "New Become a File manager Request"}).then ->
-      req.user.filemanager = 'request'
-      req.user.save()
+        req.user.filemanager = 'request'
+        req.user.save()
       res.render 'core/become_filemanager'
 
 
@@ -92,16 +92,16 @@ module.exports = (app, io) ->
                   {user: req.user,printer_model, printer_city, printer_howlong},
                   {from: req.user.email, to: settings.admins.emails,
                   subject: "New Become a Printer Request"}).then ->
-      req.user.printer = 'request'
-      req.user.save()
+        req.user.printer = 'request'
+        req.user.save()
       res.redirect '/profile/settings'
 
 
-  app.get '/project/upload',  (req, res) ->
+  app.get '/project/upload', decorators.loginRequired, (req, res) ->
     res.render 'core/project/upload'
 
 
-  app.post '/project/upload', (req, res) ->
+  app.post '/project/upload', decorators.loginRequired, (req, res) ->
     if req.files.thumbnail.size == 0
       res.json errors: thumbnail: msg: "This field is required"
       return
@@ -114,11 +114,7 @@ module.exports = (app, io) ->
     # get the temporary location of the file
     tmp_path = req.files.thumbnail.path
     project = new models.STLProject
-    try
-      project.user = req.user.id
-    catch e
-
-
+    project.user = req.user.id
     project.title = req.files.thumbnail.name
     project.file = req.files.thumbnail.path.split('/').pop()
     project.save (err, doc) ->
@@ -129,14 +125,8 @@ module.exports = (app, io) ->
         res.send redirectTo: "/project/#{project.id}"
 
 
-  app.post '/project/:id/image/',  (req, res) ->
-    filter_params
-    try
-      filter_params={_id: req.params.id, user: req.user.id}
-    catch e
-      filter_params={_id: req.params.id}
-
-    models.STLProject.findOne(filter_params).exec().then( (doc) ->
+  app.post '/project/:id/image/', decorators.loginRequired, (req, res) ->
+    models.STLProject.findOne({_id: req.params.id, user: req.user.id}).exec().then( (doc) ->
       if doc
         matches = req.body.image.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/)
         unless matches.length == 3
@@ -156,13 +146,8 @@ module.exports = (app, io) ->
     )
 
 
-  app.get '/project/:id', (req, res, next) ->
-    filter_params
-    try
-      filter_params={_id: req.params.id, user: req.user.id}
-    catch e
-      filter_params={_id: req.params.id}
-    models.STLProject.findOne(filter_params).exec().then( (doc) ->
+  app.get '/project/:id', decorators.loginRequired, (req, res, next) ->
+    models.STLProject.findOne({_id: req.params.id, $or: [{user: req.user.id}, {'order.printer': req.user.id}]}).exec().then( (doc) ->
       if doc
         if not doc.volume or doc.bad or not doc.dimension
           processVolumeWeight(doc)
@@ -202,6 +187,9 @@ module.exports = (app, io) ->
       logger.error arguments
       res.send 500
     )
+
+
+
 
   app.get '/profile/archived', decorators.loginRequired, (req, res) ->
     models.STLProject.find({user: req.user._id, status: models.PROJECT_STATUSES.ARCHIVED[0]}).exec().then( (docs) ->
@@ -617,8 +605,6 @@ module.exports = (app, io) ->
           businessPayment: decimal.fromNumber(price - printerPayment, 2).toString()
           placedAt: new Date()
 
-        console.log doc.order
-
         doc.save()
 
         # send notification
@@ -668,7 +654,8 @@ module.exports = (app, io) ->
     models.STLProject.findOne({_id: req.params.id, user: req.user.id}).exec().then( (doc) ->
       if doc and doc.validateNextStatus(models.PROJECT_STATUSES.PAYED[0])  # test if comments allowed
         printerPayment = parseFloat(doc.order.printerPayment)
-        businessPayment = parseFloat(doc.order.businessPayment)
+        businessPayment = parseFloat(doc.order.totalPrice)
+        console.log doc.order
 
         if req.body.shippingMethod == 'shipping' and doc.order.rate
           businessPayment = decimal.fromNumber(businessPayment + parseFloat(doc.order.rate.amount), 2).toString()
@@ -688,7 +675,8 @@ module.exports = (app, io) ->
             payload =
               requestEnvelope:
                 errorLanguage:  'en_US'
-              actionType:     'PAY'
+              actionType:     'PAY_PRIMARY'
+              payKeyDuration: 'P29D'
               currencyCode:   'EUR'
               feesPayer:      'EACHRECEIVER',
               memo:           'Payment for 3D printing in 3doers'
@@ -698,8 +686,8 @@ module.exports = (app, io) ->
                 receiver: [
                   {
                       email:  '3doers@gmail.com',
-                      amount: businessPayment,
-                      primary: 'false'
+                      amount: businessPayment,  # total price
+                      primary: 'true'
                   },
                   {
                       email:  user.email,
@@ -710,13 +698,19 @@ module.exports = (app, io) ->
                 ]
             paypalSdk.pay payload, (err, response) ->
               if err
+                console.log response.error
                 logger.error err
                 res.send 500
               else
-                res.redirect response.paymentApprovalUrl
+                doc.update {'order.payKey': response.payKey, 'order.secundaryPaid': false}, (error) ->
+                  if error
+                    logger.error error
+                  else
+                    res.redirect response.paymentApprovalUrl
       else
         res.send 400
     ).fail( (reason) ->
+      console.log reason
       logger.error reason
       res.send 500
     )
@@ -882,6 +876,7 @@ module.exports = (app, io) ->
                 printer: req.user.id
                 ammount: doc.order.ammount
                 price: doc.order.price
+                totalPrice: doc.order.totalPrice
                 printerPayment: doc.order.printerPayment
                 businessPayment: doc.order.businessPayment
                 placedAt: doc.order.placedAt
@@ -942,20 +937,50 @@ module.exports = (app, io) ->
       res.send 500
     )
 
+  app.post '/goshippo-webhook/', (req, res) ->
+    if req.body.object_id
+      models.STLProject.findOne('order.shipping.object_id': req.body.object_id).exec().then( (doc) ->
+        if doc
+          data = {}
+          data['order.shipping'] = req.body
+          if req.body.tracking_status and not doc.order.secundaryPaid
+            data['order.secundaryPaid'] = true
+
+            paypalSdk = new Paypal
+              userId: settings.paypal.adaptive.user
+              password:  settings.paypal.adaptive.password
+              signature: settings.paypal.adaptive.signature
+              appId: settings.paypal.adaptive.appId
+              sandbox:   settings.paypal.adaptive.debug
+
+            payload =
+              payKey: doc.order.payKey
+              requestEnvelope:
+                errorLanguage:  'en_US'
+
+            paypalSdk.executePayment payload
+
+          doc.update data, (error) ->
+            if error
+              logger.error error
+            else
+              res.send 200
+        else
+          res.send 404
+      ).fail( ->
+        res.send 500
+      )
+    else
+      res.send 400
+
   ###############################################
   # Socket IO event handlers
   ###############################################
 
   io.of('/project').on('connection', (socket) ->
-
     if socket.handshake.query.project?
-      filter={_id: socket.handshake.query.project}
-      if socket.handshake.session.passport.user
-        filter.user=socket.handshake.session.passport.user
-
-      console.log(filter)
       models.STLProject.findOne(
-        filter,
+        {_id: socket.handshake.query.project, user: socket.handshake.session.passport.user},
         {title: 1, volume:1, status: 1, editable: 1}).exec().then( (doc) ->
         if doc
           socket.join(doc._id.toHexString())

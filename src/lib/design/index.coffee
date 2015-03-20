@@ -82,7 +82,7 @@ module.exports = (app) ->
 
 
   app.get '/design/projects', decorators.loginRequired, (req, res) ->
-    models.STLDesign.find({'creator': req.user.id, status: {"$lt": models.DESIGN_STATUSES.PAID[0], "$gte": models.DESIGN_STATUSES.PREACCEPTED[0]} }).exec (err, docs) ->
+    models.STLDesign.find({'creator': req.user.id, status: {"$lte": models.DESIGN_STATUSES.TIMEEEXPIRED[0], "$gte": models.DESIGN_STATUSES.PREACCEPTED[0]} }).exec (err, docs) ->
       if err
         logger.error err
         res.send 500
@@ -90,7 +90,7 @@ module.exports = (app) ->
         res.render 'design/project/list_projects', {projects: docs}
 
   app.get '/design/jobs', decorators.filemanagerRequired, (req, res) ->
-    models.STLDesign.find(designer: req.user.id, status: {"$lt": models.DESIGN_STATUSES.PAID[0], "$gte": models.DESIGN_STATUSES.PREACCEPTED[0]}).exec (err, docs) ->
+    models.STLDesign.find(designer: req.user.id, status: {"$lte": models.DESIGN_STATUSES.TIMEEEXPIRED[0], "$gte": models.DESIGN_STATUSES.PREACCEPTED[0]}).exec (err, docs) ->
       if err
         logger.error err
         res.send 500
@@ -158,13 +158,32 @@ module.exports = (app) ->
   app.post '/design/accept/:id', decorators.filemanagerRequired, (req, res) ->
     models.STLDesign.findOne({_id: req.params.id}).exec().then( (doc) ->
       if doc
+
         auth.User.findOne(doc.creator).exec (err, user) ->
           if user
 #            mailer.send('mailer/printing/accept', {project: doc, user: user, site:settings.site}, {from: settings.mailer.noReply, to:[user.email], subject: settings.printing.accept.subject}).then ->
-            doc.status = models.DESIGN_STATUSES.ACCEPTED[0]
-            doc.save()
-            res.json msg: "Accepted"
-#
+            console.log 'doc'
+            designer=''
+            for proposal in doc.proposal
+              if proposal.accepted
+                designer=proposal.creator
+
+            if designer!=''
+              auth.User.findOne({_id:proposal.creator}).exec().then((user) ->
+                  console.log 'inquert'
+                  user.designJobs+=1
+                  user.save()
+                  doc.status = models.DESIGN_STATUSES.ACCEPTED[0]
+                  doc.save()
+                  res.json msg: "Accepted"
+              ).fail( ->
+                logger.error arguments
+                res.send 500
+              )
+            else
+              res.json msg: "Looks like someone accepted, try with another", 400
+
+      #
 #            # send notification
 #            auth.User.where('_id').in([req.user.id, user.id]).exec().then (docs)->
 #              if docs.length
