@@ -63,7 +63,7 @@
     # CSRF Protection
     */
 
-    var CSRF_HEADER, setCSRFToken, socket_project, updatePayDiv, viewer;
+    var CSRF_HEADER, e, setCSRFToken, socket_project, updatePayDiv, viewer;
     CSRF_HEADER = "X-CSRF-Token";
     setCSRFToken = function(securityToken) {
       return jQuery.ajaxPrefilter(function(options, _, xhr) {
@@ -77,7 +77,20 @@
     # Socket IO
     */
 
-    socket_project = io.connect(":" + port + "/project");
+    try {
+      user;
+      socket_project = io.connect(":" + port + "/project");
+    } catch (_error) {
+      e = _error;
+      console.log({
+        query: {
+          project: window.location.pathname.split('/').pop()
+        }
+      });
+      socket_project = io.connect(":" + port + "/project", {
+        query: 'project=' + window.location.pathname.split('/').pop()
+      });
+    }
     socket_project.on('error', function(data) {
       return console.log(data.msg);
     });

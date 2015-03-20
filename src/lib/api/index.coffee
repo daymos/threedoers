@@ -78,13 +78,11 @@ module.exports = (app) ->
 
           ws = new models.WorkSession
           if req.query.mode == 'start'
-
             ws.session_project_id = req.query.project_id
             ws.session_number = (session_number*1)+1
             ws.session_date_stamp = new Date(req.query.creation_date)
             ws.session_screen_shot = null
           else
-
             ws.session_project_id = req.query.project_id
             ws.session_number = (session_number*1)
             ws.session_date_stamp = new Date(req.query.creation_date)
@@ -92,7 +90,11 @@ module.exports = (app) ->
             desigModel.STLDesign.findOne({_id: req.query.project_id}).exec().then((design) ->
               if design
                 diffMs = ((new Date(req.query.creation_date)) - session.session_date_stamp)
+
                 design.project_total_time_logged += Math.floor(((diffMs/1000) / 60))
+                if design.project_total_time_logged>=design.project_estimated_time
+                  user.token=null
+
                 design.save()
             )
           ws.save ( err )->

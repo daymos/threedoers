@@ -949,9 +949,13 @@ module.exports = (app, io) ->
   io.of('/project').on('connection', (socket) ->
 
     if socket.handshake.query.project?
+      filter={_id: socket.handshake.query.project}
+      if socket.handshake.session.passport.user
+        filter.user=socket.handshake.session.passport.user
 
+      console.log(filter)
       models.STLProject.findOne(
-        {_id: socket.handshake.query.project, user: socket.handshake.session.passport.user},
+        filter,
         {title: 1, volume:1, status: 1, editable: 1}).exec().then( (doc) ->
         if doc
           socket.join(doc._id.toHexString())

@@ -124,11 +124,11 @@ hr.hr-light {
     border-radius: 50%;
     display: inline!important;
     text-align: center;
-    color:$bg-body;
+    color:$line-color;
     }
     a:hover {
       background-color: $bg-primary!important;
-      color:$bg-body!important;
+      color:$line-color!important;
     }
   }
   li:first-child{
@@ -191,15 +191,43 @@ hr.hr-light {
 .weight-lite{
   font-weight: lighter;
 }
+.margin-left-20{
+  margin-left: 20px;
+}
+.margin-right-20{
+  margin-right: 20px;
+}
+.right-bottom-border{
+  border: 0px solid #DDE5DE;
+  border-right-width: 1px;
+  border-bottom-width: 1px;
+  box-shadow: 1px 1px 1px $primary-color;
+}
 
 .margin-top-navbar {
   margin-top: 2.3%;
+}
+.margin-top-5{
+  margin-top:5px
+}
+.margin-top-7{
+  margin-top:7px
+}
+.margin-top-10{
+  margin-top:10px
 }
 .margin-top-15{
   margin-top:15px
 }
 .margin-top-20{
   margin-top:20px
+}
+.margin-top-50{
+  margin-top:50px
+}
+.modal-content{
+
+ background-color: $bg-body;
 }
 .menu-item {
   padding-bottom:10px!important;
@@ -208,18 +236,28 @@ hr.hr-light {
   color: $menu-item-color;
   font-family: $font-default-stack;
 }
+.menu-item:focus{
+  background-color: inherit!important;
+}
+.menu-item-active{
+  border-bottom: double 2px $green-color;
+}
 .menu-item-green {
   @extend .menu-item;
 
   color: $green-color;
 }
+
 .menu-item-green-active{
   @extend .menu-item-green;
   border-bottom: double 2px $green-color;
-
 }
 .menu-item-green:hover{
   color:$green-color!important;
+}
+.nav.menu-item:active{
+  text-decoration: underline;
+
 }
 .menu-span {
   padding-bottom: 15px;
@@ -310,6 +348,9 @@ hr.hr-light {
       color:$lite-blue;
 
     }
+    a:hover{
+      color:#ffffff;
+  }
   }
   p:first-child{
     color:#ffffff;
@@ -400,6 +441,21 @@ hr.hr-light {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+.dropdown-nav{
+    li{
+      a:hover{
+        background-color: #ffffff;
+        span {
+          color:$menu-item-color;
+        }
+
+      }
+    }
+}
+.no-focus{
+  background-color: transparent!important;
+  border-color:transparent!important;
+}
 .no-padding{
   padding: initial;
   width: 100%;
@@ -409,6 +465,9 @@ hr.hr-light {
 }
 .padding-bottom-50{
   padding-bottom:50px;
+}
+.padding-0{
+  padding:0px!important;
 }
 .focused{
   border-color: red;
@@ -641,6 +700,7 @@ hr.hr-light {
     -o-transition: none 0 ease-in;
     transition: none;
   }
+
   .nav .open > a, .nav .open > a:hover, .nav .open > a:focus {
   	background: none;
   }
@@ -929,7 +989,9 @@ a.direct-link-ship-address {
   }
   a:hover,
   a:focus {
-    text-decoration: underline;
+    text-decoration: none;
+    text-underline-color: #88D6A7;
+
   }
 
   span.title {
@@ -1005,7 +1067,8 @@ a.direct-link-ship-address {
     margin: 0 auto;
     height: 300px;
     width: 80%;
-    z-index: 999999;
+    z-index:1000;
+
   }
 
   .upload {

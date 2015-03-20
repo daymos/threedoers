@@ -7,13 +7,12 @@ block extra-headers
   meta(name="csrf-token", content="#{csrfToken}")
 
 block body
-    .container
+    section.container
         .row
             div.intro-text.text-center
-
                 p.intro-heading SIMPLE 3D PRINTING
                 p Turn your ideas into real objects
-    .container#howItWorks
+    section(data-anchor="howItWorks").container#howItWorks
         .row.text-center.margin-header-30.menu-item-color
             p.h3.weight-normal.menu-item-color.margin-bottom-20 HOW IT WORKS
 
@@ -39,8 +38,8 @@ block body
         .row.text-center
             a(href='/project/upload').btn-landing.btn-primary-landing START PRINTING
 
-    .container.margin-header-30
-        .row.blue-box#join
+    section(data-anchor='join').container.margin-header-30#join
+        .row.blue-box
             .col-sm-8.blue-border
                 .row-fluid.padding-left-20.padding-bottom-50
                     p.h3.weight-normal DO YOU HAVE A 3D PRINTER?
@@ -71,7 +70,7 @@ block body
                     br
                     .text-center.col-sm-8.col-sm-offset-2
                         a(href='#').btn-landing.btn-secondary-landing.btn-block.btn-secondary-reverse.margin-top-20 Start designing
-    .container.margin-header-30#contact
+    section(data-anchor='contact').container.margin-header-30#contact
         .row#contact-us-container
             .col-sm-2
                 p.h3.weight-normal CONTACT US
@@ -80,7 +79,7 @@ block body
                 p.text-16.weight-lite For business to business enquiries or any other requests, feel free to contact us at this address
                     a(href='mailto:info@3doers.it')  info@3doers.it
 
-            .col-sm-8.col-sm-offset-2
+            .col-sm-8.col-sm-offset-1
                 img(src='/img/background/worldmap.svg').img-responsive.col-sm-offset-2
                 .col-sm-offset-5.col-sm-4
                     p.text-14.weight-lite Printing service in US and Europe
@@ -253,3 +252,31 @@ block scripts
         'nextText': ''
         });
       });
+
+    $(document).ready(function(){
+        $('.nav .menu-item').on('click', function() {
+            var scrollAnchor = $(this).attr('data-scroll'),
+        scrollPoint = $('section[data-anchor="' + scrollAnchor + '"]').offset().top - 28;
+        $('body,html').animate({
+            scrollTop: scrollPoint
+            }, 500);
+        return false;
+        })
+    });
+
+    $(window).scroll(function() {
+        var windscroll = $(window).scrollTop();
+        if (windscroll >= 90) {
+            console.log('>=90')
+            $('.wrapper section').each(function(i) {
+                if ($(this).position().top <= windscroll - 20) {
+                    $('nav menu-item-active').removeClass('menu-item-active');
+                    $('.nav .menu-item').eq(i).addClass('menu-item-active');
+                }
+            });
+        } else {
+            console.log('else')
+            $('.nav menu-item-active').removeClass('menu-item-active');
+            $('.nav .menu-item:first').addClass('menu-item-active');
+            }
+    }).scroll();
