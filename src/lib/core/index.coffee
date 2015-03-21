@@ -935,6 +935,7 @@ module.exports = (app, io) ->
     )
 
   app.post '/goshippo-webhook/', (req, res) ->
+    console.log req.body
     if req.body.object_id
       models.STLProject.findOne('order.shipping.object_id': req.body.object_id).exec().then( (doc) ->
         if doc
@@ -955,7 +956,8 @@ module.exports = (app, io) ->
               requestEnvelope:
                 errorLanguage:  'en_US'
 
-            paypalSdk.executePayment payload
+            paypalSdk.executePayment payload, ->
+              console.log arguments
 
           doc.update data, (error) ->
             if error
