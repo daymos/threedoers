@@ -942,7 +942,7 @@ module.exports = (app, io) ->
         if doc
           data = {}
           data['order.shipping'] = req.body
-          if req.body.tracking_status and not doc.order.secundaryPaid
+          if req.body.tracking_status and req.body.tracking_status == "TRANSIT" and not doc.order.secundaryPaid
             data['order.secundaryPaid'] = true
 
             paypalSdk = new Paypal
@@ -962,6 +962,7 @@ module.exports = (app, io) ->
 
           doc.update data, (error) ->
             if error
+              console.log error
               logger.error error
             else
               res.send 200
