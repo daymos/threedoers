@@ -936,9 +936,10 @@ module.exports = (app, io) ->
 
   app.post '/goshippo-webhook/', (req, res) ->
     if req.body.object_id
-      models.STLProject.findOne('order.shipping.object_id': req.body.object_id).exec().then( (doc) ->
+      models.STLProject.find('order.shipping.object_id': req.body.object_id).exec().then( (doc) ->
+        console.log req.body.object_id
+        console.log doc
         if doc
-          console.log doc
           data = {}
           data['order.shipping'] = req.body
           # test many options
