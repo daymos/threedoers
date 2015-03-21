@@ -220,6 +220,8 @@ block body
         .section
           .container
             .row
+              - if (project.order && project.order.transaction && project.order.transaction.label_url)
+                a(href="#{project.order.transaction.label_url}") Shipping label
               form.form-inline(role="form", action="/project/archive/#{project.id}", method="post").col-md-12
                 input(type='hidden', name='_csrf', value=csrfToken)
                 input(type="submit", value="Archive").btn-default.btn-lg.btn-3doers-new
@@ -228,8 +230,6 @@ block body
         .section
           .container
             .row
-              - if (project.order && project.order.transaction && project.order.transaction.label_url)
-                a(href="#{project.order.transaction.label_url}") Shipping label
               form.form-inline(role="form", action="/project/archive/#{project.id}", method="post").col-md-12
                 input(type='hidden', name='_csrf', value=csrfToken)
                 input(type="submit", value="Picked up").btn-default.btn-lg.btn-3doers-new
