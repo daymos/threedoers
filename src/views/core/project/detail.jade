@@ -216,12 +216,17 @@ block body
                 input(type='hidden', name='_csrf', value=csrfToken)
                 input(type="submit", value="Order Printed").btn-default.btn-lg.btn-3doers-new
 
-      - if (project.status == statuses.SHIPPING[0] && user.id == project.user)
+      - if (project.status == statuses.SHIPPING[0] && user.id == project.order.printer)
         .section
           .container
             .row
               - if (project.order && project.order.transaction && project.order.transaction.label_url)
-                a(href="#{project.order.transaction.label_url}") Shipping label
+                a(href="#{project.order.transaction.label_url}").btn-default.btn-lg Shipping label
+
+      - if (project.status == statuses.SHIPPING[0] && user.id == project.user)
+        .section
+          .container
+            .row
               form.form-inline(role="form", action="/project/archive/#{project.id}", method="post").col-md-12
                 input(type='hidden', name='_csrf', value=csrfToken)
                 input(type="submit", value="Archive").btn-default.btn-lg.btn-3doers-new
