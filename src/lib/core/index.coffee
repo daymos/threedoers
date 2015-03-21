@@ -937,11 +937,9 @@ module.exports = (app, io) ->
   app.post '/goshippo-webhook/', (req, res) ->
     if req.body.object_id
       models.STLProject.findOne('order.transaction.object_id': req.body.object_id).exec().then( (doc) ->
-        console.log doc
-        console.log req.body.object_id
         if doc
           data = {}
-          data['order.shipping'] = req.body
+          data['order.transaction'] = req.body
           # test many options
           if req.body.tracking_status and req.body.tracking_status == "TRANSIT" and not doc.order.secundaryPaid
             data['order.secundaryPaid'] = true
