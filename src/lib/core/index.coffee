@@ -701,6 +701,7 @@ module.exports = (app, io) ->
               else
                 doc.update {'order.payKey': response.payKey, 'order.secundaryPaid': false}, (error) ->
                   if error
+                    console.log error
                     logger.error error
                   else
                     res.redirect response.paymentApprovalUrl
