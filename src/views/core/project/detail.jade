@@ -5,7 +5,20 @@ block title
   |  Your Project
 
 block body
+  div(role='dialog',tabindex='-1',aria-labelledby="create a profile",aria-hidden="true").modal.fade#pleaseLogin
+        div.modal-dialog
+            div.modal-content
+                div.modal-body.container-fluid
+                    div.row-fluid
+                        button(type="button",data-dismiss="modal",aria-label="Close").close
+                            span(aria-hidden="true") &times;
+
+                    div.row-fluid.margin-top-40.text-center create a profile to proceed with your order
+                    div.row-fluid.margin-top-40.text-center.center-block
+                        div.col-sm-6.col-sm-offset-3
+                            a(href='/accounts/signup').btn-landing.btn-block.btn-primary-landing.no-border.margin-bottom-20 SIGN UP
   div
+
       -function prettyDate(dateString){
       -var date = new Date(dateString);
       -var d = date.getDate();
@@ -17,13 +30,15 @@ block body
       -return d+'/'+m+'/'+y+' at '+h+':'+mm;
       -}
    .container
+
+
     .section.primary
       .row
         .col-md-6
-          h1#title.page-header(data-type="text", data-url="/project/title/#{project.id}", data-title="Enter the Title") #{ project.title }
+          h1#title.page-header.text-ellipsis(data-type="text", data-url="/project/title/#{project.id}", data-title="Enter the Title") #{ project.title }
         .col-md-6.margin-header-10
           h2.subtitle-upload Status: #{project.humanizedStatus()}
-      - if (user.printer == 'accepted' && project.status > statuses.PRINT_REQUESTED[0])
+      - if (typeof(user) !== 'undefined'&&user.printer == 'accepted' && project.statusß > statuses.PRINT_REQUESTED[0])
         .row.margin-header-10
           .col-md-6
             .back-link
@@ -71,7 +86,10 @@ block body
                 | ORDER PRICE:&nbsp;
                 span#order-price  Processing
             .col-md-4
-              button.btn-default.btn-lg.grey-3doers(type='submit') Place Order
+              if user
+                button.btn-default.btn-lg.grey-3doers(type='submit') Place Order
+              else
+                button.btn-default.btn-lg.grey-3doers(type='button',data-toggle='modal',data-target="#pleaseLogin") Place Order
             .col-md-4.margin-header-10.error-message
               - if (! project.checkHeight)
                   p too height
@@ -141,7 +159,7 @@ block body
       br
 
 
-      - if (user.printer == 'accepted' && project.status == statuses.PRINT_REVIEW[0])
+      - if (typeof(user) !== 'undefined'&&user.printer == 'accepted' && project.status == statuses.PRINT_REVIEW[0])
           .row.margin-header-10
             .col-md-3.col-sm-6.margin-header-10
               a#accept.btn-default.btn-lg.btn-3doers-new(href='/printing/accept/#{project.id}')
@@ -345,7 +363,7 @@ block scripts
       orderPrice: #{project.order?project.order.price:0},
       hasImage: #{project.image?true:false}
     };
-    console.dir(project);
+
     var port = "#{io.port}";
     $(document).ready(
       function() {

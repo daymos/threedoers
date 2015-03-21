@@ -121,7 +121,7 @@ STLProject = new Schema
 
   user:
     type: ObjectId
-    required: true
+    required: false
 
   color:
     type: String

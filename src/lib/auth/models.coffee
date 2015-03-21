@@ -364,8 +364,28 @@ User = new Schema
     type: Number
     default: 1
 
+  designJobs:
+      type: Number
+      default: 0
+
   filemanager:
     type: String
+
+  rate:
+    type:Number
+    default: 0
+
+  timeRate:
+    type:Number
+    default: 0
+
+  onTime:
+    type:Boolean
+    default:true
+
+  numberOfDelay:
+    type:Number
+    default:0
 
   admin:
     type: Boolean

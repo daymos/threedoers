@@ -188,6 +188,9 @@ module.exports = (app, io) ->
       res.send 500
     )
 
+
+
+
   app.get '/profile/archived', decorators.loginRequired, (req, res) ->
     models.STLProject.find({user: req.user._id, status: models.PROJECT_STATUSES.ARCHIVED[0]}).exec().then( (docs) ->
       res.render 'core/profile/list_projects', {projects: docs}

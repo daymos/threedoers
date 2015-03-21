@@ -58,12 +58,20 @@ $(document).ready ->
   ###
   # Socket IO
   ###
+  try
+    user
+    socket_project = io.connect(":#{port}/project")
+  catch e
+    console.log { query: {project: window.location.pathname.split( '/' ).pop()} }
+    socket_project = io.connect(":#{port}/project",{ query: 'project='+window.location.pathname.split( '/' ).pop()})
 
-  socket_project = io.connect(":#{port}/project")
   socket_project.on 'error', (data) ->
     console.log data.msg
 
+
+
   socket_project.on 'update', (data) ->
+
     socket_project.emit 'order-price', {ammount: $("#ammount").val()}
     updateFrontEnd(data)
 

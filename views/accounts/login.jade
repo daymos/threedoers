@@ -6,12 +6,11 @@ block title
 block body
   div
     .container
-        h1.page-header Login
+        h1.page-header.menu-item-color Login
 
     br
     br
-    .section.primary
-      .container
+    .container
         .row
           .col-md-6.col-sm-7
             form#registration(action='/accounts/login', method='POST', role='form', accept-charset='utf-8', name='signup-form')
@@ -22,14 +21,16 @@ block body
                 input.form-control.input-text.resize-input-form(type='password', placeholder='password', name='password')
               br
               .form-group
-                a.default-hover.forgot-password(href='/accounts/reset-password') Forgot your Password?
-                br
-                a.default-hover.create-account(href='/accounts/signup') Create an Account
+                a.forgot-password(href='/accounts/reset-password') Forgot your password
+
               .form-group
                 .row
                   .col-md-8.col-sm-7
-                    button.btn.btn-xlg.btn-default.btn-block(type='submit')
-                      span Login
+                    button.btn-landing.btn-primary-landing.btn-block.no-border(type='submit') LOGIN
+              .form-group
+                .row
+                    .col-md-8.col-sm-7
+                        a.create-account(href='/accounts/signup') Don't have an account yet? Create one here
     br
     br
 
