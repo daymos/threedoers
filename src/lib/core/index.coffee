@@ -652,7 +652,6 @@ module.exports = (app, io) ->
       if doc and doc.validateNextStatus(models.PROJECT_STATUSES.PAYED[0])  # test if comments allowed
         printerPayment = parseFloat(doc.order.printerPayment)
         businessPayment = parseFloat(doc.order.totalPrice)
-        console.log doc.order
 
         if req.body.shippingMethod == 'shipping' and doc.order.rate
           businessPayment = decimal.fromNumber(businessPayment + parseFloat(doc.order.rate.amount), 2).toString()
@@ -936,10 +935,10 @@ module.exports = (app, io) ->
     )
 
   app.post '/goshippo-webhook/', (req, res) ->
-    console.log req.body
     if req.body.object_id
       models.STLProject.findOne('order.shipping.object_id': req.body.object_id).exec().then( (doc) ->
         if doc
+          console.log doc
           data = {}
           data['order.shipping'] = req.body
           # test many options
