@@ -8387,7 +8387,7 @@ hr.hr-light {
   margin-bottom: 7%; }
 
 #footer {
-  background: #f3fff4;
+  background: #ffffff;
   color: #4A4A4A;
   border: 0px solid;
   border-top-width: 1px;
@@ -8398,6 +8398,9 @@ hr.hr-light {
 
 .grey-bg {
   background-color: #dde5de !important; }
+
+.white-bg {
+  background-color: #ffffff !important; }
 
 .lite-grey-color {
   color: #BAB9B9; }
@@ -8466,6 +8469,9 @@ hr.hr-light {
   width: 60%;
   margin-top: 3%; }
 
+.gray-color {
+  color: #959495; }
+
 .menu-item-color {
   font-weight: lighter;
   color: #4A4A4A; }
@@ -8506,9 +8512,6 @@ hr.hr-light {
 .margin-top-15 {
   margin-top: 15px; }
 
-.margin-top-20 {
-  margin-top: 20px; }
-
 .margin-top-50 {
   margin-top: 50px; }
 
@@ -8521,15 +8524,19 @@ hr.hr-light {
   font-size: 16px;
   color: #4A4A4A;
   font-family: "Helvetica Neue", Helvetica, sans-serif; }
+  .menu-item:hover, .menu-item-green:hover, .menu-item-green-active:hover {
+    border-bottom: double 2px #4EB476 !important; }
 
 .menu-item:focus, .menu-item-green:focus, .menu-item-green-active:focus {
   background-color: inherit !important; }
 
 .menu-item-active {
-  border-bottom: double 2px #4EB476; }
+  border-bottom: double 2px #4EB476 !important; }
 
 .menu-item-green, .menu-item-green-active {
   color: #4EB476; }
+  .menu-item-green:hover, .menu-item-green-active:hover {
+    border-bottom: double 2px #4EB476; }
 
 .menu-item-green-active {
   border-bottom: double 2px #4EB476; }
@@ -8557,28 +8564,36 @@ hr.hr-light {
   background-color: transparent; }
 
 .intro-text {
-  min-height: 300px;
-  background-image: url("../img/background/2x_main_pattern.png");
-  padding-top: 100px;
-  padding-bottom: 55px;
+  background-image: url("../img/background/main_pattern.png");
+  background-repeat: no-repeat;
   color: #ffffff; }
-  .intro-text > span {
-    padding-top: 0px;
-    color: #ffffff; }
   .intro-text .intro-heading {
+    padding-top: 15%;
     font-size: 36px;
-    padding-bottom: 0px;
     text-shadow: 1px 1px 0px #7BF282;
     font-family: "Helvetica Neue", Helvetica, sans-serif;
     font-size: 36px;
     font-weight: 700;
     line-height: 50px; }
+  .intro-text .intro-label {
+    padding-bottom: 15%; }
 
+@media only screen and (min-width: 992px) {
+  .nav-logo-resp {
+    margin-top: 10px; } }
+@media only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 2 / 1), only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min-device-pixel-ratio: 2) {
+  .intro-text {
+    background-image: url("../img/background/2x_main_pattern.png");
+    background-repeat: no-repeat;
+    min-height: 400px; } }
 .text-16 {
   font-size: 16px; }
 
 .text-14 {
   font-size: 14px; }
+
+.text-20 {
+  font-size: 20px; }
 
 .profile-thumb {
   width: 120%; }
@@ -8607,7 +8622,7 @@ hr.hr-light {
   height: 55px;
   border-radius: 5px;
   font-size: 16px;
-  padding: 10px 16px; }
+  padding: 14px 16px; }
 
 #contact-us-container {
   background: url("../img/background/contactus_background.png") no-repeat;
@@ -8633,34 +8648,42 @@ hr.hr-light {
 .blue-border {
   border: 6px solid #77B3D4;
   color: #77B3D4;
-  background-color: #f3fff4; }
+  background-color: #ffffff; }
 
 .blue-box {
   height: 100%;
   background-color: #77B3D4;
   color: #ffffff; }
+  .blue-box .lite-blu-shadow {
+    text-shadow: 1px 1px 0px #B8F1CE; }
 
 .btn-primary-landing {
   background-color: #88D6A7;
   text-shadow: 1px 1px 0px #88D6A7;
-  color: #ffffff; }
+  color: #ffffff;
+  width: 220px; }
   .btn-primary-landing:hover {
-    color: #ffffff; }
+    color: #ffffff;
+    background-color: #65BB87; }
 
 .btn-secondary-landing, .btn-secondary-reverse {
   border: 2px solid #77B3D4;
   text-shadow: 1px 1px 0px #f3fff4;
   color: #77B3D4; }
   .btn-secondary-landing:hover, .btn-secondary-reverse:hover {
-    color: #77B3D4; }
+    background-color: #77B3D4;
+    border-color: #77B3D4;
+    color: #ffffff; }
 
 .btn-secondary-reverse {
   background-color: #77B3D4;
-  color: #f3fff4;
-  border-color: #f3fff4;
+  color: #ffffff;
+  border-color: #ffffff;
   text-shadow: none; }
   .btn-secondary-reverse:hover {
-    color: #f3fff4; }
+    color: #77B3D4;
+    background-color: #ffffff;
+    border-color: #ffffff; }
 
 .signup-message {
   font-family: "Titillium Web", Helvetica, sans-serif;
@@ -8790,7 +8813,8 @@ hr.hr-light {
   border: 0px solid;
   border-bottom-width: 1px;
   padding-bottom: 10px;
-  padding-top: 10px; }
+  padding-top: 10px;
+  margin-bottom: 0px; }
 
 .top-social-links {
   margin-bottom: 10px; }

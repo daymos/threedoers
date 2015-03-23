@@ -22,6 +22,7 @@ $green-color:#4EB476;
 $link-color:#77B3D4;
 $lite-blue:#B8F1CE;
 $lite-grey:#BAB9B9;
+$gray:#959495;
 $menu-item-color:#4A4A4A;
 $shadow-color:#B8F1CE;
 $contact-us-color:#A5CFD2;
@@ -88,7 +89,7 @@ hr.hr-light {
 }
 
 #footer {
-  background: $bg-body;
+  background: #ffffff;
   color: $menu-item-color;
   border: 0px solid;
   border-top-width: 1px;
@@ -99,6 +100,9 @@ hr.hr-light {
 }
 .grey-bg{
   background-color:$bg-footer-grey!important;
+}
+.white-bg{
+  background-color:#ffffff!important;
 }
 .lite-grey-color{
   color:$lite-grey;
@@ -178,6 +182,9 @@ hr.hr-light {
    margin-top: 3%;
 }
 
+.gray-color{
+  color:$gray;
+}
 .menu-item-color{
   font-weight: lighter;
   color:$menu-item-color;
@@ -219,9 +226,6 @@ hr.hr-light {
 .margin-top-15{
   margin-top:15px
 }
-.margin-top-20{
-  margin-top:20px
-}
 .margin-top-50{
   margin-top:50px
 }
@@ -235,19 +239,23 @@ hr.hr-light {
   font-size: 16px;
   color: $menu-item-color;
   font-family: $font-default-stack;
+  &:hover {
+    border-bottom: double 2px $green-color!important;
+  }
 }
 .menu-item:focus{
   background-color: inherit!important;
 }
 .menu-item-active{
-  border-bottom: double 2px $green-color;
+  border-bottom: double 2px $green-color!important;
 }
 .menu-item-green {
   @extend .menu-item;
-
   color: $green-color;
+  &:hover {
+    border-bottom: double 2px $green-color;
+  }
 }
-
 .menu-item-green-active{
   @extend .menu-item-green;
   border-bottom: double 2px $green-color;
@@ -277,31 +285,53 @@ hr.hr-light {
 }
 
 .intro-text {
-  min-height: 300px;
-  background-image: url('../img/background/2x_main_pattern.png');
-  padding-top: 100px;
-  padding-bottom: 55px;
+  background-image: url('../img/background/main_pattern.png');
+  background-repeat: no-repeat;
+
   color: #ffffff;
-  &>span{
-    padding-top:0px;
-    color: #ffffff;
-  }
   .intro-heading{
+    padding-top:15%;
+
     font-size: 36px;
-    padding-bottom: 0px;
     text-shadow: 1px 1px 0px #7BF282;
     font-family: $font-default-stack;
     font-size: 36px;
     font-weight: 700;
     line-height: 50px;
   }
+  .intro-label{
+    padding-bottom: 15%;
+  }
 
 }
+@media only screen and (min-width : 992px) {
+  .nav-logo-resp{
+    margin-top:10px;
+  }
+}
+
+
+
+@media only screen and (min--moz-device-pixel-ratio: 2),
+only screen and (-o-min-device-pixel-ratio: 2/1),
+only screen and (-webkit-min-device-pixel-ratio: 2),
+only screen and (min-device-pixel-ratio: 2) {
+  .intro-text {
+    background-image: url('../img/background/2x_main_pattern.png');
+    background-repeat: no-repeat;
+    min-height: 400px;
+  }
+
+}
+
 .text-16{
   font-size: 16px;
 }
 .text-14{
   font-size: 14px;
+}
+.text-20{
+  font-size: 20px;
 }
 
 .profile-thumb{
@@ -334,7 +364,8 @@ hr.hr-light {
   height: 55px;
   border-radius: 5px;
   font-size: 16px;
-  padding: 10px 16px;
+  padding: 14px 16px;
+
 }
 #contact-us-container{
   background: url('../img/background/contactus_background.png') no-repeat;
@@ -373,20 +404,25 @@ hr.hr-light {
 .blue-border{
   border: 6px solid $bg-blue;
   color:$bg-blue;
-  background-color: $bg-body;
+  background-color: #ffffff;
 }
 .blue-box{
   height: 100%;
  background-color: $bg-blue;
   color:#ffffff;
+  .lite-blu-shadow {
+    text-shadow: 1px 1px 0px $lite-blue;
+  }
 }
 .btn-primary-landing{
   @extend .btn-landing;
   background-color: $bg-primary;
   text-shadow: 1px 1px 0px $bg-primary;
   color:#ffffff;
+  width: 220px;
   &:hover{
     color:#ffffff;
+    background-color: #65BB87;
   }
 }
 
@@ -396,17 +432,23 @@ hr.hr-light {
   text-shadow: 1px 1px 0px $bg-body;
   color:$bg-blue;
   &:hover{
-    color:$bg-blue;
+
+    background-color: $bg-blue;
+    border-color:$bg-blue;
+    color:#ffffff;
+
   }
 }
 .btn-secondary-reverse{
   @extend .btn-secondary-landing;
   background-color: $bg-blue;
-  color :$bg-body;
-  border-color:$bg-body;
+  color :#ffffff;
+  border-color:#ffffff;
   text-shadow: none;
   &:hover{
-    color:$bg-body;
+    color:$bg-blue;
+    background-color: #ffffff;
+    border-color :#ffffff;
   }
 }
 
@@ -553,6 +595,7 @@ hr.hr-light {
   border-bottom-width: 1px;
   padding-bottom:10px;
   padding-top:10px;
+  margin-bottom:0px;
 }
 .top-social-links {
   margin-bottom: 10px;
