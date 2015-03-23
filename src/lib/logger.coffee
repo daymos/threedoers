@@ -26,55 +26,55 @@ log = logger:
     warn: "yellow"
     error: "red"
 
-if settings.debug
-    loggers = [new (winston.transports.Console)(level: settings.logLevel, colorize: true)]
-else
-    ###
-    # Custom logger
-    ###
-    SentryLogger = winston.transports.CustomerLogger = (options) ->
+loggers = [new (winston.transports.Console)(level: settings.logLevel, colorize: true)]
+# if not settings.debug
+# else
+#     ###
+#     # Custom logger
+#     ###
+#     SentryLogger = winston.transports.CustomerLogger = (options) ->
 
-      #
-      # Name this logger
-      #
-      @name = "Sentry logs"
+#       #
+#       # Name this logger
+#       #
+#       @name = "Sentry logs"
 
-      #
-      # Set the level from your options
-      #
-      @level = options.level or "info"
+#       #
+#       # Set the level from your options
+#       #
+#       @level = options.level or "info"
 
-      @client = new raven.Client(settings.sentry.DSN)
-      return
+#       @client = new raven.Client(settings.sentry.DSN)
+#       return
 
 
-    #
-    # Configure your storage backing as you see fit
-    #
+#     #
+#     # Configure your storage backing as you see fit
+#     #
 
-    #
-    # Inherit from `winston.Transport` so you can take advantage
-    # of the base functionality and `.handleExceptions()`.
-    #
-    util.inherits SentryLogger, winston.Transport
-    SentryLogger::log = (level, msg, meta, callback) ->
+#     #
+#     # Inherit from `winston.Transport` so you can take advantage
+#     # of the base functionality and `.handleExceptions()`.
+#     #
+#     util.inherits SentryLogger, winston.Transport
+#     SentryLogger::log = (level, msg, meta, callback) ->
 
-      #
-      # Store this message and metadata, maybe use some custom logic
-      # then callback indicating success.
-      #
-      if level == "error"
-        @client.captureError(msg)
-      else
-        @client.captureMessage(msg, {level: level, extra: msg})
-      callback null, true
-      return
+#       #
+#       # Store this message and metadata, maybe use some custom logic
+#       # then callback indicating success.
+#       #
+#       if level == "error"
+#         @client.captureError(msg)
+#       else
+#         @client.captureMessage(msg, {level: level, extra: msg})
+#       callback null, true
+#       return
 
-    ###
-    # END Custom logger
-    ###
+#     ###
+#     # END Custom logger
+#     ###
 
-    loggers = [new (winston.transports.Console)(level: settings.logLevel, colorize: true), new (SentryLogger)(level: settings.logLevel)]
+#     loggers = [new (winston.transports.Console)(level: settings.logLevel, colorize: true), new (SentryLogger)(level: settings.logLevel)]
 
 # unless settings.debug
 #   loggers.push(new (winston.transports.File)(filename: settings.logFile))
