@@ -17,17 +17,25 @@ block body
       -return d+'/'+m+'/'+y+' at '+h+':'+mm;
       -}
     .container
-      .row
-        .col-md-6
-          h1#title.page-title(data-type="text", data-url="/filemanager/project/title/#{project.id}", data-title="Enter the Title") #{ project.title }
-      - if (user.filemanager == 'accepted' && project.status >= statuses.PREACCEPTED[0])
-            .row
+      -if (user.filemanager == 'accepted')
+          .row
               .col-md-6
-                .back-link
-                  a(href='/design/jobs')
-                    img(src='/img/return_to_jobs.png')
-                    | Return to jobs available
+                  .back-link
+                      a(href='/design/jobs')
+                          img(src='/img/return_to_jobs.png')
+                          | Return to jobs available
+      .section.primary
+          .row
+            .col-md-6
+              h1#title.page-header.text-ellipsis(data-type="text", data-url="/filemanager/project/title/#{project.id}", data-title="Enter the Title") #{ project.title }
+            .col-md-6.margin-header-10
+                h2.subtitle-upload Status: #{project.humanizedStatus()}
+          .row.margin-header-10
               .col-md-6
+                  p.subtitle-color.h4 Description:
+                    p#description(data-type="text", data-url="/filemanager/project/description/#{project.id}", data-title="Enter the description").long-text #{ project.description }
+              .col-md-6
+
                 .download-link
                     if project.resources.length>0
                         each val, index in project.resources
@@ -36,39 +44,82 @@ block body
                                 a(href="/"+val)
                                     img(src='/img/icon_download.png')
                                     |  Resource #{++n}
-
-          br
-          p#description(data-type="text", data-url="/filemanager/project/description/#{project.id}", data-title="Enter the description") #{ project.description }
-          br
-          br
-          span STATUS:&nbsp;
-          | #{ project.humanizedStatus() }
-    .section.primary
-      .container
+      .section.primary
           .row
-            .col-md-3.col-sm-6
-                .printer-properties
-                    h4 Status
-                    p #{project.humanizedStatus()}
-                    br
-                    img(src='/img/icons_#{project.dasherizedStatus()}_second.png')
-            .col-md-6
-                .printer-properties
-                    h4 Description
-                    p #{project.description}
-                    h4 Exstimated Time
-                    p #{project.order.preAmount} hours
-            .col-md-3.col-sm-6
-                .printer-properties
-                    -var tot = project.order.preAmount * project.order.preHourly
-                    h4 Price
-                    p
-                        if user.id == project.order.designer
-                            strong 3Doers: #{project.order.businessPayment} EURO
-                            br
-                            strong You: #{project.order.printerPayment} EURO
-                        else
-                            strong #{tot} EURO
+
+
+
+             - if (project.status<=statuses.PREACCEPTED[0])
+                -if (user.id==project.creator)
+                     - if (project.proposal.length == 0 )
+                              p.info-3d There is not any proposal yet for this project.
+                     - else
+                              p.info-3d Proposals:
+                                each prop, index in project.proposal
+                                    article.tile.col-md-4.margin-top-10
+                                        hearder
+                                        |Proposal from #{prop.username}
+                                        p
+                                        |Estimate time #{prop.hour}
+                                        p
+                                        |Hourly cost   #{prop.cost}
+                                        footer
+                                         form(action="/design/proposal/review/#{prop._id}", method="post")
+                                             input(type="hidden", name="project_id", value="#{project._id}")
+                                             input(type="submit",value="Accept this proposal").btn.btn-default.no-margin
+                - else
+                    each prop, index in project.proposal
+                        -if (prop.creator== user.id)
+                            p.info-ed Your proposal:
+                                p Estimate time #{prop.hour}
+                                p Hourly cost #{prop.cost}
+                            .row
+                                .col-md-3.col-sm-6
+                                    a#accept.btn.btn-lg.btn-default.btn-goto(href='/design/accept/#{project.id}')
+                                        span ACCEPT
+                                            br
+                                            | THIS WORK
+                                    br
+                                    br
+                                    br
+                                .col-md-3.col-md-offset-1.col-sm-6
+                                    a#deny.btn.btn-lg.btn-red.btn-goto(href='/design/deny/#{project.id}')
+                                        span DENY
+                                            br
+                                            | THIS WORK
+                                br
+
+             -if (project.status>=statuses.ACCEPTED[0])
+                .col-md-6
+                    -if (designSessions.length==0)
+                        p.info-3d The work is not started (no session recorderd)
+                    -else
+                        p.info-3d Until now #{project_total_time_logged} are logged
+
+                        each session, index in designSessions
+                                div(data-ride="carousel")#session-carouse-#{index}.carousel.slide
+                                    div(role="listbox").carousel-inner
+                                    each screen,innerIndex in session
+                                        div(class=(index==0?"active item":"item"))
+                                            img(src="#{screen.path}",alt="#{screen.session_date_stamp}")
+                                    a(href="#session-carouse-#{index}",role='button',data-slide='prev').left.carousel-control
+                                        span(aria-hidden='true').glyphicon.glyphicon-chevron-left
+                                        span.sr-only Previous
+                                    a(href="#session-carouse-#{index}",role='button',data-slide='prev').rigth.carousel-control
+                                        span(aria-hidden='true').glyphicon.glyphicon-chevron-right
+                                        span.sr-only Next
+                .col-md-6
+                    .printer-properties
+                        -var tot =project.order.preAmount * project.order.preHourly
+                        h4 Price
+                            p   EURO
+                            if user.id == project.order.designer
+                                strong 3Doers: #{project.order.businessPayment} EURO
+                                br
+                                strong You: #{project.order.printerPayment} EURO
+                            else
+                                strong #{tot} EURO
+
 
 
   - if (user.filemanager == 'accepted' && project.status == statuses.PREACCEPTED[0])
@@ -78,20 +129,7 @@ block body
     div
       .container
         .row
-          .col-md-3.col-sm-6
-            a#accept.btn.btn-lg.btn-default.btn-goto(href='/design/accept/#{project.id}')
-              span ACCEPT
-                br
-                | THIS WORK
-            br
-            br
-            br
-          .col-md-3.col-md-offset-1.col-sm-6
-            a#deny.btn.btn-lg.btn-red.btn-goto(href='/design/deny/#{project.id}')
-              span DENY
-                br
-                | THIS WORK
-            br
+
 
   - if (project.status == statuses.ACCEPTED[0] && user.id == project.designer)
     .section.orange
@@ -172,8 +210,6 @@ block body
   br
   br
   br
-
-  include ../../includes/publicity
 
 block extra-headers
   meta(name="csrf-token", content="#{csrfToken}")

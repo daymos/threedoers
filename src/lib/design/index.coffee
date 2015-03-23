@@ -4,6 +4,7 @@ module.exports = (app) ->
   logger = require '../logger'
   decorators = require '../decorators'
   models = require('./models')
+  Worksessions=require('../api/models')
   settings = require('../../config')
   utils = require('../utils')
   mailer = require('../mailer').mailer
@@ -82,15 +83,16 @@ module.exports = (app) ->
 
 
   app.get '/design/projects', decorators.loginRequired, (req, res) ->
-    models.STLDesign.find({'creator': req.user.id, status: {"$lte": models.DESIGN_STATUSES.TIMEEEXPIRED[0], "$gte": models.DESIGN_STATUSES.PREACCEPTED[0]} }).exec (err, docs) ->
+    models.STLDesign.find({'creator': req.user.id, status: {"$lte": models.DESIGN_STATUSES.TIMEEEXPIRED[0]} }).exec (err, docs) ->
       if err
         logger.error err
         res.send 500
       else
+        console.log docs
         res.render 'design/project/list_projects', {projects: docs}
 
   app.get '/design/jobs', decorators.filemanagerRequired, (req, res) ->
-    models.STLDesign.find(designer: req.user.id, status: {"$lte": models.DESIGN_STATUSES.TIMEEEXPIRED[0], "$gte": models.DESIGN_STATUSES.PREACCEPTED[0]}).exec (err, docs) ->
+    models.STLDesign.find(designer: req.user.id, status: {"$lt": models.DESIGN_STATUSES.DELIVERED[0], "$gte": models.DESIGN_STATUSES.UPLOADED[0]}).exec (err, docs) ->
       if err
         logger.error err
         res.send 500
@@ -146,9 +148,26 @@ module.exports = (app) ->
   app.get '/design/project/:id', decorators.loginRequired, (req, res, next) ->
     models.STLDesign.findOne({_id: req.params.id, $or: [{creator: req.user.id}, {designer: req.user.id}]}).exec().then( (doc) ->
       if doc
-        res.render 'design/project/detail',
-          statuses: models.DESIGN_STATUSES
-          project: doc
+        Worksessions.WorkSession.find({"session_project_id":doc._id}).sort('session_date_stamp').exec().then((designSessions)->
+            tmpList=designSessions
+            designSessions=[]
+            for session in tmpList
+              subList=[]
+              if (session.path)
+                subList.append(session)
+              else
+                if (subList.length)
+                  designSessions.append(subList)
+                  subList=[]
+          res.render 'design/project/detail',
+            statuses: models.DESIGN_STATUSES,
+            project: doc,
+            designSessions:designSessions
+        ).fail((reason)->
+          console.log reason
+          logger.error reason
+          res.send 500
+        )
       else
         res.redirect "/profile/projects"
     ).fail((reason) ->

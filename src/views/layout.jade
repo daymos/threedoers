@@ -96,7 +96,7 @@ html.no-js(lang="en", "xmlns:fb"="http://ogp.me/ns/fb#")
         if user
             include includes/header
 
-        section#content
+        section#content(class=(nav=='/home'||nav=='/'?'no-margin-bottom':''))
             block body
 
 

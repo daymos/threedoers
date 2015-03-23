@@ -118,10 +118,7 @@ module.exports = (app) ->
 
 
           if !user.onTime
-            console.log 'time expired'
-            res.json
-              status: -1
-              error:'Time Expired'
+            res.redirect '/accounts/login'
           else
             console.log 'ok'
             res.json
@@ -158,7 +155,9 @@ module.exports = (app) ->
             status: -1
             error: 'Wrong Username or Password'
         else
+          console.log 'authenticated'
           if !user.onTime
+            console.log 'time expired'
             res.json
               status: -1
               error: 'Time expired'

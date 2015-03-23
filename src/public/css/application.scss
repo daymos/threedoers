@@ -85,7 +85,7 @@ hr.hr-light {
 }
 
 #content {
- margin-bottom: 7%;
+  margin-bottom: 7%;
 }
 
 #footer {
@@ -498,9 +498,15 @@ only screen and (min-device-pixel-ratio: 2) {
   background-color: transparent!important;
   border-color:transparent!important;
 }
+.no-margin {
+  margin:0px!important;
+}
 .no-padding{
   padding: initial;
   width: 100%;
+}
+.no-margin-bottom{
+ margin-bottom:0px!important;
 }
 .margin-bottom-20{
   margin-bottom:20px;
@@ -1087,6 +1093,20 @@ a.direct-link-ship-address {
   font-weight: normal;
   margin: 30px auto 50px;
   color: #676767;
+}
+.subtitle-color{
+  color: #676767;
+}
+.long-text{
+  -ms-word-break: break-all;
+  word-break: break-all;
+
+  /* Non standard for webkit */
+  word-break: break-word;
+
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  hyphens: auto;
 }
 .margin-img-10{
   margin-bottom: 7%;
