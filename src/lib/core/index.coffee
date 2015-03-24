@@ -587,6 +587,21 @@ module.exports = (app, io) ->
       )
 
 
+  app.get '/project/update/:id', decorators.loginRequired, (req, res) ->
+    models.STLProject.findOne({_id: req.params.id}).exec().then( (doc) ->
+      if doc
+        shippo.transaction.retrieve(doc.order.transaction.object_id).then (data) ->
+          doc.update {'order.transaction': data}, ->
+            res.redirect "/project/#{req.params.id}"
+      else
+        res.send 404
+    ).fail( ->
+      console.log arguments
+      logger.error arguments
+      res.send 500
+    )
+
+
   app.post '/project/order/:id', decorators.loginRequired, (req, res, next) ->
     models.STLProject.findOne({_id: req.params.id}).exec().then( (doc) ->
       if doc and doc.validateNextStatus(models.PROJECT_STATUSES.PRINT_REQUESTED[0])
@@ -684,7 +699,7 @@ module.exports = (app, io) ->
               receiverList:
                 receiver: [
                   {
-                      email:  '3doers@gmail.com',
+                      email:  'mattia@3doers.it',
                       amount: businessPayment,  # total price
                       primary: 'true'
                   },

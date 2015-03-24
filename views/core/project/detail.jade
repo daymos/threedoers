@@ -221,7 +221,10 @@ block body
           .container
             .row
               - if (project.order && project.order.transaction && project.order.transaction.label_url)
-                a(href="#{project.order.transaction.label_url}").btn-default.btn-lg Shipping label
+                a(href="#{project.order.transaction.label_url}", target="_blank").btn-default.btn-lg Shipping label
+              - else
+                a(href="/project/update/#{project.id}").btn-default.btn-lg Get label
+
 
       - if (project.status == statuses.SHIPPING[0] && user.id == project.user)
         .section
