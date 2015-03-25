@@ -285,25 +285,43 @@ hr.hr-light {
 }
 
 .intro-text {
+  height: 350px;
   background-image: url('../img/background/main_pattern.png');
-  background-repeat: no-repeat;
-
+  background-size:cover;
+  text-align: center;
   color: #ffffff;
-  .intro-heading{
-    padding-top:15%;
+  line-height: 350px;
+  span {
+    display: inline-block;
+    vertical-align: middle;
+    line-height: normal;
+    .intro-heading{
+      font-size: 36px;
+      text-shadow: 1px 1px 0px #7BF282;
+      font-family: $font-default-stack;
+      font-size: 36px;
+      font-weight: 700;
 
-    font-size: 36px;
-    text-shadow: 1px 1px 0px #7BF282;
-    font-family: $font-default-stack;
-    font-size: 36px;
-    font-weight: 700;
-    line-height: 50px;
-  }
-  .intro-label{
-    padding-bottom: 15%;
-  }
+    }
+    .intro-label{
 
+    }
+  }
 }
+@media
+only screen and (-webkit-min-device-pixel-ratio: 2),
+only screen and (   min--moz-device-pixel-ratio: 2),
+only screen and (     -o-min-device-pixel-ratio: 2/1),
+only screen and (        min-device-pixel-ratio: 2),
+only screen and (                min-resolution: 192dpi),
+only screen and (                min-resolution: 2dppx) {
+  .intro-text {
+    background-image: url('../img/background/2x_main_pattern.png');
+  }
+}
+
+
+
 @media only screen and (min-width : 992px) {
   .nav-logo-resp{
     margin-top:10px;
@@ -311,18 +329,6 @@ hr.hr-light {
 }
 
 
-
-@media only screen and (min--moz-device-pixel-ratio: 2),
-only screen and (-o-min-device-pixel-ratio: 2/1),
-only screen and (-webkit-min-device-pixel-ratio: 2),
-only screen and (min-device-pixel-ratio: 2) {
-  .intro-text {
-    background-image: url('../img/background/2x_main_pattern.png');
-    background-repeat: no-repeat;
-    min-height: 400px;
-  }
-
-}
 
 .text-16{
   font-size: 16px;
@@ -365,6 +371,7 @@ only screen and (min-device-pixel-ratio: 2) {
   border-radius: 5px;
   font-size: 16px;
   padding: 14px 16px;
+  display: inline-block;
 
 }
 #contact-us-container{
@@ -516,6 +523,24 @@ only screen and (min-device-pixel-ratio: 2) {
 }
 .padding-0{
   padding:0px!important;
+}
+.button-height{
+  min-height: 55px;
+}
+button.collapsed.btn-collapse{
+  &:before {
+
+    display: block;
+    width: 15px;
+  }
+}
+button.btn-collapse{
+  &:before{
+
+    display:block;
+    width:15px;
+  }
+
 }
 .focused{
   border-color: red;

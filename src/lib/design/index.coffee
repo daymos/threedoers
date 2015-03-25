@@ -4,7 +4,9 @@ module.exports = (app) ->
   logger = require '../logger'
   decorators = require '../decorators'
   models = require('./models')
-  Worksessions=require('../api/models')
+
+  Worksession=require('../api/models').WorkSession
+  userModel=require('../auth/models').User
   settings = require('../../config')
   utils = require('../utils')
   mailer = require('../mailer').mailer
@@ -45,8 +47,8 @@ module.exports = (app) ->
       if prop
         prop.accepted = true
         prop.save()
+        console.log 'first if'
         models.STLDesign.findOne({_id:prop.backref}).exec().then( (stldes) ->
-
           stldes.order =
             preAmount:prop.cost
             preHourly:prop.hour
@@ -62,16 +64,19 @@ module.exports = (app) ->
               break
             i++
           stldes.save()
-
+          res.redirect "design/project/"+stldes._id
         ).fail( ->
           logger.error arguments
           res.send 500
         )
-        res.redirect "design/projects"
       else
+        console.log 'else'
         models.STLDesign.find({"creator": req.user.id}).exec().then( (doc) ->
+          console.log 'query stldesign'
           if doc
-            res.render('design/proposal', {projects: doc, toApply:true, error:"Some errors for this proposal"})
+            res.redirect("design/project/"+doc._id, {projects: doc, toApply:true, error:"Some errors for this proposal"})
+          else
+            console.log 'not doc'
         ).fail( ->
           logger.error arguments
           res.send 500
@@ -83,7 +88,7 @@ module.exports = (app) ->
 
 
   app.get '/design/projects', decorators.loginRequired, (req, res) ->
-    models.STLDesign.find({'creator': req.user.id, status: {"$lte": models.DESIGN_STATUSES.TIMEEEXPIRED[0]} }).exec (err, docs) ->
+    models.STLDesign.find({'creator': req.user.id, status: {"$lte": models.DESIGN_STATUSES.ARCHIVED[0]} }).exec (err, docs) ->
       if err
         logger.error err
         res.send 500
@@ -98,6 +103,14 @@ module.exports = (app) ->
         res.send 500
       else
         res.render 'design/jobs', {projects: docs}
+
+  app.get '/design/archived', decorators.filemanagerRequired, (req, res) ->
+    models.STLDesign.find({designer: req.user.id, status:{"$gte" : models.DESIGN_STATUSES.DELIVERED[0]}}).exec (err, docs) ->
+      if err
+        logger.error err
+        res.send 500
+      else
+        res.render 'design/archived', {projects: docs}
 
 
   app.get '/design/detail/:id', decorators.loginRequired, (req, res) ->
@@ -148,23 +161,27 @@ module.exports = (app) ->
   app.get '/design/project/:id', decorators.loginRequired, (req, res, next) ->
     models.STLDesign.findOne({_id: req.params.id, $or: [{creator: req.user.id}, {designer: req.user.id}]}).exec().then( (doc) ->
       if doc
-        Worksessions.WorkSession.find({"session_project_id":doc._id}).sort('session_date_stamp').exec().then((designSessions)->
-            tmpList=designSessions
+
+        Worksession.find({"session_project_id":doc._id}).sort('session_date_stamp').exec().then((tmpList)->
             designSessions=[]
+            if tmpList
+              tmpList.shift()
+            innerlist=[]
             for session in tmpList
-              subList=[]
-              if (session.path)
-                subList.append(session)
+
+              if (session.session_screen_shot!=null)
+                 innerlist.push(session)
               else
-                if (subList.length)
-                  designSessions.append(subList)
-                  subList=[]
-          res.render 'design/project/detail',
-            statuses: models.DESIGN_STATUSES,
-            project: doc,
-            designSessions:designSessions
+                 designSessions.push(innerlist)
+                 innerlist=[]
+            if (innerlist.length)
+              designSessions.push(innerlist)
+            res.render 'design/project/detail',
+                statuses: models.DESIGN_STATUSES,
+                project: doc,
+                adminMail:settings.admins.emails
+                designSessions:designSessions
         ).fail((reason)->
-          console.log reason
           logger.error reason
           res.send 500
         )
@@ -180,8 +197,8 @@ module.exports = (app) ->
 
         auth.User.findOne(doc.creator).exec (err, user) ->
           if user
-#            mailer.send('mailer/printing/accept', {project: doc, user: user, site:settings.site}, {from: settings.mailer.noReply, to:[user.email], subject: settings.printing.accept.subject}).then ->
-            console.log 'doc'
+
+
             designer=''
             for proposal in doc.proposal
               if proposal.accepted
@@ -280,12 +297,182 @@ module.exports = (app) ->
       logger.error arguments
       res.send 500
     )
+  app.post '/design/stl/complete/:id',decorators.loginRequired,(req, res, next) ->
 
+    models.STLDesign.findOne({_id: req.params.id}).exec().then( (design) ->
+      if design
+        userModel.findOne({_id:design.designer}).exec().then( (user) ->
+          if user
+            files = req.files.file;
+            if (Array.isArray(req.files.file[0]))
+              stringerror = encodeURIComponent("Too files")
+              return res.redirect('design/project/'+req.params.id+'?error='+stringerror)
+            else
+              user.onTime=true
+              design.final_stl= files[0].path.replace(/^.*[\\\/]/, '')
+              design.status=models.DESIGN_STATUSES.DELIVERED[0]
+              design.save()
+              user.save()
+              userModel.findOne({_id:design.designer}).exec().then( (creator) ->
+                if creator
 
+                  mailer.send('mailer/design/completed',
+                    {project: design,url: "http://#{ req.headers.host }/design/project/"+design._id},{from: settings.mailer.noReply, to: creator.email,subject: "Design project "+design.title+' completed'}).then ->
+                        res.redirect 'design/project/'+req.params.id
+                else
+                  res.send 500
+              ).fail( ->
 
+                logger.error arguments
+                res.send 500
+              )
+
+          else
+            res.send 500
+        ).fail( ->
+
+          logger.error arguments
+          res.send 500
+        )
+      else
+        res.send 404
+
+    ).fail( (error)->
+
+      logger.error arguments
+      res.send 500
+    )
+  app.post '/design/stl/confirmMoreTime/:id',decorators.loginRequired, (req,res)->
+
+    models.STLDesign.findOne({_id: req.params.id}).exec().then( (design) ->
+      if design
+        moreTime=parseInt(req.body.moreTime)
+        console.log moreTime
+
+        if (design.additionalHourRequested==moreTime)
+          oldValue=design.order
+          design.order=
+            preHourly:oldValue.preHourly+design.additionalHourRequested,
+            preAmount:oldValue.preAmount,
+            designer: oldValue.designer,
+            placedAt: oldValue.placedAt,
+
+          design.additionalHourRequested=0;
+          design.status=models.DESIGN_STATUSES.ACCEPTED[0]
+          design.save (err) ->
+            if err
+              logger.error reason
+              res.send 500
+            else
+              userModel.findOne({_id:design.designer}).exec().then( (designer) ->
+                if designer
+                  designer.onTime=true
+                  designer.save()
+                else
+                  logger.error 'designer not found'
+                  res.send 500
+              ).fail( (error)->
+                logger.error error
+                res.send 500
+              )
+              return res.redirect 'design/project/'+design.id
+        else
+          stringerror = encodeURIComponent("value not allowed")
+          return res.redirect('design/project/'+req.params.id+'?error='+stringerror)
+      else
+        res.send 404
+    ).fail( (error) ->
+      logger.error error
+
+      res.send 500
+    )
+
+  app.post '/design/stl/needMoreTime/:id', decorators.loginRequired, (req, res) ->
+    extraTimeValue=[1,3,5]
+    models.STLDesign.findOne({_id: req.params.id}).exec().then( (design) ->
+      if design
+          moreTime=parseInt(req.body.moreTime)
+          console.log moreTime
+          console.log(extraTimeValue.indexOf(moreTime))
+          if (extraTimeValue.indexOf(moreTime)>=0)
+            design.additionalHourRequested=moreTime
+            design.status=models.DESIGN_STATUSES.TIMEREQUIRECONFIRM[0]
+            design.save()
+            return res.redirect 'design/project/'+design.id
+          else
+            stringerror = encodeURIComponent("value not allowed")
+            return res.redirect('design/project/'+req.params.id+'?error='+stringerror)
+      else
+        res.send 404
+    ).fail( (error) ->
+      logger.error error
+      res.send 500
+
+    )
+
+  app. post '/design/project/pay/:id' ,decorators.loginRequired, (req,res) ->
+    console.log(req.params.id)
+    models.STLDesign.findOne({_id: req.params.id}).exec().then( (design) ->
+      if design
+
+        design.status = models.DESIGN_STATUSES.PAID[0]
+        console.log design
+        design.save()
+        res.redirect 'design/project/'+req.params.id
+      else
+        res.send 404
+    ).fail( (error) ->
+      logger.error error
+      res.send 500
+    )
+
+  app. post '/design/project/rate/:id' ,decorators.loginRequired, (req,res) ->
+
+    models.STLDesign.findOne({_id: req.params.id}).exec().then( (design) ->
+      if design
+        try
+          rate=parseFloat(req.body.rate)
+
+        catch e
+          stringerror=e.toString()
+          return res.redirect('design/project/'+req.params.id+'?error='+stringerror)
+        if (rate<0||rate>5)
+          stringerror = encodeURIComponent("value not allowed")
+          return res.redirect('design/project/'+req.params.id+'?error='+stringerror)
+        design.rate=rate
+        design.status=models.DESIGN_STATUSES.ARCHIVED[0]
+        design.save()
+        userModel.findOne({_id:design.designer}).exec().then( (user) ->
+          if user
+            models.STLDesign.find({designer: user.id,status:{"$gte": models.DESIGN_STATUSES.DELIVERED[0]}}).exec().then( (designsWork) ->
+              if designsWork
+                 TotalRate=0
+                 console.log(designsWork)
+                 for work in designsWork
+                   TotalRate+=work.rate
+                 console.log TotalRate
+                 user.rate=TotalRate/designsWork.length
+                 user.save()
+                 res.redirect 'design/project/'+req.params.id
+            ).fail( ->
+              logger.error arguments
+              res.send 500
+            )
+          else
+            res.send 500
+        ).fail( ->
+          logger.error arguments
+          res.send 500
+        )
+
+      else
+        res.send 404
+    ).fail( (error) ->
+      logger.error error
+      res.send 500
+    )
 
   app.post '/design/stl/upload', decorators.loginRequired, (req, res) ->
-
     files = req.files.file;
     resources = []
 
@@ -324,4 +511,5 @@ module.exports = (app) ->
         logger.error reason
         res.send 500
       else
-        res.redirect "/design/proposal"
+        res.redirect "design/projects"
+

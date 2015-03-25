@@ -1,45 +1,23 @@
-
-extends ../printing/base
+extends base
 
 block title
-  |  Your Projects
-
+    |  Your Projects
 block content-profile
-  .container
-    br
-    br
-    br
-    br
-    - if (projects.length == 0)
-      p.info-3d There is not any project yet for this list.
-    - for (project in projects)
-      - project = projects[project]
-      p.info-3d
-        span.title FILE NAME:
-        | #{ project.title }
-      br
-      br
-      .row
-        .col-md-8
-          p.info-3d
-            span.image.align-left
-              img(src='/img/icons_printing.png')
-            span.title STATUS
-            | #{project.humanizedStatus()}
-        .col-md-4
-          a.btn.btn-lg.btn-default.btn-goto(href='/project/#{ project.id }')
-            span GO TO THE
-              br
-              | PROJECT
-      .separator-3d
-        img(src='/img/img_separatori_lista.png')
-      br
-    
-    br
-    br
-    br
-    br
-
+    .container
+        br
+        br
+        br
+        br
+        - if (projects.length == 0)
+            p.info-3d There is not any project yet for this list.
+        - for (project in projects)
+            - project = projects[project]
+                a.black-3doers(href='/design/project/#{project.id}')
+                    div.tile.col-md-3.tile-projects
+                        h3.text-ellipsis #{project.title}
+                        p Status
+                            b  #{project.humanizedStatus()}
+                        img(src='/img/icons_#{project.dasherizedStatus()}.png')
 //- block extra-headers
 //-   meta(name="csrf-token", content="#{csrfToken}")
 //-
