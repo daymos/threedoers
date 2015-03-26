@@ -392,13 +392,19 @@ module.exports = (app) ->
     models.STLDesign.findOne({_id: req.params.id}).exec().then( (design) ->
       if design
           moreTime=parseInt(req.body.moreTime)
-          console.log moreTime
-          console.log(extraTimeValue.indexOf(moreTime))
           if (extraTimeValue.indexOf(moreTime)>=0)
             design.additionalHourRequested=moreTime
             design.status=models.DESIGN_STATUSES.TIMEREQUIRECONFIRM[0]
             design.save()
-            return res.redirect 'design/project/'+design.id
+            auth.User.findOne({_id:design.designer}).exec().then((user) ->
+              user.numberOfDelay+=1
+              user.save()
+              return res.redirect 'design/project/'+design.id
+            ).fail( ->
+              logger.error arguments
+              res.send 500
+            )
+
           else
             stringerror = encodeURIComponent("value not allowed")
             return res.redirect('design/project/'+req.params.id+'?error='+stringerror)

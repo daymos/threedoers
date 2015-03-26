@@ -62,16 +62,10 @@ module.exports = (app) ->
     )
 
   app.post '/api/create_work_session',(req,res) ->
-    console.log '/api/create_work_session'
-    console.log '&&&&&&&&&&&&&&&&&&&'
-    console.log '&&&&&&&&&&&&&&&&&&&'
-    console.log '&&&&&&&&&&&&&&&&&&&'
-    console.log '&&&&&&&&&&&&&&&&&&&'
-    console.log '&&&&&&&&&&&&&&&&&&&'
+
 
     userModel.User.findOne({token: req.query.token}).exec().then( (user) ->
       if not user
-        console.log 'not user'
         res.json
         status: -1
         error: 'No User found with this Access Token'
@@ -103,26 +97,26 @@ module.exports = (app) ->
               if design
                 diffMs = ((new Date(req.query.creation_date)) - session.session_date_stamp)
                 design.project_total_time_logged += Math.floor(((diffMs/1000) / 60))
-                console.log 'totale stimato '+design.order.preHourly
-                console.log 'totale loggato '+design.project_total_time_logged
+                if design.project_total_time_logged/60>=design.order.preHourly
 
-                if design.project_total_time_logged>=design.order.preHourly
-                  console.log 'ritardo rilevato'
                   user.onTime=false
                   design.status=desigModel.DESIGN_STATUSES.TIMEEEXPIRED[0]
-                  user.numberOfDelay+=1
+
                   user.save()
                 design.save()
             )
           ws.save ( err )->
             if err
-              console.log "ws save "+err
+              #console.log "ws save "+err
+              res.json
+                status: -1
+                error: 'Server Error, please retry later'
 
 
           if !user.onTime
             res.redirect '/accounts/login'
           else
-            console.log 'ok'
+
             res.json
               status: 0
               error: null
@@ -146,7 +140,7 @@ module.exports = (app) ->
     )
 
   app.post '/api/login',(req, res) ->
-    console.log '/api/login'
+
     username = req.query.username
     password = req.query.password
     userModel.User.findOne({username: username}).exec().then( (user) ->
@@ -157,13 +151,13 @@ module.exports = (app) ->
             status: -1
             error: 'Wrong Username or Password'
         else
-          console.log 'authenticated'
+
           if !user.onTime
-            console.log 'time expired'
+
             res.json
               status: -1
               error: 'Time expired'
-              console.log err
+
 
           user.token = uuid.v4()
           user.save (err) ->
@@ -171,7 +165,7 @@ module.exports = (app) ->
               res.json
               status: -1
               error: 'Server Error, please retry later'
-              console.log err
+
 
           res.json
             status: 0
