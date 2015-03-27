@@ -2,7 +2,6 @@
   $(document).ready(function() {
     var e;
     try {
-      console.log(user);
       $.post('/getNotifications').done(function(response) {
         var e;
         try {

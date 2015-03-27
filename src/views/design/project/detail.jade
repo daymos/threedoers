@@ -24,6 +24,7 @@ block body
                       a(href='/design/jobs')
                           img(src='/img/return_to_jobs.png')
                           | Return to jobs available
+
       .section.primary
           .row
             .col-md-6
@@ -31,14 +32,14 @@ block body
             .col-md-6.margin-header-10
                 h2.subtitle-upload Status: #{project.humanizedStatus()}
           .row.margin-header-10
-              .col-md-6
-                  p.subtitle-color.h4 Abstract
-                    p #{project.abstract}
+              .col-md-8
+                  p.subtitle-color.h4 SubTitle
+                    p.padding-left-15 #{project.abstract}
                   p.subtitle-color.h4 Description:
-                    p#description(data-type="text", data-url="/filemanager/project/description/#{project.id}", data-title="Enter the description").long-text #{ project.description }
-              .col-md-6
+                    p.padding-left-15#description(data-type="text", data-url="/filemanager/project/description/#{project.id}", data-title="Enter the description").long-text #{ project.description }
+              .col-md-4
 
-                .download-link
+                .download-link.padding-top-60
                     if project.resources.length>0
                         each val, index in project.resources
                             - var n=index
@@ -46,89 +47,179 @@ block body
                                 a(href="/"+val)
                                     img(src='/img/icon_download.png')
                                     |  Resource #{++n}
-      .section.primary
-          .row
 
-
-
-             - if (project.status<statuses.PREACCEPTED[0])
+      - if (project.status<statuses.PREACCEPTED[0])
+          .section.primary
+              .row
                 -if (user.id==project.creator)
-                     - if (project.proposal.length == 0 )
-                              p.info-3d There is not any proposal yet for this project.
-                     - else
-                              p.info-3d Proposals:
-                                each prop, index in project.proposal
-                                    article.tile.col-md-4.margin-top-10
-                                        hearder
-                                        |Proposal from #{prop.username}
-                                        p
-                                        |Estimate time #{prop.hour}
-                                        p
-                                        |Hourly cost   #{prop.cost}
-                                        footer
-                                         form(action="/design/proposal/review/#{prop._id}", method="post")
-                                             input(type="hidden", name="project_id", value="#{project._id}")
-                                             input(type="submit",value="Accept this proposal").btn.btn-default.no-margin
-             - if (project.status==statuses.PREACCEPTED[0])
-                    each prop, index in project.proposal
-                        -if (prop.creator == user.id)
-                            p.info-ed Your proposal:
-                                p Estimate time #{prop.hour}
-                                p Hourly cost #{prop.cost}
-                            .row
-                                .col-md-3.col-sm-6
-                                    a#accept.btn.btn-lg.btn-default.btn-goto(href='/design/accept/#{project.id}')
-                                        span ACCEPT
-                                            br
-                                            | THIS WORK
-                                    br
-                                    br
-                                    br
-                                .col-md-3.col-md-offset-1.col-sm-6
-                                    a#deny.btn.btn-lg.btn-red.btn-goto(href='/design/deny/#{project.id}')
-                                        span DENY
-                                            br
-                                            | THIS WORK
-                                br
+                  - if (project.proposal.length == 0 )
+                    p.info-3d There is not any proposal yet for this project.
+                  - else
+                      p.info-3d Proposals:
+                          each prop, index in project.proposal
+                              article.tile.tile-spaced.col-md-4.margin-top-10
+                                  div.text-center
+                                      span.text-20 Proposal from:
+                                          strong   #{prop.username}
+                                      p.child-inline-block quality
+                                          input(type="number",data-min=0,data-max=5,data-show-clear="false",value=prop.userrate,disabled=true,step=0.5,data-size="xs")#input-id.rating
 
-             -if (project.status>=statuses.ACCEPTED[0])
+                                      p.child-inline-block time rate coming soon
+                                  .text-center
+                                      p Estimate time:
+                                          strong   #{prop.hour} hours
+                                      p Hourly cost:
+                                          strong   #{prop.cost} euro
+                                      p Taxes:  EURO
+                                      p 3Doers: EURO
+
+                                      p You:  EURO
+
+                                      p Total Price: EURO
+                                  footer
+                                      form(action="/design/proposal/review/#{prop._id}", method="post")
+                                          input(type="hidden", name="project_id", value="#{project._id}")
+                                          input(type="submit",value="Accept this proposal").btn-default.btn-lg.btn-3doers-new
+
+
+        .section.primary
+            .row
+              .col-md-6
+                  .row-fluid.col-md-12
+                      -if (project.status<=statuses.ACCEPTED[0])
+                            img(src='/img/icons_time_order.png').image.margin-right-10
+                            span QUESTO PROGETTO ASPETTA DA: #{timeago(project.createAt)}
+                      -if (project.status>=statuses.ACCEPTED[0])
+                          -if (designSessions.length==0)
+                            p.info-3d The work is not started (no session recorderd)
+                          -else
+                              p.info-3d Until now #{parseInt(project.project_total_time_logged/60)} hours #{parseInt(project.project_total_time_logged%60)} minuts are logged
+                                  ul.list-unstyled.col-sm-3
+                                      each session, index in designSessions
+                                          li.row-fluid.margin-top-10
+
+                                              button(role='button',data-toggle="collapse",data-target='#session-carouse-'+index).btn-collapse.btn-default.btn-lg.btn-3doers-new.collapsed Session #{index+1}
+                                  .col-sm-9
+                                      each session,index in designSessions
+
+                                          div(data-ride="carousel",id='session-carouse-'+index).carousel.slide.collapse
+                                              div(role="listbox").carousel-inner
+                                                  each screen,innerIndex in session
+                                                      div(class=(innerIndex==0?"active item":"item"))
+                                                          img(src="/#{screen.session_screen_shot}",alt="#{screen.session_date_stamp}")
+                                              a(href="#session-carouse-#{index}",role='button',data-slide='prev').left.carousel-control
+                                                  span(aria-hidden='true').glyphicon.glyphicon-chevron-left
+                                                  span.sr-only Previous
+                                              a(href="#session-carouse-#{index}",role='button',data-slide='next').right.carousel-control
+                                                  span(aria-hidden='true').glyphicon.glyphicon-chevron-right
+                                                  span.sr-only Next
+
                 .col-md-6
-                    -if (designSessions.length==0)
-                        p.info-3d The work is not started (no session recorderd)
-                    -else
-                        p.info-3d Until now #{parseInt(project.project_total_time_logged/60)} hours #{parseInt(project.project_total_time_logged%60)} minuts are logged
-                        ul.list-unstyled.col-sm-3
-                            each session, index in designSessions
-                                li.row-fluid.margin-top-10
-                                    button(role='button',data-toggle="collapse",data-target='#session-carouse-'+index).collapsed.btn-collapse.btn.btn-default Session #{index+1}
-                        .col-sm-9
-                            each session,index in designSessions
+                    .row-fluid.col-md-12
+                        -if (project.status<=statuses.ACCEPTED[0]&&user.id!=project.creator)
+                            -var myprop=null
+                            each prop, index in project.proposal
+                                -if (prop.creator == user.id)
+                                    - myprop=prop
+                                    -if (prop.accepted==false)
+                                        article.tile.tile-spaced.col-md-4.margin-top-10
+                                            div.text-center
+                                                span.text-20 Your proposal
+                                            .text-center
+                                                p Estimate time:
+                                                    strong   #{prop.hour} hours
+                                                p Hourly cost:
+                                                    strong   #{prop.cost} eure
 
-                                    div(data-ride="carousel",id='session-carouse-'+index).carousel.slide.collapse
-                                        div(role="listbox").carousel-inner
-                                            each screen,innerIndex in session
-                                                div(class=(innerIndex==0?"active item":"item"))
-                                                    img(src="/#{screen.session_screen_shot}",alt="#{screen.session_date_stamp}")
-                                        a(href="#session-carouse-#{index}",role='button',data-slide='prev').left.carousel-control
-                                            span(aria-hidden='true').glyphicon.glyphicon-chevron-left
-                                            span.sr-only Previous
-                                        a(href="#session-carouse-#{index}",role='button',data-slide='next').right.carousel-control
-                                            span(aria-hidden='true').glyphicon.glyphicon-chevron-right
-                                            span.sr-only Next
+                            -if (typeof(project.order) == 'undefined')
+                                    p.col-sm-12 the user should choose a proposal
+                            -else
+                                    -if (myprop==null||myprop.accepted==false)
+                                        p.col-sm-12 the user choose an other proposal
 
-                .col-md-6
-                    .printer-properties.row-fluid
-                        -var tot =project.order.preAmount * project.order.preHourly
-                        h4 Price
-                            p   EURO
-                            if user.id == project.order.designer
-                                strong 3Doers: #{project.order.businessPayment} EURO
-                                br
-                                strong You: #{project.order.printerPayment} EURO
-                            else
-                                strong #{tot} EURO
+                            -if (myprop==null)
+                                .text-center.padding-top-25
+                                    button(type="button", class="btn-default btn-lg btn-3doers-new review fire-modal-proposal", id="#{ project.id}",data-toggle="modal", data-target="#myModal") MAKE A PROPOSAL
+                                div(class="modal fade", id="myModal", tabindex="-1", role="dialog", aria-labelledby="myModalLabel", aria-hidden="true")
+                                            div(class="modal-dialog")
+                                                div(class="modal-content")
+                                                    div(class="modal-header")
+                                                        h4(class="modal-title", id="myModalLabel") Make Your Proposal
+                                                            div(class="modal-body")
+                                                        form(method="post", action="/design/proposal/", id="proposalForm")
+                                                            label Estimate Time
+                                                            br
+                                                            input(type="text", name="hours")
+                                                            br
+                                                            br
+                                                            label Hourly wage
+                                                            br
+                                                            input(type="text", name="cost")
+                                                            div(class="modal-footer")
+                                                                button(type="submit").btn-default.btn-lg.btn-3doers-new Make a proposal
 
-                    .row-fluid
+                        -if (project.status>statuses.ACCEPTED[0])
+                            h4.tile.col-md-6
+                                -if (project.order.designer == user.id)
+                                     span Your proposal:
+                                -else
+                                    span Accepted proposal:
+                                p
+                                    strong Estimate time: #{project.order.preHourly} hours
+                                    br
+                                    strong Hourly cost: #{project.order.preAmount} euro
+                                    br
+                                    strong Taxes:  EURO
+                                    br
+                                    strong 3Doers:  EURO
+                                    br
+                                    strong You:  EURO
+                                    br
+                                    strong Total Price: #{project.order.preHourly*project.order.preAmount} EURO
+
+
+                            -if (project.status>=statuses.TIMEEXPIREDPROCESSED[0])
+                                    -if (project.additionalHourRequested<=project.order.preHourly)
+                                        p.col-md-12 #{project.order.designer == user.id?'the user':'you'} authorise  the requested #{project.additionalHourRequested} extra hours
+                                    -else
+                                        p.col-md-12 #{project.order.designer == user.id?'the user':'you'} doesn't authorize the the requested #{project.additionalHourRequested} extra hours  #{project.order.designer == user.id?'so please submit your work':''}
+
+                        -else
+                            each prop, index in project.proposal
+                                -if (prop.accepted)
+                                    -var tot = prop.cost * prop.hour
+                                    -if (prop.creator == user.id)
+                                        h4.tile.col-md-6 Your proposal:
+                                            p
+                                            strong Estimate time: #{prop.hour} hours
+                                            br
+                                            strong Hourly cost: #{prop.cost} EURO
+                                            br
+
+                                            strong Total Price: #{tot} EURO
+
+                                            span
+                                                    a#accept.btn-default.btn-lg.btn-3doers-new.pull-left(href='/design/accept/#{project.id}') Accept
+                                                    a#deny.btn-default.btn-lg.btn-3doers-new.pull-right(href='/design/deny/#{project.id}') Deny
+                                    -else
+                                        h4.tile.col-md-6 Accepted proposal:
+                                            p
+                                            strong Estimate time: #{prop.hour} hours
+                                            br
+                                            strong Hourly cost: #{prop.cost} euro
+                                            br
+                                            strong Taxes:  EURO
+                                            br
+                                            strong 3Doers:  EURO
+                                            br
+                                            strong You:  EURO
+                                            br
+                                            strong Total Price: #{tot} EURO
+                                            p wait the designer confirmation
+
+
+
+                    .row-fluid.col-md-12
                         -if (project.status==statuses.TIMEEEXPIRED[0])
                             .row-fluid.text-justify
                                 -if (project.designer==user.id)
@@ -136,15 +227,15 @@ block body
                                     li
                                       form(action='/design/stl/needMoreTime/#{project.id}',method="POST").row-fluid
                                         input(type='hidden',name='moreTime',value=1)
-                                        button(type='submit').btn.btn-default.btn-goto need 1 hour
+                                        button(type='submit').btn-default.btn-lg.btn-3doers-new need 1 hour
                                     li
                                       form(action='/design/stl/needMoreTime/#{project.id}',method="POST").row-fluid
                                         input(type='hidden',name='moreTime',value=3)
-                                        button(type='submit').btn.btn-default.btn-goto need 3 hour
+                                        button(type='submit').btn-default.btn-lg.btn-3doers-new need 3 hour
                                     li
                                       form(action='/design/stl/needMoreTime/#{project.id}',method="POST").row-fluid
                                         input(type='hidden',name='moreTime',value=5)
-                                        button(type='submit').btn.btn-default.btn-goto need 5 hour
+                                        button(type='submit').btn-default.btn-lg.btn-3doers-new need 5 hour
                                 -else
                                         span.text-20 The extimated time is expired please wait that the designer require more time.
 
@@ -156,63 +247,61 @@ block body
                                         li
                                             form(action='/design/stl/confirmMoreTime/#{project.id}',method="POST")
                                                 input(type='hidden',name='moreTime',value=project.additionalHourRequested)
-                                                button(type='submit').btn.btn-default.btn-goto Confirm #{project.additionalHourRequested} extra hours
+                                                button(type='submit').btn-default.btn-lg.btn-3doers-new Confirm #{project.additionalHourRequested} extra hours
 
                                         li
-                                            form
-                                                form(action='#',method="POST")
-                                                    input(type='hidden',name='moreTime',value=project.additionalHourRequested)
-                                                    button(type='submit').btn.btn-default.btn-goto Deny #{project.additionalHourRequested} extra hours
-
-                        .row-fluid.margin-top-20
-                            -if (user.id==project.designer)
-                                    -if (project.status<statuses.DELIVERED[0])
-                                        .row-fluid
-                                            span.h4.text-center.col-sm-8 Have you finished?
+                                            form(action='/design/stl/denyMoreTime/#{project.id}',method="POST")
+                                                input(type='hidden',name='moreTime',value=project.additionalHourRequested)
+                                                button(type='submit').btn-default.btn-lg.btn-3doers-new Deny #{project.additionalHourRequested} extra hours
+                        -if (project.status>=statuses.ACCEPTED[0])
+                            .row-fluid.col-md-12.margin-top-20
+                                -if (user.id==project.designer)
+                                        -if (project.status<statuses.DELIVERED[0])
                                             .row-fluid
-                                                form(role='form',enctype="multipart/form-data",action='/design/stl/complete/#{project.id}',method='POST').form-horizontal.col-sm-8
-                                                    .form-group
-                                                        input(type='file',required='required',name="file[]").form-control
-                                                    .form-group.text-center
-                                                        button(role='submit').btn.btn-default.btn-gotobtn-block UPLOAD RESULT
-                                    -else
-                                        -if (project.status>=statuses.DELIVERED[0])
-                                            span.h4.col-sm-8 the design is finished
-                                                a(src='/'+project.final_stl).gray-color  click here
-                                                span  to download the stl file
-                                            span.col-sm-4
-                                            span.col-sm-12 The user can download the file only after the payment.
-                                        -if (project.status==statuses.PAID[0])
-                                            span.h4.col-sm-12 the project is paied
-                            -else
-                                    -if (project.status==statuses.DELIVERED[0])
-                                        span the stl is ready procead to payment to donwload it
-                                    -if (project.status<statuses.PAID[0])
+                                                span.h4.text-center.col-sm-8 Have you finished?
+                                                .row-fluid
+                                                    form(role='form',enctype="multipart/form-data",action='/design/stl/complete/#{project.id}',method='POST').form-horizontal.col-sm-8
+                                                        .form-group
+                                                            input(type='file',required='required',name="file[]").form-control
+                                                        .form-group.text-center
+                                                            button(role='submit').btn-default.btn-lg.btn-3doers-new.btn-block UPLOAD RESULT
+                                        -else
+                                            -if (project.status>=statuses.DELIVERED[0])
+                                                span.h4.col-sm-8 the design is finished
+                                                    a(src='/'+project.final_stl).gray-color  click here
+                                                    span  to download the stl file
+                                                span.col-sm-4
+                                                span.col-sm-12 The user can download the file only after the payment.
+                                            -if (project.status==statuses.PAID[0])
+                                                span.h4.col-sm-12 the project is paied
+                                -else
+                                        -if (project.status==statuses.DELIVERED[0])
+                                            span the stl is ready procead to payment to donwload it
+                                        -if (project.status>=statuses.ACCEPTED[0]&&project.status<statuses.PAID[0])
 
-                                        form#hidden-pay-form(action="/design/project/pay/#{project.id}", method="post")
-                                           button.btn.btn-lg.btn-white.btn-small(type='submit') PAY
-                                           input(type='hidden', name='_csrf', value=csrfToken)
-                                    -if (project.status>=statuses.PAID[0])
-                                        .row-fluid
-                                            span.h4.col-sm-8 the design is finished
-                                                a(src='/'+project.final_stl).gray-color  click here
-                                                span  to download the stl file
-                                            span.col-sm-4
-                                        .row-fluid
-                                            p.col-sm-8 how is the work?
-                                            form(role='form',method="POST",action='/design/project/rate/#{project.id}')
+                                            form#hidden-pay-form(action="/design/project/pay/#{project.id}", method="post")
+                                               button.btn-default.btn-lg.btn-3doers-new(type='submit') PAY
+                                               input(type='hidden', name='_csrf', value=csrfToken)
+                                        -if (project.status>=statuses.PAID[0])
+                                            .row-fluid
+                                                span.h4.col-sm-8 the design is finished
+                                                    a(src='/'+project.final_stl).gray-color  click here
+                                                    span  to download the stl file
+                                                span.col-sm-4
+                                            .row-fluid
+                                                p.col-sm-8 how is the work?
+                                                form(role='form',method="POST",action='/design/project/rate/#{project.id}')
 
-                                                - if (project.rate)
-                                                        div(data-toggle="tooltip",data-placement="bottom",title='already voted')#alreadyVoted.form-group
+                                                    - if (project.rate)
+                                                            div(data-toggle="tooltip",data-placement="bottom",title='already voted')#alreadyVoted.form-group
 
-                                                                input(type="number",data-min=0,data-max=5,data-show-clear="false",value=project.rate,disabled=true,step=1,data-size="lg")#input-id.rating
-                                                -else
-                                                        input(type="number",name='rate',data-min=0,data-max=5,data-show-clear="false",step=0.5,data-size="lg")#input-id.rating
-                                                        div.form-group
-                                                            button(role='submit').btn-landing.btn-secondary-landing.btn-block.btn-secondary-reverse Grade it
-                                                div.form-group Do you have some problems about the works?
-                                                            a(href='mailto:'+adminMail +'?subject=Problem about design (id '+project.id+')')  Contact us
-
+                                                                    input(type="number",data-min=0,data-max=5,data-show-clear="false",value=project.rate,disabled=true,step=0.5,data-size="lg")#input-id.rating
+                                                    -else
+                                                            input(type="number",name='rate',data-min=0,data-max=5,data-show-clear="false",step=0.5,data-size="lg")#input-id.rating
+                                                            div.form-group
+                                                                button(role='submit').btn-default.btn-lg.btn-3doers-new.btn-block Grade it
+                                                    div.form-group Do you have some problems about the works?
+                                                                a(href='mailto:'+adminMail +'?subject=Problem about design (id '+project.id+')')  Contact us
 
 
 
@@ -225,14 +314,8 @@ block body
         .row
           .col-md-7
             .comment-title
-              img(src='/img/icons_comment_2.png', alt='')
-              h1.page-title
-                span Comments Here
-              h1.page-title
-                span For Your Project
-        br
-        br
-        br
+                h4.comment-title-new Comments
+
         .row
           .col-md-12#comment-list
               - for comment in project.comments
@@ -248,24 +331,20 @@ block body
                           span.author #{comment.username==user.username?"you":comment.username}&nbsp;
                           | at&nbsp;
                           span.date #{prettyDate(comment.createdAt)}
-      br
+
       .section.primary
           .container
               .row
                   .col-md-10.col-sm-10
                       textarea#comment-text.comment.form-control(rows=6)
                   .col-md-2.col-sm-2
-                      button.btn.btn-lg.btn-default.btn-goto#comment-button
-                          span SEND
-
-  br
-  br
-  br
+                      button.btn-default.btn-lg.btn-3doers-new#comment-button SEND
 
 block extra-headers
   meta(name="csrf-token", content="#{csrfToken}")
 
 block scripts
+  script(type='text/javascript', src='/js/views/design_proposal.js')
   script(type='text/javascript', src='/vendor/jquery.jeditable.js')
   script(src='/vendor/jquery.ajaxupload.js')
   script(type='text/javascript', src='/js/views/design_project_detail.js')
@@ -283,7 +362,7 @@ block scripts
           function(event) {
             console.log("js figo");
             event.preventDefault();
-            $.post($(this).attr('href'), function(){location.reload();})
+            $.post($(this).attr('href'), function(){location.reload();}).fail(function(XMLHttpRequest, textStatus, errorThrown){alert(JSON.parse(XMLHttpRequest.responseText).msg);});
           }
         );
       }

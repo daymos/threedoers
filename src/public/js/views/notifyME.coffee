@@ -1,6 +1,6 @@
 $(document).ready ->
   try
-    console.log user
+
     $.post('/getNotifications')
     .done( (response) ->
       try

@@ -18,9 +18,10 @@ module.exports.DESIGN_STATUSES = DESIGN_STATUSES =
   ACCEPTED: [3, 'accepted']
   TIMEEEXPIRED: [4, 'time expired']
   TIMEREQUIRECONFIRM: [5, 'more time require confirmation']
-  DELIVERED: [6, 'delivered']
-  PAID: [7, 'payed']
-  ARCHIVED: [8, 'archived']
+  TIMEEXPIREDPROCESSED: [6, 'time expired processed']
+  DELIVERED: [7, 'delivered']
+  PAID: [8, 'payed']
+  ARCHIVED: [9, 'archived']
 
 
 ###############################################
@@ -35,6 +36,12 @@ Proposal = new Schema
   username:
     type:String
     required: true
+  userRate:
+    type: Number
+    default: 0
+  timeRate:
+      type: Number
+      default: 0
 
   backref:
     type:ObjectId

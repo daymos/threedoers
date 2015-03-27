@@ -23,7 +23,7 @@ module.exports = (app) ->
         error: 'No User found with this Access Token'
       else
         console.log "id user:"+user.id
-        desigModel.STLDesign.findOne({"designer": user.id}).exec().then( (docs) ->
+        desigModel.STLDesign.findOne({"designer": user.id, status: {"$lt": desigModel.DESIGN_STATUSES.DELIVERED[0], "$gte": desigModel.DESIGN_STATUSES.ACCEPTED[0]}}).exec().then( (docs) ->
           if docs
             console.dir docs.order
             project=
@@ -71,7 +71,10 @@ module.exports = (app) ->
         error: 'No User found with this Access Token'
       else
         if !user.onTime
-          res.redirect '/accounts/login'
+          res.json
+            status: -1,
+            error : 'The time is finished require extra time form the website'
+
 
         models.WorkSession.findOne({"session_project_id":req.query.project_id}).sort('-session_number').sort('-session_date_stamp').limit(1).exec().then( ( session) ->
           session_number = 0
@@ -114,7 +117,9 @@ module.exports = (app) ->
 
 
           if !user.onTime
-            res.redirect '/accounts/login'
+            res.json
+              status: -1,
+              error : 'The time is finished require extra time form the website'
           else
 
             res.json
@@ -157,7 +162,6 @@ module.exports = (app) ->
             res.json
               status: -1
               error: 'Time expired'
-
 
           user.token = uuid.v4()
           user.save (err) ->
