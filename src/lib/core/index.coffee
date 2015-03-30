@@ -967,10 +967,11 @@ module.exports = (app, io) ->
         if doc
           data = {}
           data['order.transaction'] = req.body
+          console.log req.body
           # test many options
           if req.body.tracking_status and req.body.tracking_status == "TRANSIT" and not doc.order.secundaryPaid
             data['order.secundaryPaid'] = true
-
+            console.log "Trying to pay"
             paypalSdk = new Paypal
               userId: settings.paypal.adaptive.user
               password:  settings.paypal.adaptive.password
@@ -984,6 +985,7 @@ module.exports = (app, io) ->
                 errorLanguage:  'en_US'
 
             paypalSdk.executePayment payload, ->
+              console.log "payment executed"
               console.log arguments
 
           doc.update data, (error) ->
