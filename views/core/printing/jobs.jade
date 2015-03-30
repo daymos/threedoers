@@ -14,12 +14,11 @@ block content-profile
         - project = projects[project]
           a.black-3doers(href='/project/#{ project.id }')
             div.tile.col-md-3.tile-projects
-              h3 #{project.title}
+              h3.text-ellipsis #{project.title}
               p Status
                 b  #{project.humanizedStatus()}
               img(src='/img/icons_#{project.dasherizedStatus()}.png')
-
-
+        
 //- block extra-headers
 //-   meta(name="csrf-token", content="#{csrfToken}")
 //-

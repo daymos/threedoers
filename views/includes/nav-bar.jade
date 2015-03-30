@@ -1,11 +1,11 @@
 
 nav.navbar.nav-3doers(class=(nav!='/home'?'grey-bg':''))
-    .container
+    .container.pading-left-0
 
-        .row#navbar-content
-                a(href='/').col-sm-1.margin-top-20
+        #navbar-content
+                a(href='/').col-md-1.nav-logo-resp
                     img(src='/img/logo.png').img-responsive
-                .col-sm-11.row
+                .col-md-11.row
                 if user
                         .col-md-1.col-sm-2.col-md-offset-8.col-sm-offset-7
                           .logo-wrapper.pull-right.margin-top-20
@@ -47,7 +47,7 @@ nav.navbar.nav-3doers(class=(nav!='/home'?'grey-bg':''))
                                 a(href='#',data-toggle='dropdown',aria-expanded='true').dropdown-toggle.no-focus#landingDrop
                                     img(src='/img/icon/share_icon.svg')
                                 ul(role='menu',aria-labelledby='landingDropdown').dropdown-menu.dropdown-nav.right-bottom-border
-                                    li(role='presentation').dropdown-header.menu-item-color.margin-top-10 Spread the voice
+                                    li(role='presentation').dropdown-header.menu-item-color.margin-top-10.text-14 Spread the voice
                                     li(role='presentation').margin-top-10
                                         a(role='menuitem',tab-index='-1',href='#')
                                             i.fa.fa-facebook.lite-grey-color.margin-right-20

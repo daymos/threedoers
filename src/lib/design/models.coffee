@@ -16,10 +16,12 @@ module.exports.DESIGN_STATUSES = DESIGN_STATUSES =
   UPLOADED: [1, 'uploaded']
   PREACCEPTED: [2, 'preaccepted']
   ACCEPTED: [3, 'accepted']
-  PAID: [4, 'payed']
-  TIMEEEXPIRED: [5, 'time expired']
-  DELIVERED: [6, 'delivered']
-  ARCHIVED: [7, 'archived']
+  TIMEEEXPIRED: [4, 'time expired']
+  TIMEREQUIRECONFIRM: [5, 'more time require confirmation']
+  TIMEEXPIREDPROCESSED: [6, 'time expired processed']
+  DELIVERED: [7, 'delivered']
+  PAID: [8, 'payed']
+  ARCHIVED: [9, 'archived']
 
 
 ###############################################
@@ -34,6 +36,12 @@ Proposal = new Schema
   username:
     type:String
     required: true
+  userRate:
+    type: Number
+    default: 0
+  timeRate:
+      type: Number
+      default: 0
 
   backref:
     type:ObjectId
@@ -128,6 +136,17 @@ STLDesign = new Schema
   resources:
     type: [String]
     require: true
+
+  final_stl:
+    type: String
+  rate:
+    type: Number
+
+  additionalHourRequested:
+    type:Number
+    default:null
+
+
 
 
 STLDesign.methods.humanizedStatus = ->

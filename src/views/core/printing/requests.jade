@@ -18,12 +18,12 @@ block content-profile
         - project = projects[project]
           .black-3doers
            .tile.col-md-3.tile-projects
-            h3
+            h3.text-ellipsis
              b #{project.title}
               p.project-tile-status Status
                 b  #{project.humanizedStatus()}
-              img.margin-img-10(src='/img/icons_#{project.dasherizedStatus()}.png')
-              a.col-md-offset-3(href=toApply?"/printing/review/#{ project.id }":"#", class="btn-default btn-lg btn-3doers-new  review") Accept
+            img.margin-img-10(src='/img/icons_#{project.dasherizedStatus()}.png')
+            a.col-md-offset-3(href=toApply?"/printing/review/#{ project.id }":"#", class="btn-default btn-lg btn-3doers-new review") Accept
 
 
 block extra-headers

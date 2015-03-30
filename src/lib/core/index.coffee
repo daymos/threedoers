@@ -97,11 +97,11 @@ module.exports = (app, io) ->
       res.redirect '/profile/settings'
 
 
-  app.get '/project/upload', decorators.loginRequired, (req, res) ->
+  app.get '/project/upload', (req, res) ->
     res.render 'core/project/upload'
 
 
-  app.post '/project/upload', decorators.loginRequired, (req, res) ->
+  app.post '/project/upload', (req, res) ->
     if req.files.thumbnail.size == 0
       res.json errors: thumbnail: msg: "This field is required"
       return
@@ -114,7 +114,10 @@ module.exports = (app, io) ->
     # get the temporary location of the file
     tmp_path = req.files.thumbnail.path
     project = new models.STLProject
-    project.user = req.user.id
+    try
+      project.user = req.user.id
+    catch e
+       console.log e
     project.title = req.files.thumbnail.name
     project.file = req.files.thumbnail.path.split('/').pop()
     project.save (err, doc) ->
@@ -146,8 +149,14 @@ module.exports = (app, io) ->
     )
 
 
-  app.get '/project/:id', decorators.loginRequired, (req, res, next) ->
-    models.STLProject.findOne({_id: req.params.id, $or: [{user: req.user.id}, {'order.printer': req.user.id}]}).exec().then( (doc) ->
+  app.get '/project/:id', (req, res, next) ->
+    filterDict={_id: req.params.id}
+    try
+      filterDict.$or=[{user: req.user.id}, {'order.printer': req.user.id}]
+    catch e
+      console.log e
+
+    models.STLProject.findOne(filterDict ).exec().then( (doc) ->
       if doc
         if not doc.volume or doc.bad or not doc.dimension
           processVolumeWeight(doc)
