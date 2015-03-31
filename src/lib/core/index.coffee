@@ -967,9 +967,9 @@ module.exports = (app, io) ->
         if doc
           data = {}
           data['order.transaction'] = req.body
-          console.log req.body.tracking_status?, /TRANSIT/.match(req.body.tracking_status.status), not doc.order.secundaryPaid
+          console.log req.body.tracking_status?, req.body.tracking_status.status.match(/TRANSIT/), not doc.order.secundaryPaid
           # test many options
-          if req.body.tracking_status? and req.body.tracking_status.status == "TRANSIT" and not doc.order.secundaryPaid
+          if req.body.tracking_status? and req.body.tracking_status.status.match(/TRANSIT/) and not doc.order.secundaryPaid
             data['order.secundaryPaid'] = true
             console.log "Trying to pay"
             paypalSdk = new Paypal
