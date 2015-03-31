@@ -967,6 +967,7 @@ module.exports = (app, io) ->
         if doc
           data = {}
           data['order.transaction'] = req.body
+          console.log req.body.tracking_status and req.body.tracking_status == "TRANSIT"
           # test many options
           if req.body.tracking_status and req.body.tracking_status == "TRANSIT"
             data['order.secundaryPaid'] = true
