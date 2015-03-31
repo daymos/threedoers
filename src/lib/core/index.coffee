@@ -967,9 +967,8 @@ module.exports = (app, io) ->
         if doc
           data = {}
           data['order.transaction'] = req.body
-          console.log req.body
           # test many options
-          if req.body.tracking_status and req.body.tracking_status == "TRANSIT" and not doc.order.secundaryPaid
+          if req.body.tracking_status and req.body.tracking_status == "TRANSIT"
             data['order.secundaryPaid'] = true
             console.log "Trying to pay"
             paypalSdk = new Paypal
@@ -985,7 +984,7 @@ module.exports = (app, io) ->
                 errorLanguage:  'en_US'
 
             paypalSdk.executePayment payload, ->
-              console.log "payment executed"
+              console.log "payment exec uted"
               console.log arguments
 
           doc.update data, (error) ->
