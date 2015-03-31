@@ -69,6 +69,8 @@ Proposal = new Schema
 
 
 
+
+
 Comment = new Schema
 
   author:
@@ -145,6 +147,10 @@ STLDesign = new Schema
   additionalHourRequested:
     type:Number
     default:null
+
+  proposalSelected:
+      type: Boolean
+      default:false
 
 
 
