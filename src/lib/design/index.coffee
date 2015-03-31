@@ -47,8 +47,8 @@ module.exports = (app) ->
       if prop
         prop.accepted = true
         prop.save()
-        console.log 'first if'
         models.STLDesign.findOne({_id:prop.backref}).exec().then( (stldes) ->
+          stldes.proposalSelected=true;
           stldes.order =
             preAmount:prop.cost
             preHourly:prop.hour
@@ -71,9 +71,10 @@ module.exports = (app) ->
         )
       else
         console.log 'else'
-        models.STLDesign.find({"creator": req.user.id}).exec().then( (doc) ->
+        models.STLDesign.findOne({"creator": req.user.id}).exec().then( (doc) ->
           console.log 'query stldesign'
           if doc
+            console.log doc
             res.redirect("design/project/"+doc._id, {projects: doc, toApply:true, error:"Some errors for this proposal"})
           else
             console.log 'not doc'
@@ -94,10 +95,22 @@ module.exports = (app) ->
         res.send 500
       else
         console.log docs
-        res.render 'design/project/list_projects', {projects: docs}
+        auth.User.findOne({_id:req.user.id}).exec().then((user) ->
+          if user
+            if user.printer=='accepted'
+              return res.render 'design/project/list_projects_for_printer', {projects: docs}
+
+
+          res.render 'design/project/list_projects', {projects: docs}
+        ).fail( ->
+          logger.error arguments
+          res.send 500
+        )
+
 
   app.get '/design/jobs', decorators.filemanagerRequired, (req, res) ->
-    models.STLDesign.find($or:[ {"proposal":{"$elemMatch":{"creator":req.user.id}}},$and: [designer: req.user.id, status: {"$lt": models.DESIGN_STATUSES.DELIVERED[0], "$gte": models.DESIGN_STATUSES.UPLOADED[0]}]]).exec (err, docs) ->
+
+    models.STLDesign.find($or:[ {"proposal":{"$elemMatch":{"creator":req.user.id,"proposalSelected":false}}},$and: [designer: req.user.id, status: {"$lt": models.DESIGN_STATUSES.DELIVERED[0], "$gte": models.DESIGN_STATUSES.UPLOADED[0]}]]).exec (err, docs) ->
       if err
         logger.error err
         res.send 500
@@ -173,8 +186,10 @@ module.exports = (app) ->
               if (session.session_screen_shot!=null)
                  innerlist.push(session)
               else
-                 designSessions.push(innerlist)
+                 if (innerlist.length)
+                  designSessions.push(innerlist)
                  innerlist=[]
+
             if (innerlist.length)
               designSessions.push(innerlist)
             res.render 'design/project/detail',
@@ -206,18 +221,8 @@ module.exports = (app) ->
               models.STLDesign.findOne({"designer": designer, status: {"$lt": models.DESIGN_STATUSES.DELIVERED[0], "$gte": models.DESIGN_STATUSES.ACCEPTED[0]}}).exec().then( (activeProjects)->
                 console.log activeProjects
                 if activeProjects
-                  console.log "REMOVE IT "
-                  auth.User.findOne({_id:proposal.creator}).exec().then((user) ->
-                    user.designJobs+=1
-                    user.save()
-                    doc.status = models.DESIGN_STATUSES.ACCEPTED[0]
-                    doc.save()
-                    res.json msg: "Accepted"
-                  ).fail( ->
-                    logger.error arguments
-                    res.send 500
-                  )
-                  #res.json msg:"You have a pending project, complete it to accept an other",400
+
+                  res.json msg:"You have a pending project, complete it to accept an other",400
                 else
                   auth.User.findOne({_id:proposal.creator}).exec().then((user) ->
                       user.designJobs+=1
