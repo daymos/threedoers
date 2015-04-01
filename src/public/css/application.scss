@@ -88,6 +88,7 @@ hr.hr-light {
   margin-bottom: 7%;
 }
 
+
 #footer {
   background: #ffffff;
   color: $menu-item-color;
@@ -123,16 +124,16 @@ hr.hr-light {
   li {
     padding-right: 10px;
     a {
-    padding: 7px 10px;
-    background-color: $bg-primary;
-    border-radius: 50%;
-    display: inline!important;
-    text-align: center;
-    color:$line-color;
+      padding: 7px 10px;
+      background-color: $bg-primary;
+      border-radius: 50%;
+      display: inline!important;
+      text-align: center;
+      color:$line-color;
     }
     a:hover {
-      background-color: $bg-primary!important;
-      color:$line-color!important;
+      background-color: $line-color!important;
+      color:#ffffff!important;
     }
   }
   li:first-child{
@@ -145,14 +146,14 @@ hr.hr-light {
 
 }
 .circle{
-    width:9px;
-    height:9px;
-    border-radius:25px;
-    font-size:5px;
-    color:red;
-    text-align:center;
-    background:red;
-    z-index: 1;
+  width:9px;
+  height:9px;
+  border-radius:25px;
+  font-size:5px;
+  color:red;
+  text-align:center;
+  background:red;
+  z-index: 1;
 }
 .active-greeen-3doers{
   background-color: $primary-color;
@@ -178,8 +179,8 @@ hr.hr-light {
   color: $primary-color;
 }
 .nav-bar-logo{
-   width: 60%;
-   margin-top: 3%;
+  width: 60%;
+  margin-top: 3%;
 }
 
 .gray-color{
@@ -232,9 +233,24 @@ hr.hr-light {
 .margin-top-50{
   margin-top:50px
 }
+.margin-top-60{
+  margin-top:60px;
+}
+.margin-top-70{
+  margin-top:70px
+}
+.padding-top-55{
+  padding-top:55px;
+}
+.padding-bottom-55{
+  padding-bottom:55px;
+}
+.padding-left-30{
+  padding-left:30px;
+}
 .modal-content{
 
- background-color: $bg-body;
+  background-color: $bg-body;
 }
 .menu-item {
   padding-bottom:10px!important;
@@ -328,6 +344,9 @@ hr.hr-light {
   .intro-text {
     background-image: url('../img/background/2x_main_pattern.png');
   }
+  #contact-us-container{
+    background-image: url('../img/background/2x_contactus_background.png');
+  }
 }
 
 /* 1.3 dpr */
@@ -337,6 +356,9 @@ hr.hr-light {
   /* Retina-specific stuff here */
   .intro-text {
     background-image: url('../img/background/2x_main_pattern.png');
+  }
+  #contact-us-container{
+    background-image: url('../img/background/2x_contactus_background.png');
   }
 }
 
@@ -348,6 +370,9 @@ hr.hr-light {
   .intro-text {
     background-image: url('../img/background/2x_main_pattern.png');
   }
+  #contact-us-container{
+    background-image: url('../img/background/2x_contactus_background.png');
+  }
 }
 
 /*2.0 dpr */
@@ -357,6 +382,9 @@ hr.hr-light {
   /* Retina-specific stuff here */
   .intro-text {
     background-image: url('../img/background/2x_main_pattern.png');
+  }
+  #contact-us-container{
+    background-image: url('../img/background/2x_contactus_background.png');
   }
 }
 
@@ -393,7 +421,7 @@ hr.hr-light {
   margin-bottom: 2%;
 }
 .black-3doers, .green-3doers a{
-    color: black;
+  color: black;
 }
 .green-color{
   color:$green-color
@@ -417,10 +445,12 @@ hr.hr-light {
 #contact-us-container{
   background: url('../img/background/contactus_background.png') no-repeat;
   background-size: cover;
-  padding-top: 40px;
-  padding-bottom: 50px;
+  padding-top:20px;
+
+  height: 420px;
 
   p{
+
     color:$contact-us-color;
     a {
       color:$lite-blue;
@@ -428,7 +458,7 @@ hr.hr-light {
     }
     a:hover{
       color:#ffffff;
-  }
+    }
   }
   p:first-child{
     color:#ffffff;
@@ -436,6 +466,8 @@ hr.hr-light {
   div{
     div{
       p {
+        margin-bottom: 0px;
+        line-height: 17px;
         color:$bg-primary;
       }
       p:first-child{
@@ -455,7 +487,7 @@ hr.hr-light {
 }
 .blue-box{
   height: 100%;
- background-color: $bg-blue;
+  background-color: $bg-blue;
   color:#ffffff;
   .lite-blu-shadow {
     text-shadow: 1px 1px 0px $lite-blue;
@@ -531,15 +563,15 @@ hr.hr-light {
   white-space: nowrap;
 }
 .dropdown-nav{
-    li{
-      a:hover{
-        background-color: #ffffff;
-        span {
-          color:$menu-item-color;
-        }
-
+  li{
+    a:hover{
+      background-color: #ffffff;
+      span {
+        color:$menu-item-color;
       }
+
     }
+  }
 }
 .no-focus{
   background-color: transparent!important;
@@ -555,11 +587,12 @@ hr.hr-light {
 .padding-top-25{
   padding-top:25px;
 }
+
 .padding-top-60{
   padding-top:60px;
 }
 .no-margin-bottom{
- margin-bottom:0px!important;
+  margin-bottom:0px!important;
 }
 .margin-bottom-20{
   margin-bottom:20px;
@@ -569,6 +602,12 @@ hr.hr-light {
 }
 .padding-0{
   padding:0px!important;
+}
+.margin-top-35{
+  margin-top:35px;
+}
+.margin-bottom-18 {
+  margin-bottom:18px;
 }
 .button-height{
   min-height: 55px;
@@ -610,7 +649,7 @@ button.btn-collapse{
   border:1px solid #e8debd
 }
 .icon-dimension{
-    font-size: 42px;
+  font-size: 42px;
 }
 .favorite-count {
   background: url('../img/bg-favorite.png') left top no-repeat;
@@ -667,7 +706,7 @@ button.btn-collapse{
   }
 }
 .nav-3doers{
- border-radius: 0px;
+  border-radius: 0px;
   border: 0px solid;
   border-bottom-width: 1px;
   padding-bottom:10px;
@@ -822,20 +861,20 @@ button.btn-collapse{
   }
 
   .nav .open > a, .nav .open > a:hover, .nav .open > a:focus {
-  	background: none;
+    background: none;
   }
   .nav .dropdown-menu {
-  	background-color: transparent;
-  	border-color: transparent;
-  	box-shadow: none;
-  	text-align: right;
+    background-color: transparent;
+    border-color: transparent;
+    box-shadow: none;
+    text-align: right;
   }
   .nav .dropdown-menu > li > a {
-  	display: inline;
-  	padding: 0;
+    display: inline;
+    padding: 0;
   }
   .nav .dropdown-menu > li > a:hover {
-  	background: none;
+    background: none;
   }
 }
 
@@ -899,11 +938,11 @@ a.create-account:focus {
   color: $default-color;
 }
 a.direct-link {
-	color: $default-color;
-	font-family: $font-primary-stack;
-	font-size: 19px;
-	font-style: italic;
-	font-weight: bold;
+  color: $default-color;
+  font-family: $font-primary-stack;
+  font-size: 19px;
+  font-style: italic;
+  font-weight: bold;
 }
 a.direct-link-ship-address {
   color: $default-color;
@@ -942,17 +981,17 @@ a.direct-link-ship-address {
 
 /* Hands */
 .right-hand {
-	position: absolute;
-	right: 0;
-	top: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
 }
 .right-hand.top {
-	top: 20%;
-	margin-top: -96px;
+  top: 20%;
+  margin-top: -96px;
 }
 .right-hand.middle {
-	top: 50%;
-	margin-top: -96px;
+  top: 50%;
+  margin-top: -96px;
 }
 
 /* Projects Section */
@@ -1188,7 +1227,7 @@ a.direct-link-ship-address {
   margin-top: 3%;
 }
 #clickable {
-	cursor: pointer;
+  cursor: pointer;
 }
 .preview-print {
   background-color: #dde5de;
@@ -1206,25 +1245,25 @@ a.direct-link-ship-address {
   }
 
   .upload {
-  	font-family: $font-primary-stack;
-  	font-size: 44px;
-  	font-style: italic;
-  	font-weight: 900;
-  	margin: 30px auto 70px;
-  	text-align: center;
-  	width: 70%;
+    font-family: $font-primary-stack;
+    font-size: 44px;
+    font-style: italic;
+    font-weight: 900;
+    margin: 30px auto 70px;
+    text-align: center;
+    width: 70%;
   }
 
   .progress {
-  	height: 50px;
+    height: 50px;
   }
   .progress-bar {
-  	background: url('../img/progress-bar.png');
-  	color: #000000;
-  	font-family: $font-primary-stack;
-  	font-size: 40px;
-  	font-weight: 900;
-  	line-height: 50px;
+    background: url('../img/progress-bar.png');
+    color: #000000;
+    font-family: $font-primary-stack;
+    font-size: 40px;
+    font-weight: 900;
+    line-height: 50px;
   }
 }
 .preview-print:after,
@@ -1247,17 +1286,17 @@ a.direct-link-ship-address {
 }
 
 .photoedit {
-	margin-bottom: 40px;
+  margin-bottom: 40px;
 
-	a, button {
-		color: $default-color;
-		font-family: $font-secondary-stack;
-		font-size: 19px;
-		font-style: italic;
-		font-weight: bold;
-		margin-left: 30px;
-		vertical-align: bottom;
-	}
+  a, button {
+    color: $default-color;
+    font-family: $font-secondary-stack;
+    font-size: 19px;
+    font-style: italic;
+    font-weight: bold;
+    margin-left: 30px;
+    vertical-align: bottom;
+  }
 }
 
 /* Back & Download Links */
@@ -1293,17 +1332,17 @@ a.direct-link-ship-address {
 
 /* Slider */
 .slider-3d {
-	position: relative;
+  position: relative;
 
-	.square {
-		border: 6px solid #7bf282;
-		height: 99%;
-		left: 3%;
-		position: absolute;
-		top: 5%;
-		width: 94%;
-		z-index: 99;
-	}
+  .square {
+    border: 6px solid #7bf282;
+    height: 99%;
+    left: 3%;
+    position: absolute;
+    top: 5%;
+    width: 94%;
+    z-index: 99;
+  }
 }
 .main-slider-bottom {
   padding-left: 30%;
@@ -1328,10 +1367,10 @@ a.direct-link-ship-address {
   }
 }
 .exclamation {
-	left: -30px;
-	position: absolute;
-	top: 0px;
-	z-index: 99;
+  left: -30px;
+  position: absolute;
+  top: 0px;
+  z-index: 99;
 }
 .h1-alert-payment {
   font-family: $font-primary-stack;
@@ -1375,7 +1414,7 @@ a.direct-link-ship-address {
   //font-weight: bold;
   line-height: 43px;
   padding: 10px 30px;
-//  text-transform: uppercase;
+  //  text-transform: uppercase;
 }
 .nav-tabs > li > a:hover,
 .nav-tabs > li > a:focus {
@@ -1546,7 +1585,7 @@ a.direct-link-ship-address {
   min-width: 250px;
 }
 .btn.btn-medium {
-	min-width: 300px;
+  min-width: 300px;
 }
 
 /* Form */
@@ -1605,7 +1644,7 @@ a.direct-link-ship-address {
 
 /* Effects */
 a.hover-effect {
-	outline: none;
+  outline: none;
   position: relative;
   text-decoration: none;
 }
@@ -1649,172 +1688,172 @@ a.primary-hover {
 /* Awesome Checbox & Radio */
 .radio,
 .checkbox {
-	min-height: 22px;
-	margin-bottom: 30px;
-	margin-top: 30px;
-	padding-left: 30px;
+  min-height: 22px;
+  margin-bottom: 30px;
+  margin-top: 30px;
+  padding-left: 30px;
 }
 .radio + .radio,
 .checkbox + .checkbox {
-	margin-top: 0;
+  margin-top: 0;
 }
 .checkbox label {
-    display: inline-block;
-    font-family: $font-primary-stack;
-    font-size: 19px;
-    font-style: italic;
-    font-weight: bold;
-    position: relative;
-    padding-left: 15px; }
+  display: inline-block;
+  font-family: $font-primary-stack;
+  font-size: 19px;
+  font-style: italic;
+  font-weight: bold;
+  position: relative;
+  padding-left: 15px; }
 .checkbox label:before {
-		border-radius: 6px;
-    content: "";
-    display: inline-block;
-    position: absolute;
-    width: 30px;
-    height: 30px;
-    left: 0;
-    margin-left: -30px;
-    border: 4px solid #000000;
-    background-color: transparent;
-    -webkit-transition: border 0.15s ease-in-out, color 0.15s ease-in-out;
-    transition: border 0.15s ease-in-out, color 0.15s ease-in-out; }
+  border-radius: 6px;
+  content: "";
+  display: inline-block;
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  left: 0;
+  margin-left: -30px;
+  border: 4px solid #000000;
+  background-color: transparent;
+  -webkit-transition: border 0.15s ease-in-out, color 0.15s ease-in-out;
+  transition: border 0.15s ease-in-out, color 0.15s ease-in-out; }
 .checkbox label:after {
-    display: inline-block;
-    font-style: normal;
-    position: absolute;
-    width: 24px;
-    height: 24px;
-    left: 0;
-    top: 0px;
-    margin-left: -30px;
-    padding-left: 5px;
-    padding-top: 1px;
-    font-size: 20px;
-    color: #ffffff; }
+  display: inline-block;
+  font-style: normal;
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  left: 0;
+  top: 0px;
+  margin-left: -30px;
+  padding-left: 5px;
+  padding-top: 1px;
+  font-size: 20px;
+  color: #ffffff; }
 .checkbox input[type=checkbox] {
-    display: none; }
+  display: none; }
 .checkbox input[type=checkbox]:checked + label:after {
-    font-family: 'Glyphicons Halflings';
-    content: "\e014"; }
+  font-family: 'Glyphicons Halflings';
+  content: "\e014"; }
 .checkbox input[type=checkbox]:disabled + label {
-    opacity: 0.65; }
+  opacity: 0.65; }
 .checkbox input[type=checkbox]:disabled + label:before {
-    background-color: #eeeeee;
-    cursor: not-allowed; }
+  background-color: #eeeeee;
+  cursor: not-allowed; }
 .checkbox.checkbox-circle label:before {
-    border-radius: 50%; }
+  border-radius: 50%; }
 
 .checkbox-primary input[type=checkbox]:checked + label:before {
-    background-color: #428bca;
-    border-color: #428bca; }
+  background-color: #428bca;
+  border-color: #428bca; }
 .checkbox-primary input[type=checkbox]:checked + label:after {
-    color: #fff; }
+  color: #fff; }
 
 .checkbox-danger input[type=checkbox]:checked + label:before {
-    background-color: #d9534f;
-    border-color: #d9534f; }
+  background-color: #d9534f;
+  border-color: #d9534f; }
 .checkbox-danger input[type=checkbox]:checked + label:after {
-    color: #fff; }
+  color: #fff; }
 
 .checkbox-info input[type=checkbox]:checked + label:before {
-    background-color: #5bc0de;
-    border-color: #5bc0de; }
+  background-color: #5bc0de;
+  border-color: #5bc0de; }
 .checkbox-info input[type=checkbox]:checked + label:after {
-    color: #fff; }
+  color: #fff; }
 
 .checkbox-warning input[type=checkbox]:checked + label:before {
-    background-color: #f0ad4e;
-    border-color: #f0ad4e; }
+  background-color: #f0ad4e;
+  border-color: #f0ad4e; }
 .checkbox-warning input[type=checkbox]:checked + label:after {
-    color: #fff; }
+  color: #fff; }
 
 .checkbox-success input[type=checkbox]:checked + label:before {
-    background-color: #5cb85c;
-    border-color: #5cb85c; }
+  background-color: #5cb85c;
+  border-color: #5cb85c; }
 .checkbox-success input[type=checkbox]:checked + label:after {
-    color: #fff; }
+  color: #fff; }
 
 .radio label {
-    display: inline-block;
-    position: relative;
-    padding-left: 5px; }
+  display: inline-block;
+  position: relative;
+  padding-left: 5px; }
 .radio label:before {
-    content: "";
-    display: inline-block;
-    position: absolute;
-    width: 22px;
-    height: 22px;
-    left: 0;
-    margin-left: -30px;
-    border: 1px solid #efefef;
-    border-radius: 50%;
-    background-color: #efefef;
-    -webkit-transition: border 0.15s ease-in-out;
-    transition: border 0.15s ease-in-out; }
+  content: "";
+  display: inline-block;
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  left: 0;
+  margin-left: -30px;
+  border: 1px solid #efefef;
+  border-radius: 50%;
+  background-color: #efefef;
+  -webkit-transition: border 0.15s ease-in-out;
+  transition: border 0.15s ease-in-out; }
 .radio label:after {
-    display: inline-block;
-    position: absolute;
-    content: " ";
-    width: 10px;
-    height: 10px;
-    left: 6px;
-    top: 6px;
-    margin-left: -30px;
-    border-radius: 50%;
-    background-color: #222222;
-    -webkit-transform: scale(0);
-    -ms-transform: scale(0);
-    transform: scale(0);
-    -webkit-transition: -webkit-transform 0.1s cubic-bezier(0.8, -0.33, 0.2, 1.33);
-    -moz-transition: -moz-transform 0.1s cubic-bezier(0.8, -0.33, 0.2, 1.33);
-    -o-transition: -o-transform 0.1s cubic-bezier(0.8, -0.33, 0.2, 1.33);
-    transition: transform 0.1s cubic-bezier(0.8, -0.33, 0.2, 1.33); }
+  display: inline-block;
+  position: absolute;
+  content: " ";
+  width: 10px;
+  height: 10px;
+  left: 6px;
+  top: 6px;
+  margin-left: -30px;
+  border-radius: 50%;
+  background-color: #222222;
+  -webkit-transform: scale(0);
+  -ms-transform: scale(0);
+  transform: scale(0);
+  -webkit-transition: -webkit-transform 0.1s cubic-bezier(0.8, -0.33, 0.2, 1.33);
+  -moz-transition: -moz-transform 0.1s cubic-bezier(0.8, -0.33, 0.2, 1.33);
+  -o-transition: -o-transform 0.1s cubic-bezier(0.8, -0.33, 0.2, 1.33);
+  transition: transform 0.1s cubic-bezier(0.8, -0.33, 0.2, 1.33); }
 .radio input[type=radio] {
-    display: none; }
+  display: none; }
 .radio input[type=radio]:checked + label:after {
-    -webkit-transform: scale(1);
-    -ms-transform: scale(1);
-    transform: scale(1); }
+  -webkit-transform: scale(1);
+  -ms-transform: scale(1);
+  transform: scale(1); }
 .radio input[type=radio]:disabled + label {
-    opacity: 0.65; }
+  opacity: 0.65; }
 .radio input[type=radio]:disabled + label:before {
-    cursor: not-allowed; }
+  cursor: not-allowed; }
 
 .radio-primary input[type=radio] + label:after {
-    background-color: #428bca; }
+  background-color: #428bca; }
 .radio-primary input[type=radio]:checked + label:before {
-    border-color: #428bca; }
+  border-color: #428bca; }
 .radio-primary input[type=radio]:checked + label:after {
-    background-color: #428bca; }
+  background-color: #428bca; }
 
 .radio-danger input[type=radio] + label:after {
-    background-color: #d9534f; }
+  background-color: #d9534f; }
 .radio-danger input[type=radio]:checked + label:before {
-    border-color: #d9534f; }
+  border-color: #d9534f; }
 .radio-danger input[type=radio]:checked + label:after {
-    background-color: #d9534f; }
+  background-color: #d9534f; }
 
 .radio-info input[type=radio] + label:after {
-    background-color: #5bc0de; }
+  background-color: #5bc0de; }
 .radio-info input[type=radio]:checked + label:before {
-    border-color: #5bc0de; }
+  border-color: #5bc0de; }
 .radio-info input[type=radio]:checked + label:after {
-    background-color: #5bc0de; }
+  background-color: #5bc0de; }
 
 .radio-warning input[type=radio] + label:after {
-    background-color: #f0ad4e; }
+  background-color: #f0ad4e; }
 .radio-warning input[type=radio]:checked + label:before {
-    border-color: #f0ad4e; }
+  border-color: #f0ad4e; }
 .radio-warning input[type=radio]:checked + label:after {
-    background-color: #f0ad4e; }
+  background-color: #f0ad4e; }
 
 .radio-success input[type=radio] + label:after {
-    background-color: #5cb85c; }
+  background-color: #5cb85c; }
 .radio-success input[type=radio]:checked + label:before {
-    border-color: #5cb85c; }
+  border-color: #5cb85c; }
 .radio-success input[type=radio]:checked + label:after {
-    background-color: #5cb85c; }
+  background-color: #5cb85c; }
 
 .radio.radio-large {
   font-family: $font-primary-stack;
@@ -2079,10 +2118,10 @@ a.primary-hover {
   text-decoration: none;
 }
 
-  .tile > footer > form>input{
-    margin-top: 13px;
-    margin-left: 18%;
-  }
+.tile > footer > form>input{
+  margin-top: 13px;
+  margin-left: 18%;
+}
 .rejected_true{
   background-color: red;
 }
