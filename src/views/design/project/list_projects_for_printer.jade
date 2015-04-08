@@ -1,0 +1,20 @@
+
+extends ../../core/printing/base
+
+block title
+  |  Your Projects
+
+block content-profile
+    .tab-content
+      #projects
+        - if (projects.length == 0)
+          p.info-3d There is not any project yet for this list.
+        - for (project in projects)
+          - project = projects[project]
+              a.black-3doers(href='/design/project/#{project.id}')
+                  div.tile.col-md-3.tile-projects
+                      h3.text-ellipsis #{project.title}
+                      p Status
+                          b  #{project.humanizedStatus()}
+                      img(src='/img/icons_#{project.dasherizedStatus()}.png')
+

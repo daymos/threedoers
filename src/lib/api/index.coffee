@@ -63,7 +63,6 @@ module.exports = (app) ->
 
   app.post '/api/create_work_session',(req,res) ->
 
-
     userModel.User.findOne({token: req.query.token}).exec().then( (user) ->
       if not user
         res.json
@@ -78,9 +77,7 @@ module.exports = (app) ->
 
         models.WorkSession.findOne({"session_project_id":req.query.project_id}).sort('-session_number').sort('-session_date_stamp').limit(1).exec().then( ( session) ->
           session_number = 0
-
           if session
-            console.dir session
             session_number = session.session_number
 
           ws = new models.WorkSession
@@ -94,7 +91,11 @@ module.exports = (app) ->
             ws.session_number = (session_number*1)
             ws.session_date_stamp = new Date(req.query.creation_date)
 
-            ws.session_screen_shot = req.files.image.path.replace(/^.*[\\\/]/, '')
+            if (fs.statSync(req.files.image.path).size>0)
+              ws.session_screen_shot = req.files.image.path.replace(/^.*[\\\/]/, '')
+            else
+              ws.session_screen_shot=null
+
             desigModel.STLDesign.findOne({_id: req.query.project_id}).exec().then((design) ->
               console.log 'create sessione'
               if design
@@ -143,6 +144,7 @@ module.exports = (app) ->
         status: -1
         error: 'Server Error, please retry later'
     )
+
 
   app.post '/api/login',(req, res) ->
 

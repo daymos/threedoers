@@ -8614,8 +8614,8 @@ hr.hr-light {
       text-align: center;
       color: #126F76; }
     .social-links li a:hover {
-      background-color: #88D6A7 !important;
-      color: #126F76 !important; }
+      background-color: #126F76 !important;
+      color: #ffffff !important; }
   .social-links li:first-child a {
     padding-left: 14px;
     padding-right: 14px; }
@@ -8706,6 +8706,21 @@ hr.hr-light {
 .margin-top-50 {
   margin-top: 50px; }
 
+.margin-top-60 {
+  margin-top: 60px; }
+
+.margin-top-70 {
+  margin-top: 70px; }
+
+.padding-top-55 {
+  padding-top: 55px; }
+
+.padding-bottom-55 {
+  padding-bottom: 55px; }
+
+.padding-left-30 {
+  padding-left: 30px; }
+
 .modal-content {
   background-color: #f3fff4; }
 
@@ -8786,22 +8801,34 @@ hr.hr-light {
 @media (-webkit-min-device-pixel-ratio: 1.25), (min-resolution: 120dpi) {
   /* Retina-specific stuff here */
   .intro-text {
-    background-image: url("../img/background/2x_main_pattern.png"); } }
+    background-image: url("../img/background/2x_main_pattern.png"); }
+
+  #contact-us-container {
+    background-image: url("../img/background/2x_contactus_background.png"); } }
 /* 1.3 dpr */
 @media (-webkit-min-device-pixel-ratio: 1.3), (min-resolution: 124.8dpi) {
   /* Retina-specific stuff here */
   .intro-text {
-    background-image: url("../img/background/2x_main_pattern.png"); } }
+    background-image: url("../img/background/2x_main_pattern.png"); }
+
+  #contact-us-container {
+    background-image: url("../img/background/2x_contactus_background.png"); } }
 /* 1.5 dpr */
 @media (-webkit-min-device-pixel-ratio: 1.5), (min-resolution: 144dpi) {
   /* Retina-specific stuff here */
   .intro-text {
-    background-image: url("../img/background/2x_main_pattern.png"); } }
+    background-image: url("../img/background/2x_main_pattern.png"); }
+
+  #contact-us-container {
+    background-image: url("../img/background/2x_contactus_background.png"); } }
 /*2.0 dpr */
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
   /* Retina-specific stuff here */
   .intro-text {
-    background-image: url("../img/background/2x_main_pattern.png"); } }
+    background-image: url("../img/background/2x_main_pattern.png"); }
+
+  #contact-us-container {
+    background-image: url("../img/background/2x_contactus_background.png"); } }
 @media only screen and (min-width: 992px) {
   .nav-logo-resp {
     margin-top: 10px; } }
@@ -8847,8 +8874,8 @@ hr.hr-light {
 #contact-us-container {
   background: url("../img/background/contactus_background.png") no-repeat;
   background-size: cover;
-  padding-top: 40px;
-  padding-bottom: 50px; }
+  padding-top: 20px;
+  height: 420px; }
   #contact-us-container p {
     color: #A5CFD2; }
     #contact-us-container p a {
@@ -8858,6 +8885,8 @@ hr.hr-light {
   #contact-us-container p:first-child {
     color: #ffffff; }
   #contact-us-container div div p {
+    margin-bottom: 0px;
+    line-height: 17px;
     color: #88D6A7; }
   #contact-us-container div div p:first-child {
     color: #ffffff; }
@@ -8969,6 +8998,12 @@ hr.hr-light {
 
 .padding-0 {
   padding: 0px !important; }
+
+.margin-top-35 {
+  margin-top: 35px; }
+
+.margin-bottom-18 {
+  margin-bottom: 18px; }
 
 .button-height {
   min-height: 55px; }
