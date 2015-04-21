@@ -18,8 +18,8 @@ module.exports.DESIGN_STATUSES = DESIGN_STATUSES =
   TIMEEEXPIRED: [3, 'time expired']
   TIMEREQUIRECONFIRM: [4, 'more time require confirmation']
   TIMEEXPIREDPROCESSED: [5, 'time expired processed']
-  DELIVERED: [6, 'delivered']
-  PAID: [7, 'payed']
+  PAID: [6, 'payed']
+  DELIVERED: [7, 'delivered']
   ARCHIVED: [8, 'archived']
 
 

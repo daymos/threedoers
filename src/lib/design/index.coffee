@@ -22,7 +22,7 @@ module.exports = (app) ->
 
   app.get '/design/requests', decorators.filemanagerRequired, (req, res) ->
     #models.STLDesign.find({status:{"$lt":models.DESIGN_STATUSES.ARCHIVED[0]}}).elemMatch("proposal",{'user':req.user.id}).exec().then(( docs) ->
-    models.STLDesign.find("$and":[{status:{"$lt":models.DESIGN_STATUSES.PREACCEPTED[0]}}, {"proposal":{"$not":{"$elemMatch":{"creator":req.user._id}}}}]).exec().then(( docs) ->
+    models.STLDesign.find("$and":[{status:{"$lt":models.DESIGN_STATUSES.ACCEPTED[0]}}, {"proposal":{"$not":{"$elemMatch":{"creator":req.user._id}}}}]).exec().then(( docs) ->
       if docs
          res.render 'design/requests', {projects: docs, toApply:true, error:""}
 #      else
@@ -39,10 +39,8 @@ module.exports = (app) ->
         logger.error arguments
         res.send 500
       )
-
   #User accept id proposal
   app.post '/design/proposal/review/:id', decorators.loginRequired, (req, res) ->
-    console.log "/design/proposal/review/:id"
     models.Proposal.findOne({_id: req.params.id, accepted:false}).exec().then( (prop) ->
       if prop
         prop.accepted = true
@@ -54,40 +52,28 @@ module.exports = (app) ->
             preHourly:prop.hour
             designer:prop.creator
             placedAt: new Date()
-          stldes.status = models.DESIGN_STATUSES.PREACCEPTED[0]
+          stldes.status = models.DESIGN_STATUSES.ACCEPTED[0]
           stldes.designer = prop.creator
           i = 0
           while i < stldes.proposal.length
-
             if ((stldes.proposal[i]._id).toString() == (prop._id).toString())
               stldes.proposal[i].accepted = prop.accepted
               break
             i++
           stldes.save()
-          res.redirect "design/project/"+stldes._id
-        ).fail( ->
-          logger.error arguments
-          res.send 500
-        )
+          auth.User.findOne({_id:proposal.creator}).exec().then((user) ->
+            user.designJobs+=1
+            user.save()
+            doc.status = models.DESIGN_STATUSES.ACCEPTED[0]
+            doc.save()
+            res.redirect "design/project/"+stldes._id
+          ))
       else
-        console.log 'else'
-        models.STLDesign.findOne({"creator": req.user.id}).exec().then( (doc) ->
-          console.log 'query stldesign'
-          if doc
-            console.log doc
-            res.redirect("design/project/"+doc._id, {projects: doc, toApply:true, error:"Some errors for this proposal"})
-          else
-            console.log 'not doc'
-        ).fail( ->
-          logger.error arguments
-          res.send 500
-        )
+        res.send 404
     ).fail( ->
       logger.error arguments
       res.send 500
     )
-
-
   app.get '/design/projects', decorators.loginRequired, (req, res) ->
     models.STLDesign.find({'creator': req.user.id, status: {"$lte": models.DESIGN_STATUSES.ARCHIVED[0]} }).exec (err, docs) ->
       if err
@@ -140,7 +126,6 @@ module.exports = (app) ->
           proposal.userRate=req.user.rate
           computed=req.user.numberOfDelay/req.user.designJobs*100
           if(!isNaN(computed))
-            console.log 'not nan'
             proposal.timeRate=computed
           proposal.hour = req.body.hours
           proposal.backref = req.params.id
@@ -212,51 +197,7 @@ module.exports = (app) ->
       logger.error reason
       res.send 500
     )
-  app.post '/design/accept/:id', decorators.filemanagerRequired, (req, res) ->
-    models.STLDesign.findOne({_id: req.params.id}).exec().then( (doc) ->
-      if doc
-        auth.User.findOne(doc.creator).exec (err, user) ->
-          if user
-            console.log user._id
-            designer=''
-            for proposal in doc.proposal
-              if proposal.accepted
-                designer=proposal.creator
-            if designer!=''
-              models.STLDesign.findOne({"designer": designer, status: {"$lt": models.DESIGN_STATUSES.DELIVERED[0], "$gte": models.DESIGN_STATUSES.ACCEPTED[0]}}).exec().then( (activeProjects)->
 
-                ###if activeProjects
-                  res.json msg:"You have a pending project, complete it to accept an other",400
-                else###
-                auth.User.findOne({_id:proposal.creator}).exec().then((user) ->
-                      user.designJobs+=1
-                      user.save()
-                      doc.status = models.DESIGN_STATUSES.ACCEPTED[0]
-                      doc.save()
-                      res.json msg: "Accepted"
-                  ).fail( ->
-                    logger.error arguments
-                    res.send 500
-                  )
-                ).fail( ->
-                  logger.error arguments
-                  res.send 500
-                )
-            else
-              res.json msg: "Looks like someone accepted, try with another", 400
-      #
-#            # send notification
-#            auth.User.where('_id').in([req.user.id, user.id]).exec().then (docs)->
-#              if docs.length
-#                utils.sendNotification(io, docs, "Project <a href='/project/#{doc.id}'>#{doc.title}</a> was accepted.", 'Status changed', 'info')
-#                for user in docs
-#                  mailer.send('mailer/project/status', {project: doc, user: user, site:settings.site}, {from: settings.mailer.noReply, to:[user.email], subject: settings.project.status.subject})
-      else
-        res.json msg: "Looks like someone accepted, try with another", 400
-    ).fail( ->
-      logger.error arguments
-      res.send 500
-    )
 
   app.post '/design/deny/:id', decorators.filemanagerRequired, (req, res) ->
     console.log "/design/deny/:id"
