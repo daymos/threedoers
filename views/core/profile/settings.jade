@@ -44,6 +44,8 @@ block body
               input#city(type='hidden', name='city')
               input#country(type='hidden', name='country')
               input#location(type='hidden', name='location')
+            .form-group
+                input#mailNotification(name='html',name='mailNotification' type='checkbox', value='html', checked=(user.mailNotification===true ? "checked" : undefined)))
 
             br
             br

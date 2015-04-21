@@ -28,11 +28,14 @@ block body
         -}
       ul#list-group-notif.list-group
         - each notify in userNotif
-          a(href= '#{notify.refertourl}')
-              if (notify.read == false)
-                li(id=notify.id).list-group-item.col-lg-10.active-greeen-3doers Project #{notify.title} has changed its status @#{prettyDate(notify.createAt)}
-              else
-                li(id=notify.id).list-group-item.col-lg-10 Project #{notify.title} has changed its status @#{prettyDate(notify.createAt)}
+
+                li(id=notify.id,class=(notify.read==false?'active-greeen-3doers':'')).list-group-item.col-sm-10
+                    a(href= '#{notify.refertourl}') Project #{notify.title} has changed its status @#{prettyDate(notify.createAt)}
+                    form(action='/notification/delete/#{notify.id}',method='POST').pull-right
+                        button(type='submit').btn-sm.btn-danger
+                            span.glyphicon.glyphicon-remove
+
+
 
   div
     .container

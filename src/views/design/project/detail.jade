@@ -62,7 +62,9 @@ block body
                                       span.text-20 Proposal from:
                                           strong   #{prop.username}
                                       p.child-inline-block quality
-                                          input(type="number",data-min=0,data-max=5,data-show-clear="false",value=prop.userrate,disabled=true,step=0.5,data-size="xs")#input-id.rating
+                                          input(type="number",data-min=0,data-max=5,data-show-clear="false",value=prop.userRate,data-readonly="true",step=0.5,data-size="xs")#input-id.rating
+                                      p.child-inline-block time
+                                          input(type="number",data-min=0,data-max=100,data-show-clear="false",value=prop.timeRate,data-readonly="true",step=0.1,data-size="xs")#input-id.rating
 
                                       p.child-inline-block time rate coming soon
                                   .text-center
@@ -80,6 +82,7 @@ block body
                                       form(action="/design/proposal/review/#{prop._id}", method="post")
                                           input(type="hidden", name="project_id", value="#{project._id}")
                                           input(type="submit",value="Accept this proposal").btn-default.btn-lg.btn-3doers-new
+
 
 
         .section.primary
@@ -150,12 +153,12 @@ block body
                                                         form(method="post", action="/design/proposal/", id="proposalForm")
                                                             label Estimate Time
                                                             br
-                                                            input(type="text", name="hours")
+                                                            input(type="number", name="hours")
                                                             br
                                                             br
                                                             label Hourly wage
                                                             br
-                                                            input(type="text", name="cost")
+                                                            input(type="number", name="cost")
                                                             div(class="modal-footer")
                                                                 button(type="submit").btn-default.btn-lg.btn-3doers-new Make a proposal
 

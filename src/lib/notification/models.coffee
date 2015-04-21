@@ -50,5 +50,9 @@ Notification = new Schema
     type:String
     require:true
 
+  deleted:
+    type: Boolean
+    default: false
+
 # Expose Activation Status
 module.exports.Notification = mongoose.model 'Notification', Notification

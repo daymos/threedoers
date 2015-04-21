@@ -64,9 +64,9 @@ module.exports = (app, io) ->
             res.send 500
           else
             auth.User.findOne(doc.user).exec (err, user) ->
-              if user
+              if user & user.mailNotification
                 mailer.send('mailer/filemanager/finished', {project: doc, user: user, site:settings.site}, {from: settings.mailer.noReply, to:[user.email], subject: settings.filemanager.accept.subject}).then ->
-                  res.json
+              res.json
                     msg: "Accepted"
                     redirectTo: "/filemanager/archived"
       else
@@ -121,12 +121,12 @@ module.exports = (app, io) ->
     models.FileProject.findOne({_id: req.params.id}).exec().then( (doc) ->
       if doc and doc.validateNextStatus(models.PROJECT_STATUSES.PREACCEPTED[0])
         auth.User.findOne(doc.user).exec (err, user) ->
-          if user
-            mailer.send('mailer/filemanager/accept', {project: doc, user: user, site:settings.site}, {from: settings.mailer.noReply, to:[user.email], subject: settings.filemanager.accept.subject}).then ->
-              doc.status = models.PROJECT_STATUSES.PREACCEPTED[0]
-              doc.filemanager = req.user.id
-              doc.save()
-              res.json msg: "Accepted"
+          if user & user.mailNotification
+            mailer.send('mailer/filemanager/accept', {project: doc, user: user, site:settings.site}, {from: settings.mailer.noReply, to:[user.email], subject: settings.filemanager.accept.subject})
+          doc.status = models.PROJECT_STATUSES.PREACCEPTED[0]
+          doc.filemanager = req.user.id
+          doc.save()
+          res.json msg: "Accepted"
       else
         res.json msg: "Looks like someone accepted, try with another", 400
     ).fail( ->
@@ -214,11 +214,11 @@ module.exports = (app, io) ->
     models.FileProject.findOne({_id: req.params.id}).exec().then( (doc) ->
       if doc and doc.validateNextStatus(models.PROJECT_STATUSES.ACCEPTED[0])
         auth.User.findOne(doc.user).exec (err, user) ->
-          if user
-            mailer.send('mailer/filemanager/accept', {project: doc, user: user, site:settings.site}, {from: settings.mailer.noReply, to:[user.email], subject: settings.filemanager.accept.subject}).then ->
-              doc.status = models.PROJECT_STATUSES.ACCEPTED[0]
-              doc.save()
-              res.json msg: "Accepted"
+          if user & user.mailNotification
+            mailer.send('mailer/filemanager/accept', {project: doc, user: user, site:settings.site}, {from: settings.mailer.noReply, to:[user.email], subject: settings.filemanager.accept.subject})
+          doc.status = models.PROJECT_STATUSES.ACCEPTED[0]
+          doc.save()
+          res.json msg: "Accepted"
       else
         res.json msg: "Looks like someone accepted, try with another", 400
     ).fail( ->

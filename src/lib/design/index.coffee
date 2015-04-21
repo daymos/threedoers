@@ -138,25 +138,30 @@ module.exports = (app) ->
           proposal.creator = req.user.id
           proposal.username = req.user.username
           proposal.userRate=req.user.rate
-          proposal.timeRate=req.user.timeRate
+          computed=req.user.numberOfDelay/req.user.designJobs*100
+          if(!isNaN(computed))
+            console.log 'not nan'
+            proposal.timeRate=computed
           proposal.hour = req.body.hours
           proposal.backref = req.params.id
           proposal.cost = req.body.cost
           proposal.createAt = Date.now()
+          console.log(proposal, proposal.timeRate)
+          console.log 'before'
           proposal.save()
+          console.log 'after'
+          console.log proposal.timeRate
           doc.proposal.push(proposal)
-          doc.save (err, doc) ->
-            if err
-              logger.error err
-              res.send 500
-            else
-              res.redirect "/"
+          console.log doc
+          doc.save()
+          console.log 'save'
+          res.redirect "/profile/projects"
         else
           res.redirect('/design/requests', {projects: doc, toApply:true, error:"You must fill both fields in ProposalForm"})
-
       else
         res.send "Project couldn't be editable at this status.", 400
     ).fail( ->
+      console.log 'fail'
       logger.error arguments
       res.send 500
     )
@@ -219,12 +224,11 @@ module.exports = (app) ->
                 designer=proposal.creator
             if designer!=''
               models.STLDesign.findOne({"designer": designer, status: {"$lt": models.DESIGN_STATUSES.DELIVERED[0], "$gte": models.DESIGN_STATUSES.ACCEPTED[0]}}).exec().then( (activeProjects)->
-                console.log activeProjects
-                if activeProjects
 
+                ###if activeProjects
                   res.json msg:"You have a pending project, complete it to accept an other",400
-                else
-                  auth.User.findOne({_id:proposal.creator}).exec().then((user) ->
+                else###
+                auth.User.findOne({_id:proposal.creator}).exec().then((user) ->
                       user.designJobs+=1
                       user.save()
                       doc.status = models.DESIGN_STATUSES.ACCEPTED[0]
@@ -336,10 +340,9 @@ module.exports = (app) ->
               user.save()
               userModel.findOne({_id:design.designer}).exec().then( (creator) ->
                 if creator
-
-                  mailer.send('mailer/design/completed',
-                    {project: design,url: "http://#{ req.headers.host }/design/project/"+design._id},{from: settings.mailer.noReply, to: creator.email,subject: "Design project "+design.title+' completed'}).then ->
-                        res.redirect 'design/project/'+req.params.id
+                  if creator.mailNotification
+                    mailer.send('mailer/design/completed',{project: design,url: "http://#{ req.headers.host }/design/project/"+design._id},{from: settings.mailer.noReply, to: creator.email,subject: "Design project "+design.title+' completed'})
+                  res.redirect 'design/project/'+req.params.id
                 else
                   res.send 500
               ).fail( ->
@@ -486,7 +489,6 @@ module.exports = (app) ->
       if design
         try
           rate=parseFloat(req.body.rate)
-
         catch e
           stringerror=e.toString()
           return res.redirect('design/project/'+req.params.id+'?error='+stringerror)
@@ -501,9 +503,11 @@ module.exports = (app) ->
             models.STLDesign.find({designer: user.id,status:{"$gte": models.DESIGN_STATUSES.DELIVERED[0]}}).exec().then( (designsWork) ->
               if designsWork
                  TotalRate=0
-                 console.log(designsWork)
+                 console.log 'before'
                  for work in designsWork
+                   console.log work.rate
                    TotalRate+=work.rate
+                 console.log 'after'
                  console.log TotalRate
                  user.rate=TotalRate/designsWork.length
                  user.save()

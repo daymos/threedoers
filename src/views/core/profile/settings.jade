@@ -32,6 +32,10 @@ block body
               input#lastName.form-control.input-text.resize-input-form(value=(user.lastName)?"#{user.lastName}":"", placeholder='Last name', name='lastName')
             .form-group
               input#address.form-control.input-text.resize-input-form(value=(user.address)?"#{user.address}":"", placeholder='Address', name='address')
+            .form-group.clearfix
+                .col-sm-2
+                    input.form-control.input-text.resize-input-form#mailNotification(name='mailNotification', type='checkbox', checked=(user.mailNotification===true ? "checked" : undefined))
+                label.col-sm-10.input-text.resize-input-form Receave mail notification
             .form-group
               input#city(type='hidden', name='city')
               input#country(type='hidden', name='country')
@@ -78,7 +82,7 @@ block body
 
         a#link.direct-link-ship-address.btn-default.btn-xs.grey-3doers(href='/profile/settings/new-shipping-direction') Add new direction
           a#link.direct-link-ship-address.btn-default.btn-xs.grey-3doers(href='/accounts/logout') Logout
-      .row
+      .row#upgradeYourProfile
         .col-md-12
             h2
                 | Upgrade Your Profile
@@ -89,11 +93,11 @@ block body
           -if(user.filemanager!="accepted")
             li.tiles
                 - if(user.filemanager=="request")
-                  a(href="#")
+                  a(href="#upgradeYourProfile")
                     div.pending-request.circular.small-circular
                       |Pending
                 - else
-                  a(data-toggle="modal",data-target="#comingsoonModal",href="#")
+                  a(data-toggle="modal",data-target="#becomeDesigner",href="#")
                     img(src='/img/icons_printing.png').circular.small-circular
                 div
                     h4 Become a Designer

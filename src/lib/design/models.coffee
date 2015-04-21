@@ -14,14 +14,13 @@ ObjectId = Schema.ObjectId
 
 module.exports.DESIGN_STATUSES = DESIGN_STATUSES =
   UPLOADED: [1, 'uploaded']
-  PREACCEPTED: [2, 'preaccepted']
-  ACCEPTED: [3, 'accepted']
-  TIMEEEXPIRED: [4, 'time expired']
-  TIMEREQUIRECONFIRM: [5, 'more time require confirmation']
-  TIMEEXPIREDPROCESSED: [6, 'time expired processed']
-  DELIVERED: [7, 'delivered']
-  PAID: [8, 'payed']
-  ARCHIVED: [9, 'archived']
+  ACCEPTED: [2, 'accepted']
+  TIMEEEXPIRED: [3, 'time expired']
+  TIMEREQUIRECONFIRM: [4, 'more time require confirmation']
+  TIMEEXPIREDPROCESSED: [5, 'time expired processed']
+  DELIVERED: [6, 'delivered']
+  PAID: [7, 'payed']
+  ARCHIVED: [8, 'archived']
 
 
 ###############################################
@@ -36,9 +35,11 @@ Proposal = new Schema
   username:
     type:String
     required: true
+
   userRate:
     type: Number
     default: 0
+
   timeRate:
       type: Number
       default: 0
