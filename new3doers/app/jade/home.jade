@@ -1,0 +1,74 @@
+extends /layouts/_default
+
+block content
+	.page
+		.container
+			.row
+				.col-md-4
+					h5 Send to print
+					p Upload an STL file, see the price and order your print
+				.col-md-4
+					h5 Find a designer
+					p Describe your project and choose the designer that suits you better
+				.col-md-4
+					h5 Upgrade your Profile
+					p Are you a printer or a designer? Click here to upgrade your profile and start to print or design for others
+
+		.bg-3doers
+			.container
+				div(role='tabpanel')
+					ul.nav.nav-tabs(role='tablist')
+						li.active
+							a(href='#workplace', aria-controls='workplace', role='tab', data-toggle='tab') WorkPlace
+						li
+							a(href='#printing', aria-controls='printing', role='tab', data-toggle='tab') Printing
+						li
+							a(href='#designing', aria-controls='designing', role='tab', data-toggle='tab') Designing
+						li
+							a(href='#completed', aria-controls='completed', role='tab', data-toggle='tab') Completed
+
+					.tab-content
+						.tab-pane.fade.in.active(id='workplace', role='tabpanel')
+							p Here you can find printing and design jobs
+							br
+							.row
+								.col-md-3
+									article.job
+										h4.job-name Small_frog.stl
+										figure.job-image: img(src='images/job.png')
+										p This order has been waiting for
+										p.job-wtime 3h 25m
+										.text-center
+											a.btn.btn-green(href='#') REVIEW ORDER
+								.col-md-3
+									article.job
+										h4.job-name Small_frog.stl
+										figure.job-image: img(src='images/job.png')
+										p This order has been waiting for
+										p.job-wtime 3h 25m
+										.text-center
+											a.btn.btn-green(href='#') REVIEW ORDER
+								.col-md-3
+									article.job
+										h4.job-name Small_frog.stl
+										figure.job-image: img(src='images/job.png')
+										p This order has been waiting for
+										p.job-wtime 3h 25m
+										.text-center
+											a.btn.btn-green(href='#') REVIEW ORDER
+								.col-md-3
+									article.job
+										h4.job-name Small_frog.stl
+										figure.job-image: img(src='images/job.png')
+										p This order has been waiting for
+										p.job-wtime 3h 25m
+										.text-center
+											a.btn.btn-green(href='#') REVIEW ORDER
+						.tab-pane.fade(id='printing', role='tabpanel')
+							p Here you can find printing and design jobs
+						.tab-pane.fade(id='designing', role='tabpanel')
+							p Here you can find printing and design jobs
+						.tab-pane.fade(id='completed', role='tabpanel')
+							p Here you can find printing and design jobs
+				br
+				br

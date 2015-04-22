@@ -1,0 +1,25 @@
+extends /layouts/_default
+
+block content
+	.page
+		.container
+			.page-header
+				h3 Login
+			br
+			br
+			.row
+				.col-md-4
+					form
+						.form-group
+							input.form-control(type='text', placeholder='username')
+						.form-group.no-margin
+							input.form-control(type='password', placeholder='password')
+						.form-group
+							a(href='#') Forgot your password
+						br
+						.form-group
+							button.btn.btn-lg.btn-block.btn-green LOGIN
+						a(href='#') Don't have an account yet? Create one here
+			br
+			br
+			br

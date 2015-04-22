@@ -1,0 +1,36 @@
+extends /layouts/_default
+
+block content
+	.bg-3doers
+		.container
+			.page-header
+				h3 Sign up
+			br
+			br
+			.row
+				.col-md-4
+					form
+						.form-group
+							input.form-control(type='text', placeholder='username')
+						.form-group.no-margin
+							input.form-control(type='email', placeholder='email')
+						.form-group.no-margin
+							input.form-control(type='password', placeholder='password')
+						.form-group.no-margin
+							input.form-control(type='password', placeholder='confirm password')
+						.form-group.no-margin
+							input.form-control(type='text', placeholder='address')
+						br
+						.checkbox
+							input(id='terms_conditions', type='checkbox')
+							label(for='terms_conditions')
+								| I accept 3doers 
+								a(href='#') Privacy Policy 
+								| and 
+								a(href='#') Terms and Conditions
+						br
+						.form-group
+							button.btn.btn-xlg.btn-block.btn-green SIGN UP
+			br
+			br
+			br
