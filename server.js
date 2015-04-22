@@ -108,8 +108,6 @@
 
   app.use(passport.session());
 
-  app.use(express.csrf());
-
   app.use(gzippo.compress());
 
   app.disable("x-powered-by");
@@ -172,7 +170,7 @@
     });
   }
 
-  _ref = ['admin', 'filemanager', 'core', 'auth', 'registration'];
+  _ref = ['admin', 'filemanager', 'core', 'auth', 'registration', 'notification', 'design', 'api'];
   for (_i = 0, _len = _ref.length; _i < _len; _i++) {
     appName = _ref[_i];
     logger.debug("Loading app " + appName);

@@ -83,7 +83,13 @@ app.use express.session(
 app.use passport.initialize()
 app.use passport.session()
 
-app.use express.csrf()
+# app.use express.csrf()
+# app.use (req, res, next) ->
+#   res.cookie "XSRF-TOKEN", req.csrfToken()
+#   res.locals.csrftoken = req.csrfToken()
+#   next()
+#   return
+
 app.use gzippo.compress()
 app.disable "x-powered-by"
 
@@ -140,10 +146,9 @@ unless settings.debug
     io.set 'polling duration', 30
 
 # loading modules
-for appName in ['admin', 'filemanager', 'core', 'auth', 'registration']
+for appName in ['admin', 'filemanager', 'core', 'auth', 'registration','notification','design','api']
   logger.debug "Loading app #{appName}"
   require("./lib/#{appName}")(app, io)
-
 
 # # db connection
 

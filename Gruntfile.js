@@ -76,6 +76,7 @@ module.exports = function(grunt) {
               'src/public/css/font.css',
               'src/public/css/flexslider.css',
               'src/public/css/font-awesome.css',
+              'src/public/css/star-rating.css',
               'tmp/assets/public/css/application.css'],
         dest: 'src/public/css/application.css',
       },
@@ -116,7 +117,6 @@ module.exports = function(grunt) {
         files: ['src/public/js/**/*.coffee'],
         tasks: ['coffee:frontend', 'coffee:frontendStandalone', 'concat:js', 'concat:commonJS']
       },
-
       sass: {
         files: ['src/public/css/**/*.scss'],
         tasks: ['sass:dev', 'concat:cssApplication', 'concat:cssComming']

@@ -19,16 +19,20 @@ module.exports = (app, io) ->
 
   app.get '/', (req, res) ->
     if req.user
-      models.STLProject.find().sort(createdAt: -1).limit(6).exec (err, projects) ->
-        auth.User.find().sort(createdAt: -1).limit(15).exec (err, users) ->
-          res.render 'core/index', {message: null, error: false, message: false, users: users, projects: projects}
+      res.redirect '/profile/projects'
+#      models.STLProject.find().sort(createdAt: -1).limit(6).exec (err, projects) ->
+#        auth.User.find().sort(createdAt: -1).limit(15).exec (err, users) ->
+#          res.render 'core/index', {message: null, error: false, message: false, users: users, projects: projects}
     else
       res.render 'core/comming', {message: null, error: false, message: false}
 
   app.get '/home', (req, res) ->
-    models.STLProject.find().sort(createdAt: -1).limit(6).exec (err, projects) ->
-        auth.User.find().sort(createdAt: -1).limit(15).exec (err, users) ->
-          res.render 'core/index', {message: null, error: false, message: false, users: users, projects: projects}
+    if req.user
+      res.redirect '/profile/projects'
+    else
+      models.STLProject.find().sort(createdAt: -1).limit(6).exec (err, projects) ->
+          auth.User.find().sort(createdAt: -1).limit(15).exec (err, users) ->
+            res.render 'core/index', {message: null, error: false, message: false, users: users, projects: projects}
 
   app.post '/', (req, res) ->
     req.assert('email').isEmail()
@@ -79,22 +83,25 @@ module.exports = (app, io) ->
 
   app.post '/become', decorators.loginRequired, (req, res) ->
     if req.user.printer
-      res.render 'core/become'
+      res.render 'core/profile/settings'
     else
+      printer_model = req.body.printer_model
+      printer_city = req.body.city
+      printer_howlong = req.body.howlong
       mailer.send('mailer/core/become',
-                  {user: req.user},
+                  {user: req.user,printer_model, printer_city, printer_howlong},
                   {from: req.user.email, to: settings.admins.emails,
                   subject: "New Become a Printer Request"}).then ->
         req.user.printer = 'request'
         req.user.save()
-      res.render 'core/become'
+      res.redirect '/profile/settings'
 
 
-  app.get '/project/upload', decorators.loginRequired, (req, res) ->
+  app.get '/project/upload', (req, res) ->
     res.render 'core/project/upload'
 
 
-  app.post '/project/upload', decorators.loginRequired, (req, res) ->
+  app.post '/project/upload', (req, res) ->
     if req.files.thumbnail.size == 0
       res.json errors: thumbnail: msg: "This field is required"
       return
@@ -107,7 +114,10 @@ module.exports = (app, io) ->
     # get the temporary location of the file
     tmp_path = req.files.thumbnail.path
     project = new models.STLProject
-    project.user = req.user.id
+    try
+      project.user = req.user.id
+    catch e
+       console.log e
     project.title = req.files.thumbnail.name
     project.file = req.files.thumbnail.path.split('/').pop()
     project.save (err, doc) ->
@@ -139,15 +149,21 @@ module.exports = (app, io) ->
     )
 
 
-  app.get '/project/:id', decorators.loginRequired, (req, res, next) ->
-    models.STLProject.findOne({_id: req.params.id, $or: [{user: req.user.id}, {'order.printer': req.user.id}]}).exec().then( (doc) ->
+  app.get '/project/:id', (req, res, next) ->
+    filterDict={_id: req.params.id}
+    try
+      filterDict.$or=[{user: req.user.id}, {'order.printer': req.user.id}]
+    catch e
+      console.log e
+
+    models.STLProject.findOne(filterDict ).exec().then( (doc) ->
       if doc
         if not doc.volume or doc.bad or not doc.dimension
           processVolumeWeight(doc)
         res.render 'core/project/detail',
           project: doc
           colors: models.PROJECT_COLORS
-          densities: models.PROJECT_DENSITIES
+          materials: models.PROJECT_MATERIALS
           statuses: models.PROJECT_STATUSES
           countries: auth.EuropeCountries
       else
@@ -159,12 +175,29 @@ module.exports = (app, io) ->
 
 
   app.get '/profile/projects', decorators.loginRequired, (req, res) ->
-    models.STLProject.find({user: req.user._id, status: {"$ne": models.PROJECT_STATUSES.ARCHIVED[0]}}).exec().then( (docs) ->
+    if req.user.printer!="accepted" and req.user.filemanager!="accepted"
+      models.STLProject.find({user: req.user._id, status: {"$lte": models.PROJECT_STATUSES.PRINT_REVIEW[0]}}).exec().then( (docs) ->
+        res.render 'core/profile/list_projects', {projects: docs}
+      ).fail( ->
+        logger.error arguments
+        res.send 500
+      )
+    else if req.user.printer=='accepted' and req.user.filemanager!="accepted"
+      res.redirect "/printing/requests"
+    else if req.user.printer!='accepted' and req.user.filemanager=="accepted"
+      res.redirect "/design/requests"
+    else if req.user.printer=='accepted' and req.user.filemanager=="accepted"
+      res.redirect "/printing/requests"
+
+  app.get '/profile/onprint', decorators.loginRequired, (req, res) ->
+    models.STLProject.find({user: req.user._id, status: {"$lt": models.PROJECT_STATUSES.ARCHIVED[0], "$gt": models.PROJECT_STATUSES.PRINT_REQUESTED[0]}}).exec().then((docs) ->
       res.render 'core/profile/list_projects', {projects: docs}
     ).fail( ->
       logger.error arguments
       res.send 500
     )
+
+
 
 
   app.get '/profile/archived', decorators.loginRequired, (req, res) ->
@@ -179,6 +212,8 @@ module.exports = (app, io) ->
   app.get '/profile/settings', decorators.loginRequired, (req, res) ->
     res.render 'core/profile/settings', {errors: {}}
 
+  app.get '/profile/notifications', decorators.loginRequired, (req, res) ->
+    res.render 'core/profile/notifications'
 
   app.post '/profile/settings', decorators.loginRequired, (req, res) ->
     if (req.body.city && req.body.country && req.body.location)
@@ -198,21 +233,22 @@ module.exports = (app, io) ->
       if printer
         shipping = (shipping) ->
           shippo.rate.list(object_id: shipping.object_id, currency: 'EUR').then((rates)->
-            if rates.length > 0
+            if rates.count and rates.count > 0
               rate = null
               price = 9999999999.0 # a lot
-              for rate_tmp in rates
-                price_tmp = parseFloat(rate_tmp.amount)
-                if rate_tmp.object_purpose == "PURCHASE" and price > price_tmp
+              for rate_tmp in rates.results
+                price_tmp = parseFloat(rate_tmp.amount_local)
+                if rate_tmp.object_purpose == "PURCHASE" and price > price_tmp and price_tmp > 0
                   rate = rate_tmp
                   price = price_tmp
 
               if rate
-                project.update 'order.rate': rate
+                project.update 'order.rate': rate, ->
+                  return
                 res.json
                   ok: 'successes'
                   address: address
-                  charge: rate.ammount
+                  charge: rate.amount_local
             else
               res.json
                 message: "There is not rate, use another address"
@@ -226,20 +262,24 @@ module.exports = (app, io) ->
           else
             data = {}
             shippo.parcel.create(
-              length: decimal.fromNumber(project.dimension.length, 4).toString()
-              width: decimal.fromNumber(project.dimension.width, 4).toString()
-              height: decimal.fromNumber(project.dimension.height, 4).toString()
+              length: if project.dimension.length > 10 then decimal.fromNumber(project.dimension.length, 4).toString() else 10
+              width: if project.dimension.width > 10 then decimal.fromNumber(project.dimension.width, 4).toString() else 10
+              height: if project.dimension.height > 10 then decimal.fromNumber(project.dimension.height, 4).toString() else 10
               distance_unit: project.unit
               weight: decimal.fromNumber(project.weight, 4).toString()
               mass_unit: 'g'
             ).then( (parcel) ->
               data['order.parcel'] = parcel
+              submission_date = new Date()
+              submission_date.setDate(submission_date.getDate() + 2)
+
               shippo.shipment.create(
                 object_purpose: "PURCHASE"
                 address_from: printer.printerAddress.object_id
                 address_to: address.object_id
                 parcel: parcel.object_id
-                submission_type: 'DROPOFF')
+                submission_type: 'DROPOFF'
+                submission_date: submission_date)
 
             ).then( (shipping_tmp) ->
               data['order.shipping'] = shipping_tmp
@@ -530,23 +570,76 @@ module.exports = (app, io) ->
       )
 
 
+  app.post '/project/material/:id', decorators.loginRequired, (req, res) ->
+    value = req.body.value
+    unless value of models.PROJECT_MATERIALS
+      res.send 400
+    else
+      models.STLProject.findOne({_id: req.params.id, editable: true}).exec().then( (doc) ->
+        if doc
+          doc.density = models.PROJECT_MATERIALS[value][0]
+          doc.material = value
+          doc.status = models.PROJECT_STATUSES.PROCESSING[0]
+
+          cloned = utils.cloneObject(doc._doc)
+          cloned.status = doc.humanizedStatus()  # to show good in browser
+          delete cloned.comments
+          io.of('/project').in(doc._id.toHexString()).emit('update', cloned)
+
+          processVolumeWeight(doc)
+          res.send 200
+        else
+          res.send 404
+      ).fail( ->
+        logger.error arguments
+        res.send 500
+      )
+
+
+  app.get '/project/update/:id', decorators.loginRequired, (req, res) ->
+    models.STLProject.findOne({_id: req.params.id}).exec().then( (doc) ->
+      if doc
+        shippo.transaction.retrieve(doc.order.transaction.object_id).then (data) ->
+          doc.update {'order.transaction': data}, ->
+            res.redirect "/project/#{req.params.id}"
+      else
+        res.send 404
+    ).fail( ->
+      console.log arguments
+      logger.error arguments
+      res.send 500
+    )
+
+
   app.post '/project/order/:id', decorators.loginRequired, (req, res, next) ->
-    models.STLProject.findOne({_id: req.params.id, editable: true}).exec().then( (doc) ->
+    models.STLProject.findOne({_id: req.params.id}).exec().then( (doc) ->
       if doc and doc.validateNextStatus(models.PROJECT_STATUSES.PRINT_REQUESTED[0])
         ammount =  Math.abs(if (req.body.ammount and parseInt(req.body.ammount)) then parseInt(req.body.ammount) else 1)
-        price = calculateOrderPrice(doc.price, ammount)
+        total_price = calculateOrderPrice(doc.price, ammount)
+        taxes = decimal.fromNumber(total_price * 0.21, 2)
+        price = decimal.fromNumber(total_price - taxes, 2)
         printerPayment = decimal.fromNumber(price * 0.75, 2)
         doc.status = models.PROJECT_STATUSES.PRINT_REQUESTED[0]
         doc.order =
           ammount: ammount
           price: price.toString()
+          totalPrice: total_price.toString()
+          taxes: taxes.toString()
           printerPayment: printerPayment.toString()
           businessPayment: decimal.fromNumber(price - printerPayment, 2).toString()
           placedAt: new Date()
 
         doc.save()
+
+        # send notification
+        auth.User.find(printer: 'accepted').exec().then (docs)->
+          if docs.length
+            utils.sendNotification(io, docs, "Project <a href='/project/#{doc.id}'>#{doc.title}</a> is waiting for you.", 'New project', 'info')
+            for user in docs
+              mailer.send('mailer/project/status', {project: doc, user: user, site:settings.site}, {from: settings.mailer.noReply, to:[user.email], subject: settings.project.status.subject})
       res.redirect "/project/#{req.params.id}"
     ).fail( ->
+      console.log arguments
       logger.error arguments
       res.send 500
     )
@@ -566,6 +659,11 @@ module.exports = (app, io) ->
           doc.comments.push(comment)
           doc.save()
           res.json comment, 200
+
+          # send notification
+          auth.User.where('_id').in([req.user.id, doc.printer]).exec().then (docs)->
+            if docs.length
+              utils.sendNotification(io, docs, "Project <a href='/project/#{doc.id}'>#{doc.title}</a> has new comment.", 'New Comment', 'info')
         else
           res.json msg: "The message is required.", 400
       else
@@ -575,13 +673,12 @@ module.exports = (app, io) ->
       res.send 500
     )
 
-
   app.post '/project/pay/:id', decorators.loginRequired, (req, res, next) ->
     # Same as get /project/:id both printer who accepted and the owner can change this
     models.STLProject.findOne({_id: req.params.id, user: req.user.id}).exec().then( (doc) ->
       if doc and doc.validateNextStatus(models.PROJECT_STATUSES.PAYED[0])  # test if comments allowed
         printerPayment = parseFloat(doc.order.printerPayment)
-        businessPayment = parseFloat(doc.order.businessPayment)
+        businessPayment = parseFloat(doc.order.totalPrice)
 
         if req.body.shippingMethod == 'shipping' and doc.order.rate
           businessPayment = decimal.fromNumber(businessPayment + parseFloat(doc.order.rate.amount), 2).toString()
@@ -601,7 +698,8 @@ module.exports = (app, io) ->
             payload =
               requestEnvelope:
                 errorLanguage:  'en_US'
-              actionType:     'PAY'
+              actionType:     'PAY_PRIMARY'
+              payKeyDuration: 'P29D'
               currencyCode:   'EUR'
               feesPayer:      'EACHRECEIVER',
               memo:           'Payment for 3D printing in 3doers'
@@ -610,9 +708,9 @@ module.exports = (app, io) ->
               receiverList:
                 receiver: [
                   {
-                      email:  '3doers@gmail.com',
-                      amount: businessPayment,
-                      primary: 'false'
+                      email:  'mattia@3doers.it',
+                      amount: businessPayment,  # total price
+                      primary: 'true'
                   },
                   {
                       email:  user.email,
@@ -623,13 +721,20 @@ module.exports = (app, io) ->
                 ]
             paypalSdk.pay payload, (err, response) ->
               if err
+                console.log response.error
                 logger.error err
                 res.send 500
               else
-                res.redirect response.paymentApprovalUrl
+                doc.update {'order.payKey': response.payKey, 'order.secundaryPaid': false}, (error) ->
+                  if error
+                    console.log error
+                    logger.error error
+                  else
+                    res.redirect response.paymentApprovalUrl
       else
         res.send 400
     ).fail( (reason) ->
+      console.log reason
       logger.error reason
       res.send 500
     )
@@ -652,6 +757,10 @@ module.exports = (app, io) ->
               'order.deliveryMethod': req.session.deliveryMethod
             doc.update updatedData, (error) ->
               unless error
+                # send notification
+                utils.sendNotification(io, [user, req.user], "Project <a href='/project/#{doc.id}'>#{doc.title}</a> was paid.", 'Change Status', 'info')
+
+                mailer.send('mailer/project/status', {project: doc, user: req.user, site:settings.site}, {from: settings.mailer.noReply, to:[req.user.email], subject: settings.project.status.subject})
                 mailer.send('mailer/project/payed', {project: doc, user: user, site:settings.site}, {from: settings.mailer.noReply, to:[user.email], subject: settings.project.payed.subject})
 
               res.redirect "/project/#{req.params.id}"
@@ -678,6 +787,13 @@ module.exports = (app, io) ->
       doc.status = models.PROJECT_STATUSES.ARCHIVED[0]
       doc.save()
       res.redirect "/project/#{req.params.id}"
+
+      # send notification
+      auth.User.where('_id').in([req.user.id, doc.printer]).exec().then (docs)->
+        if docs.length
+          utils.sendNotification(io, docs, "Project <a href='/project/#{doc.id}'>#{doc.title}</a> was archived.", 'Status changed', 'info')
+          for user in docs
+            mailer.send('mailer/project/status', {project: doc, user: user, site:settings.site}, {from: settings.mailer.noReply, to:[user.email], subject: settings.project.status.subject})
     ).fail( ->
       logger.error arguments
       res.send 500
@@ -686,7 +802,6 @@ module.exports = (app, io) ->
   app.post '/project/printed/:id', decorators.loginRequired, (req, res, next) ->
     models.STLProject.findOne({_id: req.params.id, 'order.printer': req.user.id}).exec().then( (doc) ->
       if doc and doc.validateNextStatus(models.PROJECT_STATUSES.PRINTED[0])
-
         auth.User.findOne({_id: doc.order.printer}).exec().then( (printer) ->
           if printer
             if printer.printerAddress
@@ -701,8 +816,16 @@ module.exports = (app, io) ->
                     'order.transaction': transaction
 
                   doc.update updatedData, (error) ->
-                    res.redirect "/project/#{req.params.id}"
+                    unless error
+                      res.redirect "/project/#{req.params.id}"
                 )
+
+              # send notification
+              auth.User.where('id').in([req.user.id, doc.printer]).exec().then (docs)->
+                if docs.length
+                  utils.sendNotification(io, docs, "Project <a href='/project/#{doc.id}'>#{doc.title}</a> was printed.", 'Status changed', 'info')
+                  for user in docs
+                    mailer.send('mailer/project/status', {project: doc, user: user, site:settings.site}, {from: settings.mailer.noReply, to:[user.email], subject: settings.project.status.subject})
 
             else
               res.send "Printer doesn't have address, please contact support or printer to add address."
@@ -710,11 +833,13 @@ module.exports = (app, io) ->
             logger.warning "printer #{printer} do not exists"
             res.send "Printer don't exists, please contact support"
         ).fail( ->
-          logger.error arguments
+          console.log arguments
           res.send 500
         )
+      else
+        res.redirect "/project/#{req.params.id}"
     ).fail( ->
-      logger.error arguments
+      console.log arguments
       res.send 500
     )
 
@@ -736,15 +861,16 @@ module.exports = (app, io) ->
         logger.error err
         res.send 500
       else
-        if docs and docs.length > 0
-          res.render 'core/printing/requests', {projects: docs, toApply: false}
-        else
-          models.STLProject.find(status: models.PROJECT_STATUSES.PRINT_REQUESTED[0]).exec (err, docs) ->
-            if err
-              logger.error err
-              res.send 500
+        printerJobs = req.user.printerJobs || 1  # backward compatibility
+        models.STLProject.find(status: models.PROJECT_STATUSES.PRINT_REQUESTED[0]).exec (err, available) ->
+          if err
+            logger.error err
+            res.send 500
+          else
+            if docs and docs.length > printerJobs
+              res.render 'core/printing/requests', {projects: available, toApply: false}
             else
-              res.render 'core/printing/requests', {projects: docs, toApply: true}
+              res.render 'core/printing/requests', {projects: available, toApply: true}
 
 
   app.get '/printing/jobs', decorators.printerRequired, (req, res) ->
@@ -774,11 +900,17 @@ module.exports = (app, io) ->
                 printer: req.user.id
                 ammount: doc.order.ammount
                 price: doc.order.price
+                totalPrice: doc.order.totalPrice
                 printerPayment: doc.order.printerPayment
                 businessPayment: doc.order.businessPayment
                 placedAt: doc.order.placedAt
               doc.save()
               res.json msg: "Accepted"
+
+            # send notification
+            auth.User.where('_id').in([req.user.id, user.id]).exec().then (docs)->
+              if docs.length
+                utils.sendNotification(io, docs, "Project <a href='/project/#{doc.id}'>#{doc.title}</a> is being reviewed.", 'Status changed', 'info')
       else
         res.json msg: "Looks like someone accepted, try with another", 400
     ).fail( ->
@@ -795,6 +927,13 @@ module.exports = (app, io) ->
               doc.status = models.PROJECT_STATUSES.PRINT_ACCEPTED[0]
               doc.save()
               res.json msg: "Accepted"
+
+            # send notification
+            auth.User.where('_id').in([req.user.id, user.id]).exec().then (docs)->
+              if docs.length
+                utils.sendNotification(io, docs, "Project <a href='/project/#{doc.id}'>#{doc.title}</a> was accepted.", 'Status changed', 'info')
+                for user in docs
+                  mailer.send('mailer/project/status', {project: doc, user: user, site:settings.site}, {from: settings.mailer.noReply, to:[user.email], subject: settings.project.status.subject})
       else
         res.json msg: "Looks like someone accepted, try with another", 400
     ).fail( ->
@@ -802,18 +941,64 @@ module.exports = (app, io) ->
       res.send 500
     )
 
+  app.post '/'
+
   app.post '/printing/deny/:id', decorators.printerRequired, (req, res) ->
     models.STLProject.findOne({_id: req.params.id}).exec().then( (doc) ->
       if doc and doc.validateNextStatus(models.PROJECT_STATUSES.PRINT_REQUESTED[0])
         doc.status -= 1
         doc.save()
         res.json msg: "Denied"
+        # send notification
+        auth.User.where('_id').in([doc.user]).exec().then (docs)->
+          if docs.length
+            utils.sendNotification(io, docs, "Project <a href='/project/#{doc.id}'>#{doc.title}</a> is denied.", 'Status changed', 'info')
+
       if doc and doc.status == models.PROJECT_STATUSES.PRINT_ACCEPTED[0]
         res.json msg: "Looks like someone accepted, try with another", 400
     ).fail( ->
       logger.error arguments
       res.send 500
     )
+
+  app.post '/goshippo-webhook/', (req, res) ->
+    if req.body.object_id
+      models.STLProject.findOne('order.transaction.object_id': req.body.object_id).exec().then( (doc) ->
+        if doc
+          data = {}
+          data['order.transaction'] = req.body
+          # test many options
+          if req.body.tracking_status and req.body.tracking_status == "TRANSIT" and not doc.order.secundaryPaid
+            data['order.secundaryPaid'] = true
+
+            paypalSdk = new Paypal
+              userId: settings.paypal.adaptive.user
+              password:  settings.paypal.adaptive.password
+              signature: settings.paypal.adaptive.signature
+              appId: settings.paypal.adaptive.appId
+              sandbox:   settings.paypal.adaptive.debug
+
+            payload =
+              payKey: doc.order.payKey
+              requestEnvelope:
+                errorLanguage:  'en_US'
+
+            paypalSdk.executePayment payload, ->
+              console.log arguments
+
+          doc.update data, (error) ->
+            if error
+              console.log error
+              logger.error error
+            else
+              res.send 200
+        else
+          res.send 404
+      ).fail( ->
+        res.send 500
+      )
+    else
+      res.send 400
 
   ###############################################
   # Socket IO event handlers
@@ -854,6 +1039,19 @@ module.exports = (app, io) ->
       socket.emit 'error', msg: "No project was not sent"
   )
 
+  io.of('/notification').on('connection', (socket) ->
+    if socket.handshake.query.user?
+      auth.User.findOne(_id: socket.handshake.query.user).exec().then( (doc) ->
+        if doc
+          socket.join("notification-#{doc._id.toHexString()}")
+      ).fail( (reason) ->
+        logger.error reason
+        socket.emit 'error', msg: "Error searching for project. Mongo Error"
+      )
+    else
+      socket.emit 'error', msg: "No project was not sent"
+  )
+
   ###############################################
   # Some functions
   ###############################################
@@ -863,16 +1061,16 @@ module.exports = (app, io) ->
       if not err and  not stderr
         try
           result = JSON.parse(stdout)
-
           # Calculate price
-          material_price = 0.5  # ABS
+          material_price = if doc.material == 'ABS' then 0.5 else 0.5 * 1.1  # ABS
           density = doc.density
           fixed_cost = 8
           # outer shell volume - this calculate the ammount of material used for
           # the outher shell of the object that is printed at full density
           # I assume a thickness of 0.09 mm sperimentally checked
+          # surface is in mm2 need to convert to cm2 for mattia formula
 
-          v_s = result.surface * 0.09
+          v_s = result.surface / 100 * 0.09
 
           # calculate price for outer shell
           p_vs = v_s * density * material_price
@@ -898,8 +1096,19 @@ module.exports = (app, io) ->
           doc.dimension = result.dimension
           doc.status = models.PROJECT_STATUSES.PROCESSED[0]
           doc.price = decimal.fromNumber(price, 2)  # formula from doc sent by mattia
-          doc.surface = result.surface
+          doc.surface = result.surface / 100
           doc.bad = false
+
+          if result.dimension.width > models.PROJECT_BOUNDARIES.WIDTH[0]
+            doc.checkWidth = false
+
+          if result.dimension.length > models.PROJECT_BOUNDARIES.LENGTH[0]
+            doc.checkLenght = false
+
+          if result.dimension.height > models.PROJECT_BOUNDARIES.HEIGHT[0]
+            doc.checkHeight = false
+
+
           doc.save()
         catch e
           logger.error e
@@ -919,10 +1128,7 @@ module.exports = (app, io) ->
 
 
   calculateOrderPrice = (basePrice, ammount) ->
-    if (basePrice<=10)
-      decimal.fromNumber((3 + 2*basePrice) * ammount, 2)
-    else
-      decimal.fromNumber((23 + 10*Math.log(basePrice-9)) * ammount, 2)
+      decimal.fromNumber(basePrice * ammount, 2)
 
 # app.get "/", (req, res) ->
 

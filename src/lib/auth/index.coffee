@@ -24,7 +24,7 @@ module.exports = (app) ->
     },
     (username, password, done) ->
       User = models.User
-      User.findOne {username: username, active: true}, (err, user) ->
+      User.findOne {$or: [{username: username}, {email: username}], active: true}, (err, user) ->
         if err
           return done(err)
         if not user
@@ -46,7 +46,7 @@ module.exports = (app) ->
 
   app.post '/accounts/login', (req, res, next) ->
 
-    req.assert('username', regex: "Invalid username.").regex(/^[a-z0-9_-]{3,16}$/)
+    req.assert('username', regex: "Is required.").len(2)
     req.assert('password', len: 'Should have between 6 - 20 characters.').len(6, 20)
 
     errors = req.validationErrors(true)
@@ -66,7 +66,7 @@ module.exports = (app) ->
 
             req.logIn user, (err) ->
               return next(err)  if err
-              res.redirect '/'
+              res.redirect '/profile/projects'
           else
             res.render 'accounts/login', { error: "Invalid username or password", username: req.param('username'), password: req.param('password') }
       )(req, res, next)

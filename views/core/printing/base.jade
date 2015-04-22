@@ -15,15 +15,16 @@ block body
       ul.nav.nav-tabs
         li#printing_request
           a(href="/printing/requests")
-            span Available Jobs
+            span.resize-title WorkPlace
         li#jobs_available
           a(href="/printing/jobs")
-            span Accepted Jobs
+            span.resize-title WorkSpace
+        li#proposal
+          a(href="/design/projects")
+            span.resize-title On Design
         li#archived
           a(href="/printing/archived")
-            span Archived
+            span.resize-title Archived
       .line
 
     block content-profile
-
-  include ../../includes/publicity

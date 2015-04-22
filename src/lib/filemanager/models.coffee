@@ -8,7 +8,7 @@ ObjectId = Schema.ObjectId
 module.exports.PROJECT_STATUSES = PROJECT_STATUSES =
   UPLOADED: [1, 'uploaded']
   PREACCEPTED: [2, 'preaccepted']
-  ACCEPTED: [3, 'accpeted']
+  ACCEPTED: [3, 'accepted']
   PAID: [4, 'paid']
   FINISHED: [5, 'finished']
 

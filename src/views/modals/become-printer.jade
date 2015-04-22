@@ -1,0 +1,20 @@
+#becomePrinter.modal.fade
+    .modal-dialog
+        .modal-content
+            .modal-header
+                .modal-title.row
+                    h4 Become a Printer
+                .modal-body.container
+                  .col-md-5
+                    form#becomePrinterForm(action='/become', method='POST', role='form', accept-charset='utf-8')
+                      input(type='hidden', name='authenticity_token')
+                      input(type='hidden', name='_csrf', value=csrfToken)
+                      .form-group
+                        input#printerModel.form-control.input-text.resize-input-form(placeholder='Printer Model', name='printer_model')
+                      .form-group
+                        input#cityBecome.form-control.input-text.resize-input-form(placeholder='City', name='city')
+                      .form-group
+                        input#howlongBecome.form-control.input-text.resize-input-form(placeholder='How long have you been printing?', name='howlong')
+
+                        button.btn-default.btn-lg(type='submit') Become!
+                .modal-footer

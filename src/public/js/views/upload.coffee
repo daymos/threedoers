@@ -13,8 +13,8 @@ $(document).ready ->
   $.ajaxUploadSettings.name = "thumbnail"
 
   # Set promptzone
-  $("#clickable").ajaxUploadPrompt
-    url: "./upload"
+  $("#clickable-stl").ajaxUploadPrompt
+    url: "/project/upload"
 
     beforeSend: ->
       $("#promptzone").hide()

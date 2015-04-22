@@ -1,0 +1,49 @@
+
+extends ../core/base
+
+block title
+    | Notifications
+
+
+block body
+  .section.primary
+    .container
+      .row
+          if user
+            h1 Notifications Page of #{user.username}
+
+  .container.margin-header-10
+    .col-lg-12
+      if (userNotif.length == 0)
+        p.info-3d There is not any notification
+        -function prettyDate(dateString){
+            -var date = new Date(dateString);
+            -var d = date.getDate();
+            -var monthNames = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ];
+            -var m = monthNames[date.getMonth()];
+            -var y = date.getFullYear();
+            -var h = date.getHours()
+            -var mm = date.getMinutes()
+            -return d+'/'+m+'/'+y+' at '+h+':'+mm;
+        -}
+      ul#list-group-notif.list-group
+        - each notify in userNotif
+          a(href= '#{notify.refertourl}')
+              if (notify.read == false)
+                li(id=notify.id).list-group-item.col-lg-10.active-greeen-3doers Project #{notify.title} has changed its status @#{prettyDate(notify.createAt)}
+              else
+                li(id=notify.id).list-group-item.col-lg-10 Project #{notify.title} has changed its status @#{prettyDate(notify.createAt)}
+
+  div
+    .container
+      br
+      br
+      br
+      br
+      br
+      br
+      include ../includes/publicity
+      br
+      br
+      br
+      br

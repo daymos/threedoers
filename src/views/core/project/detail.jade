@@ -5,13 +5,41 @@ block title
   |  Your Project
 
 block body
+  div(role='dialog',tabindex='-1',aria-labelledby="create a profile",aria-hidden="true").modal.fade#pleaseLogin
+        div.modal-dialog
+            div.modal-content
+                div.modal-body.container-fluid
+                    div.row-fluid
+                        button(type="button",data-dismiss="modal",aria-label="Close").close
+                            span(aria-hidden="true") &times;
+
+                    div.row-fluid.margin-top-40.text-center create a profile to proceed with your order
+                    div.row-fluid.margin-top-40.text-center.center-block
+                        div.col-sm-6.col-sm-offset-3
+                            a(href='/accounts/signup').btn-landing.btn-block.btn-primary-landing.no-border.margin-bottom-20 SIGN UP
   div
-    .container
+
+      -function prettyDate(dateString){
+      -var date = new Date(dateString);
+      -var d = date.getDate();
+      -var monthNames = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ];
+      -var m = monthNames[date.getMonth()];
+      -var y = date.getFullYear();
+      -var h = date.getHours()
+      -var mm = date.getMinutes()
+      -return d+'/'+m+'/'+y+' at '+h+':'+mm;
+      -}
+   .container
+
+
+    .section.primary
       .row
         .col-md-6
-          h1#title.page-title(data-type="text", data-url="/project/title/#{project.id}", data-title="Enter the Title") #{ project.title }
-      - if (user.printer == 'accepted' && project.status > statuses.PRINT_REQUESTED[0])
-        .row
+          h1#title.page-header.text-ellipsis(data-type="text", data-url="/project/title/#{project.id}", data-title="Enter the Title") #{ project.title }
+        .col-md-6.margin-header-10
+          h2.subtitle-upload Status: #{project.humanizedStatus()}
+      - if (typeof(user) !== 'undefined'&&user.printer == 'accepted' && project.statusß > statuses.PRINT_REQUESTED[0])
+        .row.margin-header-10
           .col-md-6
             .back-link
               a(href='/printing/jobs')
@@ -22,23 +50,11 @@ block body
               a(href='/#{ project.file }')
                 | Scarica Qui Il File
                 img(src='/img/icon_download.png')
-      br
-      br
-      br
-      .preview-print
+      .preview-print.col-md-6
         #wrapper-canvas
           canvas#cv
-      br
-      br
-      br
-      br
-      br
-      br
 
-  // processed
-  - if (project.status == statuses.PROCESSING[0] || project.status == statuses.PROCESSED[0])
-    .section.primary
-      .container
+      - if (project.status == statuses.PROCESSING[0] || project.status == statuses.PROCESSED[0])
         //- p
         //-   span STATUS:&nbsp;
         //-   span#status
@@ -51,15 +67,16 @@ block body
             .col-md-4
               .form-group
                 select.form-control#color-chooser
-                  option(selected='selected', disabled='disabled') SELECT A COLOR *
+                  option(selected='selected', disabled='disabled') Select a color *
                   - for color in colors
                     option(value="#{color}") #{color}
               .form-group
-                select.form-control
-                  option(value="abs") ABS
+                select.form-control#material-chooser
+                  - for material in materials
+                    option(value="#{material[1]}") #{material[1]}
               .form-group
                 input(type='hidden', name='authenticity_token')
-                input#ammount.form-control(type='text', min='1', placeholder='HOW MANY ITEMS? *', name='ammount')
+                input#ammount.form-control(type='text', min='1', placeholder='How many items? *', name='ammount')
               p
                 span OBJECT VOLUME:&nbsp;
                 span#volume.object-volume
@@ -69,264 +86,271 @@ block body
                 | ORDER PRICE:&nbsp;
                 span#order-price  Processing
             .col-md-4
-              button.btn.btn-default.btn-lg.btn-block(type='submit') PLACE ORDER
+              if user
+                button.btn-default.btn-lg.grey-3doers(type='submit') Place Order
+              else
+                button.btn-default.btn-lg.grey-3doers(type='button',data-toggle='modal',data-target="#pleaseLogin") Place Order
+            .col-md-4.margin-header-10.error-message
+              - if (! project.checkHeight)
+                  p too height
+              - if (! project.checkLenght)
+                  p too lenght
+              - if (! project.checkWidth)
+                 p too width
         br
 
-  - if (!(project.status == statuses.PROCESSING[0] || project.status == statuses.PROCESSED[0]))
-    .section.primary
-      .container
-        .row
+      - if (!(project.status == statuses.PROCESSING[0] || project.status == statuses.PROCESSED[0]))
+       .row
           .col-md-3.col-sm-6
-            .printer-properties
-              h4 Status
-              p #{project.humanizedStatus()}
-              br
-              img(src='/img/icons_#{project.dasherizedStatus()}_second.png')
-          .col-md-3.col-sm-6
-            .printer-properties
-              h4 Volume:
+              h4 Volume
               p #{project.volume}
               h4 Density
               p #{project.density}
               h4 Weight
               p #{project.weight}
               h4 Material
-              p ABS (Now only this)
-          .col-md-3.col-sm-6
-            .printer-properties
-              h4 Ammount:
-              p #{project.order.ammount}
-              h4 Dimension:
+              p #{project.material} (Now only this)
+              h4 Dimension
+
               if project.dimension
-                p Width: #{project.dimension.width} Height: #{project.dimension.height} Length: #{project.dimension.length}
-              h4 Price
-              p
-                if user.id == project.order.printer
-                  strong 3Doers: #{project.order.businessPayment} EURO
-                  br
-                  strong You: #{project.order.printerPayment} EURO
-                else
-                  strong #{project.order.price} EURO
+                p Width: #{project.dimension.width}
+                p Height: #{project.dimension.height}
+                p Length: #{project.dimension.length}
+
+
           .col-md-3.col-sm-6
-            .printer-properties
+              h4 Ammount
+              p #{project.order.ammount}
               h4 Unit
               p #{project.unit}
               h4 Resolution
               p #{project.order.resolution} # this still on development
+
+              h4.tile Price
+                p
+                  if user.id == project.order.printer
+
+                    strong Taxes: #{project.order.taxes} EURO
+                    br
+                    strong 3Doers: #{project.order.businessPayment} EURO
+                    br
+                    strong You: #{project.order.printerPayment} EURO
+                    br
+                    strong Total Price: #{project.order.totalPrice}
+                  else
+
+                    strong Taxes: #{project.order.taxes} EURO
+                    br
+                    strong 3Doers: #{project.order.businessPayment} EURO
+                    br
+                    strong Printer: #{project.order.printerPayment} EURO
+                    br
+                    strong Total Price: #{project.order.totalPrice}
+
               if project.order.shippingCharge
                 h4 Shipping
                 p #{project.order.shippingCharge}
-    br
-    br
-    br
-    - if (user.printer == 'accepted' && project.status == statuses.PRINT_REVIEW[0])
-      div
-        .container
-          .row
-            .col-md-3.col-sm-6
-              a#accept.btn.btn-lg.btn-default.btn-goto(href='/printing/accept/#{project.id}')
-                span ACCEPT
-                  br
-                  | THIS WORK
-              br
-              br
-              br
-            .col-md-3.col-md-offset-1.col-sm-6
-              a#deny.btn.btn-lg.btn-red.btn-goto(href='/printing/deny/#{project.id}')
-                span DENY
-                  br
-                  | THIS WORK
-              br
 
-    - if (project.status == statuses.PRINT_ACCEPTED[0] && user.id == project.order.printer)
-      .section.orange
-        .container
-          h1.h1-alert-payment
-            span ATTENDI IL PAGAMENTO!
+              if project.order.rate
+                h4 Shipping
+                p #{project.order.rate.amount_local} #{project.order.rate.currency_local}
+      br
+      br
+      br
+
+      - if (typeof(user) !== 'undefined'&&user.printer == 'accepted' && project.status == statuses.PRINT_REVIEW[0])
+          .row.margin-header-10
+            .col-md-3.col-sm-6.margin-header-10
+              a#accept.btn-default.btn-lg.btn-3doers-new(href='/printing/accept/#{project.id}')
+               b Accept Work
+
+            .col-md-3.col-md-offset-1.col-sm-6.margin-header-10
+              a#deny.btn-default.btn-lg.btn-3doers-new(href='/printing/deny/#{project.id}')
+               b Deny Work
+      - if (project.status == statuses.PRINT_ACCEPTED[0] && user.id == project.order.printer)
+        .section.orange.margin-header-10
+          .container
+            h1.h1-alert-payment
+              span ATTENDI IL PAGAMENTO!
+                br
+                | RICEVERAI UNA MAIL DI CONFERMA
+              img(src='/img/alert_payment.png', alt='')
+      - if (project.status == statuses.PRINT_ACCEPTED[0] && user.id == project.user)
+        .section.blue.margin-header-10
+          .container
+            form#payment-form
+              h1.h1-blue-alert
+                img(src='/img/icon_map.png', alt='')
+              .row
+                .col-md-6.col-sm-6
+                  .radio.radio-large
+                    input#checkbox1(type='radio', name='shipping', value='shipping', checked)
+                    label(for='checkbox1') Richiedi spedizione
+                .col-md-6.col-sm-6
+                  //- .radio.radio-large
+                  //-   input#checkbox2(type='radio', name='shipping', value='pickup')
+                  //-   label(for='checkbox2') Ritiro a mano
               br
-              | RICEVERAI UNA MAIL DI CONFERMA
-            img(src='/img/alert_payment.png', alt='')
+              button.btn.btn-lg.btn-white.btn-small(type='submit')
+                span PAGA
 
-    - if (project.status == statuses.PRINT_ACCEPTED[0] && user.id == project.user)
-      .section.blue
-        .container
-          form#payment-form
-            h1.h1-blue-alert
-              img(src='/img/icon_map.png', alt='')
-            .row
-              .col-md-6.col-sm-6
-                .radio.radio-large
-                  input#checkbox1(type='radio', name='shipping', value='shipping', checked)
-                  label(for='checkbox1') Richiedi spedizione
-              .col-md-6.col-sm-6
-                //- .radio.radio-large
-                //-   input#checkbox2(type='radio', name='shipping', value='pickup')
-                //-   label(for='checkbox2') Ritiro a mano
-            br
-            button.btn.btn-lg.btn-white.btn-small(type='submit')
-              span PAGA
-
-          form#hidden-pay-form(action="/project/pay/#{project.id}", method="post")
-            input(type='hidden', name='_csrf', value=csrfToken)
-            input#shippingAddress(type='hidden', name='shippingAddress')
-            input#shippingMethod(type='hidden', name='shippingMethod')
-            input#shippingRate(type='hidden', name='shippingRate')
-
-    - if (project.status == statuses.PAYED[0] && user.id == project.order.printer)
-      .section
-        .container
-          .row
-            form.form-inline(role="form", action="/project/start-printing/#{project.id}", method="post").col-md-12
+            form#hidden-pay-form(action="/project/pay/#{project.id}", method="post")
               input(type='hidden', name='_csrf', value=csrfToken)
-              input(type="submit", value="Print Order").btn.btn-lg.btn-default.btn-goto
-
-    - if (project.status == statuses.PRINTING[0] && user.id == project.order.printer)
-      .section
-        .container
-          .row
-            form.form-inline(role="form", action="/project/printed/#{project.id}", method="post").col-md-12
-              input(type='hidden', name='_csrf', value=csrfToken)
-              input(type="submit", value="Order Printed").btn.btn-lg.btn-default.btn-goto
-
-    - if (project.status == statuses.SHIPPING[0] && user.id == project.user)
-      .section
-        .container
-          .row
-            form.form-inline(role="form", action="/project/archive/#{project.id}", method="post").col-md-12
-              input(type='hidden', name='_csrf', value=csrfToken)
-              input(type="submit", value="Archive").btn.btn-lg.btn-default.btn-goto
-
-    - if (project.status == statuses.PRINTED[0] && user.id == project.order.printer)
-      .section
-        .container
-          .row
-            form.form-inline(role="form", action="/project/archive/#{project.id}", method="post").col-md-12
-              input(type='hidden', name='_csrf', value=csrfToken)
-              input(type="submit", value="Picked up").btn.btn-lg.btn-default.btn-goto
-
-    - if (project.status >= statuses.PRINT_REVIEW[0])  // if project was accepted
-        br
-        br
-        br
-        .container
-          .row
-            .col-md-7
-              .comment-title
-                img(src='/img/icons_comment_2.png', alt='')
-                h1.page-title
-                  span Comments Here
-                h1.page-title
-                  span For Your Project
-          br
-          br
-          br
-          .row
-            .col-md-8#comment-list
-              - for comment in project.comments
-                .media
-                  a.pull-left(href='#')
-                    img.media-object(src='/#{comment.photo}', alt='', width='78', height='78')
-                  .media-body
-                    p
-                      | #{comment.content}
-                  .media-meta
-                    | by&nbsp;
-                    span.author #{comment.username}&nbsp;
-                    | at&nbsp;
-                    span.date #{comment.createdAt}
-        br
-        .section.primary
+              input#shippingAddress(type='hidden', name='shippingAddress')
+              input#shippingMethod(type='hidden', name='shippingMethod')
+              input#shippingRate(type='hidden', name='shippingRate')
+      - if (project.status == statuses.PAYED[0] && user.id == project.order.printer)
+        .section
           .container
             .row
-              .col-md-10.col-sm-10
-                textarea#comment-text.comment.form-control(rows=6)
-              .col-md-2.col-sm-2
-                button.btn.btn-lg.btn-default.btn-goto#comment-button
-                  span SEND
+              form.form-inline(role="form", action="/project/start-printing/#{project.id}", method="post").col-md-12
+                input(type='hidden', name='_csrf', value=csrfToken)
+                input(type="submit", value="Print Order").btn-default.btn-lg.btn-3doers-new
 
-  br
-  br
-  br
-  br
+      - if (project.status == statuses.PRINTING[0] && user.id == project.order.printer)
+        .section
+          .container
+            .row
+              form.form-inline(role="form", action="/project/printed/#{project.id}", method="post").col-md-12
+                input(type='hidden', name='_csrf', value=csrfToken)
+                input(type="submit", value="Order Printed").btn-default.btn-lg.btn-3doers-new
 
-  include ../../includes/publicity
+      - if (project.status == statuses.SHIPPING[0] && user.id == project.order.printer)
+        .section
+          .container
+            .row
+              - if (project.order && project.order.transaction && project.order.transaction.label_url)
+                a(href="#{project.order.transaction.label_url}", target="_blank").btn-default.btn-lg Shipping label
+              - else
+                a(href="/project/update/#{project.id}").btn-default.btn-lg Get label
 
-  - if (project.status == statuses.PRINT_ACCEPTED[0] && user.id == project.user)
-    #payment-modal.modal.modal-3d.fade.in
-      .modal-dialog
-        .modal-content
-          .modal-header
-            button.close(type='button', data-dismiss='modal')
-              span(aria-hidden='true') &times;
-                span.sr-only Close
-            h4.modal-title Shipping
-          .modal-body
-            div#address-selection
-              h5 Select the address where we has to ship.
-              // Nav tabs
-              ul.nav.nav-tabs(role='tablist')
-                li.active
-                  a(href='#saved', role='tab', data-toggle='tab') Saved
-                li
-                  a(href='#new', role='tab', data-toggle='tab') New
-              //
-                 Tab panes
-              .tab-content
-                #saved.tab-pane.active.fade.in
-                  - if (user.shippingAddresses.length > 0)
-                    for address in user.shippingAddresses
-                      div
-                        dl
-                          - for (key in address._doc)
-                            if !key.match(/^object_/)
-                              dt #{ key }
-                              dd #{ address[key] }
 
-                        a.select-saved-address(data-id="#{ address.id }", href="#") Select
-                  - else
-                    | you don't have saved any address
+      - if (project.status == statuses.SHIPPING[0] && user.id == project.user)
+        .section
+          .container
+            .row
+              form.form-inline(role="form", action="/project/archive/#{project.id}", method="post").col-md-12
+                input(type='hidden', name='_csrf', value=csrfToken)
+                input(type="submit", value="Archive").btn-default.btn-lg.btn-3doers-new
+
+      - if (project.status == statuses.PRINTED[0] && user.id == project.order.printer)
+        .section
+          .container
+            .row
+              form.form-inline(role="form", action="/project/archive/#{project.id}", method="post").col-md-12
+                input(type='hidden', name='_csrf', value=csrfToken)
+                input(type="submit", value="Picked up").btn-default.btn-lg.btn-3doers-new
+
+
+      - if (project.status >= statuses.PRINT_REVIEW[0])  // if project was accepted
+          .container.margin-header-30
+              .row
+                .col-md-7
+                  .comment-title
+                    h4.comment-title-new Comments
+              .row
+                .col-md-12#comment-list
+                  - for comment in project.comments
+                    - var myclass=(user.username===comment.username ? 'mine-chat':'other-chat')
+                      div(class=myclass).media
+                        a.pull-left(href='#')
+                          img.media-object(src='/#{comment.photo}', alt='', width='78', height='78')
+                        .media-body
+                          p
+                            | #{comment.content}
+                        .media-meta
+                          | by&nbsp;
+                          span.author #{comment.username==user.username?"you":comment.username}&nbsp;
+                          | at&nbsp;
+                          span.date #{prettyDate(comment.createdAt)}
+              br
+              .section.primary
+                .container
+                  .row
+                    .col-md-6
+                      textarea#comment-text.comment.form-control(rows=6)
+                    .col-md-2.col-sm-2
+                      button.btn-default.btn-lg.btn-3doers-new#comment-button SEND
+
+
+      - if (project.status == statuses.PRINT_ACCEPTED[0] && user.id == project.user)
+        #payment-modal.modal.modal-3d.fade.in
+          .modal-dialog
+            .modal-content
+              .modal-header
+                button.close(type='button', data-dismiss='modal')
+                  span(aria-hidden='true') &times;
+                    span.sr-only Close
+                h4.modal-title Shipping
+              .modal-body
+                div#address-selection
+                  h5 Select the address where we has to ship.
+                  // Nav tabs
+                  ul.nav.nav-tabs(role='tablist')
+                    li.active
+                      a(href='#saved', role='tab', data-toggle='tab') Saved
+                    li
+                      a(href='#new', role='tab', data-toggle='tab') New
+                  //
+                     Tab panes
+                  .tab-content
+                    #saved.tab-pane.active.fade.in
+                      - if (user.shippingAddresses.length > 0)
+                        for address in user.shippingAddresses
+                          address.col-md-4
+                            strong #{address['company']}
+                            br
+                            |#{address['street1']}
+                            br
+                            |#{address['city']}, #{address['zip']}, #{address['country']}
+                            br
+                            |#{address['phone']}
+                            br
+                            a.select-saved-address.btn-default.btn-xs.grey-3doers(data-id="#{ address.id }", href="#") Select
+                      - else
+                        | you don't have saved any address
+                      button.close-payment-modal Cancel
+                    #new.tab-pane.fade
+                      form
+                        .form-group
+                          input.form-control.input-text(type='text', placeholder='CONTACT', name='name')
+                        .form-group
+                          input.form-control.input-text(type='text', placeholder='COMPANY', name='company')
+                        .form-group
+                          input.form-control.input-text(type='text', placeholder='ADDRESS 1', name='street1')
+                        .form-group
+                          input.form-control.input-text(type='text', placeholder='BUILDING NO (OPTIONAL)', name='street_no')
+                        .form-group
+                          input.form-control.input-text(type='text', placeholder='ADDRESS 2 (OPTIONAL)', name='street2')
+                        .form-group
+                          input.form-control.input-text(type='text', placeholder='CITY', name='city')
+                        .form-group
+                          input.form-control.input-text(type='text', placeholder='STATE', name='state')
+                        .form-group
+                          input.form-control.input-text(type='text', placeholder='ZIP CODE', name='zip_code')
+                        .form-group
+                          input.form-control.input-text(type='text', placeholder='PHONE NO.', name='phone_no')
+                        .form-group
+                          select(name="country")
+                            for country in countries
+                              option#country(value='#{ country.abbr }') #{ country.name }
+
+                        .text-right
+                          button#validate-address.btn.btn-default.btn-lg.btn-xsmall
+                            span Validate
+                      button.close-payment-modal Cancel
+                div#pay-values(style='display: none;')
+                  h5 Pay Now
+                  p Price:&nbsp;
+                    span#pay-product-price
+                  p Estimated Shipping:&nbsp;
+                    span#pay-shipping-price
+                  hr
+                  p Estimated Total:&nbsp;
+                    span#pay-total-price
+
                   button.close-payment-modal Cancel
-                #new.tab-pane.fade
-                  form
-                    .form-group
-                      input.form-control.input-text(type='text', placeholder='CONTACT', name='name')
-                    .form-group
-                      input.form-control.input-text(type='text', placeholder='COMPANY', name='company')
-                    .form-group
-                      input.form-control.input-text(type='text', placeholder='ADDRESS 1', name='street1')
-                    .form-group
-                      input.form-control.input-text(type='text', placeholder='BUILDING NO (OPTIONAL)', name='street_no')
-                    .form-group
-                      input.form-control.input-text(type='text', placeholder='ADDRESS 2 (OPTIONAL)', name='street2')
-                    .form-group
-                      input.form-control.input-text(type='text', placeholder='CITY', name='city')
-                    .form-group
-                      input.form-control.input-text(type='text', placeholder='STATE', name='state')
-                    .form-group
-                      input.form-control.input-text(type='text', placeholder='ZIP CODE', name='zip_code')
-                    .form-group
-                      input.form-control.input-text(type='text', placeholder='PHONE NO.', name='phone_no')
-                    .form-group
-                      select(name="country")
-                        for country in countries
-                          option#country(value='#{ country.abbr }') #{ country.name }
-
-                    .text-right
-                      button#validate-address.btn.btn-default.btn-lg.btn-xsmall
-                        span Validate
-                  button.close-payment-modal Cancel
-            div#pay-values(style='display: none;')
-              h5 Pay Now
-              p Price:&nbsp;
-                span#pay-product-price
-              p Estimated Shipping:&nbsp;
-                span#pay-shipping-price
-              hr
-              p Estimated Total:&nbsp;
-                span#pay-total-price
-
-              button.close-payment-modal Cancel
-              button#pay-payment-modal.btn.btn-default.btn-lg.btn-xsmall Pay
+                  button#pay-payment-modal.btn.btn-default.btn-lg.btn-xsmall Pay
 
 block extra-headers
   meta(name="csrf-token", content="#{csrfToken}")
@@ -342,9 +366,11 @@ block scripts
       filename: "#{project.file}",
       color: "#{project.color?project.color:'black'}",
       density: "#{project.density}",
+      material: "#{project.material}",
       orderPrice: #{project.order?project.order.price:0},
       hasImage: #{project.image?true:false}
     };
+
     var port = "#{io.port}";
     $(document).ready(
       function() {
@@ -370,4 +396,3 @@ block scripts
 
     //Initial call
     respondCanvas();
-

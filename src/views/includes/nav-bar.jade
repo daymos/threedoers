@@ -1,0 +1,69 @@
+
+nav.navbar.nav-3doers(class=(nav!='/home'?'grey-bg':''))
+    .container.pading-left-0
+
+        #navbar-content
+                a(href='/').col-md-1.nav-logo-resp
+                    img(src='/img/logo.png').img-responsive
+                .col-md-11.row
+                if user
+                        .col-md-1.col-sm-2.col-md-offset-8.col-sm-offset-7
+                          .logo-wrapper.pull-right.margin-top-20
+                             a(href='/notifications')
+                                 i#notifID.glyphicon.glyphicon-bell.grey-3doers.icon-dimension
+                                    //div#notifID.circle.pull-right
+                        .col-sm-1
+                            .logo-wrapper.pull-right.thumbnail.profile-thumb
+                                a(href='/')
+                                  - if (user.photo)
+                                    img(src='/#{ user.photo }')
+                                  - else
+                                    img(src='/img/edit_photo_placeholder.png?1396277523', alt='profile image')
+                else
+
+                    if nav=='/home'||nav=='/'
+                        ul.nav.navbar-nav.navbar-left.margin-top-15
+                            li
+                                a.menu-item.padding-0.no-border
+                            li
+                                a(href='#howItWorks',data-scroll='howItWorks').menu-item How it works
+                            li
+                                a(href='#join',data-scroll='join').menu-item Join 3doers
+                            li
+                                a(href='#contact',data-scroll='contact').menu-item Contact us
+
+                    ul.nav.navbar-nav.navbar-right.margin-top-15
+
+                        li
+                            a(href='/accounts/login',class=(nav=='/accounts/login'?'menu-item-green-active':'')).menu-item-green Log in
+
+                        li
+                            span.menu-span.menu-item-green /
+
+                        li
+                            a(href='/accounts/signup',class=(nav=='/accounts/signup'?'menu-item-green-active':'')).menu-item-green Sign in
+                        li
+                            div.dropdown.margin-top-7
+                                a(href='#',data-toggle='dropdown',aria-expanded='true').dropdown-toggle.no-focus#landingDrop
+                                    img(src='/img/icon/share_icon.svg')
+                                ul(role='menu',aria-labelledby='landingDropdown').dropdown-menu.dropdown-nav.right-bottom-border
+                                    li(role='presentation').dropdown-header.menu-item-color.margin-top-10.text-14 Spread the voice
+                                    li(role='presentation').margin-top-10
+                                        a(role='menuitem',tab-index='-1',href='#')
+                                            i.fa.fa-facebook.lite-grey-color.margin-right-20
+                                            span.lite-grey-color.text-14.weight-lite Share on facebook
+                                    li(role='presentation').margin-top-10
+                                        a(role='menuitem',tab-index='-1',href='#')
+                                            i.fa.fa-twitter.lite-grey-color.margin-right-20
+                                            span.lite-grey-color.text-14.weight-lite Share on twitter
+                                    li(role='presentation').margin-top-10
+                                        a(role='menuitem',tab-index='-1',href='#')
+                                            i.fa.fa-google.lite-grey-color.margin-right-20
+                                            span.lite-grey-color.text-14.weight-lite Share on facebook
+
+
+
+script
+
+
+

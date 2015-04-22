@@ -1,6 +1,8 @@
 mongoose = require 'mongoose'
 gridfs = require '../gridfs'
 inflection = require 'inflection'
+models = require('./models')
+modelsNot = require('../notification/models')
 
 Schema = mongoose.Schema
 ObjectId = Schema.ObjectId
@@ -22,6 +24,12 @@ module.exports.PROJECT_STATUSES = PROJECT_STATUSES =
   SHIPPING: [9, 'shipping']
   ARCHIVED: [10, 'archived']
 
+module.exports.PROJECT_BOUNDARIES = PROJECT_BOUNDARIES =
+  WIDTH:  [1, 'width boundary']
+  HEIGHT: [1,'height boundary']
+  LENGTH: [1,'lenght boundary']
+
+
 module.exports.PROJECT_COLORS = PROJECT_COLORS =
   BLACK: 'black'
   WHITE: 'white'
@@ -35,6 +43,10 @@ module.exports.PROJECT_DENSITIES = PROJECT_DENSITIES =
   MEDIUM: [0.5, 'medium']
   HIGH: [0.75, 'high']
   COMPLETE: [1.01, 'complete']
+
+module.exports.PROJECT_MATERIALS = PROJECT_MATERIALS =
+  ABS: [1.01, 'ABS']
+  PLA: [1.24, 'PLA']
 
 ###############################################
 # Models
@@ -90,7 +102,7 @@ STLProject = new Schema
 
   density:
     type: Number
-    default: PROJECT_DENSITIES.COMPLETE[0]
+    default: PROJECT_MATERIALS.ABS[0]
     required: true
 
   weight:
@@ -109,7 +121,7 @@ STLProject = new Schema
 
   user:
     type: ObjectId
-    required: true
+    required: false
 
   color:
     type: String
@@ -144,6 +156,18 @@ STLProject = new Schema
 
   createdAt:
     type: Date
+
+  checkWidth:
+    type: Boolean
+    default: true
+
+  checkLenght:
+    type: Boolean
+    default: true
+
+  checkHeight:
+    type: Boolean
+    default: true
 
 
 
@@ -197,12 +221,27 @@ STLProject.pre 'save', (next) ->
   @editable = @status in [PROJECT_STATUSES.PROCESSED[0], PROJECT_STATUSES.PRINT_REVIEW[0]]
   now = new Date()
   @createdAt = now  unless @createdAt
+  that = @
+  models.STLProject.findOne({_id: @id}).exec().then( (doc) ->
+    if (doc.status != that.status and doc.status != 1)
+      notif = new modelsNot.Notification()
+      notif.type = modelsNot.NOTIFICATION_STATE.CHANGE_STATUS[0]
+      notif.creator = that.id
+      notif.title = that.title
+      notif.recipient = that.user
+      notif.refertourl="/project/"+that.id
+      notif.save()
+
+  )
+
   next()
 
 
 module.exports.Subscription = mongoose.model 'Subscription', Subscription
 
 module.exports.STLProject = mongoose.model 'STLProject', STLProject
+
+module.exports.Comment = mongoose.model 'Comment', Comment
 
 
 module.exports.STLProject.schema.path('color').validate( (value) ->
@@ -212,7 +251,7 @@ module.exports.STLProject.schema.path('color').validate( (value) ->
 
 module.exports.STLProject.schema.path('density').validate( (value) ->
   return true unless value?  # allowing empty
-  return value in [PROJECT_DENSITIES.LOW[0], PROJECT_DENSITIES.MEDIUM[0], PROJECT_DENSITIES.HIGH[0], PROJECT_DENSITIES.COMPLETE[0], 1.04]  # 1.04 fallback for already created proejcts
+  return value in [PROJECT_MATERIALS.ABS[0], PROJECT_MATERIALS.PLA[0]]
 , 'Invalid Density')
 
 ###

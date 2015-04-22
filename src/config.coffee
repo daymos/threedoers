@@ -20,7 +20,7 @@ config =
 
   db:
     name: 'imake'
-    host: 'mongodb://imake:3m1k2M4ng4@ds033617.mongolab.com:33617/'
+    host: 'mongodb://imake:3m1k2M4ng4@ds063789.mongolab.com:63789/'
 
   mailer:
     service: 'Mandrill'
@@ -39,6 +39,8 @@ config =
   project:
     payed:
       subject: "Project was payed."
+    status:
+      subject: "Project Notification - Status"
 
   printer:
     accepted:
@@ -80,10 +82,14 @@ config =
       client_secret: "ENKeHRBEcHZ3TdTdNUHpkKqd9ktHYwTYZQur6XrGtY-BttLKsDRc6ZRa_uE-"
     adaptive:
       user: 'mattia_api1.3doers.it'
-      password: 'WW6BZJ85ZEX2FKSY'
-      signature: 'AFcWxV21C7fd0v3bYYYRCpSSRl31AAU4YSg1okO-jRUbIO44qSUP4rdP'
-      appId: 'APP-80W284485P519543T',
-      debug: true
+      password: 'DPEEDAHG8T45RB6B'
+      signature: 'An5ns1Kso7MWUdW4ErQKJJJ4qi4-AY0LS6hHOHeEY9lfmz9BXg.ZRbx1'
+      appId: 'APP-6YS565683F194310E'
+      # user: 'mattia_api1.3doers.it'
+      # password: 'WW6BZJ85ZEX2FKSY'
+      # signature: 'AFcWxV21C7fd0v3bYYYRCpSSRl31AAU4YSg1okO-jRUbIO44qSUP4rdP'
+      # appId: 'APP-80W284485P519543T'
+      # debug: true
 
   postmaster:
     apiKey: 'pp_MTA2NDEwMDE6X2sxbnlGVjZLbjdtUjZKS2Q4RFJ0THY2Y1hj'
