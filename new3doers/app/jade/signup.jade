@@ -1,6 +1,8 @@
 extends /layouts/_default
 
 block content
+	.hidden-xs.hidden-sm(id='beta-label')
+		img(src='images/beta_label.png', alt='3doers beta')
 	.bg-3doers
 		.container
 			.page-header
@@ -9,7 +11,7 @@ block content
 			br
 			.row
 				.col-md-4
-					form
+					form.form-3doers
 						.form-group
 							input.form-control(type='text', placeholder='username')
 						.form-group.no-margin
@@ -27,6 +29,7 @@ block content
 								| I accept 3doers 
 								a(href='#') Privacy Policy 
 								| and 
+								br
 								a(href='#') Terms and Conditions
 						br
 						.form-group

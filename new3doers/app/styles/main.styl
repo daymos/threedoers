@@ -1,30 +1,32 @@
-// VARS
-// MIXINS
-border-radius(n)
-  -webkit-border-radius n
-  -moz-border-radius n
-  border-radius n
+@import 'vars.styl'
 
-box-shadow(n)
-	-webkit-box-shadow n
-	-moz-box-shadow n
-	box-shadow n
-
-transition(n)
-	-webkit-transition n
-	-moz-transition n
-	transition n
+@import 'mixins/border-radius'
+@import 'mixins/box-shadow'
+@import 'mixins/text-shadow'
+@import 'mixins/transition'
 
 .nav-inline > li
 	padding-left 10px
 	padding-right 10px
+
+a
+	color $primary-color-text
+a:hover,
+a:focus
+	color #BAB9B9
+
+a.link-inverse
+	color #BAB9B9
+a.link-inverse:hover,
+a.link-inverse:focus
+	color $primary-color-text
 
 // Top navbar
 .navbar-3doers
 	margin-bottom 0
 	.navbar-text > .navbar-link
 		border-bottom 3px solid transparent
-		color #4A4A4A
+		color $default-color-text
 		font-size 16px
 		font-weight 300
 		padding-bottom 3px
@@ -58,11 +60,11 @@ transition(n)
 	.dropdown-menu > li > a
 		color #BAB9B9
 	.dropdown-menu > li > span
-		color #4A4A4A
+		color $default-color-text
 	.dropdown-menu > li > a:hover,
 	.dropdown-menu > li > a:focus
 		background-color transparent
-		color #4A4A4A
+		color $default-color-text
 	.dropdown-menu > li > a .fa
 		font-size 1.8em
 		margin-right 16px
@@ -89,7 +91,7 @@ transition(n)
 		text-align right
 	
 	.nav-inline > li > a
-			color #4A4A4A
+			color $default-color-text
 			font-size 12px
 			font-weight 300
 			line-height 30px
@@ -115,7 +117,7 @@ transition(n)
 // Landing Page
 .section
 	.title
-		color #4A4A4A
+		color $default-color-text
 		font-weight normal
 		margin-bottom 18px
 		margin-top 35px
@@ -147,10 +149,10 @@ transition(n)
 		font-weight 300
 	a:hover,
 	a:focus
-		color #4A4A4A
+		color $default-color-text
 
 .box
-	border 3px solid #77B3D4
+	border 3px solid $primary-color-text
 	margin-top 30px
 	margin-bottom 20px
 
@@ -170,11 +172,11 @@ transition(n)
 
 	.content-white
 		h3
-			color #77B3D4
+			color $primary-color-text
 		p
 			color #9B9B9B
 	.content-blue
-		background-color #77B3D4
+		background-color $primary-color-text
 		h3
 			color #FFFFFF
 		p
@@ -213,7 +215,8 @@ transition(n)
 // Page header
 .page-header
 	border-bottom-color #DDE5DE
-	color #4A4A4A
+	color $default-color-text
+	padding-bottom 7px
 // Buttons
 .btn
 	transition(background .3s)
@@ -226,13 +229,13 @@ transition(n)
 	padding 14px 18px
 
 .btn-simple
-	border 2px solid #77B3D4
+	border 2px solid $primary-color-text
 	border-radius(5px)
-	color #77B3D4
+	color $primary-color-text
 .btn-simple:hover
 .btn-simple:focus
-	background-color #77B3D4
-	border-color #77B3D4
+	background-color $primary-color-text
+	border-color $primary-color-text
 	color #FFFFFF
 .btn-simple-inverse
 	border 2px solid #FFFFFF
@@ -241,7 +244,7 @@ transition(n)
 .btn-simple-inverse:hover,
 .btn-simple-inverse:focus
 	background-color: #FFFFFF
-	color #77B3D4
+	color $primary-color-text
 .btn-green
 	background-color #88D6A7
 	border-radius(5px)
@@ -290,33 +293,49 @@ transition(n)
 	content ''
 
 .navbar .nav > li > .dropdown-menu:after
-  position absolute
-  top -9px
-  left 10px
-  display inline-block
-  border-right 10px solid transparent
-  border-bottom 10px solid #FFFFFF
-  border-left 10px solid transparent
-  content ''
+	position absolute
+	top -9px
+	left 10px
+	display inline-block
+	border-right 10px solid transparent
+	border-bottom 10px solid #FFFFFF
+	border-left 10px solid transparent
+	content ''
 
 .navbar .navbar-right > li > .dropdown-menu:before,
 .navbar .navbar-right > li > .dropdown-menu:after
 	right 13px
 	left auto
 
+// Forms
+.form-3doers
+	.form-control
+		color $default-color-text
+		font-size 18px
+		font-style italic
+		text-shadow(1px 1px 0 #7BF282)
+
+// Others
+#beta-label
+	height 77px
+	left 0
+	position fixed
+	top 74px
+	width 51px
+
 // Responsive
 .img-responsive
 	display inline-block
 // Containers
 @media (min-width: 768px)
-  .container
-    width: 750px;
+	.container
+		width 750px;
 @media (min-width: 992px)
-  .container
-    width: 960px;
+	.container
+		width 960px
 @media (min-width: 1200px)
-  .container
-    width: 960px;
+	.container
+		width 960px
 
 // Max Small
 @media (max-width: 767px)
