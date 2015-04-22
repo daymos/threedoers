@@ -11,6 +11,7 @@ module.exports = (app) ->
   utils = require('../utils')
   mailer = require('../mailer').mailer
   settings = require('../../config')
+  Paypal = require('paypal-adaptive')
 
   app.get '/design/stl', decorators.loginRequired, (req, res) ->
       stringerror =""
@@ -45,6 +46,7 @@ module.exports = (app) ->
       if prop
         prop.accepted = true
         prop.save()
+        console.log 'prop save'
         models.STLDesign.findOne({_id:prop.backref}).exec().then( (stldes) ->
           stldes.proposalSelected=true;
           stldes.order =
@@ -52,20 +54,19 @@ module.exports = (app) ->
             preHourly:prop.hour
             designer:prop.creator
             placedAt: new Date()
-          stldes.status = models.DESIGN_STATUSES.ACCEPTED[0]
-          stldes.designer = prop.creator
           i = 0
           while i < stldes.proposal.length
             if ((stldes.proposal[i]._id).toString() == (prop._id).toString())
               stldes.proposal[i].accepted = prop.accepted
               break
             i++
-          stldes.save()
-          auth.User.findOne({_id:proposal.creator}).exec().then((user) ->
+          auth.User.findOne({_id:prop.creator}).exec().then((user) ->
             user.designJobs+=1
             user.save()
-            doc.status = models.DESIGN_STATUSES.ACCEPTED[0]
-            doc.save()
+            stldes.designer = prop.creator
+            stldes.status = models.DESIGN_STATUSES.ACCEPTED[0]
+            console.log 'stl save'
+            stldes.save()
             res.redirect "design/project/"+stldes._id
           ))
       else
@@ -75,7 +76,7 @@ module.exports = (app) ->
       res.send 500
     )
   app.get '/design/projects', decorators.loginRequired, (req, res) ->
-    models.STLDesign.find({'creator': req.user.id, status: {"$lte": models.DESIGN_STATUSES.ARCHIVED[0]} }).exec (err, docs) ->
+    models.STLDesign.find({'creator': req.user.id, status: {"$lt": models.DESIGN_STATUSES.ARCHIVED[0]} }).exec (err, docs) ->
       if err
         logger.error err
         res.send 500
@@ -187,6 +188,7 @@ module.exports = (app) ->
                 project: doc,
                 adminMail:settings.admins.emails
                 designSessions:designSessions
+                payment : settings.payment
         ).fail((reason)->
           logger.error reason
           res.send 500
@@ -264,7 +266,6 @@ module.exports = (app) ->
       res.send 500
     )
   app.post '/design/stl/complete/:id',decorators.loginRequired,(req, res, next) ->
-
     models.STLDesign.findOne({_id: req.params.id}).exec().then( (design) ->
       if design
         userModel.findOne({_id:design.designer}).exec().then( (user) ->
@@ -277,33 +278,45 @@ module.exports = (app) ->
               user.onTime=true
               design.final_stl= files[0].path.replace(/^.*[\\\/]/, '')
               design.status=models.DESIGN_STATUSES.DELIVERED[0]
+              paypalSdk = new Paypal
+                userId: settings.paypal.adaptive.user
+                password:  settings.paypal.adaptive.password
+                signature: settings.paypal.adaptive.signature
+                appId: settings.paypal.adaptive.appId
+                sandbox:   settings.paypal.adaptive.debug
+
+              payload =
+                payKey: design.payKey
+                requestEnvelope:
+                  errorLanguage:  'en_US'
+
+              paypalSdk.executePayment payload
+              if (design.timeExpiredPayKey)
+                payload =
+                  payKey: design.timeExpiredPayKey
+                  requestEnvelope:
+                    errorLanguage:  'en_US'
+
+              paypalSdk.executePayment payload
               design.save()
               user.save()
-              userModel.findOne({_id:design.designer}).exec().then( (creator) ->
+              userModel.findOne({_id:design.creator}).exec().then( (creator) ->
                 if creator
                   if creator.mailNotification
                     mailer.send('mailer/design/completed',{project: design,url: "http://#{ req.headers.host }/design/project/"+design._id},{from: settings.mailer.noReply, to: creator.email,subject: "Design project "+design.title+' completed'})
+                  if (user.VatNumber)
+                    mailer.send('mailer/design/vatnumber',{designer: user,design:design,user:creator},{from: settings.mailer.noReply, to: settings.admins.emails,subject: "Paied designer with VAT number"})
                   res.redirect 'design/project/'+req.params.id
                 else
                   res.send 500
-              ).fail( ->
-
-                logger.error arguments
-                res.send 500
               )
-
           else
             res.send 500
-        ).fail( ->
-
-          logger.error arguments
-          res.send 500
         )
       else
         res.send 404
-
     ).fail( (error)->
-
+      console.log error
       logger.error arguments
       res.send 500
     )
@@ -311,7 +324,6 @@ module.exports = (app) ->
     models.STLDesign.findOne({_id: req.params.id}).exec().then( (design) ->
       if design
           design.status=models.DESIGN_STATUSES.TIMEEXPIREDPROCESSED[0]
-
           design.save (err) ->
             if err
               logger.error reason
@@ -341,7 +353,6 @@ module.exports = (app) ->
     models.STLDesign.findOne({_id: req.params.id}).exec().then( (design) ->
       if design
         moreTime=parseInt(req.body.moreTime)
-        console.log moreTime
         if (design.additionalHourRequested==moreTime)
           oldValue=design.order
           design.order=
@@ -349,25 +360,60 @@ module.exports = (app) ->
             preAmount:oldValue.preAmount,
             designer: oldValue.designer,
             placedAt: oldValue.placedAt,
+          designerPayment=design.additionalHourRequested*design.order.preAmount
+          businessGain=designerPayment*settings.payment.designCommission
+          taxes=businessGain*settings.payment.taxes
+          businessPayment=designerPayment+businessGain+taxes
 
-          design.status=models.DESIGN_STATUSES.TIMEEXPIREDPROCESSED[0]
-          design.save (err) ->
-            if err
-              logger.error reason
-              res.send 500
-            else
-              userModel.findOne({_id:design.designer}).exec().then( (designer) ->
-                if designer
-                  designer.onTime=true
-                  designer.save()
-                else
-                  logger.error 'designer not found'
+          design.designerPayment+=designerPayment
+          design.businessGain+=businessGain
+          design.taxes+=taxes
+          design.businessPayment+=businessPayment
+          paypalSdk = new Paypal
+            userId: settings.paypal.adaptive.user
+            password:  settings.paypal.adaptive.password,
+            signature: settings.paypal.adaptive.signature,
+            appId: settings.paypal.adaptive.appId,
+            sandbox:   settings.paypal.adaptive.debug
+
+          auth.User.findOne({_id: design.designer}).exec().then( (user) ->
+            if user
+              payload =
+                requestEnvelope:
+                  errorLanguage:  'en_US'
+                actionType:     'PAY_PRIMARY'
+                payKeyDuration: 'P29D'
+                currencyCode:   'EUR'
+                feesPayer:      'EACHRECEIVER',
+                memo:           'Payment for 3D printing in 3doers'
+                returnUrl:      "#{settings.site}/design/project/pay/execute/#{design.id}"
+                cancelUrl:      "#{settings.site}/design/project/pay/cancel/#{design.id}"
+                receiverList:
+                  receiver: [
+                    {
+                      email:  '3doers@gmail.com',
+                      amount: businessPayment,  # total price
+                      primary: 'true'
+                    },
+                    {
+                      email:  user.email,
+                      amount: designerPayment,
+                      primary: 'false'
+                    }
+                  ]
+              paypalSdk.pay payload, (err, response) ->
+                if err
+                  console.log response.error
+                  logger.error err
                   res.send 500
-              ).fail( (error)->
-                logger.error error
-                res.send 500
-              )
-              return res.redirect 'design/project/'+design.id
+                else
+                  design.timeExpiredPayKey=response.payKey
+                  design.secundaryExpiredPaid=false
+                  design.save()
+                  user.onTime=true
+                  user.save()
+                  res.redirect response.paymentApprovalUrl
+            )
         else
           stringerror = encodeURIComponent("value not allowed")
           return res.redirect('design/project/'+req.params.id+'?error='+stringerror)
@@ -375,7 +421,6 @@ module.exports = (app) ->
         res.send 404
     ).fail( (error) ->
       logger.error error
-
       res.send 500
     )
 
@@ -409,23 +454,93 @@ module.exports = (app) ->
     )
 
   app. post '/design/project/pay/:id' ,decorators.loginRequired, (req,res) ->
-    console.log(req.params.id)
     models.STLDesign.findOne({_id: req.params.id}).exec().then( (design) ->
       if design
-
-        design.status = models.DESIGN_STATUSES.PAID[0]
-        console.log design
-        design.save()
-        res.redirect 'design/project/'+req.params.id
+        design.designerPayment=design.order.preHourly*design.order.preAmount
+        design.businessGain=design.designerPayment*settings.payment.designCommission
+        design.taxes=design.businessGain*settings.payment.taxes
+        design.businessPayment=design.designerPayment+design.businessGain+design.taxes
+        paypalSdk = new Paypal
+          userId: settings.paypal.adaptive.user
+          password:  settings.paypal.adaptive.password,
+          signature: settings.paypal.adaptive.signature,
+          appId: settings.paypal.adaptive.appId,
+          sandbox:   settings.paypal.adaptive.debug
+        auth.User.findOne({_id: design.designer}).exec().then (user) ->
+            if user
+              payload =
+                requestEnvelope:
+                  errorLanguage:  'en_US'
+                actionType:     'PAY_PRIMARY'
+                payKeyDuration: 'P29D'
+                currencyCode:   'EUR'
+                feesPayer:      'EACHRECEIVER',
+                memo:           'Payment for 3D printing in 3doers'
+                returnUrl:      "#{settings.site}/design/project/timeExpired/pay/execute/#{design.id}"
+                cancelUrl:      "#{settings.site}/design/project/timeExpired/pay/cancel/#{design.id}"
+                receiverList:
+                  receiver: [
+                    {
+                      email:  '3doers@gmail.com',
+                      amount: design.businessPayment,  # total price
+                      primary: 'true'
+                    },
+                    {
+                      email:  user.email,
+                      amount: design.designerPayment,
+                      primary: 'false'
+                    }
+                  ]
+              paypalSdk.pay payload, (err, response) ->
+                if err
+                  console.log response.error
+                  logger.error err
+                  res.send 500
+                else
+                  design.payKey=response.payKey
+                  design.secundaryPaid=false
+                  console.log response
+                  design.save()
+                  res.redirect response.paymentApprovalUrl
       else
         res.send 404
     ).fail( (error) ->
+      console.log error
+      logger.error error
+      res.send 500
+    )
+  app.get '/design/project/timeExpired/pay/execute/:id', decorators.loginRequired, (req, res) ->
+    models.STLDesign.findOne({_id: req.params.id}).exec().then( (doc) ->
+      if doc
+        auth.User.findOne(doc.designer).exec().then((user) ->
+          doc.status=models.DESIGN_STATUSES.TIMEEXPIREDPROCESSED[0]
+          doc.save()
+          res.redirect "/design/project/#{doc.id}"
+        )).fail( (error) ->
+      console.log error
+      logger.error error
+      res.send 500
+    )
+  app.get '/design/project/timeExpired/pay/cancel/:id', decorators.loginRequired, (req, res) ->
+    res.redirect "design/project/#{req.params.id}"
+  app.get '/design/project/pay/cancel/:id', decorators.loginRequired, (req, res) ->
+      res.redirect "design/project/#{req.params.id}"
+
+  app.get '/design/project/pay/execute/:id', decorators.loginRequired, (req, res) ->
+    models.STLDesign.findOne({_id: req.params.id}).exec().then( (doc) ->
+      if doc
+        auth.User.findOne(doc.designer).exec().then((user) ->
+            doc.status=models.DESIGN_STATUSES.PAID[0]
+            doc.save()
+            mailer.send('mailer/design/payed', {project: doc, user: user, site:settings.site}, {from: settings.mailer.noReply, to:[user.email], subject: settings.project.payed.subject})
+            res.redirect "/design/project/#{req.params.id}"
+    )).fail( (error) ->
+      console.log error
       logger.error error
       res.send 500
     )
 
   app. post '/design/project/rate/:id' ,decorators.loginRequired, (req,res) ->
-
     models.STLDesign.findOne({_id: req.params.id}).exec().then( (design) ->
       if design
         try

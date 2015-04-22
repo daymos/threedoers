@@ -15,6 +15,7 @@ module.exports = (app, io) ->
   models = require('./models')
   utils = require('../utils')
   auth = require('../auth/models')
+  designModels = require('../design/models')
   shippo = require('shippo')('mattia.spinelli@zoho.com', 'mattia13')
 
   app.get '/', (req, res) ->
@@ -911,12 +912,14 @@ module.exports = (app, io) ->
         res.render 'core/printing/jobs', {projects: docs}
 
   app.get '/printing/archived', decorators.printerRequired, (req, res) ->
-    models.STLProject.find('order.printer': req.user.id, status: models.PROJECT_STATUSES.ARCHIVED[0]).exec (err, docs) ->
-      if err
-        logger.error err
-        res.send 500
-      else
-        res.render 'core/printing/archived', {projects: docs}
+    models.STLProject.find('order.printer': req.user.id, status: models.PROJECT_STATUSES.ARCHIVED[0]).exec().then( ( printings) ->
+        designModels.STLDesign.find({'creator': req.user.id, status: {"$lt": designModels.DESIGN_STATUSES.ARCHIVED[0]} }).exec().then((design) ->
+          res.render 'core/printing/archived', {printingProjects: printings,designProjects: design}
+    )).fail( (reason) ->
+      console.log reason
+      logger.error reason
+      res.send 500
+    )
 
   app.post '/printing/review/:id', decorators.printerRequired, (req, res) ->
     models.STLProject.findOne({_id: req.params.id}).exec().then( (doc) ->
