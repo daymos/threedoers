@@ -1,0 +1,61 @@
+@import 'mixins/border-radius'
+@import 'mixins/box-shadow'
+@import 'mixins/text-shadow'
+@import 'mixins/transition'
+
+// Typography
+h1.light,
+h2.light,
+h3.light,
+h4.light,
+h5.light
+	font-weight 300
+
+// 3doers nav tabs
+.nav-tabs.nav-tabs-3doers
+	> li > a
+		border-bottom-color #7BF282
+		color #BAB9B9
+		font-size 28px
+	> .active > a,
+	> .active > a:hover,
+	> .active > a:focus
+		background-color transparent
+		border-color #7BF282
+		border-bottom transparent
+		color #BAB9B9
+
+// Steps
+.step p
+	font-size 12px
+
+// Job
+.job
+	background-color #FFFFFF
+	border 1px solid #DDE5DE
+	border-radius(5px)
+	margin-bottom 40px
+	padding-bottom 15px
+	padding-top 15px
+
+	.job-name
+		color #4A4A4A
+		font-size 22px
+		margin-top 0
+		padding 0 10px
+		text-shadow(1px 1px 0 #7BF282)
+	.job-image
+		margin-bottom 10px
+		text-align center
+	.job-wtime
+		font-size 12px
+		font-weight: 300
+		text-align center
+		h5
+			margin-top 0
+	.btn-lg
+		font-size 15px
+
+// Override Bootstrap
+.tab-content
+	padding 10px 0
