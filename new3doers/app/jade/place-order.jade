@@ -20,6 +20,24 @@ block content
 
 		.bg-3doers
 			.container
+				ul
+					li.checked
+						a(href='#') Review
+						div
+							p You have 24 hours to review and accept this order before it goes automatically back to the Workplace.
+					li.active
+						a(href='#') Accepted
+						div
+							p You have 24 hours to review and accept this order before it goes automatically back to the Workplace.
+					li
+						a(href='#') Printing
+						div
+							p You have 24 hours to review and accept this order before it goes automatically back to the Workplace.
+					li
+						a(href='#') Shipping
+						div
+							p You have 24 hours to review and accept this order before it goes automatically back to the Workplace.
+
 				.job-review
 					h4.job-name Small_frog.stl
 					.row
@@ -58,15 +76,42 @@ block content
 										td.desc 3Doers:
 										td.value 8.54 $
 									tr
+										td.desc Printer:
+										td.value 25.62 $
+									tr
 										td.desc Shipping:
-										td.value 8.45 $
-									tr.separator
+										td.value -
+									tr.separator-small
 										td(col-span='2')
 									tr
-										td.desc.text-shadow-3doers Printer:
+										td.desc.text-shadow-3doers Price quotation*:
 										td.value
-											h3.normal 25.62 $
-				h4: a(href='#') Back
+											h3.normal 42.50 $
+									tr
+										td(colspan='2')
+											p.final-price *Final price will include a shipping fee and will be calculated once the order has been accepted by a printer.
+				div
+					a(href='#', data-toggle='modal', data-target='#orderModal') Cancel order
 
+				.modal.fade(id='orderModal', role='dialog')
+					.modal-dialog.modal-md
+						.modal-content
+							.modal-header
+								button.close(data-dismiss='modal')
+									span &times;
+								h4.modal-title &nbsp;
+							.modal-body
+								p
+									| Once deleted the order won't be accesible anymore. 
+									br
+									| Do you want to proceed?
+								br
+								.row
+									.col-md-5
+										.form-group
+											a.btn.btn-xlg.btn-block.btn-green-inverse(href='#') Undo
+									.col-md-7
+										.form-group
+											a.btn.btn-xlg.btn-block.btn-green(href='#') CANCEL ORDER
 				br
 				br

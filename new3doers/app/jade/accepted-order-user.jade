@@ -38,6 +38,16 @@ block content
 						div
 							p You have 24 hours to review and accept this order before it goes automatically back to the Workplace.
 
+				.alert.alert-primary
+					.media
+						.media-left
+							a(href='#')
+								img.media-object(src='data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+PGRlZnMvPjxyZWN0IHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCIgZmlsbD0iI0VFRUVFRSIvPjxnPjx0ZXh0IHg9IjEzLjQ2MDkzNzUiIHk9IjMyIiBzdHlsZT0iZmlsbDojQUFBQUFBO2ZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1mYW1pbHk6QXJpYWwsIEhlbHZldGljYSwgT3BlbiBTYW5zLCBzYW5zLXNlcmlmLCBtb25vc3BhY2U7Zm9udC1zaXplOjEwcHQ7ZG9taW5hbnQtYmFzZWxpbmU6Y2VudHJhbCI+NjR4NjQ8L3RleHQ+PC9nPjwvc3ZnPg==', style='width: 50px; height: 50px')
+						.media-body.media-middle
+							.message
+								strong Sam 
+								| is currently reviewing this order and may contact you
+
 				.job-review
 					h4.job-name Small_frog.stl
 					.row
@@ -76,26 +86,31 @@ block content
 										td.desc 3Doers:
 										td.value 8.54 $
 									tr
+										td.desc Printer:
+										td.value 25.62 $
+									tr
 										td.desc Shipping:
 										td.value -
-									tr.separator
+									tr.separator-small
 										td(col-span='2')
 									tr
 										td.desc.text-shadow-3doers Printer:
 										td.value
-											h3.normal 25.62 $
+											h3.normal 42.50 $
+									tr
+										td(colspan='2')
+											p.final-price *Final price will include a shipping fee and will be calculated once the order has been accepted by a printer.
 				.row
 					.col-md-3
 						.form-group
-							h4: a(href='#') Download STF file
+							a(href='#') Cancel order
 					.col-md-4.col-md-offset-5
 						.form-group
-							a.btn.btn-xlg.btn-block.btn-green(href='#') ORDER PRINTED
-						p.text-muted.text-light
-							small Click the button above to generate a shipping label
+							a.btn.btn-xlg.btn-block.btn-green(href='#', data-toggle='modal', data-target='#paymentModal') PROCEED WITH PAYMENT
+						p.text-muted.text-light.text-xsmall The payment will be secured on 3Doers account and won’t be released to the printer until the order has been completed and delivered to you.
 
 				.page-subheader
-					h3 Conversation with project owner:
+					h3 Conversation with printer:
 
 				.row
 					.col-md-8
@@ -112,7 +127,7 @@ block content
 										strong 6:12 pm
 								.media-right
 									a(href='#')
-										img.media-object(src='data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+PGRlZnMvPjxyZWN0IHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCIgZmlsbD0iI0VFRUVFRSIvPjxnPjx0ZXh0IHg9IjEzLjQ2MDkzNzUiIHk9IjMyIiBzdHlsZT0iZmlsbDojQUFBQUFBO2ZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1mYW1pbHk6QXJpYWwsIEhlbHZldGljYSwgT3BlbiBTYW5zLCBzYW5zLXNlcmlmLCBtb25vc3BhY2U7Zm9udC1zaXplOjEwcHQ7ZG9taW5hbnQtYmFzZWxpbmU6Y2VudHJhbCI+NjR4NjQ8L3RleHQ+PC9nPjwvc3ZnPg==')
+										img.media-object(src='data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+PGRlZnMvPjxyZWN0IHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCIgZmlsbD0iI0VFRUVFRSIvPjxnPjx0ZXh0IHg9IjEzLjQ2MDkzNzUiIHk9IjMyIiBzdHlsZT0iZmlsbDojQUFBQUFBO2ZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1mYW1pbHk6QXJpYWwsIEhlbHZldGljYSwgT3BlbiBTYW5zLCBzYW5zLXNlcmlmLCBtb25vc3BhY2U7Zm9udC1zaXplOjEwcHQ7ZG9taW5hbnQtYmFzZWxpbmU6Y2VudHJhbCI+NjR4NjQ8L3RleHQ+PC9nPjwvc3ZnPg==', style='width:50px; height:50px')
 							.media
 								.media-left
 									a(href='#')
@@ -132,5 +147,38 @@ block content
 								.row
 									.col-xs-3.col-xs-offset-9
 										button.btn.btn-md.btn-block.btn-green-inverse(type='submit') Send
+
+				.modal.fade(id='paymentModal', role='dialog')
+					.modal-dialog.modal-md
+						.modal-content
+							.modal-header
+								button.close(data-dismiss='modal')
+									span &times;
+								h4.modal-title &nbsp;
+							.modal-body
+								h4.payment-title Payment
+								table.job-payment
+									tbody
+										tr
+											td.desc Price:
+											td.value 42.50 $
+										tr
+											td.desc Shipping:
+											td.value 8.54 $
+										tr
+											td(colspan='2')
+												hr
+										tr
+											td.desc.text-shadow-3doers Total to Pay
+											td.value
+												h3.normal 50.95 $
+								br
+								.row
+									.col-md-5
+										.form-group
+											a.btn.btn-xlg.btn-block.btn-green-inverse(href='#') Undo
+									.col-md-7
+										.form-group
+											a.btn.btn-xlg.btn-block.btn-green(href='#') CANCEL ORDER
 				br
 				br

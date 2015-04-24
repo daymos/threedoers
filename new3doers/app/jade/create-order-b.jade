@@ -20,53 +20,64 @@ block content
 
 		.bg-3doers
 			.container
-				.job-review
+				ul
+					li.active
+						a(href='#') Create order
+						div
+							p Preview your file and decide printing features.
+					li
+						a(href='#') Place order
+						div
+							p Preview your file and decide printing features.
+					li
+						a(href='#') Accepted
+						div
+							p Preview your file and decide printing features.
+					li
+						a(href='#') Printing
+						div
+							p Preview your file and decide printing features.
+					li
+						a(href='#') Shipping
+						div
+							p Preview your file and decide printing features.
+
+				.job-order
 					h4.job-name Small_frog.stl
+					h5.job-volume
+						strong VOLUME: 
+						| 59.7 cm3
 					.row
-						.col-md-8
+						.col-md-9
 							.job-details
 								.row
-									.col-md-5
-										figure: img.img-responsive(src='images/job-preview-small.jpg')
 									.col-md-7
-										.info
-											p
-												strong COLOR: 
-												| Blue
-											p
-												strong MATERIAL: 
-												| ABS
-											p
-												strong AMOUNT: 
-												| 2 pieces
-											p
-												strong VOLUME: 
-												| 59.7 cm3
-											p
-												strong WEIGHT: 
-												| 74 g
-											p
-												strong DIMENSIONS: 
-												| 3.25 cm (W) 15.12 cm (H) 6.31(L)
-						.col-md-4
-							table.job-payment
-								tbody
-									tr
-										td.desc Taxes:
-										td.value 9.08 $
-									tr
-										td.desc 3Doers:
-										td.value 8.54 $
-									tr
-										td.desc Shipping:
-										td.value 8.45 $
-									tr.separator
-										td(col-span='2')
-									tr
-										td.desc.text-shadow-3doers Printer:
-										td.value
-											h3.normal 25.62 $
-				h4: a(href='#') Back
+										figure: img.img-responsive(src='images/job-preview.jpg')
+									.col-md-5
+										form.form-3doers
+											.form-group
+												select.form-control
+													option What color?
+											.form-group
+												select.form-control
+													option What material?
+											.form-group
+												input.form-control(type='text', placeholder='How many items?')
+											.row
+												.col-sm-7
+													h4.job-quotation Price quotation*:
+												.col-sm-5
+													h3.job-price 0 $
+											p.text-muted.final-price
+												small *Final price will include a shipping fee and will be calculated once the order has been accepted.
+											button.btn.btn-lg.btn-block.btn-green(type='submit', disabled='disabled') PLACE ORDER
+				.row
+					.col-md-9
+						.alert.alert-danger
+							.text-light
+								| Dimensions of the object might exceed printing sizes.
+								br
+								| You can proceed with the order anyway, but if no printer picks it up you might consider resizing the object.
 
 				br
 				br
