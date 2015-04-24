@@ -214,9 +214,15 @@ a.link-inverse:focus
 
 // Page header
 .page-header
-	border-bottom-color #DDE5DE
+	border-bottom 1px solid #DDE5DE
 	color $default-color-text
+	margin 40px 0 20px
 	padding-bottom 7px
+.page-subheader
+	@extend .page-header
+	h3
+		font-size 22px
+
 // Buttons
 .btn
 	transition(background .3s)
@@ -253,6 +259,10 @@ a.link-inverse:focus
 .btn-green:focus
 	background-color #65BB87
 	color #FFFFFF
+.btn-green-inverse
+	background-color transparent
+	border 2px solid #88D6A7
+	color #88D6A7
 
 // Backgrounds
 .bg-3doers

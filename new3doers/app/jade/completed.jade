@@ -20,6 +20,34 @@ block content
 
 		.bg-3doers
 			.container
+				ul
+					li.checked
+						a(href='#') Review
+						div
+							p You have 24 hours to review and accept this order before it goes automatically back to the Workplace.
+					li.active
+						a(href='#') Accepted
+						div
+							p You have 24 hours to review and accept this order before it goes automatically back to the Workplace.
+					li
+						a(href='#') Printing
+						div
+							p You have 24 hours to review and accept this order before it goes automatically back to the Workplace.
+					li
+						a(href='#') Shipping
+						div
+							p You have 24 hours to review and accept this order before it goes automatically back to the Workplace.
+
+				.alert.alert-primary
+					.media
+						.media-left
+							a(href='#')
+								img.media-object(src='data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+PGRlZnMvPjxyZWN0IHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCIgZmlsbD0iI0VFRUVFRSIvPjxnPjx0ZXh0IHg9IjEzLjQ2MDkzNzUiIHk9IjMyIiBzdHlsZT0iZmlsbDojQUFBQUFBO2ZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1mYW1pbHk6QXJpYWwsIEhlbHZldGljYSwgT3BlbiBTYW5zLCBzYW5zLXNlcmlmLCBtb25vc3BhY2U7Zm9udC1zaXplOjEwcHQ7ZG9taW5hbnQtYmFzZWxpbmU6Y2VudHJhbCI+NjR4NjQ8L3RleHQ+PC9nPjwvc3ZnPg==', style='width: 50px; height: 50px')
+						.media-body.media-middle
+							.message
+								| Printed by 
+								strong Sam.
+
 				.job-review
 					h4.job-name Small_frog.stl
 					.row
@@ -58,15 +86,21 @@ block content
 										td.desc 3Doers:
 										td.value 8.54 $
 									tr
+										td.desc Printer:
+										td.value 25.62 $
+									tr
 										td.desc Shipping:
 										td.value 8.45 $
-									tr.separator
+									tr.separator-small
 										td(col-span='2')
 									tr
 										td.desc.text-shadow-3doers Printer:
 										td.value
-											h3.normal 25.62 $
-				h4: a(href='#') Back
+											h3.normal 42.50 $
+									tr
+										td(colspan='2')
+											p.final-price *Final price will include a shipping fee and will be calculated once the order has been accepted by a printer.
 
+				div: a(href='#') Back
 				br
 				br
