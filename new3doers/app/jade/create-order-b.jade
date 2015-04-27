@@ -20,27 +20,39 @@ block content
 
 		.bg-3doers
 			.container
-				ul
-					li.active
-						a(href='#') Create order
-						div
-							p Preview your file and decide printing features.
-					li
-						a(href='#') Place order
-						div
-							p Preview your file and decide printing features.
-					li
-						a(href='#') Accepted
-						div
-							p Preview your file and decide printing features.
-					li
-						a(href='#') Printing
-						div
-							p Preview your file and decide printing features.
-					li
-						a(href='#') Shipping
-						div
-							p Preview your file and decide printing features.
+				div(role='tabpanel')
+					ul.nav.nav-justified.nav-3doers
+						li.nav-step.active
+							a(href='#tab-crete-order')
+								span.step-one
+								| Create order
+						li.nav-step
+							a(href='#tab-place-order')
+								span.step-two
+								| Place order
+						li.nav-step
+							a(href='#tab-accepted')
+								span.step-three
+								| Accepted
+						li.nav-step
+							a(href='#tab-printing')
+								span.step-four
+								| Printing
+						li.nav-step
+							a(href='#tab-shipping')
+								span.step-five
+								| Shipping
+					.tab-content
+						.tab-pane.fade.in.active(id='tab-crete-order')
+							h4.light Preview your file and decide printing features.
+						.tab-pane.fade(id='tab-place-order')
+							h4.light Preview your file and decide printing features.
+						.tab-pane.fade(id='tab-accepted')
+							h4.light Preview your file and decide printing features.
+						.tab-pane.fade(id='tab-printing')
+							h4.light Preview your file and decide printing features.
+						.tab-pane.fade(id='tab-shipping')
+							h4.light Preview your file and decide printing features.
 
 				.job-order
 					h4.job-name Small_frog.stl

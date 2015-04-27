@@ -180,6 +180,73 @@ table.job-payment
 		font-style italic
 		font-weight 300
 
+// Steps
+.nav.nav-3doers
+	border-bottom 1px solid #4A4A4A
+	margin-top 60px
+	padding-bottom 1px
+	a
+		padding 0
+	a:hover,
+	a:focus
+		background-color transparent
+.nav-step
+	span
+		background-position 0 -38px
+		background-repeat no-repeat
+		display inline-block
+		height 38px
+		margin-right 10px
+		vertical-align middle
+		width 31px
+	a
+		color #959495
+		font-size 14px
+		font-weight 300
+		text-align left !important
+	.step-one
+		background-position 0 0
+		background-image url('../images/icon_1.png')
+	.step-two
+		background-image url('../images/icon_2.png')
+	.step-three
+		background-image url('../images/icon_3.png')
+	.step-four
+		background-image url('../images/icon_4.png')
+	.step-five
+		background-image url('../images/icon_5.png')
+
+.nav-step.complete,
+.nav-step.complete:hover,
+.nav-step.complete:focus
+	span
+		background-position 0 0
+		background-image url('../images/icon_checkedbubble.png')
+
+.nav-step:hover,
+.nav-step:focus
+	.step-one,
+	.step-two,
+	.step-three,
+	.step-four,
+	.step-five
+		background-position 0 -76px
+
+.nav-step.active,
+.nav-step.active:hover,
+.nav-step.active:focus
+	a
+		color #4A4A4A
+		font-size 22px
+		font-weight normal
+	.step-one,
+	.step-two,
+	.step-three,
+	.step-four,
+	.step-five
+		background-position 0 0
+
+
 // Alerts
 .alert
 	margin-bottom 30px

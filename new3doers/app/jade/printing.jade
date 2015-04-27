@@ -20,23 +20,33 @@ block content
 
 		.bg-3doers
 			.container
-				ul
-					li.checked
-						a(href='#') Review
-						div
-							p You have 24 hours to review and accept this order before it goes automatically back to the Workplace.
-					li.active
-						a(href='#') Accepted
-						div
-							p You have 24 hours to review and accept this order before it goes automatically back to the Workplace.
-					li
-						a(href='#') Printing
-						div
-							p You have 24 hours to review and accept this order before it goes automatically back to the Workplace.
-					li
-						a(href='#') Shipping
-						div
-							p You have 24 hours to review and accept this order before it goes automatically back to the Workplace.
+				div(role='tabpanel')
+					ul.nav.nav-justified.nav-3doers
+						li.nav-step.active
+							a(href='#tab-review')
+								span.step-one
+								| Review
+						li.nav-step
+							a(href='#tab-accepted')
+								span.step-two
+								| Accepted
+						li.nav-step
+							a(href='#tab-printing')
+								span.step-three
+								| Printing
+						li.nav-step
+							a(href='#tab-shipping')
+								span.step-four
+								| Shipping
+					.tab-content
+						.tab-pane.fade.in.active(id='tab-review')
+							h4.light You have 24 hours to review and accept this order before it goes automatically back to the Workplace.
+						.tab-pane.fade(id='tab-accepted')
+							h4.light You have 24 hours to review and accept this order before it goes automatically back to the Workplace.
+						.tab-pane.fade(id='tab-printing')
+							h4.light You have 24 hours to review and accept this order before it goes automatically back to the Workplace.
+						.tab-pane.fade(id='tab-shipping')
+							h4.light You have 24 hours to review and accept this order before it goes automatically back to the Workplace.
 
 				.job-review
 					h4.job-name Small_frog.stl
