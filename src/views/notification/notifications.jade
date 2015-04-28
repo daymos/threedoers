@@ -30,10 +30,20 @@ block body
         - each notify in userNotif
 
                 li(id=notify.id,class=(notify.read==false?'active-greeen-3doers':'')).list-group-item.col-sm-10
-                    a(href= '#{notify.refertourl}') Project #{notify.title} has changed its status @#{prettyDate(notify.createAt)}
-                    form(action='/notification/delete/#{notify.id}',method='POST').pull-right
-                        button(type='submit').btn-sm.btn-danger
-                            span.glyphicon.glyphicon-remove
+                    a(href= '#{notify.refertourl}')
+                        .col-sm-10 Project #{notify.title} has changed its status @#{prettyDate(notify.createAt)}
+                        .col-sm-2
+                            -if (notify.read==false)
+                                form(action='/notification/read/#{notify.id}',method='POST').col-sm-4.col-sm-offset-4
+                                    button(type='submit').btn-sm.btn-default
+                                        span.glyphicon.glyphicon-thumbs-up
+                            -else
+                                .col-sm-4.col-sm-offset-4
+
+                            form(action='/notification/delete/#{notify.id}',method='POST').col-sm-4
+                                button(type='submit').btn-sm.btn-danger
+                                    span.glyphicon.glyphicon-remove
+
 
 
 

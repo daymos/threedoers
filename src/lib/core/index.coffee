@@ -116,6 +116,8 @@ module.exports = (app, io) ->
       return
 
     if req.files.thumbnail.type != 'application/octet-stream' or req.files.thumbnail.path.split('/').pop().split('.').pop().toLowerCase() != 'stl'
+      console.log req.files.thumbnail.type
+      console.log req.files.thumbnail.path.split('/').pop().split('.').pop().toLowerCase()
       res.json errors: thumbnail: msg: "Is not a valid format, you need to upload a STL file."
       fs.unlink(req.files.thumbnail.path)
       return
@@ -240,8 +242,10 @@ module.exports = (app, io) ->
 
 
   app.get '/profile/archived', decorators.loginRequired, (req, res) ->
-    models.STLProject.find({user: req.user._id, status: models.PROJECT_STATUSES.ARCHIVED[0]}).exec().then( (docs) ->
-      res.render 'core/profile/list_projects', {projects: docs}
+    models.STLProject.find({user: req.user._id, status: models.PROJECT_STATUSES.ARCHIVED[0]}).exec().then( (printings) ->
+        designModels.STLDesign.find({'creator': req.user.id, status: {"$lt": designModels.DESIGN_STATUSES.ARCHIVED[0]} }).exec().then((design) ->
+          res.render 'core/profile/list_projects', {printingProjects: printings,designProjects: design}
+        )
     ).fail( ->
       logger.error arguments
       res.send 500
@@ -913,7 +917,7 @@ module.exports = (app, io) ->
 
   app.get '/printing/archived', decorators.printerRequired, (req, res) ->
     models.STLProject.find('order.printer': req.user.id, status: models.PROJECT_STATUSES.ARCHIVED[0]).exec().then( ( printings) ->
-        designModels.STLDesign.find({'creator': req.user.id, status: {"$lt": designModels.DESIGN_STATUSES.ARCHIVED[0]} }).exec().then((design) ->
+        designModels.STLDesign.find({'creator': req.user.id, status:  designModels.DESIGN_STATUSES.ARCHIVED[0]}).exec().then((design) ->
           res.render 'core/printing/archived', {printingProjects: printings,designProjects: design}
     )).fail( (reason) ->
       console.log reason

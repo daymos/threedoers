@@ -31,16 +31,17 @@ module.exports = (app) ->
       if notf
         notf.read = true
         notf.save()
+      res.redirect '/notifications'
     ).fail((reason) ->
       logger.error reason
       res.send 500
     )
   app.post '/notification/delete/:id', decorators.loginRequired, (req,res) ->
-    models.Notification.findOne({_id: req.params.id, read: false}).exec().then((notf) ->
+    models.Notification.findOne({_id: req.params.id, deleted: false}).exec().then((notf) ->
       if notf
         notf.deleted = true
         notf.save()
-        res.redirect '/notifications'
+      res.redirect '/notifications'
     ).fail((reason) ->
       logger.error reason
       res.send 500

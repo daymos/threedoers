@@ -70,10 +70,11 @@ block body
                                             strong   #{prop.hour} hours
                                         p Hourly cost:
                                             strong   #{prop.cost} euro
-                                        -var doers=prop.hour*prop.cost*payment.designCommission
+                                        -var doers=prop.hour*prop.cost*payment.threeDoersDesigner
                                         p 3Doers: #{doers} EURO
                                         p Taxes:  #{doers*payment.taxes}EURO
-                                        p Total Price: #{prop.hour*prop.cost +doers+doers*payment.taxes} EURO
+                                        p
+                                            strong Total Price: #{prop.hour*prop.cost +doers+doers*payment.taxes} EURO
                                     footer
                                         form(action="/design/proposal/review/#{prop._id}", method="post")
                                             input(type="hidden", name="project_id", value="#{project._id}")
@@ -122,10 +123,18 @@ block body
                 -if (user.id==project.creator)
                     .col-sm-8
                         .col-sm-12
-                    .col-sm-4.text-center
-                        form#hidden-pay-form(action="/design/project/pay/#{project.id}", method="post")
-                            button.btn-default.btn-lg.btn-3doers-new(type='submit') PAY
-                            input(type='hidden', name='_csrf', value=csrfToken)
+                    .col-sm-4
+                        -if (designer)
+                            .row-fluid
+                                p designer information
+                                    ul.list-unstyled
+                                        li name: #{designer.username}
+                                        li email: #{designer.email}
+                                        li address: #{designer.address}
+                        .text-center
+                            form#hidden-pay-form(action="/design/project/pay/#{project.id}", method="post")
+                                button.btn-default.btn-lg.btn-3doers-new(type='submit') PAY
+                                input(type='hidden', name='_csrf', value=csrfToken)
                 -else
                         .section.orange.clearfix
                             h1.h1-alert-payment

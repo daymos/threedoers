@@ -241,23 +241,8 @@ STLProject.pre 'save', (next) ->
 
 
 STLProject.post 'save', (doc) ->
-  console.log 'post save'
-  console.log 'post save'
-  console.log 'post save'
-  console.log 'post save'
-  console.log 'post save'
-  console.log 'post save'
-  console.log 'post save'
-  console.log 'post save'
   if (doc.status==PROJECT_STATUSES.SHIPPING[0])
-    console.log 'shipping'
-    console.log 'shipping'
-    console.log 'shipping'
-    console.log 'shipping'
-
     mailer.send('mailer/printer/feedback',{project:doc},{from: settings.admins.emails,to:doc.creator, subject: "Printing work feedback"})
-
-
 
 
 module.exports.Subscription = mongoose.model 'Subscription', Subscription

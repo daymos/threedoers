@@ -10,7 +10,7 @@ module.exports = (app) ->
   settings = require('../../config')
   utils = require('../utils')
   mailer = require('../mailer').mailer
-  settings = require('../../config')
+
   Paypal = require('paypal-adaptive')
 
   app.get '/design/stl', decorators.loginRequired, (req, res) ->
@@ -81,12 +81,10 @@ module.exports = (app) ->
         logger.error err
         res.send 500
       else
-        console.log docs
         auth.User.findOne({_id:req.user.id}).exec().then((user) ->
           if user
             if user.printer=='accepted'
               return res.render 'design/project/list_projects_for_printer', {projects: docs}
-
 
           res.render 'design/project/list_projects', {projects: docs}
         ).fail( ->
@@ -167,6 +165,7 @@ module.exports = (app) ->
   app.get '/design/project/:id', decorators.loginRequired, (req, res, next) ->
     models.STLDesign.findOne({_id: req.params.id, $or: [{creator: req.user.id}, $or:[ {designer: req.user.id},designer:{ $exists: false },{"proposal":{"$elemMatch":{"creator":req.user.id}}}]]}).exec().then( (doc) ->
       if doc
+
         Worksession.find({"session_project_id":doc._id}).sort('session_date_stamp').exec().then((tmpList)->
             designSessions=[]
             if tmpList
@@ -183,13 +182,27 @@ module.exports = (app) ->
 
             if (innerlist.length)
               designSessions.push(innerlist)
-            res.render 'design/project/detail',
+            if (doc.designer)
+              userModel.findOne({_id:doc.designer}).exec().then( (designer) ->
+                console.log designer
+                res.render 'design/project/detail',
+                    statuses: models.DESIGN_STATUSES,
+                    project: doc,
+                    adminMail:settings.admins.emails,
+                    designSessions:designSessions,
+                    payment : settings.payment,
+                    designer:designer
+              )
+            else
+              res.render 'design/project/detail',
                 statuses: models.DESIGN_STATUSES,
                 project: doc,
-                adminMail:settings.admins.emails
-                designSessions:designSessions
-                payment : settings.payment
+                adminMail:settings.admins.emails,
+                designSessions:designSessions,
+                payment : settings.payment,
+                designer:undefined
         ).fail((reason)->
+          console.log reason
           logger.error reason
           res.send 500
         )
@@ -291,13 +304,15 @@ module.exports = (app) ->
                   errorLanguage:  'en_US'
 
               paypalSdk.executePayment payload
+
               if (design.timeExpiredPayKey)
                 payload =
                   payKey: design.timeExpiredPayKey
                   requestEnvelope:
                     errorLanguage:  'en_US'
 
-              paypalSdk.executePayment payload
+                paypalSdk.executePayment payload
+
               design.save()
               user.save()
               userModel.findOne({_id:design.creator}).exec().then( (creator) ->
@@ -361,7 +376,7 @@ module.exports = (app) ->
             designer: oldValue.designer,
             placedAt: oldValue.placedAt,
           designerPayment=design.additionalHourRequested*design.order.preAmount
-          businessGain=designerPayment*settings.payment.designCommission
+          businessGain=designerPayment*settings.payment.threeDoersDesigner
           taxes=businessGain*settings.payment.taxes
           businessPayment=designerPayment+businessGain+taxes
 
@@ -386,8 +401,8 @@ module.exports = (app) ->
                 currencyCode:   'EUR'
                 feesPayer:      'EACHRECEIVER',
                 memo:           'Payment for 3D printing in 3doers'
-                returnUrl:      "#{settings.site}/design/project/pay/execute/#{design.id}"
-                cancelUrl:      "#{settings.site}/design/project/pay/cancel/#{design.id}"
+                returnUrl:      "#{settings.site}/design/project/timeExpired/pay/execute/#{design.id}"
+                cancelUrl:      "#{settings.site}/design/project/timeExpired/pay/cancel/#{design.id}"
                 receiverList:
                   receiver: [
                     {
@@ -456,16 +471,21 @@ module.exports = (app) ->
   app. post '/design/project/pay/:id' ,decorators.loginRequired, (req,res) ->
     models.STLDesign.findOne({_id: req.params.id}).exec().then( (design) ->
       if design
-        design.designerPayment=design.order.preHourly*design.order.preAmount
-        design.businessGain=design.designerPayment*settings.payment.designCommission
-        design.taxes=design.businessGain*settings.payment.taxes
+        design.designerPayment=Math.round(design.order.preHourly*design.order.preAmount) / 100
+        design.businessGain=Math.round(design.designerPayment*settings.payment.threeDoersDesigner) / 100
+
+        design.taxes=Math.round(design.businessGain*settings.payment.taxes) / 100
+
         design.businessPayment=design.designerPayment+design.businessGain+design.taxes
+        console.log design.businessPayment
+        console.log 'compute'
         paypalSdk = new Paypal
           userId: settings.paypal.adaptive.user
           password:  settings.paypal.adaptive.password,
           signature: settings.paypal.adaptive.signature,
           appId: settings.paypal.adaptive.appId,
           sandbox:   settings.paypal.adaptive.debug
+
         auth.User.findOne({_id: design.designer}).exec().then (user) ->
             if user
               payload =
@@ -476,8 +496,8 @@ module.exports = (app) ->
                 currencyCode:   'EUR'
                 feesPayer:      'EACHRECEIVER',
                 memo:           'Payment for 3D printing in 3doers'
-                returnUrl:      "#{settings.site}/design/project/timeExpired/pay/execute/#{design.id}"
-                cancelUrl:      "#{settings.site}/design/project/timeExpired/pay/cancel/#{design.id}"
+                returnUrl:      "#{settings.site}/design/project/pay/execute/#{design.id}"
+                cancelUrl:      "#{settings.site}/design/project/pay/cancel/#{design.id}"
                 receiverList:
                   receiver: [
                     {
@@ -491,6 +511,7 @@ module.exports = (app) ->
                       primary: 'false'
                     }
                   ]
+              console.log 'pay'
               paypalSdk.pay payload, (err, response) ->
                 if err
                   console.log response.error
@@ -499,7 +520,7 @@ module.exports = (app) ->
                 else
                   design.payKey=response.payKey
                   design.secundaryPaid=false
-                  console.log response
+
                   design.save()
                   res.redirect response.paymentApprovalUrl
       else
@@ -516,6 +537,7 @@ module.exports = (app) ->
           doc.status=models.DESIGN_STATUSES.TIMEEXPIREDPROCESSED[0]
           doc.save()
           res.redirect "/design/project/#{doc.id}"
+          res.redirect "/design/project/#{doc.id}"
         )).fail( (error) ->
       console.log error
       logger.error error
@@ -531,6 +553,7 @@ module.exports = (app) ->
       if doc
         auth.User.findOne(doc.designer).exec().then((user) ->
             doc.status=models.DESIGN_STATUSES.PAID[0]
+            console.log doc
             doc.save()
             mailer.send('mailer/design/payed', {project: doc, user: user, site:settings.site}, {from: settings.mailer.noReply, to:[user.email], subject: settings.project.payed.subject})
             res.redirect "/design/project/#{req.params.id}"
@@ -559,12 +582,12 @@ module.exports = (app) ->
             models.STLDesign.find({designer: user.id,status:{"$gte": models.DESIGN_STATUSES.DELIVERED[0]}}).exec().then( (designsWork) ->
               if designsWork
                  TotalRate=0
-                 console.log 'before'
+                 console.log 'before' + TotalRate
                  for work in designsWork
                    console.log work.rate
                    TotalRate+=work.rate
-                 console.log 'after'
-                 console.log TotalRate
+                 console.log 'after' +TotalRate
+                 console.log designsWork.length
                  user.rate=TotalRate/designsWork.length
                  user.save()
                  res.redirect 'design/project/'+req.params.id
