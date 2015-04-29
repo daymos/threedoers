@@ -3,7 +3,8 @@ gridfs = require '../gridfs'
 inflection = require 'inflection'
 models = require('./models')
 modelsNot = require('../notification/models')
-
+mailer = require('../mailer').mailer
+settings = require('../../config')
 Schema = mongoose.Schema
 ObjectId = Schema.ObjectId
 
@@ -169,6 +170,9 @@ STLProject = new Schema
     type: Boolean
     default: true
 
+  rating:
+    type: {}
+
 
 
 STLProject.methods.addFile = (file, options) ->
@@ -233,8 +237,12 @@ STLProject.pre 'save', (next) ->
       notif.save()
 
   )
-
   next()
+
+
+STLProject.post 'save', (doc) ->
+  if (doc.status==PROJECT_STATUSES.SHIPPING[0])
+    mailer.send('mailer/printer/feedback',{project:doc},{from: settings.admins.emails,to:doc.creator, subject: "Printing work feedback"})
 
 
 module.exports.Subscription = mongoose.model 'Subscription', Subscription

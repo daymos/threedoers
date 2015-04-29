@@ -6,7 +6,7 @@ module.exports = (app) ->
   models = require('./models')
 
   app.get '/notifications', decorators.loginRequired, (req, res) ->
-    models.Notification.find({recipient: req.user.id, type:2}).sort({createAt: 'desc'}).limit(15).exec().then( (nots) ->
+    models.Notification.find({recipient: req.user.id, type:2,deleted:false}).sort({createAt: 'desc'}).limit(15).exec().then( (nots) ->
       res.render 'notification/notifications',
       userNotif: nots
     ).fail((reason) ->
@@ -16,7 +16,7 @@ module.exports = (app) ->
 
 
   app.post '/getNotifications', decorators.loginRequired, (req, res) ->
-    models.Notification.find({recipient: req.user.id, type:2, read: false}).exec().then( (nots) ->
+    models.Notification.find({recipient: req.user.id, type:2, read: false,deleted:false}).exec().then( (nots) ->
        if nots
          res.json notifications:nots
        else
@@ -31,6 +31,17 @@ module.exports = (app) ->
       if notf
         notf.read = true
         notf.save()
+      res.redirect '/notifications'
+    ).fail((reason) ->
+      logger.error reason
+      res.send 500
+    )
+  app.post '/notification/delete/:id', decorators.loginRequired, (req,res) ->
+    models.Notification.findOne({_id: req.params.id, deleted: false}).exec().then((notf) ->
+      if notf
+        notf.deleted = true
+        notf.save()
+      res.redirect '/notifications'
     ).fail((reason) ->
       logger.error reason
       res.send 500

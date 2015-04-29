@@ -15,6 +15,7 @@ module.exports = (app, io) ->
   models = require('./models')
   utils = require('../utils')
   auth = require('../auth/models')
+  designModels = require('../design/models')
   shippo = require('shippo')('mattia.spinelli@zoho.com', 'mattia13')
 
   app.get '/', (req, res) ->
@@ -61,20 +62,31 @@ module.exports = (app, io) ->
 
 
   app.get '/become/filemanager', decorators.loginRequired, (req, res) ->
-    res.render 'core/become_filemanager'
+    res.redirect '/profile/settings#upgradeYourProfile'
 
 
   app.post '/become/filemanager', decorators.loginRequired, (req, res) ->
     if req.user.filemanager
-      res.render 'core/become_filemanager'
+      res.redirect '/profile/settings#upgradeYourProfile'
     else
-      mailer.send('mailer/core/become',
-                  {user: req.user},
-                  {from: req.user.email, to: settings.admins.emails,
-                  subject: "New Become a File manager Request"}).then ->
+      if (req.body.designerType==undefined || (req.body.fiscalCode==undefined && req.body.VatNumber==undefined))
+        return res.send 400
+
+      mailer.send('mailer/core/become_designer',{user: req.user},{from: req.user.email, to: settings.admins.emails,subject: "New Become a File manager Request"}).then ->
         req.user.filemanager = 'request'
-        req.user.save()
-      res.render 'core/become_filemanager'
+        req.user.designerType=req.body.designerType
+        console.log(req.body)
+        if (req.body.designerType=='private')
+            req.user.fiscalCode=req.body.fiscalCode
+        else
+            req.user.VatNumber=req.body.VatNumber
+        req.user.save((error, user) ->
+          if error
+            logger.error error
+            return res.send 500
+          else
+             return res.redirect '/profile/settings'
+        )
 
 
   app.get '/become', decorators.loginRequired, (req, res) ->
@@ -88,10 +100,7 @@ module.exports = (app, io) ->
       printer_model = req.body.printer_model
       printer_city = req.body.city
       printer_howlong = req.body.howlong
-      mailer.send('mailer/core/become',
-                  {user: req.user,printer_model, printer_city, printer_howlong},
-                  {from: req.user.email, to: settings.admins.emails,
-                  subject: "New Become a Printer Request"}).then ->
+      mailer.send('mailer/core/become',{user: req.user,printer_model, printer_city, printer_howlong},{from: req.user.email, to: settings.admins.emails,subject: "New Become a Printer Request"}).then ->
         req.user.printer = 'request'
         req.user.save()
       res.redirect '/profile/settings'
@@ -107,6 +116,8 @@ module.exports = (app, io) ->
       return
 
     if req.files.thumbnail.type != 'application/octet-stream' or req.files.thumbnail.path.split('/').pop().split('.').pop().toLowerCase() != 'stl'
+      console.log req.files.thumbnail.type
+      console.log req.files.thumbnail.path.split('/').pop().split('.').pop().toLowerCase()
       res.json errors: thumbnail: msg: "Is not a valid format, you need to upload a STL file."
       fs.unlink(req.files.thumbnail.path)
       return
@@ -172,6 +183,36 @@ module.exports = (app, io) ->
       logger.error reason
       res.send 500
     )
+  app.get '/project/feedback/:id', (req, res, next) ->
+    models.STLProject.findOne({_id: req.params.id}).exec().then( (doc) ->
+      if doc
+        console.log doc
+        return res.render 'core/project/feedback' ,doc:doc
+      else
+        return res.send 404
+    ).fail((reason) ->
+      logger.error reason
+      return res.send 500
+    )
+  app.post '/project/feedback/:id', (req, res, next) ->
+    console.log req.params.id
+    models.STLProject.findOne({_id: req.params.id}).exec().then( (doc) ->
+      if doc
+        if (doc.rating)
+          return res.send 401
+        doc.rating =
+          quality:parseFloat(req.body.quality)
+          comunication:parseFloat(req.body.comunication)
+          speed:parseFloat(req.body.speed)
+          satisfation:parseFloat(req.body.satisfation)
+        doc.save()
+        return res.redirect '/project/feedback/'+req.params.id
+      else
+        return res.send 404
+    ).fail((reason) ->
+      logger.error reason
+      return res.send 500
+    )
 
 
   app.get '/profile/projects', decorators.loginRequired, (req, res) ->
@@ -201,8 +242,10 @@ module.exports = (app, io) ->
 
 
   app.get '/profile/archived', decorators.loginRequired, (req, res) ->
-    models.STLProject.find({user: req.user._id, status: models.PROJECT_STATUSES.ARCHIVED[0]}).exec().then( (docs) ->
-      res.render 'core/profile/list_projects', {projects: docs}
+    models.STLProject.find({user: req.user._id, status: models.PROJECT_STATUSES.ARCHIVED[0]}).exec().then( (printings) ->
+        designModels.STLDesign.find({'creator': req.user.id, status: {"$lt": designModels.DESIGN_STATUSES.ARCHIVED[0]} }).exec().then((design) ->
+          res.render 'core/profile/list_projects', {printingProjects: printings,designProjects: design}
+        )
     ).fail( ->
       logger.error arguments
       res.send 500
@@ -224,7 +267,15 @@ module.exports = (app, io) ->
 
     req.user.firstName = req.body.firstName
     req.user.lastName = req.body.lastName
+    if (req.body.mailNotification=='on')
+      req.user.mailNotification=true
+    else
+      req.user.mailNotification=false
+
     req.user.save (error, user)->
+      if error
+        logger.error error
+
       res.render 'core/profile/settings'
 
 
@@ -636,7 +687,8 @@ module.exports = (app, io) ->
           if docs.length
             utils.sendNotification(io, docs, "Project <a href='/project/#{doc.id}'>#{doc.title}</a> is waiting for you.", 'New project', 'info')
             for user in docs
-              mailer.send('mailer/project/status', {project: doc, user: user, site:settings.site}, {from: settings.mailer.noReply, to:[user.email], subject: settings.project.status.subject})
+              if user.mailNotification
+                mailer.send('mailer/project/status', {project: doc, user: user, site:settings.site}, {from: settings.mailer.noReply, to:[user.email], subject: settings.project.status.subject})
       res.redirect "/project/#{req.params.id}"
     ).fail( ->
       console.log arguments
@@ -793,7 +845,8 @@ module.exports = (app, io) ->
         if docs.length
           utils.sendNotification(io, docs, "Project <a href='/project/#{doc.id}'>#{doc.title}</a> was archived.", 'Status changed', 'info')
           for user in docs
-            mailer.send('mailer/project/status', {project: doc, user: user, site:settings.site}, {from: settings.mailer.noReply, to:[user.email], subject: settings.project.status.subject})
+            if user.mailNotification
+              mailer.send('mailer/project/status', {project: doc, user: user, site:settings.site}, {from: settings.mailer.noReply, to:[user.email], subject: settings.project.status.subject})
     ).fail( ->
       logger.error arguments
       res.send 500
@@ -811,21 +864,17 @@ module.exports = (app, io) ->
                   res.redirect "/project/#{req.params.id}"
               else
                 shippo.transaction.create(rate: doc.order.rate.object_id).then((transaction)->
-                  updatedData =
-                    status: models.PROJECT_STATUSES.SHIPPING[0]
-                    'order.transaction': transaction
-
-                  doc.update updatedData, (error) ->
-                    unless error
-                      res.redirect "/project/#{req.params.id}"
+                  doc.status=models.PROJECT_STATUSES.SHIPPING[0]
+                  doc.transaction= transaction
+                  doc.save()
+                  res.redirect "/project/#{req.params.id}"
                 )
-
-              # send notification
               auth.User.where('id').in([req.user.id, doc.printer]).exec().then (docs)->
                 if docs.length
                   utils.sendNotification(io, docs, "Project <a href='/project/#{doc.id}'>#{doc.title}</a> was printed.", 'Status changed', 'info')
                   for user in docs
-                    mailer.send('mailer/project/status', {project: doc, user: user, site:settings.site}, {from: settings.mailer.noReply, to:[user.email], subject: settings.project.status.subject})
+                    if user.mailNotification
+                      mailer.send('mailer/project/status', {project: doc, user: user, site:settings.site}, {from: settings.mailer.noReply, to:[user.email], subject: settings.project.status.subject})
 
             else
               res.send "Printer doesn't have address, please contact support or printer to add address."
@@ -882,21 +931,24 @@ module.exports = (app, io) ->
         res.render 'core/printing/jobs', {projects: docs}
 
   app.get '/printing/archived', decorators.printerRequired, (req, res) ->
-    models.STLProject.find('order.printer': req.user.id, status: models.PROJECT_STATUSES.ARCHIVED[0]).exec (err, docs) ->
-      if err
-        logger.error err
-        res.send 500
-      else
-        res.render 'core/printing/archived', {projects: docs}
+    models.STLProject.find('order.printer': req.user.id, status: models.PROJECT_STATUSES.ARCHIVED[0]).exec().then( ( printings) ->
+        designModels.STLDesign.find({'creator': req.user.id, status:  designModels.DESIGN_STATUSES.ARCHIVED[0]}).exec().then((design) ->
+          res.render 'core/printing/archived', {printingProjects: printings,designProjects: design}
+    )).fail( (reason) ->
+      console.log reason
+      logger.error reason
+      res.send 500
+    )
 
   app.post '/printing/review/:id', decorators.printerRequired, (req, res) ->
     models.STLProject.findOne({_id: req.params.id}).exec().then( (doc) ->
       if doc and doc.validateNextStatus(models.PROJECT_STATUSES.PRINT_REVIEW[0])
         auth.User.findOne(doc.user).exec (err, user) ->
           if user
-            mailer.send('mailer/printing/accept', {project: doc, user: user, site:settings.site}, {from: settings.mailer.noReply, to:[user.email], subject: settings.printing.accept.subject}).then ->
-              doc.status = models.PROJECT_STATUSES.PRINT_REVIEW[0]
-              doc.order =
+            if user.mailNotification
+              mailer.send('mailer/printing/accept', {project: doc, user: user, site:settings.site}, {from: settings.mailer.noReply, to:[user.email], subject: settings.printing.accept.subject})
+            doc.status = models.PROJECT_STATUSES.PRINT_REVIEW[0]
+            doc.order =
                 printer: req.user.id
                 ammount: doc.order.ammount
                 price: doc.order.price
@@ -904,8 +956,8 @@ module.exports = (app, io) ->
                 printerPayment: doc.order.printerPayment
                 businessPayment: doc.order.businessPayment
                 placedAt: doc.order.placedAt
-              doc.save()
-              res.json msg: "Accepted"
+            doc.save()
+            res.json msg: "Accepted"
 
             # send notification
             auth.User.where('_id').in([req.user.id, user.id]).exec().then (docs)->
@@ -923,17 +975,19 @@ module.exports = (app, io) ->
       if doc and doc.validateNextStatus(models.PROJECT_STATUSES.PRINT_ACCEPTED[0])
         auth.User.findOne(doc.user).exec (err, user) ->
           if user
-            mailer.send('mailer/printing/accept', {project: doc, user: user, site:settings.site}, {from: settings.mailer.noReply, to:[user.email], subject: settings.printing.accept.subject}).then ->
-              doc.status = models.PROJECT_STATUSES.PRINT_ACCEPTED[0]
-              doc.save()
-              res.json msg: "Accepted"
+            if user.mailNotification
+              mailer.send('mailer/printing/accept', {project: doc, user: user, site:settings.site}, {from: settings.mailer.noReply, to:[user.email], subject: settings.printing.accept.subject})
+            doc.status = models.PROJECT_STATUSES.PRINT_ACCEPTED[0]
+            doc.save()
+            res.json msg: "Accepted"
 
             # send notification
             auth.User.where('_id').in([req.user.id, user.id]).exec().then (docs)->
               if docs.length
                 utils.sendNotification(io, docs, "Project <a href='/project/#{doc.id}'>#{doc.title}</a> was accepted.", 'Status changed', 'info')
                 for user in docs
-                  mailer.send('mailer/project/status', {project: doc, user: user, site:settings.site}, {from: settings.mailer.noReply, to:[user.email], subject: settings.project.status.subject})
+                  if user.mailNotification
+                    mailer.send('mailer/project/status', {project: doc, user: user, site:settings.site}, {from: settings.mailer.noReply, to:[user.email], subject: settings.project.status.subject})
       else
         res.json msg: "Looks like someone accepted, try with another", 400
     ).fail( ->

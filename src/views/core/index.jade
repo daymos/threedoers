@@ -1,11 +1,8 @@
 extends ../layout
-
 block title
-  |  Home
-
+    |  Home
 block extra-headers
-  meta(name="csrf-token", content="#{csrfToken}")
-
+    meta(name="csrf-token", content="#{csrfToken}")
 block body
     section.container
         .row
@@ -14,34 +11,27 @@ block body
                     p.intro-heading SIMPLE 3D PRINTING
                     p.text-20.intro-label Turn your ideas into real objects
     section(data-anchor="howItWorks").container#howItWorks
-        .row.text-center.margin-header-30.menu-item-color
-            p.h3.weight-normal.menu-item-color.margin-bottom-20 HOW IT WORKS
-
+        .row.text-center.margin-top-35.menu-item-color
+            p.h3.weight-normal.menu-item-color.margin-bottom-18 HOW IT WORKS
             span.text-16.gray-color 3doers is a collective 3d printing service.
             p.text-16.gray-color Here you can print your objects or find a designer to model your ideas.
-
-        .row.margin-header-30.green-color
+        .row.margin-top-70.green-color
             div.col-sm-4.text-center
                 img(src='/img/icon/step1_icon.svg').img-responsive.center-block
                 div.h3.text-20 1. You upload a file
                 a(href='#').lite-grey-color.text-14 Don&rsquo;t have a design yet?
-
-
             div.col-sm-4.text-center
                 img(src='/img/icon/step2_icon.svg').img-responsive.center-block
                 div.h3.text-20 2. A printer picks it
-
             div.col-sm-4.text-center
                 img(src='/img/icon/step3_icon.svg').img-responsive.center-block
                 div.h3.text-20 3. Your object is delivered to you
-
-        .row.text-center
+        .row.text-center.margin-top-60
             a(href='/project/upload').btn-landing.btn-primary-landing START PRINTING
-
-    section(data-anchor='join').container.margin-header-30#join
+    section(data-anchor='join').container.margin-top-60#join
         .row.blue-box
-            .col-sm-8.blue-border
-                .row-fluid.padding-left-20.padding-bottom-50
+            .col-sm-8.blue-border.padding-top-55.padding-bottom-55
+                .row-fluid.padding-left-20.padding-left-30
                     p.h3.weight-normal.lite-blu-shadow DO YOU HAVE A 3D PRINTER?
                     br
                     p.text-16.menu-item-color You bought a 3d printer and you feel strong about your skills.
@@ -56,7 +46,7 @@ block body
                             a(href='/become').btn-landing.btn-block.btn-secondary-landing.margin-top-60 Become a printer
                         .col-sm-5.col-sm-offset-2
                             img(src='/img/icon/printer_icon.svg').img-responsive.center-block
-            .col-sm-4.blue-box
+            .col-sm-4.blue-box.padding-top-55.padding-left-30.padding-bottom-55
                 .row-fluid.padding-left-20
                     p.h3.weight-normal ARE YOU A DESIGNER?
                     br
@@ -69,8 +59,8 @@ block body
                     br
                     br
                     .text-center.col-sm-8.col-sm-offset-2
-                        a(href='#').btn-landing.btn-secondary-landing.btn-block.btn-secondary-reverse.margin-top-20 Start designing
-    section(data-anchor='contact').container.margin-header-30#contact
+                        a(href='/profile/settings#upgradeYourProfile').btn-landing.btn-secondary-landing.btn-block.btn-secondary-reverse.margin-top-20 Start designing
+    section(data-anchor='contact').container.margin-top-20#contact
         .row#contact-us-container
             .col-sm-2
                 p.h3.weight-normal CONTACT US
@@ -78,7 +68,6 @@ block body
                 p.text-16.weight-lite Need help using our service?
                 p.text-16.weight-lite For business to business enquiries or any other requests, feel free to contact us at this address
                     a(href='mailto:info@3doers.it')  info@3doers.it
-
             .col-sm-8.col-sm-offset-1
                 img(src='/img/background/worldmap.svg').img-responsive.col-sm-offset-2
                 .col-sm-offset-5.col-sm-4

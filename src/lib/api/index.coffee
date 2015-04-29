@@ -23,7 +23,7 @@ module.exports = (app) ->
         error: 'No User found with this Access Token'
       else
         console.log "id user:"+user.id
-        desigModel.STLDesign.findOne({"designer": user.id, status: {"$lt": desigModel.DESIGN_STATUSES.DELIVERED[0], "$gte": desigModel.DESIGN_STATUSES.ACCEPTED[0]}}).exec().then( (docs) ->
+        desigModel.STLDesign.findOne({"designer": user.id, status: {"$lt": desigModel.DESIGN_STATUSES.DELIVERED[0], "$gte": desigModel.DESIGN_STATUSES.PAID[0]}}).exec().then( (docs) ->
           if docs
             console.dir docs.order
             project=
@@ -102,10 +102,8 @@ module.exports = (app) ->
                 diffMs = ((new Date(req.query.creation_date)) - session.session_date_stamp)
                 design.project_total_time_logged += Math.floor(((diffMs/1000) / 60))
                 if design.project_total_time_logged/60>=design.order.preHourly
-
                   user.onTime=false
                   design.status=desigModel.DESIGN_STATUSES.TIMEEEXPIRED[0]
-
                   user.save()
                 design.save()
             )
