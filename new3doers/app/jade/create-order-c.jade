@@ -1,0 +1,94 @@
+extends /layouts/_app
+
+block content
+	.page
+		.container
+			br
+			br
+			.row
+				.col-md-10.col-md-offset-1
+					.row
+						.col-md-4
+							.step
+								img.img-circle(src='data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMTQwIiBoZWlnaHQ9IjE0MCIgdmlld0JveD0iMCAwIDE0MCAxNDAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjxkZWZzLz48cmVjdCB3aWR0aD0iMTQwIiBoZWlnaHQ9IjE0MCIgZmlsbD0iI0VFRUVFRSIvPjxnPjx0ZXh0IHg9IjQ0LjA0Njg3NSIgeT0iNzAiIHN0eWxlPSJmaWxsOiNBQUFBQUE7Zm9udC13ZWlnaHQ6Ym9sZDtmb250LWZhbWlseTpBcmlhbCwgSGVsdmV0aWNhLCBPcGVuIFNhbnMsIHNhbnMtc2VyaWYsIG1vbm9zcGFjZTtmb250LXNpemU6MTBwdDtkb21pbmFudC1iYXNlbGluZTpjZW50cmFsIj4xNDB4MTQwPC90ZXh0PjwvZz48L3N2Zz4=', style='width: 100px; height: 100px;')
+						.col-md-4
+							.step
+								img.img-circle(src='data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMTQwIiBoZWlnaHQ9IjE0MCIgdmlld0JveD0iMCAwIDE0MCAxNDAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjxkZWZzLz48cmVjdCB3aWR0aD0iMTQwIiBoZWlnaHQ9IjE0MCIgZmlsbD0iI0VFRUVFRSIvPjxnPjx0ZXh0IHg9IjQ0LjA0Njg3NSIgeT0iNzAiIHN0eWxlPSJmaWxsOiNBQUFBQUE7Zm9udC13ZWlnaHQ6Ym9sZDtmb250LWZhbWlseTpBcmlhbCwgSGVsdmV0aWNhLCBPcGVuIFNhbnMsIHNhbnMtc2VyaWYsIG1vbm9zcGFjZTtmb250LXNpemU6MTBwdDtkb21pbmFudC1iYXNlbGluZTpjZW50cmFsIj4xNDB4MTQwPC90ZXh0PjwvZz48L3N2Zz4=', style='width: 100px; height: 100px;')
+						.col-md-4
+							.step
+								img.img-circle(src='data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMTQwIiBoZWlnaHQ9IjE0MCIgdmlld0JveD0iMCAwIDE0MCAxNDAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjxkZWZzLz48cmVjdCB3aWR0aD0iMTQwIiBoZWlnaHQ9IjE0MCIgZmlsbD0iI0VFRUVFRSIvPjxnPjx0ZXh0IHg9IjQ0LjA0Njg3NSIgeT0iNzAiIHN0eWxlPSJmaWxsOiNBQUFBQUE7Zm9udC13ZWlnaHQ6Ym9sZDtmb250LWZhbWlseTpBcmlhbCwgSGVsdmV0aWNhLCBPcGVuIFNhbnMsIHNhbnMtc2VyaWYsIG1vbm9zcGFjZTtmb250LXNpemU6MTBwdDtkb21pbmFudC1iYXNlbGluZTpjZW50cmFsIj4xNDB4MTQwPC90ZXh0PjwvZz48L3N2Zz4=', style='width: 100px; height: 100px;')
+
+		.bg-3doers
+			.container
+				div(role='tabpanel')
+					ul.nav.nav-justified.nav-3doers
+						li.nav-step.active
+							a(href='#tab-crete-order')
+								span.step-one
+								| Create order
+						li.nav-step
+							a(href='#tab-place-order')
+								span.step-two
+								| Place order
+						li.nav-step
+							a(href='#tab-accepted')
+								span.step-three
+								| Accepted
+						li.nav-step
+							a(href='#tab-printing')
+								span.step-four
+								| Printing
+						li.nav-step
+							a(href='#tab-shipping')
+								span.step-five
+								| Shipping
+					.tab-content
+						.tab-pane.fade.in.active(id='tab-crete-order')
+							h4.light Preview your file and decide printing features.
+						.tab-pane.fade(id='tab-place-order')
+							h4.light Preview your file and decide printing features.
+						.tab-pane.fade(id='tab-accepted')
+							h4.light Preview your file and decide printing features.
+						.tab-pane.fade(id='tab-printing')
+							h4.light Preview your file and decide printing features.
+						.tab-pane.fade(id='tab-shipping')
+							h4.light Preview your file and decide printing features.
+
+				.job-order
+					h4.job-name Small_frog.stl
+					h5.job-volume
+						strong VOLUME: 
+						| 59.7 cm3
+					.row
+						.col-md-9
+							.job-details
+								.row
+									.col-md-7
+										figure: img.img-responsive(src='images/job-preview.jpg')
+									.col-md-5
+										form.form-3doers
+											.form-group
+												select.form-control
+													option What color?
+											.form-group
+												select.form-control
+													option What material?
+											.form-group
+												input.form-control(type='text', placeholder='How many items?')
+											.row
+												.col-sm-7
+													h4.job-quotation Price quotation*:
+												.col-sm-5
+													h3.job-price 43.24 $
+											p.final-price *Final price will include a shipping fee and will be calculated once the order has been accepted.
+											button.btn.btn-lg.btn-block.btn-green(type='submit') PLACE ORDER
+				.row
+					.col-md-9
+						.alert.alert-danger
+							.text-light
+								| Dimensions of the object might exceed printing sizes.
+								br
+								| You can proceed with the order anyway, but if no printer picks it up you might consider resizing the object.
+
+				br
+				br

@@ -1,0 +1,68 @@
+extends /layouts/_default
+
+block content
+	.page
+		.container
+			.row
+				.col-md-4
+					h5 ICON
+				.col-md-4
+					h5 ICON
+				.col-md-4
+					h5 ICON
+
+		.bg-3doers
+			.container
+				ul
+					li.active
+						a(href='#') Create order
+						div
+							p Preview your file and decide printing features.
+					li
+						a(href='#') Place order
+						div
+							p Preview your file and decide printing features.
+					li
+						a(href='#') Accepted
+						div
+							p Preview your file and decide printing features.
+					li
+						a(href='#') Printing
+						div
+							p Preview your file and decide printing features.
+					li
+						a(href='#') Shipping
+						div
+							p Preview your file and decide printing features.
+
+				h4 Small_frog.stl
+				h5 VOLUME: 59.7 cm3
+				.row
+					.col-md-8
+						div
+							.row
+								.col-md-7
+									figure: img(src='data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+PGRlZnMvPjxyZWN0IHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCIgZmlsbD0iI0VFRUVFRSIvPjxnPjx0ZXh0IHg9IjEzLjQ2MDkzNzUiIHk9IjMyIiBzdHlsZT0iZmlsbDojQUFBQUFBO2ZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1mYW1pbHk6QXJpYWwsIEhlbHZldGljYSwgT3BlbiBTYW5zLCBzYW5zLXNlcmlmLCBtb25vc3BhY2U7Zm9udC1zaXplOjEwcHQ7ZG9taW5hbnQtYmFzZWxpbmU6Y2VudHJhbCI+NjR4NjQ8L3RleHQ+PC9nPjwvc3ZnPg==', style='width:100%')
+								.col-md-5
+									form
+										.form-group
+											select.form-control
+												option What color?
+										.form-group
+											select.form-control
+												option What material?
+										.form-group
+											select.form-control
+												option How many items?
+										p
+											small *Final price will include a shipping fee and will be calculated once the order has been accepted.
+										button.btn.btn-lg.btn-block.btn-green(type='submit') PLACE ORDER
+				.row
+					.col-md-8
+						.alert.alert-danger
+							| Dimensions of the object might exceed printing sizes.
+							br
+							| You can proceed with the order anyway, but if no printer picks it up you might consider resizing the object.
+
+				br
+				br

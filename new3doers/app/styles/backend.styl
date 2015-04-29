@@ -1,0 +1,310 @@
+@import 'mixins/border-radius'
+@import 'mixins/box-shadow'
+@import 'mixins/text-shadow'
+@import 'mixins/transition'
+
+// Typography
+h1.light,
+h2.light,
+h3.light,
+h4.light,
+h5.light
+	font-weight 300
+h1.normal,
+h2.normal,
+h3.normal,
+h4.normal,
+h5.normal
+	font-weight 400
+
+// 3doers nav tabs
+.nav-tabs.nav-tabs-3doers
+	> li > a
+		border-bottom-color #7BF282
+		color #BAB9B9
+		font-size 28px
+	> .active > a,
+	> .active > a:hover,
+	> .active > a:focus
+		background-color transparent
+		border-color #7BF282
+		border-bottom transparent
+		color #BAB9B9
+
+// Steps
+.step p
+	font-size 12px
+
+// Job
+.job
+	background-color #FFFFFF
+	border 1px solid #DDE5DE
+	border-radius(5px)
+	margin-bottom 40px
+	padding-top 15px
+
+	.job-name
+		color #4A4A4A
+		font-size 22px
+		margin-top 0
+		padding 0 10px
+		text-shadow(1px 1px 0 #7BF282)
+	.job-created-at
+		color #4A4A4A
+		font-size 12px
+		font-weight 300
+		padding 0 10px
+	.job-image
+		text-align center
+	.job-wtime
+		font-size 12px
+		font-weight: 300
+		margin-top 10px
+		text-align center
+		h5
+			margin-top 0
+	.job-status
+		background-color #77B3D4
+		border-radius(0 0 5px 5px)
+		color #FFFFFF
+		font-size 16px
+		font-weight normal
+		padding 10px
+	.btn-lg
+		font-size 15px
+
+// Job Review
+.job-review
+	margin-bottom 20px
+	margin-top 20px
+	.job-name
+		color #4A4A4A
+		font-size 22px
+		margin-top 0
+		text-shadow(1px 1px 0 #7BF282)
+	.job-details
+		background-color #FFFFFF
+		border-radius(5px)
+		p
+			font-weight 300
+			margin-bottom 5px
+		.info
+			padding 15px 0
+
+// Job Order
+.job-order
+	margin-bottom 20px
+	margin-top 20px
+	.job-name
+		color #4A4A4A
+		font-size 22px
+		margin-top 0
+		text-shadow(1px 1px 0 #7BF282)
+	.job-volume
+		color #4A4A4A
+		font-weight 300
+		margin-bottom 15px
+		margin-top 0px
+	.job-quotation
+		font-size 18px
+		font-style italic
+		font-weight 400
+		line-height 36px
+		margin-bottom 0
+		margin-top 10px
+		text-shadow(1px 1px 0 #7BF282)
+	.job-price
+		background-color #FFFFFF
+		font-size 24px
+		font-weight 300
+		margin-top 10px
+		padding 5px 0
+		text-align center
+	.final-price
+		color #959495
+		font-size 10px
+		line-height 14px
+		margin-bottom 28px
+
+// Table Job Payment
+h4.payment-title
+	font-size 22px
+	margin-top 0
+table.job-payment
+	width 100%
+	tr.separator
+		height 30px
+	tr.separator-small
+		height 15px
+	td.desc
+		color #4A4A4A
+		font-size 18px
+		font-style italic
+		width 60%
+	td.value
+		color #4A4A4A
+		font-size 22px
+		font-weight 300
+	h3.normal
+		margin-bottom 0
+		margin-top 0
+	.final-price
+		color #959495
+		font-size 10px
+		line-height 14px
+
+// Conversation
+.conversation
+	margin-top 10px
+
+	.media:first-child
+		margin-top 0
+	.media
+		margin-bottom 30px
+		margin-top 0
+		.media-body
+			.message
+				font-size 18px
+				font-weight 300
+				margin-bottom 0px
+			.meta
+				color #959495
+				font-size 14px
+				font-weight 300
+	.media-right
+		padding-left 25px
+	.media-left
+		padding-right 25px
+	textarea.form-control
+		font-size 18px
+		font-style italic
+		font-weight 300
+
+// Steps
+.nav.nav-3doers
+	border-bottom 1px solid #4A4A4A
+	margin-top 60px
+	padding-bottom 1px
+	a
+		padding 0
+	a:hover,
+	a:focus
+		background-color transparent
+.nav-step
+	span
+		background-position 0 -38px
+		background-repeat no-repeat
+		display inline-block
+		height 38px
+		margin-right 10px
+		vertical-align middle
+		width 31px
+	a
+		color #959495
+		font-size 14px
+		font-weight 300
+		text-align left !important
+	.step-one
+		background-position 0 0
+		background-image url('../images/icon_1.png')
+	.step-two
+		background-image url('../images/icon_2.png')
+	.step-three
+		background-image url('../images/icon_3.png')
+	.step-four
+		background-image url('../images/icon_4.png')
+	.step-five
+		background-image url('../images/icon_5.png')
+
+.nav-step.complete,
+.nav-step.complete:hover,
+.nav-step.complete:focus
+	span
+		background-position 0 0
+		background-image url('../images/icon_checkedbubble.png')
+
+.nav-step:hover,
+.nav-step:focus
+	.step-one,
+	.step-two,
+	.step-three,
+	.step-four,
+	.step-five
+		background-position 0 -76px
+
+.nav-step.active,
+.nav-step.active:hover,
+.nav-step.active:focus
+	a
+		color #4A4A4A
+		font-size 22px
+		font-weight normal
+	.step-one,
+	.step-two,
+	.step-three,
+	.step-four,
+	.step-five
+		background-position 0 0
+
+
+// Alerts
+.alert
+	margin-bottom 30px
+.alert-primary
+	background-color #77B3D4
+	border-radius(0px)
+	color #FFFFFF
+	font-size 18px
+	font-weight 300
+.alert-warning
+	background-color #F5CF87
+	border-radius(0px)
+	color #4A4A4A
+	font-size 18px
+	font-weight 300
+.alert-danger
+	background-color #FF7373
+	border-color #FF7373
+	border-radius(0px)
+	color #FFFFFF
+
+// Text Shadows
+.text-shadow-3doers
+	text-shadow(1px 1px 0 #7BF282)
+
+// Texts
+.text-xsmall
+	font-size 10px
+.text-light
+	font-weight 300
+.text-muted
+	color #959495
+// Texts alignments
+.text-left-sm,
+.text-left-xs
+	text-align left
+
+// Override Bootstrap
+.tab-content
+	padding 10px 0
+.modal-content
+	border-color #7BF282
+	border-radius(0px)
+	box-shadow(none)
+.modal-header
+	border-bottom-color transparent
+	padding-bottom 0
+	padding-left 20px
+	padding-right 20px
+.modal-body
+	font-size 16px
+	font-weight 300
+	padding 10px 20px 20px 20px
+
+// Responsive
+// Min Medium
+@media (min-width: 768px)
+	.text-right
+		text-align right
+	.modal-dialog.modal-md
+		width 420px;

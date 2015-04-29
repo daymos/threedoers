@@ -1,0 +1,366 @@
+@import 'vars.styl'
+
+@import 'mixins/border-radius'
+@import 'mixins/box-shadow'
+@import 'mixins/text-shadow'
+@import 'mixins/transition'
+
+.nav-inline > li
+	padding-left 10px
+	padding-right 10px
+
+a
+	color $primary-color-text
+a:hover,
+a:focus
+	color #BAB9B9
+
+a.link-inverse
+	color #BAB9B9
+a.link-inverse:hover,
+a.link-inverse:focus
+	color $primary-color-text
+
+// Top navbar
+.navbar-3doers
+	margin-bottom 0
+	.navbar-text > .navbar-link
+		border-bottom 3px solid transparent
+		color $default-color-text
+		font-size 16px
+		font-weight 300
+		padding-bottom 3px
+		text-decoration none
+		transition(border .3s)
+	.navbar-text > .navbar-link:hover,
+	.navbar-text > .navbar-link:focus
+		border-bottom-color #88D6A7
+	.navbar-text > .navbar-link.navbar-link-inverse
+		color #4EB476
+	li.navbar-text > .navbar-link
+		display inline
+		padding 0 0 3px 0
+
+	.dropdown > a
+		padding-bottom 10px
+		padding-top 10px
+	.dropdown-menu
+		box-shadow(1px 1px 1px #7BF282)
+		min-width 240px
+		margin-top 4px !important
+	.dropdown-menu > li
+		margin 10px 0
+	.dropdown-menu > li > span
+		display block
+		font-size 16px
+		margin-bottom 20px
+		padding 3px 20px
+	.dropdown-menu > li > a
+	.dropdown-menu > li > span
+		font-weight 300
+	.dropdown-menu > li > a
+		color #BAB9B9
+	.dropdown-menu > li > span
+		color $default-color-text
+	.dropdown-menu > li > a:hover,
+	.dropdown-menu > li > a:focus
+		background-color transparent
+		color $default-color-text
+	.dropdown-menu > li > a .fa
+		font-size 1.8em
+		margin-right 16px
+
+.navbar-default .navbar-nav>.open>a,
+.navbar-default .navbar-nav>.open>a:focus,
+.navbar-default .navbar-nav>.open>a:hover
+	background-color #FFFFFF
+
+// Main Banner
+.main-banner
+	text-align center
+
+// Footer
+#footer
+	border-top 1px solid #126F76
+	padding-bottom 20px
+	padding-top 20px
+	
+	.nav-inline,
+	.nav-social
+		margin-bottom 0
+	.nav-social
+		text-align right
+	
+	.nav-inline > li > a
+			color $default-color-text
+			font-size 12px
+			font-weight 300
+			line-height 30px
+
+	.nav-social > li > a
+		background-color #88D6A7
+		border-radius(50%)
+		color #ffffff
+		display inline-block
+		font-size 17px
+		height 30px
+		text-align center
+		transition(background .3s)
+		width 30px
+
+		&:hover,
+		&:focus
+			background-color #126F76
+
+		.fa
+			line-height 30px
+
+// Landing Page
+.section
+	.title
+		color $default-color-text
+		font-weight normal
+		margin-bottom 18px
+		margin-top 35px
+	.info
+		color #959495
+		font-size 16px
+		font-weight 300
+	.control-links
+		margin-bottom 60px
+		margin-top 30px
+		text-align center
+		.btn-lg
+			font-size 16px
+			min-width 220px
+			padding 14px 16px
+
+.steps
+	margin-top 70px
+.step
+	margin-bottom 30px
+	text-align center
+	h4
+		color #4EB476
+		font-size 20px
+		font-weight normal
+		margin-bottom 0
+	a
+		color #BAB9B9
+		font-weight 300
+	a:hover,
+	a:focus
+		color $default-color-text
+
+.box
+	border 3px solid $primary-color-text
+	margin-top 30px
+	margin-bottom 20px
+
+	.content
+		padding 55px 30px
+		h3
+			font-size 24px
+			font-weight 600
+			margin-top 0
+		p
+			font-size 16px
+			font-weight 300
+		.btn-lg
+			font-size 16px
+			min-width 220px
+			padding 14px 16px
+
+	.content-white
+		h3
+			color $primary-color-text
+		p
+			color #9B9B9B
+	.content-blue
+		background-color $primary-color-text
+		h3
+			color #FFFFFF
+		p
+			color #F3FFF4
+			text-align justify
+
+.contact
+	background url('../images/contactus_background.png') left top no-repeat
+	background-size cover
+	padding 30px
+	
+	h3
+		color #FFFFFF
+		font-weight normal
+		margin-top 0
+	
+	.info
+		color #A5CFD2
+		font-size 16px
+		font-weight 300
+		a
+			color #B8F1CE
+		a:hover,
+		a:focus
+			color #FFFFFF
+	.inner
+		background url('../images/worldmap.png') right top no-repeat
+	.text
+		font-weight 300
+		margin-bottom 0
+	.text.white
+		color #FFFFFF
+	.text.green
+		color #88D6A7
+
+// Page header
+.page-header
+	border-bottom 1px solid #DDE5DE
+	color $default-color-text
+	margin 40px 0 20px
+	padding-bottom 7px
+.page-subheader
+	@extend .page-header
+	h3
+		font-size 22px
+
+// Buttons
+.btn
+	transition(background .3s)
+.btn-md
+	font-size 16px
+	padding 8px 14px
+.btn-xlg
+	font-size 16px
+	line-height 1.5
+	padding 14px 18px
+
+.btn-simple
+	border 2px solid $primary-color-text
+	border-radius(5px)
+	color $primary-color-text
+.btn-simple:hover
+.btn-simple:focus
+	background-color $primary-color-text
+	border-color $primary-color-text
+	color #FFFFFF
+.btn-simple-inverse
+	border 2px solid #FFFFFF
+	border-radius(5px)
+	color #FFFFFF
+.btn-simple-inverse:hover,
+.btn-simple-inverse:focus
+	background-color: #FFFFFF
+	color $primary-color-text
+.btn-green
+	background-color #88D6A7
+	border-radius(5px)
+	color #FFFFFF
+.btn-green:hover
+.btn-green:focus
+	background-color #65BB87
+	color #FFFFFF
+.btn-green-inverse
+	background-color transparent
+	border 2px solid #88D6A7
+	color #88D6A7
+
+// Backgrounds
+.bg-3doers
+	background-color #F3FFF4
+
+// Custom Bootstrap
+// Top navbar
+.navbar-brand
+	height 72px
+	padding 5px 15px
+.navbar-text
+	margin-bottom 26px
+	margin-top 26px
+.navbar-toggle
+	margin-top 18px
+.navbar-default
+	background-color #FFFFFF
+	border none
+	border-bottom 1px solid #126F76
+
+.navbar .nav > li > .dropdown-menu:before
+	position absolute
+	top -10px
+	left 9px
+	display inline-block
+	border-right 10px solid transparent
+	border-bottom 10px solid #DDE5DE
+	border-left 10px solid transparent
+	border-bottom-color rgba(0,0,0,0.2)
+	content ''
+
+.navbar .nav > li > .dropdown-menu:after
+	position absolute
+	top -9px
+	left 10px
+	display inline-block
+	border-right 10px solid transparent
+	border-bottom 10px solid #FFFFFF
+	border-left 10px solid transparent
+	content ''
+
+.navbar .navbar-right > li > .dropdown-menu:before,
+.navbar .navbar-right > li > .dropdown-menu:after
+	right 30px
+	left auto
+
+// Forms
+.form-3doers
+	.form-control
+		color $default-color-text
+		font-size 18px
+		font-style italic
+		text-shadow(1px 1px 0 #7BF282)
+
+// Others
+#beta-label
+	height 77px
+	left 0
+	position fixed
+	top 74px
+	width 51px
+
+// Responsive
+.img-responsive
+	display inline-block
+// Containers
+@media (min-width: 768px)
+	.container
+		width 750px;
+@media (min-width: 992px)
+	.container
+		width 960px
+@media (min-width: 1200px)
+	.container
+		width 960px
+
+// Max Small
+@media (max-width: 767px)
+	.navbar-3doers
+		li.navbar-text
+			padding-left 15px
+			padding-right 15px
+	.navbar .nav > li > .dropdown-menu:before,
+	.navbar .nav > li > .dropdown-menu:after
+		content none
+// Min Medium
+@media (min-width: 768px)
+	.navbar
+		border-radius(0px)
+@media (max-width: 992px)
+	.contact
+		.inner
+			background none
+
+	#footer
+		.nav-inline,
+		.nav-social
+			text-align center
+		.nav-social
+			margin-top 20px
