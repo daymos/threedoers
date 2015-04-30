@@ -370,6 +370,9 @@ User = new Schema
 
   filemanager:
     type: String
+  mailNotification:
+    type:Boolean
+    default :true
 
   rate:
     type:Number
@@ -407,6 +410,14 @@ User = new Schema
   resetPasswordExpires:
     type: Date
 
+  designerType:
+    type: String
+
+  fiscalCode:
+    type: String
+
+  VatNumber:
+    type: String
 
 User.index loc: '2d'
 

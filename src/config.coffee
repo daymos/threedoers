@@ -59,6 +59,11 @@ config =
   admins:
     emails: ['3doers@gmail.com']
 
+  payment:
+    threeDoers : 0.25
+    taxes : 0.22
+    threeDoersDesigner: 0.25
+
   python:
     path: __dirname + '/src/stlstats.py'
     bin: '~/app-root/data/3doers-pyenv/bin/python'

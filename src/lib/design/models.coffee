@@ -14,14 +14,13 @@ ObjectId = Schema.ObjectId
 
 module.exports.DESIGN_STATUSES = DESIGN_STATUSES =
   UPLOADED: [1, 'uploaded']
-  PREACCEPTED: [2, 'preaccepted']
-  ACCEPTED: [3, 'accepted']
+  ACCEPTED: [2, 'accepted']
+  PAID: [3, 'payed']
   TIMEEEXPIRED: [4, 'time expired']
   TIMEREQUIRECONFIRM: [5, 'more time require confirmation']
   TIMEEXPIREDPROCESSED: [6, 'time expired processed']
   DELIVERED: [7, 'delivered']
-  PAID: [8, 'payed']
-  ARCHIVED: [9, 'archived']
+  ARCHIVED: [8, 'archived']
 
 
 ###############################################
@@ -36,9 +35,11 @@ Proposal = new Schema
   username:
     type:String
     required: true
+
   userRate:
     type: Number
     default: 0
+
   timeRate:
       type: Number
       default: 0
@@ -152,7 +153,22 @@ STLDesign = new Schema
       type: Boolean
       default:false
 
-
+  secundaryPaid:
+    type:Boolean
+  secundaryExpiredPaid:
+      type:Boolean
+  payKey:
+    type:String
+  timeExpiredPayKey:
+    type:String
+  designerPayment:
+    type: Number
+  businessGain:
+    type:Number
+  taxes:
+    type:Number
+  businessPayment:
+    type:Number
 
 
 STLDesign.methods.humanizedStatus = ->

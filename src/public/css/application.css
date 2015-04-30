@@ -8947,6 +8947,9 @@ hr.hr-light {
 .margin-top-20 {
   margin-top: 20px; }
 
+.margin-top-30 {
+  margin-top: 30px; }
+
 .margin-top-40 {
   margin-top: 40px; }
 
@@ -8957,8 +8960,17 @@ hr.hr-light {
   margin-top: 80px; }
 
 .btn-3doers-new {
-  background: #f3fff4;
+  background: #f3fff4 !important;
   border-radius: 15px; }
+
+.nav-pills > li.active .btn-3doers-new {
+  background-image: none;
+  outline: 0;
+  -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125); }
+
+.nav-pills > li.active > a, .nav-pills > li.active > a:hover, .nav-pills > li.active > a:focus, .nav-pills > li.active > a, .nav-pills > li.active > a:hover, .nav-pills > li.active > a:focus {
+  color: inherit; }
 
 .text-ellipsis {
   overflow: hidden;
@@ -9537,14 +9549,14 @@ a.direct-link-ship-address {
 
 .preview-print {
   background-color: #dde5de;
-  padding: 7% 7% 7% 5%;
+  padding: 0;
   position: relative;
   text-align: center; }
   .preview-print #wrapper-canvas {
     position: relative;
-    margin: 0 auto;
-    height: 300px;
-    width: 80%;
+    margin: 0;
+    height: 400px;
+    width: 100%;
     z-index: 1000; }
   .preview-print .upload {
     font-family: "Lato", Helvetica, sans-serif;

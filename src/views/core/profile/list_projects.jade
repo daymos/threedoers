@@ -5,26 +5,29 @@ block title
   |  Your Projects
 
 block content-profile
-    .tab-content
-      #projects
-        - if (projects.length == 0)
-          p.info-3d There is not any project yet for this list.
-        - for (project in projects)
-          - project = projects[project]
-              a.black-3doers(href='/project/#{ project.id }')
-               div.tile.col-md-3.tile-projects
-                  h3.text-ellipsis #{project.title}
-                  p Status
-                   b  #{project.humanizedStatus()}
-                  img(src='/img/icons_#{project.dasherizedStatus()}.png')
-
-
-
-
+.container
     br
     br
     br
     br
+    - if (printingProjects.length == 0&&designProjects.length==0)
+    p.info-3d There is not any project yet for this list.
+    - for (project in printingProjects)
+    - project = printingProjects[project]
+    a.black-3doers(href='/project/#{ project.id }')
+        div.tile.col-md-3.tile-projects
+            h3.text-ellipsis #{project.title}
+            p Status
+                b  #{project.humanizedStatus()}
+            img(src='/img/icons_#{project.dasherizedStatus()}.png')
+    - for (project in designProjects)
+    - project = designProjects[project]
+    a.black-3doers(href='/design/project/#{project.id}')
+        div.tile.col-md-3.tile-projects
+            h3.text-ellipsis #{project.title}
+            p Status
+                b  #{project.humanizedStatus()}
+            img(src='/img/icons_#{project.dasherizedStatus()}.png')
 
 block scripts
   script(src='/js/views/project_list.js')
