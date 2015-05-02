@@ -1,45 +1,30 @@
-extends ../layout
+extends ../layouts/_default
 
 block title
   |  Signup Done
 
-block body
-  div
+block content
+  .hidden-xs.hidden-sm(id='beta-label')
+    img(src='/images/beta_label.png', alt='3doers beta')
+  .bg-3doers
     .container
-        h1.page-title
-          span Registration
-        h1.page-title
-          span Form
-    br
-    br
-    .section.primary
-      .container
-        .row
-          .col-md-7
-            h1.h1-3d.text-shadow-white
-              | THANK YOU FOR
-              br
-              | REGISTERING
-              br
-              | WITH 3DOERS!
-            h4.h4-3d
-              | YOUR ACCOUNT HAS BEEN CREATED AND A VERIFICATION EMAIL
-              br
-              | HAS BEEN SENT TO YOUR REGISTERED EMAIL ADDRESS. PLEASE
-              br
-              | CLICK ON THE VERIFICATION LINK INCLUDED IN THE EMAIL TO AC-
-              br
-              | TIVATE YOUR ACCOUNT.
-            h4.h4-3d
-              | YOUR ACCOUNT WILL NOT BE ACTIVATED UNTIL YOU
-              br
-              | VERIFY YOUR EMAIL ADDRESS.
-      .right-hand.middle
-        img(src='img/hand_register.png')
-    br
-    br
-    br
-    include ../includes/publicity
-    br
-    br
-    br
+      .page-header
+        h3 Thank you for registering with 3doers!
+      br
+      br
+      .row
+        .col-md-12
+          p Your account has been created and a verification email has been sent to your registered email address. please click on the verification link included in the email to ac- tivate your account. your account will not be activated until you verify your email address.
+      br
+      br
+      br
+      br
+      br
+      br
+      br
+      br
+      br
+      br
+      br
+      br
+      br

@@ -66,6 +66,7 @@ module.exports = function(grunt) {
         src: ['!src/public/css/application.css',
               'src/public/css/bootstrap.min.css',
               'src/public/css/font-awesome.min.css',
+              'src/public/css/awesome-bootstrap-checkbox.css',
               'tmp/assets/public/css/application.css'],
         dest: 'src/public/css/application.css',
       },

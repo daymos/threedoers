@@ -1,14 +1,33 @@
-extends ../layout
+extends ../layouts/_default
 
 block title
   |  Activation Done
 
-block body
-  .row
-    div.col-md-12
-      if activated
-        h3 Your account has been activated, please login.
-      else
-        h3 Nothing to activate.
+block content
+  .hidden-xs.hidden-sm(id='beta-label')
+    img(src='/images/beta_label.png', alt='3doers beta')
+  .bg-3doers
+    .container
+      .page-header
+        if activated
+          h3 Your account has been activated, please login.
+        else
+          h3 Nothing to activate.
+      br
+      br
+      .row
+        .col-md-12
 
-block scripts
+      br
+      br
+      br
+      br
+      br
+      br
+      br
+      br
+      br
+      br
+      br
+      br
+      br
