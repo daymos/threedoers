@@ -21,15 +21,6 @@ module.exports = (app, io) ->
   app.get '/', (req, res) ->
     if req.user
       res.redirect '/profile/projects'
-#      models.STLProject.find().sort(createdAt: -1).limit(6).exec (err, projects) ->
-#        auth.User.find().sort(createdAt: -1).limit(15).exec (err, users) ->
-#          res.render 'core/index', {message: null, error: false, message: false, users: users, projects: projects}
-    else
-      res.render 'core/comming', {message: null, error: false, message: false}
-
-  app.get '/home', (req, res) ->
-    if req.user
-      res.redirect '/profile/projects'
     else
       models.STLProject.find().sort(createdAt: -1).limit(6).exec (err, projects) ->
           auth.User.find().sort(createdAt: -1).limit(15).exec (err, users) ->

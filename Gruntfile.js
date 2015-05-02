@@ -52,7 +52,7 @@ module.exports = function(grunt) {
         options: {
           separator: ';',
         },
-        src: ['src/public/js/lib/modernizr.js', 'src/public/js/lib/**/*.js'],
+        src: ['src/public/js/lib/modernizr.js', 'src/public/js/lib/jquery.js', 'src/public/js/lib/**/*.js'],
         dest: 'src/public/js/lib.js',
       },
       commonJS: {
@@ -62,21 +62,10 @@ module.exports = function(grunt) {
         src: ['tmp/assets/public/js/common/**/*.js'],
         dest: 'src/public/js/common.js',
       },
-      cssComming: {
-        src: ['!src/public/css/comming.css',
-              'src/public/css/bootstrap-select.min.css',
-              'tmp/assets/public/css/comming.css',
-              'src/public/css/narrow_jumbo.css'],
-        dest: 'src/public/css/comming.css',
-      },
       cssApplication: {
         src: ['!src/public/css/application.css',
-              'src/public/css/bootstrap.css',
-              'src/public/css/bootstrap-theme.css',
-              'src/public/css/font.css',
-              'src/public/css/flexslider.css',
-              'src/public/css/font-awesome.css',
-              'src/public/css/star-rating.css',
+              'src/public/css/bootstrap.min.css',
+              'src/public/css/font-awesome.min.css',
               'tmp/assets/public/css/application.css'],
         dest: 'src/public/css/application.css',
       },

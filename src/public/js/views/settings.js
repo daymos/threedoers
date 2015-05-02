@@ -1,1 +1,94 @@
-(function(){$(document).ready(function(){var e,t,n,a,r,i;return n=$("#registration"),i=new Validator(n,{"#address":{required:!0}}),n.on("error",function(e,t,n){return t.siblings(".help-block").remove(),t.parent().append($("<span>").addClass("help-block").text(n)),t.closest(".form-group").addClass("has-error")}),n.on("valid",function(e,t){return t.siblings(".help-block").remove(),t.closest(".form-group").removeClass("has-error")}),e=$("#address").bind("keypress",function(e){return 13===e.which?e.preventDefault():void 0}),e.val(""+address),a=new google.maps.places.Autocomplete(e.get(0)),google.maps.event.addListener(a,"place_changed",function(){var t,n,r,i,o,s,l,c;for(i=a.getPlace(),t=!1,r=!1,o=!1,c=i.address_components,s=0,l=c.length;l>s;s++)n=c[s],"locality"===n.types[0]&&(t=n.long_name),"country"===n.types[0]&&(r=n.long_name);return i.geometry&&i.geometry.location&&(o=[i.geometry.location.lng(),i.geometry.location.lat()]),t&&r&&o?($("#city").val(t),$("#country").val(r),$("#location").val(o)):(e.siblings(".help-block").remove(),e.parent().append($("<span>").addClass("help-block").text("Is not a valid address.")),e.closest(".form-group").addClass("has-error"))}),t="X-CSRF-Token",r=function(e){return jQuery.ajaxPrefilter(function(n,a,r){return r.crossDomain?void 0:r.setRequestHeader(t,e)})},r($('meta[name="csrf-token"]').attr("content")),$.ajaxUploadSettings.name="photo",$("#clickable").ajaxUploadPrompt({url:"/accounts/user/photo/upload",error:function(){var e;return e='<br><div class="alert alert-danger"><strong>Error</strong> uploading your file, please try again.</div>',$("#result").html(e)},success:function(){return location.reload()}}),$("a.remove-shipping-address").click(function(e){return e.preventDefault(),$.ajax({url:$(this).attr("href"),method:"post",success:function(){return window.location.reload()},statusCode:{400:function(e){return alert(e.msg),location.reload(!0)}}})})})}).call(this);
+(function() {
+  $(document).ready(function() {
+    var $input, CSRF_HEADER, form, searchAddressBox, setCSRFToken, validator;
+    form = $('#registration');
+    validator = new Validator(form, {
+      '#address': {
+        required: true
+      }
+    });
+    form.on('error', function(form, element, message) {
+      element.siblings('.help-block').remove();
+      element.parent().append($('<span>').addClass('help-block').text(message));
+      return element.closest('.form-group').addClass('has-error');
+    });
+    form.on('valid', function(form, element, message) {
+      element.siblings('.help-block').remove();
+      return element.closest('.form-group').removeClass('has-error');
+    });
+    $input = $('#address').bind('keypress', function(e) {
+      if (e.which === 13) {
+        return e.preventDefault();
+      }
+    });
+    $input.val("" + address);
+    searchAddressBox = new google.maps.places.Autocomplete($input.get(0));
+    google.maps.event.addListener(searchAddressBox, 'place_changed', function() {
+      var city, component, country, place, point, _i, _len, _ref;
+      place = searchAddressBox.getPlace();
+      city = false;
+      country = false;
+      point = false;
+      _ref = place.address_components;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        component = _ref[_i];
+        if (component.types[0] === 'locality') {
+          city = component.long_name;
+        }
+        if (component.types[0] === 'country') {
+          country = component.long_name;
+        }
+      }
+      if (place.geometry && place.geometry.location) {
+        point = [place.geometry.location.lng(), place.geometry.location.lat()];
+      }
+      if (city && country && point) {
+        $('#city').val(city);
+        $('#country').val(country);
+        return $('#location').val(point);
+      } else {
+        $input.siblings('.help-block').remove();
+        $input.parent().append($('<span>').addClass('help-block').text("Is not a valid address."));
+        return $input.closest('.form-group').addClass('has-error');
+      }
+    });
+    CSRF_HEADER = "X-CSRF-Token";
+    setCSRFToken = function(securityToken) {
+      return jQuery.ajaxPrefilter(function(options, _, xhr) {
+        if (!xhr.crossDomain) {
+          return xhr.setRequestHeader(CSRF_HEADER, securityToken);
+        }
+      });
+    };
+    setCSRFToken($("meta[name=\"csrf-token\"]").attr("content"));
+    $.ajaxUploadSettings.name = "photo";
+    $("#clickable").ajaxUploadPrompt({
+      url: "/accounts/user/photo/upload",
+      error: function() {
+        var html;
+        html = '<br><div class="alert alert-danger"><strong>Error</strong> uploading your file, please try again.</div>';
+        return $("#result").html(html);
+      },
+      success: function(data) {
+        return location.reload();
+      }
+    });
+    return $("a.remove-shipping-address").click(function(e) {
+      e.preventDefault();
+      return $.ajax({
+        url: $(this).attr("href"),
+        method: "post",
+        success: function() {
+          return window.location.reload();
+        },
+        statusCode: {
+          400: function(data) {
+            alert(data.msg);
+            return location.reload(true);
+          }
+        }
+      });
+    });
+  });
+
+}).call(this);

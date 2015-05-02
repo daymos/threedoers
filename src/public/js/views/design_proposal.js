@@ -1,1 +1,37 @@
-(function(){$(document).ready(function(){var t,e;return t="X-CSRF-Token",e=function(e){return jQuery.ajaxPrefilter(function(n,a,r){return r.crossDomain?void 0:r.setRequestHeader(t,e)})},e($('meta[name="csrf-token"]').attr("content")),$("#proposalForm").validate({rules:{hours:{required:!0,number:!0},cost:{required:!0,number:!0}},submitHandler:function(){return!0}}),$("button.fire-modal-proposal").click(function(t){$("form#proposalForm").attr("action","/design/proposal/"+t.target.id)})})}).call(this);
+(function() {
+  $(document).ready(function() {
+    /*
+    # CSRF Protection
+    */
+
+    var CSRF_HEADER, setCSRFToken;
+    CSRF_HEADER = "X-CSRF-Token";
+    setCSRFToken = function(securityToken) {
+      return jQuery.ajaxPrefilter(function(options, _, xhr) {
+        if (!xhr.crossDomain) {
+          return xhr.setRequestHeader(CSRF_HEADER, securityToken);
+        }
+      });
+    };
+    setCSRFToken($("meta[name=\"csrf-token\"]").attr("content"));
+    $('#proposalForm').validate({
+      rules: {
+        hours: {
+          required: true,
+          number: true
+        },
+        cost: {
+          required: true,
+          number: true
+        }
+      },
+      submitHandler: function(form) {
+        return true;
+      }
+    });
+    return $("button.fire-modal-proposal").click(function(event) {
+      $("form#proposalForm").attr("action", "/design/proposal/" + event.target.id);
+    });
+  });
+
+}).call(this);

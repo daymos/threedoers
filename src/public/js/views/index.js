@@ -1,1 +1,35 @@
-(function(){$(document).ready(function(){var t,e;return t="X-CSRF-Token",e=function(e){return jQuery.ajaxPrefilter(function(n,a,r){return r.crossDomain?void 0:r.setRequestHeader(t,e)})},e($('meta[name="csrf-token"]').attr("content")),$.ajaxUploadSettings.name="thumbnail",$("#manager-clickable").ajaxUploadPrompt({url:"/filemanager/upload",error:function(){return alert("error uploading file")},success:function(t){var e,n,a;if(t.errors){a=[];for(e in object)n=object[e],a.push(alert(""+e+": "+n));return a}return location.href=t.redirectTo}})})}).call(this);
+(function() {
+  $(document).ready(function() {
+    var CSRF_HEADER, setCSRFToken;
+    CSRF_HEADER = "X-CSRF-Token";
+    setCSRFToken = function(securityToken) {
+      return jQuery.ajaxPrefilter(function(options, _, xhr) {
+        if (!xhr.crossDomain) {
+          return xhr.setRequestHeader(CSRF_HEADER, securityToken);
+        }
+      });
+    };
+    setCSRFToken($("meta[name=\"csrf-token\"]").attr("content"));
+    $.ajaxUploadSettings.name = "thumbnail";
+    return $("#manager-clickable").ajaxUploadPrompt({
+      url: "/filemanager/upload",
+      error: function() {
+        return alert("error uploading file");
+      },
+      success: function(data) {
+        var k, v, _results;
+        if (data.errors) {
+          _results = [];
+          for (k in object) {
+            v = object[k];
+            _results.push(alert("" + k + ": " + v));
+          }
+          return _results;
+        } else {
+          return location.href = data.redirectTo;
+        }
+      }
+    });
+  });
+
+}).call(this);

@@ -146,6 +146,7 @@ module.exports = (app) ->
     if errors
       res.render 'accounts/reset-password-complete',
         errors: errors
+        token: req.params.token
     else
      models.User.findOne
         resetPasswordToken: req.params.token

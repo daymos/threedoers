@@ -1,1 +1,279 @@
-(function(){var e,t,n,a,r,i,o,s;s=function(e){var t,n,a;a=[];for(n in e)t=$("#"+n),1===t.length&&t.text(" "+e[n]),"status"===n&&("processing"===e[n]?($(".object-volume-unit").addClass("hide"),$(".object-volume").text("processing")):$(".object-volume-unit").removeClass("hide")),"order"===n&&$("#order-placed-order").text(" "+e[n].price+"  "),"status_image"===n?a.push($("#status-image").attr("src","/img/icons_"+e[n]+"_second.png")):a.push(void 0);return a},t={black:"#000000",white:"#FFFFFF",red:"#FF0000",green:"#00FF00",blue:"#0000FF",yellow:"#FFFF00"},n=function(e){return o[e]||e},a=function(e){return e.replace(/[&<>]/g,n)},o={"&":"&amp;","<":"&lt;",">":"&gt;"},e=null,i=null,r=null,$(document).ready(function(){var n,o,l,c,u,d;n="X-CSRF-Token",l=function(e){return jQuery.ajaxPrefilter(function(t,a,r){return r.crossDomain?void 0:r.setRequestHeader(n,e)})},l($('meta[name="csrf-token"]').attr("content"));try{c=io.connect(":"+port+"/project")}catch(f){o=f,console.log({query:{project:window.location.pathname.split("/").pop()}}),c=io.connect(":"+port+"/project",{query:"project="+window.location.pathname.split("/").pop()})}return c.on("error",function(e){return console.log(e.msg)}),c.on("update",function(e){return c.emit("order-price",{ammount:$("#ammount").val()}),s(e)}),c.on("update-price-order",function(e){return $("#order-price").text(e.price)}),Modernizr.canvas||$("#message-canvas").removeClass("hide"),d=new JSC3D.Viewer($("#cv").get(0)),d.setParameter("SceneUrl","/"+project.filename),d.setParameter("ModelColor",""+t[project.color]),d.setParameter("BackgroundColor1","#E5D7BA"),d.setParameter("BackgroundColor2","#383840"),d.setParameter("RenderMode","smooth"),d.setParameter("Definition","high"),d.setParameter("MipMapping","on"),d.setParameter("CreaseAngle","30"),d.onloadingcomplete=function(){return project.hasImage?void 0:setTimeout(function(){return $.post("/project/"+project.id+"/image/",{image:$("#cv")[0].toDataURL()})},15e3)},d.init(),d.update(),$("#color-chooser").val(""+project.color),$("#color-chooser").val(""+project.color).change(function(){return $.post("/project/color/"+project.id,{value:$(this).val()},function(){return location.reload()})}),$("#material-chooser").val(""+project.material),$("#material-chooser").val(""+project.material).change(function(){return $.post("/project/material/"+project.id,{value:$(this).val()})}),$("#title").editable("/project/title/"+project.id),$("#ammount").keyup(function(e){return(/\D/g.test(this.value)||/^0$/.test(this.value))&&(this.value=this.value.replace(/\D/g,""),this.value=this.value.replace(/^0$/,"")),/^[1-9][0-9]*$/.test(this.value)||/^\s*$/.test(this.value)?($("#order-price").text("Processing"),c.emit("order-price",{ammount:$("#ammount").val()})):e.preventDefault()}),$("#comment-button").click(function(e){return e.preventDefault(),$.ajax({url:"/project/comment/"+project.id,method:"post",dataType:"json",data:{message:$("#comment-text").val()},success:function(e){var t;return t="<div class='media'><a href='#' class='pull-left'><img src='/"+e.photo+"' alt='' class='media-object' height='78' width='78'></a>              <div class='media-body'>                <p>"+a(e.content)+"</p>              </div>              <div class='media-meta'>by <span class='author'>"+e.username+"</span> <span class='date'>"+Date(e.createdAt)+"</span></div>            </div>",$("#comment-list").append($(t)),$("#comment-text").val("")},statusCode:{400:function(e){return e=JSON.parse(e.responseText),alert(e.msg)}}})}),u=function(){return e?$.ajax({url:"/validate-address-and-rate/"+project.id,data:e,dataType:"json",success:function(t){var n;if(t.errors)for(n in t.errors)alert(""+t.errors[n].param+": "+t.errors[n].msg);return t.message&&alert(t.message),t.ok?(e=t.address,i=parseFloat(t.charge),$("#address-selection").hide(),$("#pay-values").show(),$("#pay-product-price").html(""+project.orderPrice),$("#pay-shipping-price").html(""+i),$("#pay-total-price").html(""+(project.orderPrice+i).toFixed(2))):alert("Something was wrong please try again.")},error:function(){return alert("Something was wrong please try again.")}}):alert("Please select and address or add new one.")},$("a.select-saved-address").click(function(t){return t.preventDefault(),e={id:$(this).attr("data-id")},u()}),$("button#validate-address").click(function(t){var n;return t.preventDefault(),e={},n=$(this).closest("form").serializeArray(),$.each(n,function(){e[this.name]?(e[this.name].push||(e[this.name]=[e[this.name]]),e[this.name].push(this.value||"")):e[this.name]=this.value||""}),u()}),$("#payment-form").submit(function(e){var t;return e.preventDefault(),t=$("#payment-form"),r=t.find("input[name=shipping]:checked").val(),"shipping"===r?$("#payment-modal").modal("show"):($("#hidden-pay-form #shippingMethod").val(r),$("#hidden-pay-form").submit())}),$(".close-payment-modal").click(function(){return $("#payment-modal").modal("hide")}),$("#payment-modal").on("hidden.bs.modal",function(){return $("#address-selection").show(),$("#pay-values").hide(),e=null,r=null,i=null}),$("#pay-payment-modal").click(function(){return $("#hidden-pay-form #shippingRate").val(i),$("#hidden-pay-form #shippingMethod").val(r),$("#hidden-pay-form #shippingAddress").val(JSON.stringify(e)),$("#hidden-pay-form").submit()})})}).call(this);
+(function() {
+  var address, colors, replaceTag, safe_tags_replace, shippingMethod, shippingRate, tagsToReplace, updateFrontEnd;
+
+  updateFrontEnd = function(data) {
+    var element, key, _results;
+    _results = [];
+    for (key in data) {
+      element = $("#" + key);
+      if (element.length === 1) {
+        element.text(" " + data[key]);
+      }
+      if (key === 'status') {
+        if (data[key] === 'processing') {
+          $('.object-volume-unit').addClass('hide');
+          $('.object-volume').text('processing');
+        } else {
+          $('.object-volume-unit').removeClass('hide');
+        }
+      }
+      if (key === 'order') {
+        $('#order-placed-order').text(" " + data[key].price + "  ");
+      }
+      if (key === 'status_image') {
+        _results.push($('#status-image').attr("src", "/img/icons_" + data[key] + "_second.png"));
+      } else {
+        _results.push(void 0);
+      }
+    }
+    return _results;
+  };
+
+  colors = {
+    black: '#000000',
+    white: '#FFFFFF',
+    red: '#FF0000',
+    green: '#00FF00',
+    blue: '#0000FF',
+    yellow: '#FFFF00'
+  };
+
+  replaceTag = function(tag) {
+    return tagsToReplace[tag] || tag;
+  };
+
+  safe_tags_replace = function(str) {
+    return str.replace(/[&<>]/g, replaceTag);
+  };
+
+  tagsToReplace = {
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;"
+  };
+
+  address = null;
+
+  shippingRate = null;
+
+  shippingMethod = null;
+
+  $(document).ready(function() {
+    /*
+    # CSRF Protection
+    */
+
+    var CSRF_HEADER, e, setCSRFToken, socket_project, updatePayDiv, viewer;
+    CSRF_HEADER = "X-CSRF-Token";
+    setCSRFToken = function(securityToken) {
+      return jQuery.ajaxPrefilter(function(options, _, xhr) {
+        if (!xhr.crossDomain) {
+          return xhr.setRequestHeader(CSRF_HEADER, securityToken);
+        }
+      });
+    };
+    setCSRFToken($("meta[name=\"csrf-token\"]").attr("content"));
+    /*
+    # Socket IO
+    */
+
+    try {
+      user;
+      socket_project = io.connect(":" + port + "/project");
+    } catch (_error) {
+      e = _error;
+      console.log({
+        query: {
+          project: window.location.pathname.split('/').pop()
+        }
+      });
+      socket_project = io.connect(":" + port + "/project", {
+        query: 'project=' + window.location.pathname.split('/').pop()
+      });
+    }
+    socket_project.on('error', function(data) {
+      return console.log(data.msg);
+    });
+    socket_project.on('update', function(data) {
+      socket_project.emit('order-price', {
+        ammount: $("#ammount").val()
+      });
+      return updateFrontEnd(data);
+    });
+    socket_project.on('update-price-order', function(data) {
+      return $('#order-price').text(data.price);
+    });
+    if (!Modernizr.canvas) {
+      $("#message-canvas").removeClass('hide');
+    }
+    /*
+    # JSC3D.Viewer
+    */
+
+    viewer = new JSC3D.Viewer($('#cv').get(0));
+    viewer.setParameter('SceneUrl', "/" + project.filename);
+    viewer.setParameter('ModelColor', "" + colors[project.color]);
+    viewer.setParameter('BackgroundColor1', '#E5D7BA');
+    viewer.setParameter('BackgroundColor2', '#383840');
+    viewer.setParameter('RenderMode', 'smooth');
+    viewer.setParameter('Definition', 'high');
+    viewer.setParameter('MipMapping', 'on');
+    viewer.setParameter('CreaseAngle', '30');
+    viewer.onloadingcomplete = function() {
+      if (!project.hasImage) {
+        return setTimeout(function() {
+          return $.post("/project/" + project.id + "/image/", {
+            image: $("#cv")[0].toDataURL()
+          });
+        }, 15000);
+      }
+    };
+    viewer.init();
+    viewer.update();
+    /*
+    # Some controllers
+    */
+
+    $("#color-chooser").val("" + project.color);
+    $("#color-chooser").val("" + project.color).change(function() {
+      return $.post("/project/color/" + project.id, {
+        value: $(this).val()
+      }, function() {
+        return location.reload();
+      });
+    });
+    $("#material-chooser").val("" + project.material);
+    $("#material-chooser").val("" + project.material).change(function() {
+      return $.post("/project/material/" + project.id, {
+        value: $(this).val()
+      });
+    });
+    $("#title").editable("/project/title/" + project.id);
+    $("#ammount").keyup(function(event) {
+      if (/\D/g.test(this.value) || /^0$/.test(this.value)) {
+        this.value = this.value.replace(/\D/g, '');
+        this.value = this.value.replace(/^0$/, '');
+      }
+      if (/^[1-9][0-9]*$/.test(this.value) || /^\s*$/.test(this.value)) {
+        $("#order-price").text("Processing");
+        return socket_project.emit('order-price', {
+          ammount: $("#ammount").val()
+        });
+      } else {
+        return event.preventDefault();
+      }
+    });
+    $("#comment-button").click(function(e) {
+      e.preventDefault();
+      return $.ajax({
+        url: "/project/comment/" + project.id,
+        method: "post",
+        dataType: "json",
+        data: {
+          message: $("#comment-text").val()
+        },
+        success: function(data) {
+          var template;
+          template = "<div class='media'><a href='#' class='pull-left'><img src='/" + data.photo + "' alt='' class='media-object' height='78' width='78'></a>              <div class='media-body'>                <p>" + (safe_tags_replace(data.content)) + "</p>              </div>              <div class='media-meta'>by <span class='author'>" + data.username + "</span> <span class='date'>" + (Date(data.createdAt)) + "</span></div>            </div>";
+          $("#comment-list").append($(template));
+          return $("#comment-text").val("");
+        },
+        statusCode: {
+          400: function(data) {
+            data = JSON.parse(data.responseText);
+            return alert(data.msg);
+          }
+        }
+      });
+    });
+    updatePayDiv = function() {
+      if (address) {
+        return $.ajax({
+          url: "/validate-address-and-rate/" + project.id,
+          data: address,
+          dataType: 'json',
+          success: function(data) {
+            var error;
+            if (data.errors) {
+              for (error in data.errors) {
+                alert("" + data.errors[error].param + ": " + data.errors[error].msg);
+              }
+            }
+            if (data.message) {
+              alert(data.message);
+            }
+            if (data.ok) {
+              address = data.address;
+              shippingRate = parseFloat(data.charge);
+              $('#address-selection').hide();
+              $('#pay-values').show();
+              $('#pay-product-price').html("" + project.orderPrice);
+              $('#pay-shipping-price').html("" + shippingRate);
+              return $('#pay-total-price').html("" + ((project.orderPrice + shippingRate).toFixed(2)));
+            } else {
+              return alert("Something was wrong please try again.");
+            }
+          },
+          error: function() {
+            return alert("Something was wrong please try again.");
+          }
+        });
+      } else {
+        return alert("Please select and address or add new one.");
+      }
+    };
+    $('a.select-saved-address').click(function(event) {
+      event.preventDefault();
+      address = {
+        id: $(this).attr('data-id')
+      };
+      return updatePayDiv();
+    });
+    $('button#validate-address').click(function(event) {
+      var a;
+      event.preventDefault();
+      address = {};
+      a = $(this).closest('form').serializeArray();
+      $.each(a, function() {
+        if (address[this.name]) {
+          if (!address[this.name].push) {
+            address[this.name] = [address[this.name]];
+          }
+          address[this.name].push(this.value || "");
+        } else {
+          address[this.name] = this.value || "";
+        }
+      });
+      return updatePayDiv();
+    });
+    $('#payment-form').submit(function(event) {
+      var $form;
+      event.preventDefault();
+      $form = $('#payment-form');
+      shippingMethod = $form.find('input[name=shipping]:checked').val();
+      if (shippingMethod === 'shipping') {
+        return $('#payment-modal').modal('show');
+      } else {
+        $("#hidden-pay-form #shippingMethod").val(shippingMethod);
+        return $("#hidden-pay-form").submit();
+      }
+    });
+    $('.close-payment-modal').click(function(event) {
+      return $('#payment-modal').modal('hide');
+    });
+    $('#payment-modal').on('hidden.bs.modal', function(event) {
+      $('#address-selection').show();
+      $('#pay-values').hide();
+      address = null;
+      shippingMethod = null;
+      return shippingRate = null;
+    });
+    return $('#pay-payment-modal').click(function(event) {
+      $("#hidden-pay-form #shippingRate").val(shippingRate);
+      $("#hidden-pay-form #shippingMethod").val(shippingMethod);
+      $("#hidden-pay-form #shippingAddress").val(JSON.stringify(address));
+      return $("#hidden-pay-form").submit();
+    });
+  });
+
+}).call(this);
