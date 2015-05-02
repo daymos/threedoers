@@ -52,7 +52,7 @@ module.exports = function(grunt) {
         options: {
           separator: ';',
         },
-        src: ['src/public/js/lib/modernizr.js', 'src/public/js/lib/jquery.js', 'src/public/js/lib/**/*.js'],
+        src: ['src/public/js/lib/modernizr.js', 'src/public/js/lib/jquery.js', 'src/public/js/lib/jquery.migrate.js', 'src/public/js/lib/**/*.js'],
         dest: 'src/public/js/lib.js',
       },
       commonJS: {
@@ -64,6 +64,7 @@ module.exports = function(grunt) {
       },
       cssApplication: {
         src: ['!src/public/css/application.css',
+              '!src/public/css/backend.css',
               'src/public/css/bootstrap.min.css',
               'src/public/css/font-awesome.min.css',
               'src/public/css/awesome-bootstrap-checkbox.css',
@@ -76,7 +77,7 @@ module.exports = function(grunt) {
       assets: {
         expand: true,
         cwd: 'src/public/',
-        src: ['css/application.css', 'css/comming.css', 'js/application.js', 'js/site.js', 'js/common.js', 'js/lib.js', 'js/views/*.js', 'vendor/*.js', 'tmp/.gitignore', 'img/*.png', 'img/*.jpg', 'fonts/**'],
+        src: ['css/application.css', 'css/comming.css', 'css/backend.css', 'js/application.js', 'js/site.js', 'js/common.js', 'js/lib.js', 'js/views/*.js', 'vendor/*.js', 'tmp/.gitignore', 'img/*.png', 'img/*.jpg', 'fonts/**'],
         dest: 'public/'
       },
       views: {

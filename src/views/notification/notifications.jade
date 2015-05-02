@@ -1,22 +1,22 @@
-
-extends ../core/base
+extends ../layouts/_app
 
 block title
     | Notifications
 
-
-block body
-  .section.primary
+block content
+  .page
     .container
+      br
+      br
       .row
-          if user
-            h1 Notifications Page of #{user.username}
+        include ../includes/banner
 
-  .container.margin-header-10
-    .col-lg-12
-      if (userNotif.length == 0)
-        p.info-3d There is not any notification
-        -function prettyDate(dateString){
+    .bg-3doers
+      .container
+        h1 Notifications Page of #{user.username}
+        if (userNotif.length == 0)
+          p.info-3d There is not any notification
+          -function prettyDate(dateString){
             -var date = new Date(dateString);
             -var d = date.getDate();
             -var monthNames = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ];
@@ -25,38 +25,23 @@ block body
             -var h = date.getHours()
             -var mm = date.getMinutes()
             -return d+'/'+m+'/'+y+' at '+h+':'+mm;
-        -}
-      ul#list-group-notif.list-group
-        - each notify in userNotif
+          -}
+        ul#list-group-notif.list-group
+          - each notify in userNotif
+            li(id=notify.id,class=(notify.read==false?'active-greeen-3doers':'')).list-group-item.col-sm-10
+              a(href= '#{notify.refertourl}')
+                .col-sm-10 Project #{notify.title} has changed its status @#{prettyDate(notify.createAt)}
+                .col-sm-2
+                  -if (notify.read==false)
+                    form(action='/notification/read/#{notify.id}',method='POST').col-sm-4.col-sm-offset-4
+                      button(type='submit').btn-sm.btn-default
+                        span.glyphicon.glyphicon-thumbs-up
+                  -else
+                    .col-sm-4.col-sm-offset-4
 
-                li(id=notify.id,class=(notify.read==false?'active-greeen-3doers':'')).list-group-item.col-sm-10
-                    a(href= '#{notify.refertourl}')
-                        .col-sm-10 Project #{notify.title} has changed its status @#{prettyDate(notify.createAt)}
-                        .col-sm-2
-                            -if (notify.read==false)
-                                form(action='/notification/read/#{notify.id}',method='POST').col-sm-4.col-sm-offset-4
-                                    button(type='submit').btn-sm.btn-default
-                                        span.glyphicon.glyphicon-thumbs-up
-                            -else
-                                .col-sm-4.col-sm-offset-4
+                  form(action='/notification/delete/#{notify.id}',method='POST').col-sm-4
+                    button(type='submit').btn-sm.btn-danger
+                      span.glyphicon.glyphicon-remove
 
-                            form(action='/notification/delete/#{notify.id}',method='POST').col-sm-4
-                                button(type='submit').btn-sm.btn-danger
-                                    span.glyphicon.glyphicon-remove
-
-
-
-
-  div
-    .container
-      br
-      br
-      br
-      br
-      br
-      br
-      include ../includes/publicity
-      br
-      br
-      br
-      br
+        br
+        br

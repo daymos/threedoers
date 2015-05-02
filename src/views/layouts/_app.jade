@@ -40,6 +40,7 @@ html(lang="en")
     link(type='image/x-icon', rel='shortcut icon', href='/img/favicon.ico')
 
     link(href='/css/application.css', rel='stylesheet')
+    link(href='/css/backend.css', rel='stylesheet')
 
     // HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries
     // WARNING: Respond.js doesn't work if you view the page via file:
@@ -79,25 +80,18 @@ html(lang="en")
               span.icon-bar
               span.icon-bar
               span.icon-bar
-            a.navbar-brand(href='/')
+            a.navbar-brand(href='#')
               img(src='/images/logo.png', alt='3doers')
           .collapse.navbar-collapse(id='bs-example-navbar-collapse-1')
             p.navbar-text
-              a.navbar-link(href='#') How it works
-            p.navbar-text
-              a.navbar-link(href='#') Join 3doers
-            p.navbar-text
-              a.navbar-link(href='#') Contact us
+              a.navbar-link(href='#') Home
             ul.nav.navbar-nav.navbar-right
               li.navbar-text
-                a.navbar-link.navbar-link-inverse(href='/accounts/login') Log in
-              li.navbar-text(style="padding:0; margin-left:0; margin-right:0")
-                span /
-              li.navbar-text
-                a.navbar-link.navbar-link-inverse(href='/accounts/signup') Sign up
+                a.navbar-link.navbar-link-inverse(href='/notifications')
+                  i#notifID.fa.fa-fw.fa-lg.fa-paper-plane
               li.dropdown
                 a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-expanded='false')
-                  img(src='/images/share_icon.png')
+                  img(src='data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMTQwIiBoZWlnaHQ9IjE0MCIgdmlld0JveD0iMCAwIDE0MCAxNDAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjxkZWZzLz48cmVjdCB3aWR0aD0iMTQwIiBoZWlnaHQ9IjE0MCIgZmlsbD0iI0VFRUVFRSIvPjxnPjx0ZXh0IHg9IjQ0LjA0Njg3NSIgeT0iNzAiIHN0eWxlPSJmaWxsOiNBQUFBQUE7Zm9udC13ZWlnaHQ6Ym9sZDtmb250LWZhbWlseTpBcmlhbCwgSGVsdmV0aWNhLCBPcGVuIFNhbnMsIHNhbnMtc2VyaWYsIG1vbm9zcGFjZTtmb250LXNpemU6MTBwdDtkb21pbmFudC1iYXNlbGluZTpjZW50cmFsIj4xNDB4MTQwPC90ZXh0PjwvZz48L3N2Zz4=', style='width: 50px; height: 50px;')
                 ul.dropdown-menu(role='menu')
                   li: span Spread the voice
                   li: a(href='#')
@@ -135,4 +129,6 @@ html(lang="en")
 
     script(src='/js/lib.js')
     script(src='/js/common.js')
+    script(type='text/javascript', src='/vendor/socket.io.min.js')
+    script(src='/js/views/notifyME.js')
     block scripts

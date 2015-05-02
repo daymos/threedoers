@@ -209,7 +209,7 @@ module.exports = (app, io) ->
   app.get '/profile/projects', decorators.loginRequired, (req, res) ->
     if req.user.printer!="accepted" and req.user.filemanager!="accepted"
       models.STLProject.find({user: req.user._id, status: {"$lte": models.PROJECT_STATUSES.PRINT_REVIEW[0]}}).exec().then( (docs) ->
-        res.render 'core/profile/list_projects', {projects: docs}
+        res.render 'core/profile/list_projects', {projects: docs, printingProjects: [], designProjects: []}
       ).fail( ->
         logger.error arguments
         res.send 500
@@ -223,7 +223,7 @@ module.exports = (app, io) ->
 
   app.get '/profile/onprint', decorators.loginRequired, (req, res) ->
     models.STLProject.find({user: req.user._id, status: {"$lt": models.PROJECT_STATUSES.ARCHIVED[0], "$gt": models.PROJECT_STATUSES.PRINT_REQUESTED[0]}}).exec().then((docs) ->
-      res.render 'core/profile/list_projects', {projects: docs}
+      res.render 'core/profile/list_projects', {projects: docs, printingProjects: [], designProjects: []}
     ).fail( ->
       logger.error arguments
       res.send 500
