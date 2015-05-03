@@ -23,7 +23,7 @@ module.exports = (app) ->
 
   app.get '/design/requests', decorators.filemanagerRequired, (req, res) ->
     #models.STLDesign.find({status:{"$lt":models.DESIGN_STATUSES.ARCHIVED[0]}}).elemMatch("proposal",{'user':req.user.id}).exec().then(( docs) ->
-    models.STLDesign.find("$and":[{status:{"$lt":models.DESIGN_STATUSES.ACCEPTED[0]}}, {"proposal":{"$not":{"$elemMatch":{"creator":req.user._id}}}}]).exec().then(( docs) ->
+    models.STLDesign.find("$and":[{status:{"$lt":models.DESIGN_STATUSES.ACCEPTED[0]}}, {"proposal":{"$not":{"$elemMatch":{"creator":req.user._id}}}}]).sort(createdAt: -1).exec().then(( docs) ->
       if docs
          res.render 'design/requests', {projects: docs, toApply:true, error:""}
 #      else
@@ -76,7 +76,7 @@ module.exports = (app) ->
       res.send 500
     )
   app.get '/design/projects', decorators.loginRequired, (req, res) ->
-    models.STLDesign.find({'creator': req.user.id, status: {"$lt": models.DESIGN_STATUSES.ARCHIVED[0]} }).exec (err, docs) ->
+    models.STLDesign.find({'creator': req.user.id, status: {"$lt": models.DESIGN_STATUSES.ARCHIVED[0]} }).sort(createdAt: -1).exec (err, docs) ->
       if err
         logger.error err
         res.send 500
@@ -95,7 +95,7 @@ module.exports = (app) ->
 
   app.get '/design/jobs', decorators.filemanagerRequired, (req, res) ->
 
-    models.STLDesign.find($or:[ {"proposal":{"$elemMatch":{"creator":req.user.id,"proposalSelected":false}}},$and: [designer: req.user.id, status: {"$lt": models.DESIGN_STATUSES.DELIVERED[0], "$gte": models.DESIGN_STATUSES.UPLOADED[0]}]]).exec (err, docs) ->
+    models.STLDesign.find($or:[ {"proposal":{"$elemMatch":{"creator":req.user.id,"proposalSelected":false}}},$and: [designer: req.user.id, status: {"$lt": models.DESIGN_STATUSES.DELIVERED[0], "$gte": models.DESIGN_STATUSES.UPLOADED[0]}]]).sort(createdAt: -1).exec (err, docs) ->
       if err
         logger.error err
         res.send 500
@@ -103,7 +103,7 @@ module.exports = (app) ->
         res.render 'design/jobs', {projects: docs}
 
   app.get '/design/archived', decorators.filemanagerRequired, (req, res) ->
-    models.STLDesign.find({designer: req.user.id, status:{"$gte" : models.DESIGN_STATUSES.DELIVERED[0]}}).exec (err, docs) ->
+    models.STLDesign.find({designer: req.user.id, status:{"$gte" : models.DESIGN_STATUSES.DELIVERED[0]}}).sort(createdAt: -1).exec (err, docs) ->
       if err
         logger.error err
         res.send 500
@@ -311,7 +311,7 @@ module.exports = (app) ->
                   requestEnvelope:
                     errorLanguage:  'en_US'
 
-                paypalSdk.executePayment payload
+                paypalSdk.executePayment payload, ->
 
               design.save()
               user.save()

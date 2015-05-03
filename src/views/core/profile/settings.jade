@@ -1,125 +1,140 @@
-extends base
+extends ../../layouts/_app
 
 block title
   |  Your Profile
 
-
 block extra-headers
   meta(name="csrf-token", content="#{csrfToken}")
 
-block body
-  .section.primary
+block content
+  .page
     .container
+      br
+      br
       .row
-        .col-md-6.col-sm-7
-          p#result
-          form#registration(action='/profile/settings', method='POST', role='form', accept-charset='utf-8')
-            input(type='hidden', name='authenticity_token')
-            input(type='hidden', name='_csrf', value=csrfToken)
-            .photoedit
-              - if (user.photo)
-                img#profile_image.circular(width='142', height='142', src='/#{ user.photo }', alt='#{ user.firstName } #{ user.lastName }')
-              - else
-                img#profile_image.circular(width='142', height='142', src='/img/edit_photo_placeholder.png?1396277523', alt='profile image')
-              a#clickable.btn-default.btn-xs.grey-3doers Edit Photo
-            .form-group
-              input#username.form-control.input-text.resize-input-form(value=(user.username)?"#{user.username}":"", placeholder='Username', name='username')
-            .form-group
-              input#email.form-control.input-text.resize-input-form(value=(user.email)?"#{user.email}":"", placeholder='Email', name='email')
-            .form-group
-              input#firstName.form-control.input-text.resize-input-form(value=(user.firstName)?"#{user.firstName}":"", placeholder='First name', name='firstName')
-            .form-group
-              input#lastName.form-control.input-text.resize-input-form(value=(user.lastName)?"#{user.lastName}":"", placeholder='Last name', name='lastName')
-            .form-group
-              input#address.form-control.input-text.resize-input-form(value=(user.address)?"#{user.address}":"", placeholder='Address', name='address')
-            .form-group.clearfix
-                .col-sm-2
-                    input.form-control.input-text.resize-input-form#mailNotification(name='mailNotification', type='checkbox', checked=(user.mailNotification===true ? "checked" : undefined))
-                label.col-sm-10.input-text.resize-input-form Receave mail notification
-            .form-group
-              input#city(type='hidden', name='city')
-              input#country(type='hidden', name='country')
-              input#location(type='hidden', name='location')
+        include ../../includes/banner
 
-            .photoedit
-              button#submit.btn-default.btn-xs.grey-3doers(type='submit') Edit profile info
-
-        .col-md-6.col-sm-7
-          if user.printer == 'accepted'
-            h1 Printer Address
-            dl
-              if user.printerAddress
-                address
-                    strong #{user.printerAddress['company']}
-                    br
-                    |#{user.printerAddress['street1']}
-                    br
-                    |#{user.printerAddress['city']}, #{user.printerAddress['zip']}, #{user.printerAddress['country']}
-                    br
-                    |#{user.printerAddress['phone']}
-
-            a#link.direct-link-ship-address.btn-default.btn-xs.grey-3doers(href='/profile/settings/printer-direction') Update
-
-          if user.shippingAddresses
-            h2 Shipping Addresses
-            .margin-address
-            for direction in user.shippingAddresses
-                address.col-md-5
-                 strong #{direction['company']}
-                 br
-                 |#{direction['street1']}
-                 br
-                 |#{direction['city']}, #{direction['zip']}, #{direction['country']}
-                 br
-                 |#{direction['phone']}
-                 br
-                 a.remove-shipping-address.btn-default.btn-xs.grey-3doers(href='/profile/settings/delete-shipping-direction/#{ direction.id }') Delete
-
-            else
-              strong you still don't have any direction
-
-            br
-
-        a#link.direct-link-ship-address.btn-default.btn-xs.grey-3doers(href='/profile/settings/new-shipping-direction') Add new direction
-          a#link.direct-link-ship-address.btn-default.btn-xs.grey-3doers(href='/accounts/logout') Logout
-      .row#upgradeYourProfile
-        .col-md-12
-            h2
-                | Upgrade Your Profile
-            p
-                | Here you can Upgrade your profile for FREE!
-
-        ul.nav-circles
-          -if(user.filemanager!="accepted")
-            li.tiles
-                - if(user.filemanager=="request")
-                  a(href="#upgradeYourProfile")
-                    div.pending-request.circular.small-circular
-                      |Pending
+    .bg-3doers
+      .container
+        .row
+          .col-md-6.col-sm-7
+            p#result
+            form#registration(action='/profile/settings', method='POST', role='form', accept-charset='utf-8')
+              input(type='hidden', name='authenticity_token')
+              input(type='hidden', name='_csrf', value=csrfToken)
+              .photoedit
+                - if (user.photo)
+                  img#profile_image.circular(width='142', height='142', src='/#{ user.photo }', alt='#{ user.firstName } #{ user.lastName }')
                 - else
-                  a(data-toggle="modal",data-target="#becomeDesigner",href="#")
-                    img(src='/img/icons_printing.png').circular.small-circular
-                div
-                    h4 Become a Designer
-                    p
-                        | Are you a Designer?
-                        | Updgrade your profile
-                        | and earn money!
-          -if(user.printer!="accepted")
-            li.tiles
-                - if(user.printer=="request")
-                  a(href='#')
+                  img#profile_image.circular(width='142', height='142', src='/img/edit_photo_placeholder.png?1396277523', alt='profile image')
+                &nbsp;&nbsp;
+                a#clickable.btn-default.btn-xs.btn  Edit Photo
+              .form-group
+                br
+                input#username.form-control.input-text.resize-input-form(value=(user.username)?"#{user.username}":"", placeholder='Username', name='username')
+              .form-group
+                input#email.form-control.input-text.resize-input-form(value=(user.email)?"#{user.email}":"", placeholder='Email', name='email')
+              .form-group
+                input#firstName.form-control.input-text.resize-input-form(value=(user.firstName)?"#{user.firstName}":"", placeholder='First name', name='firstName')
+              .form-group
+                input#lastName.form-control.input-text.resize-input-form(value=(user.lastName)?"#{user.lastName}":"", placeholder='Last name', name='lastName')
+              .form-group
+                input#address.form-control.input-text.resize-input-form(value=(user.address)?"#{user.address}":"", placeholder='Address', name='address')
+              br
+              .form-group
+
+                .checkbox
+                  input.input-text.resize-input-form#mailNotification(name='mailNotification', type='checkbox', checked=(user.mailNotification===true ? "checked" : undefined))
+                  label.col-sm-10.input-text.resize-input-form Receave mail notification
+              .form-group
+                input#city(type='hidden', name='city')
+                input#country(type='hidden', name='country')
+                input#location(type='hidden', name='location')
+
+              .form-group
+                br
+                button#submit.btn-default.btn-xs.btn(type='submit') Edit profile info
+
+          .col-md-6.col-sm-7
+            if user.printer == 'accepted'
+              h1 Printer Address
+              dl
+                if user.printerAddress
+                  address
+                      strong #{user.printerAddress['company']}
+                      br
+                      |#{user.printerAddress['street1']}
+                      br
+                      |#{user.printerAddress['city']}, #{user.printerAddress['zip']}, #{user.printerAddress['country']}
+                      br
+                      |#{user.printerAddress['phone']}
+
+              a#link.direct-link-ship-address.btn-default.btn-xs.btn(href='/profile/settings/printer-direction') Update
+
+            if user.shippingAddresses
+              h2 Shipping Addresses
+              .margin-address
+              for direction in user.shippingAddresses
+                  address.col-md-5
+                   strong #{direction['company']}
+                   br
+                   |#{direction['street1']}
+                   br
+                   |#{direction['city']}, #{direction['zip']}, #{direction['country']}
+                   br
+                   |#{direction['phone']}
+                   br
+                   a.remove-shipping-address.btn-default.btn-xs.btn(href='/profile/settings/delete-shipping-direction/#{ direction.id }') Delete
+
+              else
+                strong you still don't have any direction
+
+              br
+
+          a#link.direct-link-ship-address.btn-default.btn-xs.btn(href='/profile/settings/new-shipping-direction') Add new direction
+          &nbsp;&nbsp;&nbsp;
+          a#link.direct-link-ship-address.btn-primary.btn-xs.btn(href='/accounts/logout') Logout
+        .row#upgradeYourProfile
+          .col-md-12
+              h2
+                  | Upgrade Your Profile
+              p
+                  | Here you can Upgrade your profile for FREE!
+          .col-md-12
+            .row
+              -if(user.filemanager!="accepted")
+                .col-md-6
+                  - if(user.filemanager=="request")
+                    a(href="#upgradeYourProfile")
                       div.pending-request.circular.small-circular
                         |Pending
-                - else
-                  a(data-toggle="modal",data-target="#becomePrinter",href="#")
-                      img(src='/img/icon-1.png').circular.small-circular
-                div
-                    h4 Become a Printer
-                    p
-                        | Are you a Printer?
-                        | Upgrade your profile
-                        | and earn money!
+                  - else
+                    a(data-toggle="modal",data-target="#becomeDesigner",href="#")
+                      img(src='/img/icons_printing.png').circular.small-circular
+                  div
+                      h4 Become a Designer
+                      p
+                          | Are you a Designer?
+                          | Updgrade your profile
+                          | and earn money!
+
+              -if(user.printer!="accepted")
+                .col-md-6
+                  - if(user.printer=="request")
+                    a(href='#')
+                        div.pending-request.circular.small-circular
+                          |Pending
+                  - else
+                    a(data-toggle="modal",data-target="#becomePrinter",href="#")
+                        img(src='/img/icon-1.png').circular.small-circular
+                  div
+                      h4 Become a Printer
+                      p
+                          | Are you a Printer?
+                          | Upgrade your profile
+                          | and earn money!
+            br
+            br
 
 block scripts
   script(src='/vendor/jquery.ajaxupload.js')

@@ -77,7 +77,7 @@ module.exports = function(grunt) {
       assets: {
         expand: true,
         cwd: 'src/public/',
-        src: ['css/application.css', 'css/comming.css', 'css/backend.css', 'js/application.js', 'js/site.js', 'js/common.js', 'js/lib.js', 'js/views/*.js', 'vendor/*.js', 'tmp/.gitignore', 'img/*.png', 'img/*.jpg', 'fonts/**'],
+        src: ['css/application.css', 'css/comming.css', 'css/backend.css', 'js/application.js', 'js/site.js', 'js/common.js', 'js/lib.js', 'js/views/*.js', 'vendor/*.js', 'tmp/.gitignore', 'img/*.png', 'img/*.jpg', 'image/*.png', 'image/*.jpg', 'fonts/**'],
         dest: 'public/'
       },
       views: {

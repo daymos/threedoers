@@ -73,12 +73,12 @@ block content
                     .col-md-3.col-sm-6
                       article.job
                         h4.job-name
-                          a(href="/project/#{project._id}") #{project.title}
-                        h6.job-created-at Created on #{prettyDate(project.createdAt)} at #{prettyHour(project.createdAt)} pm
-                        figure.job-image: img.img-responsive(src='/#{project.image}')
+                          a(href="/design/project/#{project._id}") #{project.title}
+                        figure.job-image: img.img-responsive(src='/img/icons_#{project.dasherizedStatus()}.png')
                         .job-status
                           i Status:
-                            a(style="color:black", href="/project/#{project._id}") #{project.humanizedStatus()}
+                            a(style="color:black", href="/design/project/#{project._id}") #{project.humanizedStatus()}
+
 
                 - if (projects.length > 0)
                   - for (project in projects)

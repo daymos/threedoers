@@ -180,7 +180,29 @@
               td(colspan='2')
                 p.final-price *Final price will include a shipping fee and will be calculated once the order has been accepted by a printer.
   div
-    a#deny(href='/printing/deny/#{project.id}') Cancel order
+    a(href='#', data-toggle='modal', data-target='#orderModal') Cancel order
+
+  .modal.fade(id='orderModal', role='dialog')
+    .modal-dialog.modal-md
+      .modal-content
+        .modal-header
+          button.close(data-dismiss='modal')
+            span &times;
+          h4.modal-title &nbsp;
+        .modal-body
+          p
+            | Once deleted the order won't be accesible anymore.
+            br
+            | Do you want to proceed?
+          br
+          form(action='/project/delete/#{ project._id }', method='post')
+            .row
+              .col-md-5
+                .form-group
+                  a.btn.btn-xlg.btn-block.btn-green-inverse(data-dismiss='modal', href='#') Undo
+              .col-md-7
+                .form-group
+                  button.btn.btn-xlg.btn-block.btn-green(type='submit') CANCEL ORDER
 
   .page-subheader
     h3 Conversation with printer:

@@ -1,272 +1,294 @@
 
-extends ../base
+extends ../../layouts/_app
 
 block title
   |  Your Design Project
 
-block body
-  div
-      -function prettyDate(dateString){
-      -var date = new Date(dateString);
-      -var d = date.getDate();
-      -var monthNames = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ];
-      -var m = monthNames[date.getMonth()];
-      -var y = date.getFullYear();
-      -var h = date.getHours()
-      -var mm = date.getMinutes()
-      -return d+'/'+m+'/'+y+' at '+h+':'+mm;
-      -}
-    .container
-      -if (user.filemanager == 'accepted')
-          .row
-              .col-md-6
-                  .back-link
-                      a(href='/design/jobs')
-                          img(src='/img/return_to_jobs.png')
-                          | Return to jobs available
+block content
+  -function prettyDate(dateString){
+  -var date = new Date(dateString);
+  -var d = date.getDate();
+  -var monthNames = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ];
+  -var m = monthNames[date.getMonth()];
+  -var y = date.getFullYear();
+  -var h = date.getHours()
+  -var mm = date.getMinutes()
+  -return d+'/'+m+'/'+y+' at '+h+':'+mm;
+  -}
 
-      .section.primary
+  .page
+    .container
+      br
+      br
+      .row
+        include ../../includes/banner
+
+    .bg-3doers
+      .container
+
+        -if (user.filemanager == 'accepted')
+          .row
+            .col-md-6
+              .back-link
+                a(href='/design/jobs')
+                  img(src='/img/return_to_jobs.png')
+                  | Return to jobs available
+
+        .section.primary
           .row
             .col-md-6
               h1#title.page-header.text-ellipsis(data-type="text", data-url="/filemanager/project/title/#{project.id}", data-title="Enter the Title") #{ project.title }
-            .col-md-6.margin-header-10
-                h2.subtitle-upload Status: #{project.humanizedStatus()}
-          .row.margin-header-10
-              .col-md-8
-                  p.subtitle-color.h4 SubTitle
-                    p.padding-left-15 #{project.abstract}
-                  p.subtitle-color.h4 Description:
-                    p.padding-left-15#description(data-type="text", data-url="/filemanager/project/description/#{project.id}", data-title="Enter the description").long-text #{ project.description }
-              .col-md-4
+              h2.subtitle-upload Status: #{project.humanizedStatus()}
+              p.subtitle-color.h4 SubTitle
+              p.padding-left-15 #{project.abstract}
+              p.subtitle-color.h4 Description:
+              p.padding-left-15#description(data-type="text", data-url="/filemanager/project/description/#{project.id}", data-title="Enter the description").long-text #{ project.description }
 
-                .download-link.padding-top-60
-                    if project.resources.length>0
-                        each val, index in project.resources
-                            - var n=index
-                            p
-                                a(href="/"+val)
-                                    img(src='/img/icon_download.png')
-                                    |  Resource #{++n}
+            .col-md-6
+              br
+              br
+              br
+              br
+              br
+              .download-link.padding-top-60
+                if project.resources.length>0
+                  each val, index in project.resources
+                    - var n=index
+                    p
+                      a(href="/"+val)
+                        img(src='/img/icon_download.png')
+                        |  Resource #{++n}
 
-      - if (project.status==statuses.UPLOADED[0])
-        .section.primary
+        - if (project.status==statuses.UPLOADED[0])
+          .section.primary
             .row
-                -if (user.id==project.creator)
-                    - if (project.proposal.length == 0 )
-                        p.info-3d There is not any proposal yet for this project.
-                    - else
-                        p.info-3d Proposals:
-                            each prop, index in project.proposal
-                                article.tile.tile-spaced.col-md-4.margin-top-10
-                                    div.text-center
-                                        span.text-20 Proposal from:
-                                            strong   #{prop.username}
-                                        p.child-inline-block quality
-                                            input(type="number",data-min=0,data-max=5,data-show-clear="false",value=prop.userRate,data-readonly="true",step=0.5,data-size="xs")#input-id.rating
-                                        p.child-inline-block this designer is late  #{prop.timeRate}% of times
-                                        p.child-inline-block time rate coming soon
-                                    .text-center
-                                        p Estimate time:
-                                            strong   #{prop.hour} hours
-                                        p Hourly cost:
-                                            strong   #{prop.cost} euro
-                                        -var doers=prop.hour*prop.cost*payment.threeDoersDesigner
-                                        p 3Doers: #{doers} EURO
-                                        p Taxes:  #{doers*payment.taxes}EURO
-                                        p
-                                            strong Total Price: #{prop.hour*prop.cost +doers+doers*payment.taxes} EURO
-                                    footer
-                                        form(action="/design/proposal/review/#{prop._id}", method="post")
-                                            input(type="hidden", name="project_id", value="#{project._id}")
-                                            input(type="submit",value="Accept this proposal").btn-default.btn-lg.btn-3doers-new
-                -else
-                  .col-sm-8
-                      .col-sm-12
-                  .col-sm-4
-                    -var myprop=null
+              -if (user.id==project.creator)
+                - if (project.proposal.length == 0 )
+                  .col-md-6
+                    p.info-3d There is not any proposal yet for this project.
+                - else
+                  p.info-3d Proposals:
                     each prop, index in project.proposal
-                        -if (prop.creator == user.id)
-                            - myprop=prop
-                        -if (typeof(prop.accepted)=='undefined'||prop.accepted==null)
-                            article.tile.tile-spaced.col-md-4.margin-top-10
-                                div.text-center
-                                    span.text-20 Your proposal
-                                .text-center
-                                    p Estimate time:
-                                        strong   #{prop.hour} hours
-                                    p Hourly cost:
-                                        strong   #{prop.cost} eure
-
-                    -if (myprop==null)
-                        .text-right
-                            button(type="button", class="btn-default btn-lg btn-3doers-new review fire-modal-proposal", id="#{ project.id}",data-toggle="modal", data-target="#myModal") MAKE A PROPOSAL
-                        div(class="modal fade", id="myModal", tabindex="-1", role="dialog", aria-labelledby="myModalLabel", aria-hidden="true")
-                            div(class="modal-dialog")
-                                div(class="modal-content")
-                                    div(class="modal-header")
-                                        h4(class="modal-title", id="myModalLabel") Make Your Proposal
-                                            div(class="modal-body")
-                                        form(method="post", action="/design/proposal/", id="proposalForm")
-                                            label Estimate Time
-                                            br
-                                            input(type="number", name="hours")
-                                            br
-                                            br
-                                            label Hourly wage
-                                            br
-                                            input(type="number", name="cost")
-                                            div(class="modal-footer")
-                                                button(type="submit").btn-default.btn-lg.btn-3doers-new Make a proposal
-      - if (project.status==statuses.ACCEPTED[0])
-        .section.primary
-            .row
-                -if (user.id==project.creator)
-                    .col-sm-8
-                        .col-sm-12
-                    .col-sm-4
-                        -if (designer)
-                            .row-fluid
-                                p designer information
-                                    ul.list-unstyled
-                                        li name: #{designer.username}
-                                        li email: #{designer.email}
-                                        li address: #{designer.address}
+                      article.tile.tile-spaced.col-md-4.margin-top-10
+                        div.text-center
+                          span.text-20 Proposal from:
+                            strong   #{prop.username}
+                          p.child-inline-block quality
+                            input(type="number",data-min=0,data-max=5,data-show-clear="false",value=prop.userRate,data-readonly="true",step=0.5,data-size="xs")#input-id.rating
+                          p.child-inline-block this designer is late  #{prop.timeRate}% of times
+                          p.child-inline-block time rate coming soon
                         .text-center
-                            form#hidden-pay-form(action="/design/project/pay/#{project.id}", method="post")
-                                button.btn-default.btn-lg.btn-3doers-new(type='submit') PAY
-                                input(type='hidden', name='_csrf', value=csrfToken)
-                -else
-                        .section.orange.clearfix
-                            h1.h1-alert-payment
-                                span Wait for the payment
-                                    br
-                                    | you will receave a confirmation mail
-                                img(src='/img/alert_payment.png', alt='')
+                          p Estimate time:
+                            strong   #{prop.hour} hours
+                          p Hourly cost:
+                            strong   #{prop.cost} euro
+                          -var doers=prop.hour*prop.cost*payment.threeDoersDesigner
+                          p 3Doers: #{doers} EURO
+                          p Taxes:  #{doers*payment.taxes}EURO
+                          p
+                            strong Total Price: #{prop.hour*prop.cost +doers+doers*payment.taxes} EURO
+                        footer
+                          form(action="/design/proposal/review/#{prop._id}", method="post")
+                            input(type="hidden", name="project_id", value="#{project._id}")
+                            input(type="submit",value="Accept this proposal").btn-default.btn-lg.btn
+                          br
+                          br
+              -else
+                .row
+                  .col-sm-8
+                    .col-sm-12
+                  .col-sm-4
+                  -var myprop=null
+                  each prop, index in project.proposal
+                    -if (prop.creator == user.id)
+                      - myprop=prop
+                    -if (typeof(prop.accepted)=='undefined'||prop.accepted==null)
+                      article.tile.tile-spaced.col-md-4.margin-top-10
+                        div.text-center
+                          span.text-20 Your proposal
+                        .text-center
+                          p Estimate time:
+                            strong   #{prop.hour} hours
+                          p Hourly cost:
+                            strong   #{prop.cost} eure
 
-      - if (project.status>statuses.ACCEPTED[0])
-        .section.primary
+                  -if (myprop==null)
+                    .text-right
+                      button(type="button", class="btn btn-default btn-lg review fire-modal-proposal", id="#{ project.id}",data-toggle="modal", data-target="#myModal") MAKE A PROPOSAL
+                    br
+                    br
+                    div(class="modal fade", id="myModal", tabindex="-1", role="dialog", aria-labelledby="myModalLabel", aria-hidden="true")
+                      div(class="modal-dialog")
+                        div(class="modal-content")
+                          div(class="modal-header")
+                            h4(class="modal-title", id="myModalLabel") Make Your Proposal
+                              div(class="modal-body")
+                            form(method="post", action="/design/proposal/#{project.id}", id="proposalForm")
+                              label Estimate Time
+                              br
+                              input(type="number", name="hours")
+                              br
+                              br
+                              label Hourly wage
+                              br
+                              input(type="number", name="cost")
+                              div(class="modal-footer")
+                                button(type="submit").btn-default.btn-lg.btn Make a proposal
+
+
+        - if (project.status==statuses.ACCEPTED[0])
+          .section.primary
             .row
-                .col-md-6
-                    .row-fluid.col-md-12
-                        -if (designSessions.length==0)
-                            p.info-3d The work is not started (no session recorderd)
-                        -else
-                            p.info-3d Until now #{parseInt(project.project_total_time_logged/60)} hours #{parseInt(project.project_total_time_logged%60)} minuts are logged
-                                ul.list-unstyled.col-sm-3
-                                    each session, index in designSessions
-                                        li.row-fluid.margin-top-10
+              -if (user.id==project.creator)
+                .col-sm-8
+                  .col-sm-12
+                .col-sm-4
+                  -if (designer)
+                    .row-fluid
+                      p designer information
+                        ul.list-unstyled
+                          li name: #{designer.username}
+                          li email: #{designer.email}
+                          li address: #{designer.address}
+                  .text-center
+                    form#hidden-pay-form(action="/design/project/pay/#{project.id}", method="post")
+                      button.btn-default.btn-lg.btn(type='submit') PAY
+                      input(type='hidden', name='_csrf', value=csrfToken)
+              -else
+                  .section.orange.clearfix
+                    h1.h1-alert-payment
+                      span Wait for the payment
+                        br
+                        | you will receave a confirmation mail
+                      img(src='/img/alert_payment.png', alt='')
 
-                                            button(role='button',data-toggle="collapse",data-target='#session-carouse-'+index).btn-collapse.btn-default.btn-lg.btn-3doers-new.collapsed Session #{index+1}
-                                .col-sm-9
-                                    each session,index in designSessions
+        - if (project.status>statuses.ACCEPTED[0])
+          .section.primary
+            .row
+              .col-md-6
+                .row-fluid.col-md-12
+                  -if (designSessions.length==0)
+                    p.info-3d The work is not started (no session recorderd)
+                  -else
+                    p.info-3d Until now #{parseInt(project.project_total_time_logged/60)} hours #{parseInt(project.project_total_time_logged%60)} minuts are logged
+                      ul.list-unstyled.col-sm-3
+                        each session, index in designSessions
+                          li.row-fluid.margin-top-10
 
-                                        div(data-ride="carousel",id='session-carouse-'+index).carousel.slide.collapse
-                                            div(role="listbox").carousel-inner
-                                                each screen,innerIndex in session
-                                                    div(class=(innerIndex==0?"active item":"item"))
-                                                        img(src="/#{screen.session_screen_shot}",alt="#{screen.session_date_stamp}")
-                                            a(href="#session-carouse-#{index}",role='button',data-slide='prev').left.carousel-control
-                                                span(aria-hidden='true').glyphicon.glyphicon-chevron-left
-                                                span.sr-only Previous
-                                            a(href="#session-carouse-#{index}",role='button',data-slide='next').right.carousel-control
-                                                span(aria-hidden='true').glyphicon.glyphicon-chevron-right
-                                                span.sr-only Next
-                .col-md-6
-                    -if (project.status==statuses.TIMEEEXPIRED[0])
-                        .row-fluid.text-justify
-                            -if (project.designer==user.id)
-                                ul.list-inline
-                                    li
-                                        form(action='/design/stl/needMoreTime/#{project.id}',method="POST").row-fluid
-                                            input(type='hidden',name='moreTime',value=1)
-                                            button(type='submit').btn-default.btn-lg.btn-3doers-new need 1 hour
-                                    li
-                                        form(action='/design/stl/needMoreTime/#{project.id}',method="POST").row-fluid
-                                            input(type='hidden',name='moreTime',value=3)
-                                            button(type='submit').btn-default.btn-lg.btn-3doers-new need 3 hour
-                                    li
-                                        form(action='/design/stl/needMoreTime/#{project.id}',method="POST").row-fluid
-                                            input(type='hidden',name='moreTime',value=5)
-                                            button(type='submit').btn-default.btn-lg.btn-3doers-new need 5 hour
-                            -else
-                                span.text-20 The extimated time is expired please wait that the designer require more time.
-                    -if (project.status==statuses.TIMEREQUIRECONFIRM[0])
-                        -if (project.designer==user.id)
-                            span You request #{project.additionalHourRequested}  extra hours please wait for user confirmation
-                        -else
-                            ul.list-inline
-                                li
-                                    form(action='/design/stl/confirmMoreTime/#{project.id}',method="POST")
-                                        input(type='hidden',name='moreTime',value=project.additionalHourRequested)
-                                        button(type='submit').btn-default.btn-lg.btn-3doers-new Confirm #{project.additionalHourRequested} extra hours
+                            button(role='button',data-toggle="collapse",data-target='#session-carouse-'+index).btn-collapse.btn-default.btn-lg.btn.collapsed Session #{index+1}
+                      .col-sm-9
+                        each session,index in designSessions
 
-                                li
-                                    form(action='/design/stl/denyMoreTime/#{project.id}',method="POST")
-                                        input(type='hidden',name='moreTime',value=project.additionalHourRequested)
-                                        button(type='submit').btn-default.btn-lg.btn-3doers-new Deny #{project.additionalHourRequested} extra hours
-                    -if (project.status<statuses.DELIVERED[0])
-                        -if (project.designer!=user.id)
-                            span
+                          div(data-ride="carousel",id='session-carouse-'+index).carousel.slide.collapse
+                            div(role="listbox").carousel-inner
+                              each screen,innerIndex in session
+                                div(class=(innerIndex==0?"active item":"item"))
+                                  img(src="/#{screen.session_screen_shot}",alt="#{screen.session_date_stamp}")
+                            a(href="#session-carouse-#{index}",role='button',data-slide='prev').left.carousel-control
+                              span(aria-hidden='true').glyphicon.glyphicon-chevron-left
+                              span.sr-only Previous
+                            a(href="#session-carouse-#{index}",role='button',data-slide='next').right.carousel-control
+                              span(aria-hidden='true').glyphicon.glyphicon-chevron-right
+                              span.sr-only Next
+              .col-md-6
+                -if (project.status==statuses.TIMEEEXPIRED[0])
+                  .row-fluid.text-justify
+                    -if (project.designer==user.id)
+                      ul.list-inline
+                        li
+                          form(action='/design/stl/needMoreTime/#{project.id}',method="POST").row-fluid
+                            input(type='hidden',name='moreTime',value=1)
+                            button(type='submit').btn-default.btn-lg.btn need 1 hour
+                        li
+                          form(action='/design/stl/needMoreTime/#{project.id}',method="POST").row-fluid
+                            input(type='hidden',name='moreTime',value=3)
+                            button(type='submit').btn-default.btn-lg.btn need 3 hour
+                        li
+                          form(action='/design/stl/needMoreTime/#{project.id}',method="POST").row-fluid
+                            input(type='hidden',name='moreTime',value=5)
+                            button(type='submit').btn-default.btn-lg.btn need 5 hour
+                    -else
+                      span.text-20 The extimated time is expired please wait that the designer require more time.
+                -if (project.status==statuses.TIMEREQUIRECONFIRM[0])
+                  -if (project.designer==user.id)
+                    span You request #{project.additionalHourRequested}  extra hours please wait for user confirmation
+                  -else
+                    ul.list-inline
+                      li
+                        form(action='/design/stl/confirmMoreTime/#{project.id}',method="POST")
+                          input(type='hidden',name='moreTime',value=project.additionalHourRequested)
+                          button(type='submit').btn-default.btn-lg.btn Confirm #{project.additionalHourRequested} extra hours
+
+                      li
+                        form(action='/design/stl/denyMoreTime/#{project.id}',method="POST")
+                          input(type='hidden',name='moreTime',value=project.additionalHourRequested)
+                          button(type='submit').btn-default.btn-lg.btn Deny #{project.additionalHourRequested} extra hours
+                -if (project.status<statuses.DELIVERED[0])
+                  -if (project.designer!=user.id)
+                    span
+                  -else
+                    .row-fluid
+                      span.h4.text-center.col-sm-8 Have you finished?
+                      .row-fluid
+                        form(role='form',enctype="multipart/form-data",action='/design/stl/complete/#{project.id}',method='POST').form-horizontal.col-sm-8
+                          .form-group
+                            input(type='file',required='required',name="file[]").form-control
+                          .form-group.text-center
+                            button(role='submit').btn-default.btn-lg.btn.btn-block UPLOAD RESULT
+                -if (project.status>=statuses.DELIVERED[0])
+                  .row-fluid
+                    span.h4.col-sm-8 the design is finished
+                      a(href='/'+project.final_stl,download).gray-color  click here
+                      span  to download the stl file
+                    span.col-sm-4
+                  -if (user.id==project.creator)
+                    .row-fluid
+                      p.col-sm-8 how is the work?
+                      form(role='form',method="POST",action='/design/project/rate/#{project.id}')
+                        - if (project.rate)
+                          div(data-toggle="tooltip",data-placement="bottom",title='already voted')#alreadyVoted.form-group
+                            input(type="number",data-min=0,data-max=5,data-show-clear="false",value=project.rate,disabled=true,step=0.5,data-size="lg")#input-id.rating
                         -else
-                            .row-fluid
-                                span.h4.text-center.col-sm-8 Have you finished?
-                                .row-fluid
-                                    form(role='form',enctype="multipart/form-data",action='/design/stl/complete/#{project.id}',method='POST').form-horizontal.col-sm-8
-                                        .form-group
-                                            input(type='file',required='required',name="file[]").form-control
-                                        .form-group.text-center
-                                            button(role='submit').btn-default.btn-lg.btn-3doers-new.btn-block UPLOAD RESULT
-                    -if (project.status>=statuses.DELIVERED[0])
-                        .row-fluid
-                            span.h4.col-sm-8 the design is finished
-                                a(href='/'+project.final_stl,download).gray-color  click here
-                                span  to download the stl file
-                            span.col-sm-4
-                        -if (user.id==project.creator)
-                            .row-fluid
-                                p.col-sm-8 how is the work?
-                                form(role='form',method="POST",action='/design/project/rate/#{project.id}')
-                                    - if (project.rate)
-                                        div(data-toggle="tooltip",data-placement="bottom",title='already voted')#alreadyVoted.form-group
-                                            input(type="number",data-min=0,data-max=5,data-show-clear="false",value=project.rate,disabled=true,step=0.5,data-size="lg")#input-id.rating
-                                    -else
-                                        input(type="number",name='rate',data-min=0,data-max=5,data-show-clear="false",step=0.5,data-size="lg")#input-id.rating
-                                        div.form-group
-                                                button(role='submit').btn-default.btn-lg.btn-3doers-new.btn-block Grade it
-                                    div.form-group Do you have some problems about the works?
-                                        a(href='mailto:'+adminMail +'?subject=Problem about design (id '+project.id+')')  Contact us
+                          input(type="number",name='rate',data-min=0,data-max=5,data-show-clear="false",step=0.5,data-size="lg")#input-id.rating
+                          div.form-group
+                              button(role='submit').btn-default.btn-lg.btn.btn-block Grade it
+                        div.form-group Do you have some problems about the works?
+                          a(href='mailto:'+adminMail +'?subject=Problem about design (id '+project.id+')')  Contact us
 
         - if (project.status >= statuses.ACCEPTED[0])
-            br
-            br
-            br
+          br
+          br
+          br
+          .container
+            .row
+              .col-md-7
+                .comment-title
+                  h4.comment-title-new Comments
+            .row
+              .col-md-12#comment-list
+                - for comment in project.comments
+                  - var myclass=(user.username===comment.username ? 'mine-chat':'other-chat')
+                    div(class=myclass).media
+                      a.pull-left(href='#')
+                        img.media-object(src='/#{comment.photo}', alt='', width='78', height='78')
+                      .media-body
+                        p
+                          | #{comment.content}
+                      .media-meta
+                        | by&nbsp;
+                        span.author #{comment.username == user.username ? "you" : comment.username}&nbsp;
+                        | at&nbsp;
+                        span.date #{prettyDate(comment.createdAt)}
+          .section.primary
             .container
-                .row
-                    .col-md-7
-                        .comment-title
-                            h4.comment-title-new Comments
-                .row
-                    .col-md-12#comment-list
-                        - for comment in project.comments
-                            - var myclass=(user.username===comment.username ? 'mine-chat':'other-chat')
-                                div(class=myclass).media
-                                    a.pull-left(href='#')
-                                        img.media-object(src='/#{comment.photo}', alt='', width='78', height='78')
-                                    .media-body
-                                        p
-                                            | #{comment.content}
-                                    .media-meta
-                                        | by&nbsp;
-                                        span.author #{comment.username == user.username ? "you" : comment.username}&nbsp;
-                                        | at&nbsp;
-                                        span.date #{prettyDate(comment.createdAt)}
-            .section.primary
-                .container
-                    .row
-                        .col-md-10.col-sm-10
-                            textarea#comment-text.comment.form-control(rows=6)
-                        .col-md-2.col-sm-2
-                            button.btn-default.btn-lg.btn-3doers-new#comment-button SEND
+              .row
+                .col-md-10.col-sm-10
+                  textarea#comment-text.comment.form-control(rows=6)
+                .col-md-2.col-sm-2
+                  button.btn-default.btn-lg.btn#comment-button SEND
+
+          br
+          br
 
 block extra-headers
   meta(name="csrf-token", content="#{csrfToken}")
@@ -285,12 +307,12 @@ block scripts
     };
     $(document).ready(
       function() {
-        $('#alreadyVoted').tooltip();
+      $('#alreadyVoted').tooltip();
         $('#deny, #accept').click(
           function(event) {
-            console.log("js figo");
-            event.preventDefault();
-            $.post($(this).attr('href'), function(){location.reload();}).fail(function(XMLHttpRequest, textStatus, errorThrown){alert(JSON.parse(XMLHttpRequest.responseText).msg);});
+          console.log("js figo");
+          event.preventDefault();
+          $.post($(this).attr('href'), function(){location.reload();}).fail(function(XMLHttpRequest, textStatus, errorThrown){alert(JSON.parse(XMLHttpRequest.responseText).msg);});
           }
         );
       }

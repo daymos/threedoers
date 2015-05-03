@@ -112,12 +112,13 @@
             br
             | Do you want to proceed?
           br
-          .row
-            .col-md-5
-              .form-group
-                a.btn.btn-xlg.btn-block.btn-green-inverse(href='#') Undo
-            .col-md-7
-              .form-group
-                a.btn.btn-xlg.btn-block.btn-green(href='#') CANCEL ORDER
+          form(action='/project/delete/#{ project._id }', method='post')
+            .row
+              .col-md-5
+                .form-group
+                  a.btn.btn-xlg.btn-block.btn-green-inverse(data-dismiss='modal', href='#') Undo
+              .col-md-7
+                .form-group
+                  button.btn.btn-xlg.btn-block.btn-green(type='submit') CANCEL ORDER
   br
   br

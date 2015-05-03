@@ -40,7 +40,7 @@ block content
                       h4.job-name #{project.title}
                       figure.job-image: img.img-responsive(src='/#{project.image}')
                       .form-group.text-center
-                        a.btn.btn-lg.btn-green.review("#") #{project.humanizedStatus()}
+                        a.btn.btn-lg.btn-green.review(href="/project/#{ project._id }") #{project.humanizedStatus()}
                 - for (project in designProjects)
                   - project = printingProjects[project]
                   .col-md-3.col-sm-6

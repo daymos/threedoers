@@ -208,7 +208,7 @@ module.exports = (app, io) ->
 
   app.get '/profile/projects', decorators.loginRequired, (req, res) ->
     if req.user.printer!="accepted" and req.user.filemanager!="accepted"
-      models.STLProject.find({user: req.user._id, status: {"$lte": models.PROJECT_STATUSES.PRINT_REVIEW[0]}}).exec().then( (docs) ->
+      models.STLProject.find({user: req.user._id, status: {"$lte": models.PROJECT_STATUSES.PRINT_REVIEW[0]}}).sort(createdAt: -1).exec().then( (docs) ->
         res.render 'core/profile/list_projects', {projects: docs, printingProjects: [], designProjects: []}
       ).fail( ->
         logger.error arguments
@@ -222,7 +222,7 @@ module.exports = (app, io) ->
       res.redirect "/printing/requests"
 
   app.get '/profile/onprint', decorators.loginRequired, (req, res) ->
-    models.STLProject.find({user: req.user._id, status: {"$lt": models.PROJECT_STATUSES.ARCHIVED[0], "$gt": models.PROJECT_STATUSES.PRINT_REQUESTED[0]}}).exec().then((docs) ->
+    models.STLProject.find({user: req.user._id, status: {"$lt": models.PROJECT_STATUSES.ARCHIVED[0], "$gt": models.PROJECT_STATUSES.PRINT_REQUESTED[0]}}).sort(createdAt: -1).exec().then((docs) ->
       res.render 'core/profile/list_projects', {projects: docs, printingProjects: [], designProjects: []}
     ).fail( ->
       logger.error arguments
@@ -233,7 +233,7 @@ module.exports = (app, io) ->
 
 
   app.get '/profile/archived', decorators.loginRequired, (req, res) ->
-    models.STLProject.find({user: req.user._id, status: models.PROJECT_STATUSES.ARCHIVED[0]}).exec().then( (printings) ->
+    models.STLProject.find({user: req.user._id, status: models.PROJECT_STATUSES.ARCHIVED[0]}).sort(createdAt: -1).exec().then( (printings) ->
         designModels.STLDesign.find({'creator': req.user.id, status: {"$lt": designModels.DESIGN_STATUSES.ARCHIVED[0]} }).exec().then((design) ->
           res.render 'core/profile/list_projects', {printingProjects: printings, designProjects: design, projects:[]}
         )
@@ -687,6 +687,15 @@ module.exports = (app, io) ->
       res.send 500
     )
 
+  app.post '/project/delete/:id', decorators.loginRequired, (req, res, next) ->
+    models.STLProject.findOne({_id: req.params.id, status: {$lt: models.PROJECT_STATUSES.PRINTING[0]}}).remove().exec().then( (doc) ->
+      res.redirect "/profile/projects"
+    ).fail( ->
+      console.log arguments
+      logger.error arguments
+      res.send 500
+    )
+
   app.post '/project/comment/:id', decorators.loginRequired, (req, res, next) ->
     # Same as get /project/:id both printer who accepted and the owner can change this
     models.STLProject.findOne({_id: req.params.id, $or: [{user: req.user.id}, {'order.printer': req.user.id}]}).exec().then( (doc) ->
@@ -895,7 +904,7 @@ module.exports = (app, io) ->
 
 
   app.get '/printing/requests', decorators.printerRequired, (req, res) ->
-    models.STLProject.find(status: {"$lt": models.PROJECT_STATUSES.ARCHIVED[0], "$gt": models.PROJECT_STATUSES.PRINT_REQUESTED[0]}, 'order.printer': req.user.id).exec (err, docs) ->
+    models.STLProject.find(status: {"$lt": models.PROJECT_STATUSES.ARCHIVED[0], "$gt": models.PROJECT_STATUSES.PRINT_REQUESTED[0]}, 'order.printer': req.user.id).sort(createdAt: -1).exec (err, docs) ->
       if err
         logger.error err
         res.send 500
@@ -913,7 +922,7 @@ module.exports = (app, io) ->
 
 
   app.get '/printing/jobs', decorators.printerRequired, (req, res) ->
-    models.STLProject.find('order.printer': req.user.id, status: {"$lt": models.PROJECT_STATUSES.ARCHIVED[0], "$gt": models.PROJECT_STATUSES.PRINT_REQUESTED[0]}).exec (err, docs) ->
+    models.STLProject.find('order.printer': req.user.id, status: {"$lt": models.PROJECT_STATUSES.ARCHIVED[0], "$gt": models.PROJECT_STATUSES.PRINT_REQUESTED[0]}).sort(createdAt: -1).exec (err, docs) ->
       if err
         logger.error err
         res.send 500
@@ -921,7 +930,7 @@ module.exports = (app, io) ->
         res.render 'core/printing/jobs', {projects: docs}
 
   app.get '/printing/archived', decorators.printerRequired, (req, res) ->
-    models.STLProject.find('order.printer': req.user.id, status: models.PROJECT_STATUSES.ARCHIVED[0]).exec().then( ( printings) ->
+    models.STLProject.find('order.printer': req.user.id, status: models.PROJECT_STATUSES.ARCHIVED[0]).sort(createdAt: -1).exec().then( ( printings) ->
       designModels.STLDesign.find({'creator': req.user.id, status:  designModels.DESIGN_STATUSES.ARCHIVED[0]}).exec().then((design) ->
         res.render 'core/printing/archived', {printingProjects: printings, designProjects: design}
       )
@@ -1015,6 +1024,7 @@ module.exports = (app, io) ->
           data['order.transaction'] = req.body
           if typeof req.body.tracking_status == 'string'
             req.body = JSON.parse(req.body)
+
           # test many options
           if req.body.tracking_status? and req.body.tracking_status.status == "TRANSIT" and not doc.order.secundaryPaid
             data['order.secundaryPaid'] = true
@@ -1034,6 +1044,9 @@ module.exports = (app, io) ->
             paypalSdk.executePayment payload, ->
               console.log "payment exec uted"
               console.log arguments
+
+          if req.body.tracking_status? and req.body.tracking_status.status == "DELIVERED"
+            data['status'] = models.PROJECT_STATUSES.ARCHIVED[0]
 
           doc.update data, (error) ->
             if error
