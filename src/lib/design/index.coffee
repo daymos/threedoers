@@ -552,12 +552,13 @@ module.exports = (app) ->
     models.STLDesign.findOne({_id: req.params.id}).exec().then( (doc) ->
       if doc
         auth.User.findOne(doc.designer).exec().then((user) ->
-            doc.status=models.DESIGN_STATUSES.PAID[0]
-            console.log doc
-            doc.save()
-            mailer.send('mailer/design/payed', {project: doc, user: user, site:settings.site}, {from: settings.mailer.noReply, to:[user.email], subject: settings.project.payed.subject})
-            res.redirect "/design/project/#{req.params.id}"
-    )).fail( (error) ->
+          doc.status=models.DESIGN_STATUSES.PAID[0]
+          console.log doc
+          doc.save()
+          mailer.send('mailer/design/payed', {project: doc, user: user, site:settings.site}, {from: settings.mailer.noReply, to:[user.email], subject: settings.project.payed.subject})
+          res.redirect "/design/project/#{req.params.id}"
+        )
+    ).fail( (error) ->
       console.log error
       logger.error error
       res.send 500

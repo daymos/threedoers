@@ -235,7 +235,7 @@ module.exports = (app, io) ->
   app.get '/profile/archived', decorators.loginRequired, (req, res) ->
     models.STLProject.find({user: req.user._id, status: models.PROJECT_STATUSES.ARCHIVED[0]}).exec().then( (printings) ->
         designModels.STLDesign.find({'creator': req.user.id, status: {"$lt": designModels.DESIGN_STATUSES.ARCHIVED[0]} }).exec().then((design) ->
-          res.render 'core/profile/list_projects', {printingProjects: printings,designProjects: design}
+          res.render 'core/profile/list_projects', {printingProjects: printings, designProjects: design, projects:[]}
         )
     ).fail( ->
       logger.error arguments
@@ -922,9 +922,10 @@ module.exports = (app, io) ->
 
   app.get '/printing/archived', decorators.printerRequired, (req, res) ->
     models.STLProject.find('order.printer': req.user.id, status: models.PROJECT_STATUSES.ARCHIVED[0]).exec().then( ( printings) ->
-        designModels.STLDesign.find({'creator': req.user.id, status:  designModels.DESIGN_STATUSES.ARCHIVED[0]}).exec().then((design) ->
-          res.render 'core/printing/archived', {printingProjects: printings,designProjects: design}
-    )).fail( (reason) ->
+      designModels.STLDesign.find({'creator': req.user.id, status:  designModels.DESIGN_STATUSES.ARCHIVED[0]}).exec().then((design) ->
+        res.render 'core/printing/archived', {printingProjects: printings, designProjects: design}
+      )
+    ).fail( (reason) ->
       console.log reason
       logger.error reason
       res.send 500

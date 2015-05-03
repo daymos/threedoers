@@ -1,46 +1,53 @@
-extends ../layout
+extends ../layouts/_default
 
 block title
-  |  Signup
+  |  Sign up
 
-block body
-  div
+block content
+  .hidden-xs.hidden-sm(id='beta-label')
+    img(src='/images/beta_label.png', alt='3doers beta')
+  .bg-3doers
     .container
-        h1.page-header Registration
-
-      .container
-        p.signup-message To become a printer your need to be a 3doers user first. Once you sign up you'll be able to upgrade your profile anytime.
-        .row
-          .col-md-5.col-sm-6
-            form#registration(action='/accounts/signup', method='POST', role='form', accept-charset='utf-8', name='signup-form')
-              input(type='hidden', name='_csrf', value=csrfToken)
-              .form-group
-                input.form-control.input-text.resize-input-form(type='text', placeholder='username', name='username')
-              .form-group
-                input.form-control.input-text.resize-input-form(type='email', placeholder='email', name='email')
-              .form-group
-                input.form-control.input-text.resize-input-form(type='password', placeholder='password', name='password')
-              .form-group
-                input.form-control.input-text.resize-input-form(type='password', placeholder='confirm password', name='passwordConfirm')
-              .form-group
-                input.form-control.input-text.resize-input-form(type='text', placeholder='address', name='address', id='address')
-                input#city(type='hidden', name='city')
-                input#country(type='hidden', name='country')
-                input#location(type='hidden', name='location')
-              br
-              br
-              .form-group
-                    input(type='checkbox',name='term_condition') &nbsp;
-                    span   I accept 3doers
-                    a(href="/docs/pp.pdf", target="_blank")  Privacy Policy &nbsp;
-                    a(href="/docs/terms.pdf", target="_blank") Terms and Condition
-                    br
-                    br
-                    button.btn-landing.btn-primary-landing.btn-block.no-border(type='submit') SIGN UP
-
+      .page-header
+        h3 Sign up
+      br
+      br
+      .row
+        .col-md-4
+          form.form-3doers#registration(action='/accounts/signup', method='POST', role='form', accept-charset='utf-8', name='signup-form')
+            input(type='hidden', name='_csrf', value=csrfToken)
+            .form-group
+              input.form-control(type='text', placeholder='username', name='username')
+            .form-group.no-margin
+              input.form-control(type='email', placeholder='email', name='email')
+            .form-group.no-margin
+              input.form-control(type='password', placeholder='password', name='password')
+            .form-group.no-margin
+              input.form-control(type='password', placeholder='confirm password', name='passwordConfirm')
+            .form-group.no-margin
+              input.form-control(type='text', placeholder='address', name='address', id='address')
+              input#city(type='hidden', name='city')
+              input#country(type='hidden', name='country')
+              input#location(type='hidden', name='location')
+            br
+            .checkbox
+              input(id='terms_conditions', type='checkbox', name='term_condition')
+              label(for='terms_conditions')
+                | I accept 3doers
+                a(href='/docs/pp.pdf')  Privacy Policy
+                |  and
+                br
+                a(href='/docs/terms.pdf')  Terms and Conditions
+            br
+            .form-group
+              button.btn.btn-xlg.btn-block.btn-green SIGN UP
+      br
+      br
+      br
 
 block scripts
-  script(src!='http://maps.googleapis.com/maps/api/js?key=AIzaSyDRQ1Ct3DCGBOzXsr0nGNIHwNjKp7FNaKQ&sensor=false&libraries=places')
+
+  script(src='https://maps.googleapis.com/maps/api/js?v=3.exp&&libraries=places&language=en')
   script(src='/js/views/signup.js')
 
   if locals.error
