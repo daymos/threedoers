@@ -44,7 +44,6 @@ $(document).ready ->
       dataType: "json"
 
       success: (data) ->
-        alert(data.msg)
         window.location.href = "/printing/jobs"
 
       statusCode:
