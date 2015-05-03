@@ -27,20 +27,24 @@ block content
 
           .tab-content
             .tab-pane.fade.in.active(id='workplace', role='tabpanel')
-            - if (printingProjects.length == 0 && designProjects.length==0)
+            - if (printingProjects.length == 0 && designProjects.length==0 && projects.length==0)
               h4.light There is not any project yet for this list.
             - else
               h4.light Here you can find printing and design jobs
               br
               .row
-                .col-md-3.col-sm-6
-                  article.job
-                    h4.job-name Small_frog.stl
-                    h6.job-created-at Created on 11/Apr/2015 at 6:25 pm
-                    figure.job-image: img.img-responsive(src='/images/job.jpg')
-                    .job-status
-                      i Status:
-                      | ORDER REVIEW
+                - if (printingProject.length > 0)
+                  - for (project in printingProjects)
+                  - project = printingProjects[project]
+                    .col-md-3.col-sm-6
+                      article.job
+                        h4.job-name #{project.title}
+                        h6.job-created-at Created on 11/Apr/2015 at 6:25 pm
+                        figure.job-image: img.img-responsive(src='#{project.image}')
+                        .job-status
+                          i Status:
+                          | ORDER REVIEW
+
                 .col-md-3.col-sm-6
                   article.job
                     h4.job-name Small_frog.stl

@@ -10,6 +10,7 @@ updateFrontEnd = (data) ->
         $('.object-volume').text('processing')
       else
         $('.object-volume-unit').removeClass('hide')
+        $('#order-button').prop('disabled', false)
 
     if key == 'order'
       $('#order-placed-order').text(" #{data[key].price}  ")
@@ -85,31 +86,31 @@ $(document).ready ->
   ###
   # JSC3D.Viewer
   ###
+  if $('#cv').get(0)
+    viewer = new JSC3D.Viewer $('#cv').get(0)
+    viewer.setParameter 'SceneUrl', "/#{project.filename}"
+    viewer.setParameter 'ModelColor', "#{colors[project.color]}"
+    viewer.setParameter 'BackgroundColor1', '#E5D7BA'
+    # viewer.setParameter 'InitRotationX', '25'
+    # viewer.setParameter 'InitRotationY', '25'
+    # viewer.setParameter 'InitRotationZ', '25'
+    viewer.setParameter 'BackgroundColor2', '#383840'
+    viewer.setParameter 'RenderMode', 'smooth'
+    viewer.setParameter 'Definition','high'
+    viewer.setParameter 'MipMapping','on'
+    viewer.setParameter 'CreaseAngle', '30'
+    # viewer.setMouseUsage 'default'
+    # viewer.enableDefaultInputHandler(true)
+    viewer.onloadingcomplete = ->
+      unless project.hasImage
+        # we need to render the image before update project
+        setTimeout(->
+          $.post("/project/#{ project.id }/image/", {image: $("#cv")[0].toDataURL()})
+        , 15000 # 10 sec
+        )
 
-  viewer = new JSC3D.Viewer $('#cv').get(0)
-  viewer.setParameter 'SceneUrl', "/#{project.filename}"
-  viewer.setParameter 'ModelColor', "#{colors[project.color]}"
-  viewer.setParameter 'BackgroundColor1', '#E5D7BA'
-  # viewer.setParameter 'InitRotationX', '25'
-  # viewer.setParameter 'InitRotationY', '25'
-  # viewer.setParameter 'InitRotationZ', '25'
-  viewer.setParameter 'BackgroundColor2', '#383840'
-  viewer.setParameter 'RenderMode', 'smooth'
-  viewer.setParameter 'Definition','high'
-  viewer.setParameter 'MipMapping','on'
-  viewer.setParameter 'CreaseAngle', '30'
-  # viewer.setMouseUsage 'default'
-  # viewer.enableDefaultInputHandler(true)
-  viewer.onloadingcomplete = ->
-    unless project.hasImage
-      # we need to render the image before update project
-      setTimeout(->
-        $.post("/project/#{ project.id }/image/", {image: $("#cv")[0].toDataURL()})
-      , 15000 # 10 sec
-      )
-
-  viewer.init()
-  viewer.update()
+    viewer.init()
+    viewer.update()
 
   ###
   # Some controllers
@@ -141,6 +142,27 @@ $(document).ready ->
       event.preventDefault()
   )
 
+  prettyDate = (dateString) ->
+    date = new Date(dateString);
+    d = date.getDate();
+    monthNames = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ];
+    m = monthNames[date.getMonth()];
+    y = date.getFullYear();
+    h = date.getHours()
+    mm = date.getMinutes()
+    return d+'/'+m+'/'+y;
+
+
+  prettyHour = (dateString) ->
+    date = new Date(dateString);
+    d = date.getDate();
+    monthNames = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ];
+    m = monthNames[date.getMonth()];
+    y = date.getFullYear();
+    h = date.getHours()
+    mm = date.getMinutes()
+    return h+':'+mm;
+
   $("#comment-button").click (e) ->
     e.preventDefault()
     $.ajax
@@ -150,12 +172,14 @@ $(document).ready ->
       data: {message: $("#comment-text").val()}
 
       success: (data) ->
-        template = "<div class='media'><a href='#' class='pull-left'><img src='/#{data.photo}' alt='' class='media-object' height='78' width='78'></a>
-              <div class='media-body'>
-                <p>#{safe_tags_replace(data.content)}</p>
-              </div>
-              <div class='media-meta'>by <span class='author'>#{data.username}</span> <span class='date'>#{Date(data.createdAt)}</span></div>
-            </div>"
+
+        template = "<div class='mine-chat media'>
+          <div class='media-body text-right'>
+            <div class='message'>#{safe_tags_replace(data.content)}</div>
+            <p class='meta'> By<strong> you</strong> at<strong> #{prettyDate(data.createdAt)}</strong> at<strong> #{prettyHour(data.createdAt)} pm</strong></p>
+          </div>
+          <div class='media-right'><a href='#'><img src='/#{data.photo}' style='width:50px; height:50px' class='media-object'></a></div>
+        </div>"
 
         $("#comment-list").append($(template))
         $("#comment-text").val("")  # cleaning the textarea
@@ -220,7 +244,7 @@ $(document).ready ->
   $('#payment-form').submit (event) ->
     event.preventDefault()
     $form = $('#payment-form')
-    shippingMethod = $form.find('input[name=shipping]:checked').val()
+    shippingMethod = 'shipping' # $form.find('input[name=shipping]:checked').val()
 
     if shippingMethod == 'shipping'
       $('#payment-modal').modal('show')

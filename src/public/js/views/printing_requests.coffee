@@ -36,7 +36,7 @@ $(document).ready ->
 
 
   # $("[data-toggle=\"tooltip\"]").tooltip()
-  $("a.btn-3doers-new.review").click (e) ->
+  $("a.review").click (e) ->
     e.preventDefault()
     $.ajax
       url: $(this).attr("href")

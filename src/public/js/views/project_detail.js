@@ -15,6 +15,7 @@
           $('.object-volume').text('processing');
         } else {
           $('.object-volume-unit').removeClass('hide');
+          $('#order-button').prop('disabled', false);
         }
       }
       if (key === 'order') {
@@ -63,7 +64,7 @@
     # CSRF Protection
     */
 
-    var CSRF_HEADER, e, setCSRFToken, socket_project, updatePayDiv, viewer;
+    var CSRF_HEADER, e, prettyDate, prettyHour, setCSRFToken, socket_project, updatePayDiv, viewer;
     CSRF_HEADER = "X-CSRF-Token";
     setCSRFToken = function(securityToken) {
       return jQuery.ajaxPrefilter(function(options, _, xhr) {
@@ -110,26 +111,28 @@
     # JSC3D.Viewer
     */
 
-    viewer = new JSC3D.Viewer($('#cv').get(0));
-    viewer.setParameter('SceneUrl', "/" + project.filename);
-    viewer.setParameter('ModelColor', "" + colors[project.color]);
-    viewer.setParameter('BackgroundColor1', '#E5D7BA');
-    viewer.setParameter('BackgroundColor2', '#383840');
-    viewer.setParameter('RenderMode', 'smooth');
-    viewer.setParameter('Definition', 'high');
-    viewer.setParameter('MipMapping', 'on');
-    viewer.setParameter('CreaseAngle', '30');
-    viewer.onloadingcomplete = function() {
-      if (!project.hasImage) {
-        return setTimeout(function() {
-          return $.post("/project/" + project.id + "/image/", {
-            image: $("#cv")[0].toDataURL()
-          });
-        }, 15000);
-      }
-    };
-    viewer.init();
-    viewer.update();
+    if ($('#cv').get(0)) {
+      viewer = new JSC3D.Viewer($('#cv').get(0));
+      viewer.setParameter('SceneUrl', "/" + project.filename);
+      viewer.setParameter('ModelColor', "" + colors[project.color]);
+      viewer.setParameter('BackgroundColor1', '#E5D7BA');
+      viewer.setParameter('BackgroundColor2', '#383840');
+      viewer.setParameter('RenderMode', 'smooth');
+      viewer.setParameter('Definition', 'high');
+      viewer.setParameter('MipMapping', 'on');
+      viewer.setParameter('CreaseAngle', '30');
+      viewer.onloadingcomplete = function() {
+        if (!project.hasImage) {
+          return setTimeout(function() {
+            return $.post("/project/" + project.id + "/image/", {
+              image: $("#cv")[0].toDataURL()
+            });
+          }, 15000);
+        }
+      };
+      viewer.init();
+      viewer.update();
+    }
     /*
     # Some controllers
     */
@@ -163,6 +166,28 @@
         return event.preventDefault();
       }
     });
+    prettyDate = function(dateString) {
+      var d, date, h, m, mm, monthNames, y;
+      date = new Date(dateString);
+      d = date.getDate();
+      monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+      m = monthNames[date.getMonth()];
+      y = date.getFullYear();
+      h = date.getHours();
+      mm = date.getMinutes();
+      return d + '/' + m + '/' + y;
+    };
+    prettyHour = function(dateString) {
+      var d, date, h, m, mm, monthNames, y;
+      date = new Date(dateString);
+      d = date.getDate();
+      monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+      m = monthNames[date.getMonth()];
+      y = date.getFullYear();
+      h = date.getHours();
+      mm = date.getMinutes();
+      return h + ':' + mm;
+    };
     $("#comment-button").click(function(e) {
       e.preventDefault();
       return $.ajax({
@@ -174,7 +199,7 @@
         },
         success: function(data) {
           var template;
-          template = "<div class='media'><a href='#' class='pull-left'><img src='/" + data.photo + "' alt='' class='media-object' height='78' width='78'></a>              <div class='media-body'>                <p>" + (safe_tags_replace(data.content)) + "</p>              </div>              <div class='media-meta'>by <span class='author'>" + data.username + "</span> <span class='date'>" + (Date(data.createdAt)) + "</span></div>            </div>";
+          template = "<div class='mine-chat media'>          <div class='media-body text-right'>            <div class='message'>" + (safe_tags_replace(data.content)) + "</div>            <p class='meta'> By<strong> you</strong> at<strong> " + (prettyDate(data.createdAt)) + "</strong> at<strong> " + (prettyHour(data.createdAt)) + " pm</strong></p>          </div>          <div class='media-right'><a href='#'><img src='/" + data.photo + "' style='width:50px; height:50px' class='media-object'></a></div>        </div>";
           $("#comment-list").append($(template));
           return $("#comment-text").val("");
         },
@@ -250,7 +275,7 @@
       var $form;
       event.preventDefault();
       $form = $('#payment-form');
-      shippingMethod = $form.find('input[name=shipping]:checked').val();
+      shippingMethod = 'shipping';
       if (shippingMethod === 'shipping') {
         return $('#payment-modal').modal('show');
       } else {

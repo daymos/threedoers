@@ -16,7 +16,7 @@
     setCSRFToken($("meta[name=\"csrf-token\"]").attr("content"));
     $(".info_jobs_available").last().find(".separator").css("display", "none");
     $(".info > div").css("display", "block");
-    return $("a.btn-3doers-new.review").click(function(e) {
+    return $("a.review").click(function(e) {
       e.preventDefault();
       return $.ajax({
         url: $(this).attr("href"),

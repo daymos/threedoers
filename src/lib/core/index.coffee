@@ -855,10 +855,9 @@ module.exports = (app, io) ->
                   res.redirect "/project/#{req.params.id}"
               else
                 shippo.transaction.create(rate: doc.order.rate.object_id).then((transaction)->
-                  doc.status=models.PROJECT_STATUSES.SHIPPING[0]
-                  doc.transaction= transaction
-                  doc.save()
-                  res.redirect "/project/#{req.params.id}"
+                  doc.transaction = transaction
+                  doc.update({'order.transaction': transaction, 'status': models.PROJECT_STATUSES.PRINTED[0]}, -> res.redirect "/project/#{req.params.id}" )
+
                 )
               auth.User.where('id').in([req.user.id, doc.printer]).exec().then (docs)->
                 if docs.length
@@ -944,6 +943,7 @@ module.exports = (app, io) ->
                 ammount: doc.order.ammount
                 price: doc.order.price
                 totalPrice: doc.order.totalPrice
+                taxes: doc.order.taxes
                 printerPayment: doc.order.printerPayment
                 businessPayment: doc.order.businessPayment
                 placedAt: doc.order.placedAt

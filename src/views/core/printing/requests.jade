@@ -1,33 +1,93 @@
+extends ../../layouts/_app
 
-extends ../printing/base
 
 block title
   |  Your Projects
 
-block content-profile
-  .tab-content
-   .container
-    if !toApply
-        h3 You need to complete at least one previous order before you can accept another one.
-        br
-        br
-     #projects
-      - if (projects.length == 0)
-          p.info-3d There is not any project yet for this list.
-      - for (project in projects)
-        - project = projects[project]
-          .black-3doers
-           .tile.col-md-3.tile-projects
-            h3.text-ellipsis
-             b #{project.title}
-              p.project-tile-status Status
-                b  #{project.humanizedStatus()}
-            img.margin-img-10(src='/img/icons_#{project.dasherizedStatus()}.png')
-            a.col-md-offset-3(href=toApply?"/printing/review/#{ project.id }":"#", class="btn-default btn-lg btn-3doers-new review") Accept
+block content
+  .page
+    .container
+      br
+      br
+      .row
+        include ../../includes/banner
 
+    .bg-3doers
+      .container
+        div(role='tabpanel')
+          ul.nav.nav-tabs.nav-justified.nav-tabs-3doers(role='tablist')
+            li.active
+              a(href='/printing/requests', aria-controls='workplace') WorkPlace
+            li
+              a(href='/printing/jobs', aria-controls='printing') Printing
+            li
+              a(href='/design/projects', aria-controls='designing') Designing
+            li
+              a(href='/printing/archived', aria-controls='completed') Completed
+
+          .tab-content
+            .tab-pane.fade.in.active(id='workplace', role='tabpanel')
+            if !toApply
+              h3 You need to complete at least one previous order before you can accept another one.
+            - if (projects.length==0)
+              h4.light There is not any project yet for this list.
+            - else
+              h4.light Here you can find printing and design jobs
+              br
+              .row
+                - for (project in projects)
+                - project = projects[project]
+                  .col-md-3.col-sm-6
+                    article.job
+                      h4.job-name #{project.title}
+                      figure.job-image: img.img-responsive(src='/#{project.image}')
+                      .job-wtime This order has been waiting for
+                        h5(data-time='/#{project.order.placedAt}') 3h 25m
+                      .form-group.text-center
+                        a.btn.btn-lg.btn-green.review(href=toApply?"/printing/review/#{ project.id }":"#") REVIEW ORDER
+        br
+        br
 
 block extra-headers
   meta(name="csrf-token", content="#{csrfToken}")
 
 block scripts
-    script(src='/js/views/printing_requests.js')
+  script(src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.2/moment.min.js')
+  script(src='/js/views/printing_requests.js')
+  script
+    $(document).ready(function(){
+      $('.job-wtime h5').each(function(element){
+        var now = moment(), // get the current moment
+        // May 28, 2013 @ 12:00AM
+        then = moment($(this).data('time')),
+        // get the difference from now to then in ms
+        ms = then.diff(now, 'milliseconds', true);
+
+        // update the duration in ms
+        ms = then.diff(now, 'milliseconds', true);
+        // get the duration as months and round down
+        var months = Math.floor(moment.duration(ms).asMonths());
+
+        // subtract months from the original moment (not sure why I had to offset by 1 day)
+        then = then.subtract('months', months).subtract('days', 1);
+        // update the duration in ms
+        ms = then.diff(now, 'milliseconds', true);
+        var days = Math.floor(moment.duration(ms).asDays());
+
+        then = then.subtract('days', days);
+        // update the duration in ms
+        ms = then.diff(now, 'milliseconds', true);
+        var hours = Math.floor(moment.duration(ms).asHours());
+
+        then = then.subtract('hours', hours);
+        // update the duration in ms
+        ms = then.diff(now, 'milliseconds', true);
+        var minutes = Math.floor(moment.duration(ms).asMinutes());
+
+        // concatonate the variables
+        var diff = "" + hours + "h " +  minutes + "m";
+
+        $(this).html(diff);
+      });
+    });
+

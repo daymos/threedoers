@@ -49,6 +49,8 @@ html(lang="en")
     script(src='https://oss.maxcdn.com/respond/1.4.2/respond.min.js')
     <![endif]-->
 
+    block extra-headers
+
     if user
       script.
         var user = {
@@ -80,11 +82,11 @@ html(lang="en")
               span.icon-bar
               span.icon-bar
               span.icon-bar
-            a.navbar-brand(href='#')
+            a.navbar-brand(href='/')
               img(src='/images/logo.png', alt='3doers')
           .collapse.navbar-collapse(id='bs-example-navbar-collapse-1')
             p.navbar-text
-              a.navbar-link(href='#') Home
+              a.navbar-link(href='/') Home
             ul.nav.navbar-nav.navbar-right
               li.navbar-text
                 a.navbar-link.navbar-link-inverse(href='/notifications')
