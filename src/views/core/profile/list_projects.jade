@@ -57,7 +57,7 @@ block content
               .row
                 - if (printingProjects.length > 0)
                   - for (project in printingProjects)
-                  - project = printingProjects[project]
+                    - project = printingProjects[project]
                     .col-md-3.col-sm-6
                       article.job
                         h4.job-name
@@ -69,7 +69,7 @@ block content
                             a(style="color:black", href="/project/#{project._id}") #{project.humanizedStatus()}
                 - if (designProjects.length > 0)
                   - for (project in designProjects)
-                  - project = designProjects[project]
+                    - project = designProjects[project]
                     .col-md-3.col-sm-6
                       article.job
                         h4.job-name
@@ -82,7 +82,7 @@ block content
 
                 - if (projects.length > 0)
                   - for (project in projects)
-                  - project = projects[project]
+                    - project = projects[project]
                     .col-md-3.col-sm-6
                       article.job
                         h4.job-name

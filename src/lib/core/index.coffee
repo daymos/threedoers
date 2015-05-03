@@ -18,6 +18,13 @@ module.exports = (app, io) ->
   designModels = require('../design/models')
   shippo = require('shippo')('mattia.spinelli@zoho.com', 'mattia13')
 
+  # Hack for update docs instead of cron, this is for a while
+
+  app.get (req, res, next) ->
+    query = {'order.reviewStartAt': {$lt: new Date(current.getTime() - 86400000)}, status: {$lt: models.PROJECT_STATUSES.PAYED[0]}}
+    models.STLProject.find(query).update({$set: {status: models.PROJECT_STATUSES.PRINT_REQUESTED[0]}})
+    next()
+
   app.get '/', (req, res) ->
     if req.user
       res.redirect '/profile/projects'
@@ -957,6 +964,7 @@ module.exports = (app, io) ->
                 printerPayment: doc.order.printerPayment
                 businessPayment: doc.order.businessPayment
                 placedAt: doc.order.placedAt
+                reviewStartAt: new Date
             doc.save()
             res.json msg: "Accepted"
 
