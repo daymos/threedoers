@@ -1,0 +1,35 @@
+#becomeDesigner.modal.fade
+    .modal-dialog
+        .modal-content
+            .modal-header
+                .modal-title.row
+                    h4 Become a Designer
+                .modal-body.container
+                  .col-md-5
+                      ul.nav.nav-pills
+                        li.active
+                            a(href='#private', data-toggle='tab').btn-3doers-new.btn-default.btn-lg Private
+                        li
+                            a(href='#company', data-toggle='tab').btn-3doers-new.btn-default.btn-lg Company
+                        .tab-content
+                            #private.tab-pane.active
+                                form(action='/become/filemanager',method='POST').form-horizontal
+                                    input(value=csrfToken, name='_csrf', type='hidden')
+                                    input(type='hidden', name='designerType', value='private')
+                                    .form-group
+                                        label.col-sm-3.control-label(for='fiscalCode') fiscal code
+                                        .col-sm-9
+                                            input#fiscalCode.form-control(type='text', name='fiscalCode', placeholder='fiscal code',required='true')
+                                    .form-group.text-center
+                                        input.btn-default.btn-lg.btn-3doers-new(type='submit', value='Become')
+                            #company.tab-pane
+                                form(action='/become/filemanager',method='POST').form-horizontal
+                                    input(value=csrfToken, name='_csrf', type='hidden')
+                                    input(type='hidden', name='designerType', value='company')
+                                    .form-group
+                                        label.col-sm-3.control-label(for='fiscalCode') VAT number
+                                        .col-sm-9
+                                            input#Vat.form-control(type='text', name='VatNumber', placeholder='Vat number',required='true')
+                                    .form-group.text-center
+                                        input.btn-default.btn-lg.btn-3doers-new(type='submit', value='Become')
+                .modal-footer

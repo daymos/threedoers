@@ -1,0 +1,213 @@
+-if (user.id == project.order.printer)
+  div(role='tabpanel')
+    ul.nav.nav-justified.nav-3doers
+      li.nav-step.active
+        a(href='#tab-review')
+          span.step-one
+          | Review
+      li.nav-step
+        a(href='#tab-accepted')
+          span.step-two
+          | Accepted
+      li.nav-step
+        a(href='#tab-printing')
+          span.step-three
+          | Printing
+      li.nav-step
+        a(href='#tab-shipping')
+          span.step-four
+          | Shipping
+    .tab-content
+      .tab-pane.fade.in.active(id='tab-review')
+        h4.light You have 24 hours to review and accept this order before it goes automatically back to the Workplace.
+      .tab-pane.fade(id='tab-accepted')
+        h4.light You have 48 hours to review and accept this order before it goes automatically back to the Workplace.
+      .tab-pane.fade(id='tab-printing')
+        h4.light You have 72 hours to review and accept this order before it goes automatically back to the Workplace.
+      .tab-pane.fade(id='tab-shipping')
+        h4.light You have 90 hours to review and accept this order before it goes automatically back to the Workplace.
+
+  .job-review
+    h4.job-name Small_frog.stl
+    .row
+      .col-md-8
+        .job-details
+          .row
+            .col-md-7
+              figure: img.img-responsive(src='/#{project.image}')
+            .col-md-5
+              .info
+                p
+                  strong COLOR:
+                  |  #{project.color}
+                p
+                  strong MATERIAL:
+                  |  #{project.material}
+                p
+                  strong AMOUNT:
+                  |  #{project.order.ammount} pieces
+                p
+                  strong VOLUME:
+                  |  #{project.volume} cm3
+                p
+                  strong WEIGHT:
+                  |  #{project.weight} g
+                if project.dimension
+                  p
+                    strong DIMENSIONS:
+                    |  #{project.dimension.width} cm (W) #{project.dimension.height} cm (H) #{project.dimension.length}(L)
+                br
+                h4: a(href='/#{project.file}') Download STL file
+      .col-md-4
+        table.job-payment
+          tbody
+            tr
+              td.desc Taxes:
+              td.value #{project.order.taxes} €
+            tr
+              td.desc 3Doers:
+              td.value #{project.order.businessPayment} €
+            tr
+              td.desc Shipping:
+              td.value -
+            tr.separator
+              td(col-span='2')
+            tr
+              td.desc.text-shadow-3doers Printer:
+              td.value
+                h3.normal #{project.order.printerPayment} €
+  .row
+    .col-md-3
+      .form-group
+        a#deny.btn.btn-xlg.btn-block.btn-green-inverse(href='/printing/deny/#{project.id}') Not for me
+    .col-md-4.col-md-offset-5
+      .form-group
+        a#accept.btn.btn-xlg.btn-block.btn-green(href='/printing/accept/#{project.id}') ACCEPT ORDER
+
+  .page-subheader
+    h3 Conversation with project owner:
+
+- else
+  div(role='tabpanel')
+    ul.nav.nav-justified.nav-3doers
+      li.nav-step.active
+        a(href='#tab-review')
+          span.step-one
+          | Review
+      li.nav-step
+        a(href='#tab-accepted')
+          span.step-two
+          | Accepted
+      li.nav-step
+        a(href='#tab-printing')
+          span.step-three
+          | Printing
+      li.nav-step
+        a(href='#tab-shipping')
+          span.step-four
+          | Shipping
+    .tab-content
+      .tab-pane.fade.in.active(id='tab-review')
+        h4.light
+      .tab-pane.fade(id='tab-accepted')
+        h4.light
+      .tab-pane.fade(id='tab-printing')
+        h4.light
+      .tab-pane.fade(id='tab-shipping')
+        h4.light
+
+  .alert.alert-primary
+    .media
+      .media-left
+        a(href='#')
+          img.media-object(src='data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+PGRlZnMvPjxyZWN0IHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCIgZmlsbD0iI0VFRUVFRSIvPjxnPjx0ZXh0IHg9IjEzLjQ2MDkzNzUiIHk9IjMyIiBzdHlsZT0iZmlsbDojQUFBQUFBO2ZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1mYW1pbHk6QXJpYWwsIEhlbHZldGljYSwgT3BlbiBTYW5zLCBzYW5zLXNlcmlmLCBtb25vc3BhY2U7Zm9udC1zaXplOjEwcHQ7ZG9taW5hbnQtYmFzZWxpbmU6Y2VudHJhbCI+NjR4NjQ8L3RleHQ+PC9nPjwvc3ZnPg==', style='width: 50px; height: 50px')
+      .media-body.media-middle
+        .message
+          strong #{project.order.printer}
+          |  is currently reviewing this order and may contact you
+
+  .job-review
+    h4.job-name #{project.name}
+    .row
+      .col-md-8
+        .job-details
+          .row
+            .col-md-5
+              figure: img.img-responsive(src='/#{project.image}')
+            .col-md-7
+              .info
+                p
+                  strong COLOR:
+                  |  #{project.color}
+                p
+                  strong MATERIAL:
+                  |  #{project.material}
+                p
+                  strong AMOUNT:
+                  |  #{project.order.ammount} pieces
+                p
+                  strong VOLUME:
+                  |  #{project.volume} cm3
+                p
+                  strong WEIGHT:
+                  |  #{project.weight} g
+                if project.dimension
+                  p
+                    strong DIMENSIONS:
+                    |  #{project.dimension.width} cm (W) #{project.dimension.height} cm (H) #{project.dimension.length}(L)
+      .col-md-4
+        table.job-payment
+          tbody
+            tr
+              td.desc Taxes:
+              td.value #{project.order.taxes} €
+            tr
+              td.desc 3Doers:
+              td.value #{project.order.businessPayment} €
+            tr
+              td.desc Printer:
+              td.value #{project.order.printerPayment} €
+            tr
+              td.desc Shipping:
+              td.value -
+            tr.separator-small
+              td(col-span='2')
+            tr
+              td.desc.text-shadow-3doers Printer:
+              td.value
+                h3.normal #{project.order.totalPrice} €
+            tr
+              td(colspan='2')
+                p.final-price *Final price will include a shipping fee and will be calculated once the order has been accepted by a printer.
+  div
+    a#deny(href='/printing/deny/#{project.id}') Cancel order
+
+  .page-subheader
+    h3 Conversation with printer:
+
+.row
+  .col-md-8
+    .conversation
+      #comment-list
+        - for comment in project.comments
+          - var myclass=(user.username===comment.username ? 'mine-chat':'other-chat')
+          div(class=myclass).media
+            .media-body.text-right
+              .message #{comment.content}
+              p.meta
+                |  By
+                strong  #{comment.username==user.username?"you":comment.username}
+                |  at
+                strong  #{ prettyDate(comment.createdAt) }
+                |  at
+                strong  #{ prettyHour(comment.createdAt) } pm
+            .media-right
+              a(href='#')
+                img.media-object(src='/#{comment.photo}', style='width:50px; height:50px')
+      .form-group
+        textarea#comment-text.form-control(rows=4, placeholder='Write a comment')
+      .row
+        .col-xs-3.col-xs-offset-9
+          button#comment-button.btn.btn-md.btn-block.btn-green-inverse(type='submit') Send
+br
+br

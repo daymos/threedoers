@@ -1,0 +1,123 @@
+-if (user.id != project.order.printer)
+  div(role='tabpanel')
+    ul.nav.nav-justified.nav-3doers
+      li.nav-step
+        a(href='#tab-crete-order')
+          span.step-one
+          | Create order
+      li.nav-step.active
+        a(href='#tab-place-order')
+          span.step-two
+          | Place order
+      li.nav-step
+        a(href='#tab-accepted')
+          span.step-three
+          | Accepted
+      li.nav-step
+        a(href='#tab-printing')
+          span.step-four
+          | Printing
+      li.nav-step
+        a(href='#tab-shipping')
+          span.step-five
+          | Shipping
+    .tab-content
+      .tab-pane.fade(id='tab-crete-order')
+        h4.light Your order is now available for printers to review.
+          br
+          | You'll be notified once the work is accepted in order to proceed with the final payment.
+      .tab-pane.fade.in.active(id='tab-place-order')
+        h4.light Your order is now available for printers to review.
+          br
+          | You'll be notified once the work is accepted in order to proceed with the final payment.
+      .tab-pane.fade(id='tab-accepted')
+        h4.light Your order is now available for printers to review.
+          br
+          | You'll be notified once the work is accepted in order to proceed with the final payment.
+      .tab-pane.fade(id='tab-printing')
+        h4.light Your order is now available for printers to review.
+          br
+          | You'll be notified once the work is accepted in order to proceed with the final payment.
+      .tab-pane.fade(id='tab-shipping')
+        h4.light Your order is now available for printers to review.
+          br
+          | You'll be notified once the work is accepted in order to proceed with the final payment.
+
+  .job-review
+    h4.job-name Small_frog.stl
+    .row
+      .col-md-8
+        .job-details
+          .row
+            .col-md-5
+              figure: img.img-responsive(src='/#{project.image}')
+            .col-md-7
+              .info
+                p
+                  strong COLOR:
+                  |  #{project.color}
+                p
+                  strong MATERIAL:
+                  |  #{project.material}
+                p
+                  strong AMOUNT:
+                  |  #{project.order.ammount} pieces
+                p
+                  strong VOLUME:
+                  |  #{project.volume} cm3
+                p
+                  strong WEIGHT:
+                  |  #{project.weight} g
+                if project.dimension
+                  p
+                    strong DIMENSIONS:
+                    |  #{project.dimension.width} cm (W) #{project.dimension.height} cm (H) #{project.dimension.length}(L)
+      .col-md-4
+        table.job-payment
+          tbody
+            tr
+              td.desc Taxes:
+              td.value #{project.order.taxes} €
+            tr
+              td.desc 3Doers:
+              td.value #{project.order.businessPayment} €
+            tr
+              td.desc Printer:
+              td.value #{project.order.printerPayment} €
+            tr
+              td.desc Shipping:
+              td.value -
+            tr.separator-small
+              td(col-span='2')
+            tr
+              td.desc.text-shadow-3doers Price quotation*:
+              td.value
+                h3.normal #{project.order.totalPrice} €
+            tr
+              td(colspan='2')
+                p.final-price *Final price will include a shipping fee and will be calculated once the order has been accepted by a printer.
+  div
+    a(href='#', data-toggle='modal', data-target='#orderModal') Cancel order
+
+  .modal.fade(id='orderModal', role='dialog')
+    .modal-dialog.modal-md
+      .modal-content
+        .modal-header
+          button.close(data-dismiss='modal')
+            span &times;
+          h4.modal-title &nbsp;
+        .modal-body
+          p
+            | Once deleted the order won't be accesible anymore.
+            br
+            | Do you want to proceed?
+          br
+          .row
+            .col-md-5
+              .form-group
+                a.btn.btn-xlg.btn-block.btn-green-inverse(href='#') Undo
+            .col-md-7
+              .form-group
+                a.btn.btn-xlg.btn-block.btn-green(href='#') CANCEL ORDER
+  br
+  br
