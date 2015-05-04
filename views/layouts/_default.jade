@@ -83,11 +83,11 @@ html(lang="en")
               img(src='/images/logo.png', alt='3doers')
           .collapse.navbar-collapse(id='bs-example-navbar-collapse-1')
             p.navbar-text
-              a.navbar-link(href='#') How it works
+              a.navbar-link(href='#', data-scroll-goto='0') How it works
             p.navbar-text
-              a.navbar-link(href='#') Join 3doers
+              a.navbar-link(href='#', data-scroll-goto='1') Join 3doers
             p.navbar-text
-              a.navbar-link(href='#') Contact us
+              a.navbar-link(href='#', data-scroll-goto='2') Contact us
             ul.nav.navbar-nav.navbar-right
               li.navbar-text
                 a.navbar-link.navbar-link-inverse(href='/accounts/login') Log in
@@ -136,5 +136,11 @@ html(lang="en")
                     a.social-link(href='#'): i.fa.fa-fw.fa-pinterest-p
 
     script(src='/js/lib.js')
-    // script(src='/js/common.js')
+    script(src='/js/common.js')
+    script(type='text/javascript').
+      $(function(){
+        $.scrollIt({
+          topOffset: -30
+        });
+      });
     block scripts
