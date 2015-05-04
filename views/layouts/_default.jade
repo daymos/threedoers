@@ -100,13 +100,13 @@ html(lang="en")
                   img(src='/images/share_icon.png')
                 ul.dropdown-menu(role='menu')
                   li: span Spread the voice
-                  li: a(href='#')
+                  li: a.social-popup(href='http://www.facebook.com/sharer/sharer.php?t=3Doers&u=3doers.it', data-title='Facebook')
                         i.fa.fa-fw.fa-lg.fa-facebook
                         | Share on facebook
-                  li: a(href='#')
+                  li: a.social-popup(href='http://twitter.com/share?text=3Doers', data-title='Twitter')
                         i.fa.fa-fw.fa-lg.fa-twitter
                         | Share on twitter
-                  li: a(href='#')
+                  li: a.social-popup(href='https://plus.google.com/share?url=3doers.it', data-title='Google +')
                         i.fa.fa-fw.fa-lg.fa-google-plus
                         | Share on google+
 
@@ -136,5 +136,5 @@ html(lang="en")
                     a.social-link(href='#'): i.fa.fa-fw.fa-pinterest-p
 
     script(src='/js/lib.js')
-    script(src='/js/common.js')
+    // script(src='/js/common.js')
     block scripts
