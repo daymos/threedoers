@@ -104,7 +104,7 @@ module.exports = (app, io) ->
       res.redirect '/profile/settings'
 
 
-  app.get '/project/upload', decorators.loginRequired, (req, res) ->
+  app.get '/project/upload', (req, res) ->
     res.render 'core/project/upload'
 
 

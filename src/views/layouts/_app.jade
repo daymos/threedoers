@@ -85,29 +85,58 @@ html(lang="en")
             a.navbar-brand(href='/')
               img(src='/images/logo.png', alt='3doers')
           .collapse.navbar-collapse(id='bs-example-navbar-collapse-1')
-            p.navbar-text
-              a.navbar-link(href='/') Home
-            ul.nav.navbar-nav.navbar-right
-              li.navbar-text
-                a.navbar-link.navbar-link-inverse(href='/notifications')
-                  i#notifID.fa.fa-fw.fa-lg.fa-paper-plane
-              li.dropdown
-                a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-expanded='false')
-                  if user.photo
-                    img(src='/#{user.photo}', style='width: 50px; height: 50px;')
-                  else
-                    img(src='data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMTQwIiBoZWlnaHQ9IjE0MCIgdmlld0JveD0iMCAwIDE0MCAxNDAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjxkZWZzLz48cmVjdCB3aWR0aD0iMTQwIiBoZWlnaHQ9IjE0MCIgZmlsbD0iI0VFRUVFRSIvPjxnPjx0ZXh0IHg9IjQ0LjA0Njg3NSIgeT0iNzAiIHN0eWxlPSJmaWxsOiNBQUFBQUE7Zm9udC13ZWlnaHQ6Ym9sZDtmb250LWZhbWlseTpBcmlhbCwgSGVsdmV0aWNhLCBPcGVuIFNhbnMsIHNhbnMtc2VyaWYsIG1vbm9zcGFjZTtmb250LXNpemU6MTBwdDtkb21pbmFudC1iYXNlbGluZTpjZW50cmFsIj4xNDB4MTQwPC90ZXh0PjwvZz48L3N2Zz4=', style='width: 50px; height: 50px;')
-                ul.dropdown-menu(role='menu')
-                  li: span Spread the voice
-                  li: a.social-popup(href='http://www.facebook.com/sharer/sharer.php?t=3Doers&u=3doers.it', data-title='Facebook')
-                        i.fa.fa-fw.fa-lg.fa-facebook
-                        | Share on facebook
-                  li: a.social-popup(href='http://twitter.com/share?text=3Doers', data-title='Twitter')
-                        i.fa.fa-fw.fa-lg.fa-twitter
-                        | Share on twitter
-                  li: a.social-popup(href='https://plus.google.com/share?url=3doers.it', data-title='Google +')
-                        i.fa.fa-fw.fa-lg.fa-google-plus
-                        | Share on google+
+            - if (user)
+              p.navbar-text
+                a.navbar-link(href='/') Home
+              ul.nav.navbar-nav.navbar-right
+                li.navbar-text
+                  a.navbar-link.navbar-link-inverse(href='/notifications')
+                    i#notifID.fa.fa-fw.fa-lg.fa-paper-plane
+                li.dropdown
+                  a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-expanded='false')
+                    if user.photo
+                      img(src='/#{user.photo}', style='width: 50px; height: 50px;')
+                    else
+                      img(src='data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMTQwIiBoZWlnaHQ9IjE0MCIgdmlld0JveD0iMCAwIDE0MCAxNDAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjxkZWZzLz48cmVjdCB3aWR0aD0iMTQwIiBoZWlnaHQ9IjE0MCIgZmlsbD0iI0VFRUVFRSIvPjxnPjx0ZXh0IHg9IjQ0LjA0Njg3NSIgeT0iNzAiIHN0eWxlPSJmaWxsOiNBQUFBQUE7Zm9udC13ZWlnaHQ6Ym9sZDtmb250LWZhbWlseTpBcmlhbCwgSGVsdmV0aWNhLCBPcGVuIFNhbnMsIHNhbnMtc2VyaWYsIG1vbm9zcGFjZTtmb250LXNpemU6MTBwdDtkb21pbmFudC1iYXNlbGluZTpjZW50cmFsIj4xNDB4MTQwPC90ZXh0PjwvZz48L3N2Zz4=', style='width: 50px; height: 50px;')
+                  ul.dropdown-menu(role='menu')
+                    li: span Spread the voice
+                    li: a.social-popup(href='http://www.facebook.com/sharer/sharer.php?t=3Doers&u=3doers.it', data-title='Facebook')
+                          i.fa.fa-fw.fa-lg.fa-facebook
+                          | Share on facebook
+                    li: a.social-popup(href='http://twitter.com/share?text=3Doers', data-title='Twitter')
+                          i.fa.fa-fw.fa-lg.fa-twitter
+                          | Share on twitter
+                    li: a.social-popup(href='https://plus.google.com/share?url=3doers.it', data-title='Google +')
+                          i.fa.fa-fw.fa-lg.fa-google-plus
+                          | Share on google+
+            - else
+              p.navbar-text
+                a.navbar-link(href='#', data-scroll-goto='0') How it works
+              p.navbar-text
+                a.navbar-link(href='#', data-scroll-goto='1') Join 3doers
+              p.navbar-text
+                a.navbar-link(href='#', data-scroll-goto='2') Contact us
+              ul.nav.navbar-nav.navbar-right
+                li.navbar-text
+                  a.navbar-link.navbar-link-inverse(href='/accounts/login') Log in
+                li.navbar-text(style="padding:0; margin-left:0; margin-right:0")
+                  span /
+                li.navbar-text
+                  a.navbar-link.navbar-link-inverse(href='/accounts/signup') Sign up
+                li.dropdown
+                  a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-expanded='false')
+                    img(src='/images/share_icon.png')
+                  ul.dropdown-menu(role='menu')
+                    li: span Spread the voice
+                    li: a.social-popup(href='http://www.facebook.com/sharer/sharer.php?t=3Doers&u=3doers.it', data-title='Facebook')
+                          i.fa.fa-fw.fa-lg.fa-facebook
+                          | Share on facebook
+                    li: a.social-popup(href='http://twitter.com/share?text=3Doers', data-title='Twitter')
+                          i.fa.fa-fw.fa-lg.fa-twitter
+                          | Share on twitter
+                    li: a.social-popup(href='https://plus.google.com/share?url=3doers.it', data-title='Google +')
+                          i.fa.fa-fw.fa-lg.fa-google-plus
+                          | Share on google+
 
     .hidden-xs.hidden-sm(id='beta-label')
       img(src='/images/beta_label.png', alt='3doers beta')

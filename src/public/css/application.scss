@@ -27,7 +27,6 @@ a.link-inverse:focus {
   padding-bottom: 3px;
   text-decoration: none;
   -webkit-transition: border 0.3s;
-  -moz-transition: border 0.3s;
   transition: border 0.3s;
 }
 .navbar-3doers .navbar-text > .navbar-link:hover,
@@ -46,8 +45,6 @@ a.link-inverse:focus {
   padding-top: 10px;
 }
 .navbar-3doers .dropdown-menu {
-  -webkit-box-shadow: 1px 1px 1px #7bf282;
-  -moz-box-shadow: 1px 1px 1px #7bf282;
   box-shadow: 1px 1px 1px #7bf282;
   min-width: 240px;
   margin-top: 4px !important;
@@ -108,8 +105,6 @@ a.link-inverse:focus {
 }
 #footer .nav-social > li > a {
   background-color: #88d6a7;
-  -webkit-border-radius: 50%;
-  -moz-border-radius: 50%;
   border-radius: 50%;
   color: #fff;
   display: inline-block;
@@ -117,7 +112,6 @@ a.link-inverse:focus {
   height: 30px;
   text-align: center;
   -webkit-transition: background 0.3s;
-  -moz-transition: background 0.3s;
   transition: background 0.3s;
   width: 30px;
 }
@@ -255,7 +249,6 @@ a.link-inverse:focus {
 }
 .btn {
   -webkit-transition: background 0.3s;
-  -moz-transition: background 0.3s;
   transition: background 0.3s;
 }
 .btn-md {
@@ -269,8 +262,6 @@ a.link-inverse:focus {
 }
 .btn-simple {
   border: 2px solid #77b3d4;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
   border-radius: 5px;
   color: #77b3d4;
 }
@@ -282,8 +273,6 @@ a.link-inverse:focus {
 }
 .btn-simple-inverse {
   border: 2px solid #fff;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
   border-radius: 5px;
   color: #fff;
 }
@@ -294,8 +283,6 @@ a.link-inverse:focus {
 }
 .btn-green {
   background-color: #88d6a7;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
   border-radius: 5px;
   color: #fff;
 }
@@ -362,6 +349,30 @@ a.link-inverse:focus {
   -moz-text-shadow: 1px 1px 0 #7bf282;
   text-shadow: 1px 1px 0 #7bf282;
 }
+.fileinput-button {
+  position: relative;
+  overflow: hidden;
+}
+.fileinput-button input {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 0;
+  opacity: 0;
+  font-size: 200px;
+  direction: ltr;
+  cursor: pointer;
+}
+.upload-stl {
+  background-color: #dde5de;
+  border-radius: 5px;
+  padding: 40px;
+  text-align: center;
+}
+.upload-stl img {
+  margin-bottom: 20px;
+  margin-top: 50px;
+}
 #beta-label {
   height: 77px;
   left: 0;
@@ -399,8 +410,6 @@ a.link-inverse:focus {
 }
 @media (min-width: 768px) {
   .navbar {
-    -webkit-border-radius: 0px;
-    -moz-border-radius: 0px;
     border-radius: 0px;
   }
 }

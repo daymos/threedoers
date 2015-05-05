@@ -34,7 +34,9 @@
         .job-details
           .row
             .col-md-7
-              figure: img.img-responsive(src='/#{project.image}')
+              figure
+                #wrapper-canvas
+                  canvas#cv
             .col-md-5
               .info
                 p

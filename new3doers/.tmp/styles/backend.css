@@ -38,8 +38,6 @@ h5.normal {
 .job {
   background-color: #fff;
   border: 1px solid #dde5de;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
   border-radius: 5px;
   margin-bottom: 40px;
   padding-top: 15px;
@@ -75,8 +73,6 @@ h5.normal {
 }
 .job .job-status {
   background-color: #77b3d4;
-  -webkit-border-radius: 0 0 5px 5px;
-  -moz-border-radius: 0 0 5px 5px;
   border-radius: 0 0 5px 5px;
   color: #fff;
   font-size: 16px;
@@ -100,8 +96,6 @@ h5.normal {
 }
 .job-review .job-details {
   background-color: #fff;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
   border-radius: 5px;
 }
 .job-review .job-details p {
@@ -308,8 +302,6 @@ table.job-payment .final-price {
 }
 .alert-primary {
   background-color: #77b3d4;
-  -webkit-border-radius: 0px;
-  -moz-border-radius: 0px;
   border-radius: 0px;
   color: #fff;
   font-size: 18px;
@@ -317,8 +309,6 @@ table.job-payment .final-price {
 }
 .alert-warning {
   background-color: #f5cf87;
-  -webkit-border-radius: 0px;
-  -moz-border-radius: 0px;
   border-radius: 0px;
   color: #4a4a4a;
   font-size: 18px;
@@ -327,8 +317,6 @@ table.job-payment .final-price {
 .alert-danger {
   background-color: #ff7373;
   border-color: #ff7373;
-  -webkit-border-radius: 0px;
-  -moz-border-radius: 0px;
   border-radius: 0px;
   color: #fff;
 }
@@ -355,11 +343,7 @@ table.job-payment .final-price {
 }
 .modal-content {
   border-color: #7bf282;
-  -webkit-border-radius: 0px;
-  -moz-border-radius: 0px;
   border-radius: 0px;
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
   box-shadow: none;
 }
 .modal-header {
