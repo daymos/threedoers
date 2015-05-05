@@ -12,18 +12,25 @@ h4.normal,
 h5.normal {
   font-weight: 400;
 }
-.nav-tabs.nav-tabs-3doers > li > a {
+.nav-tabs.nav-tabs-3doers > li > a,
+.nav-tabs.nav-tabs-3doers-small > li > a {
   border-bottom-color: #7bf282;
   color: #bab9b9;
   font-size: 28px;
 }
 .nav-tabs.nav-tabs-3doers > .active > a,
+.nav-tabs.nav-tabs-3doers-small > .active > a,
 .nav-tabs.nav-tabs-3doers > .active > a:hover,
-.nav-tabs.nav-tabs-3doers > .active > a:focus {
+.nav-tabs.nav-tabs-3doers-small > .active > a:hover,
+.nav-tabs.nav-tabs-3doers > .active > a:focus,
+.nav-tabs.nav-tabs-3doers-small > .active > a:focus {
   background-color: transparent;
   border-color: #7bf282;
   border-bottom: transparent;
   color: #bab9b9;
+}
+.nav-tabs.nav-tabs-3doers-small > li > a {
+  font-size: 24px;
 }
 .step p {
   font-size: 12px;
@@ -41,7 +48,9 @@ h5.normal {
   color: #4a4a4a;
   font-size: 22px;
   margin-top: 0;
+  overflow: hidden;
   padding: 0 10px;
+  text-overflow: ellipsis;
   -webkit-text-shadow: 1px 1px 0 #7bf282;
   -moz-text-shadow: 1px 1px 0 #7bf282;
   text-shadow: 1px 1px 0 #7bf282;
