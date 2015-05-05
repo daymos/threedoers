@@ -362,6 +362,32 @@ a.link-inverse:focus {
   -moz-text-shadow: 1px 1px 0 #7bf282;
   text-shadow: 1px 1px 0 #7bf282;
 }
+.fileinput-button {
+  position: relative;
+  overflow: hidden;
+}
+.fileinput-button input {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 0;
+  opacity: 0;
+  font-size: 200px;
+  direction: ltr;
+  cursor: pointer;
+}
+.upload-stl {
+  background-color: #dde5de;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  padding: 40px;
+  text-align: center;
+}
+.upload-stl img {
+  margin-bottom: 20px;
+  margin-top: 50px;
+}
 #beta-label {
   height: 77px;
   left: 0;
