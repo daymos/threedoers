@@ -41,7 +41,8 @@ block content
                         a(href="/project/#{ project._id }") #{project.title}
                       figure.job-image: img.img-responsive(src='/#{project.image}')
                       .form-group.text-center
-                        a.btn.btn-lg.btn-green.review(href="/project/#{ project._id }") #{project.humanizedStatus()}
+                        br
+                        a.btn.btn-lg.btn-green(href="/project/#{ project._id }") Status: #{project.humanizedStatus()}
         br
         br
 
