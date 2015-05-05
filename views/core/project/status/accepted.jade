@@ -229,9 +229,9 @@
                 h4.modal-title Shipping
               .modal-body
                 div#address-selection
-                  h5 Select the address where we has to ship.
+                  h4.light Select the address where we has to ship.
                   // Nav tabs
-                  ul.nav.nav-tabs(role='tablist')
+                  ul.nav.nav-tabs.nav-tabs-3doers-small.nav-justified(role='tablist')
                     li.active
                       a(href='#saved', role='tab', data-toggle='tab') Saved
                     li
@@ -254,7 +254,7 @@
                             a.select-saved-address.btn-default.btn-xs.grey-3doers(data-id="#{ address.id }", href="#") Select
                       - else
                         | you don't have saved any address
-                      button.close-payment-modal Cancel
+                      button.close-payment-modal.btn.btn-lg.btn-green Cancel
                     #new.tab-pane.fade
                       form
                         .form-group
@@ -276,14 +276,17 @@
                         .form-group
                           input.form-control.input-text(type='text', placeholder='PHONE NO.', name='phone_no')
                         .form-group
-                          select(name="country")
+                          select.form-control(name="country")
                             for country in countries
                               option#country(value='#{ country.abbr }') #{ country.name }
 
+                        .row
+                          .col-xs-6
+                            button.btn.btn-lg.btn-default.close-payment-modal Cancel
+                          .col-xs-6.text-right
+                            button#validate-address.btn.btn-lg.btn-green
+                              span Validate
                         .text-right
-                          button#validate-address.btn.btn-default.btn-lg.btn-xsmall
-                            span Validate
-                      button.close-payment-modal Cancel
                 div#pay-values(style='display: none;')
                   h5 Pay Now
                   p Price:&nbsp;
