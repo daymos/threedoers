@@ -70,11 +70,13 @@ block body
                                             strong   #{prop.hour} hours
                                         p Hourly cost:
                                             strong   #{prop.cost} euro
-                                        -var doers=prop.hour*prop.cost*payment.threeDoersDesigner
+                                        -var tot =Math.round(prop.hour*prop.cost*100)/100
+                                        -var doers=Math.round(tot*payment.threeDoersDesigner*100)/100
+                                        -var taxes =Math.round(doers*payment.taxes*100)/100
                                         p 3Doers: #{doers} EURO
-                                        p Taxes:  #{doers*payment.taxes}EURO
+                                        p Taxes:  #{taxes} EURO
                                         p
-                                            strong Total Price: #{prop.hour*prop.cost +doers+doers*payment.taxes} EURO
+                                            strong Total Price: #{tot +doers+taxes} EURO
                                     footer
                                         form(action="/design/proposal/review/#{prop._id}", method="post")
                                             input(type="hidden", name="project_id", value="#{project._id}")
@@ -126,7 +128,7 @@ block body
                     .col-sm-4
                         -if (designer)
                             .row-fluid
-                                p designer information
+                                p.h5 designer information
                                     ul.list-unstyled
                                         li name: #{designer.username}
                                         li email: #{designer.email}

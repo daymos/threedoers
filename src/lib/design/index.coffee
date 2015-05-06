@@ -302,29 +302,29 @@ module.exports = (app) ->
                 payKey: design.payKey
                 requestEnvelope:
                   errorLanguage:  'en_US'
+              paypalSdk.executePayment payload ,->
+                console.log arguments
 
-              paypalSdk.executePayment payload
+                if (design.timeExpiredPayKey)
+                  payload =
+                    payKey: design.timeExpiredPayKey
+                    requestEnvelope:
+                      errorLanguage:  'en_US'
+                  paypalSdk.executePayment payload ,->
+                    console.log arguments
 
-              if (design.timeExpiredPayKey)
-                payload =
-                  payKey: design.timeExpiredPayKey
-                  requestEnvelope:
-                    errorLanguage:  'en_US'
-
-                paypalSdk.executePayment payload
-
-              design.save()
-              user.save()
-              userModel.findOne({_id:design.creator}).exec().then( (creator) ->
-                if creator
-                  if creator.mailNotification
-                    mailer.send('mailer/design/completed',{project: design,url: "http://#{ req.headers.host }/design/project/"+design._id},{from: settings.mailer.noReply, to: creator.email,subject: "Design project "+design.title+' completed'})
-                  if (user.VatNumber)
-                    mailer.send('mailer/design/vatnumber',{designer: user,design:design,user:creator},{from: settings.mailer.noReply, to: settings.admins.emails,subject: "Paied designer with VAT number"})
-                  res.redirect 'design/project/'+req.params.id
-                else
-                  res.send 500
-              )
+                design.save()
+                user.save()
+                userModel.findOne({_id:design.creator}).exec().then( (creator) ->
+                  if creator
+                    if creator.mailNotification
+                      mailer.send('mailer/design/completed',{project: design,url: "http://#{ req.headers.host }/design/project/"+design._id},{from: settings.mailer.noReply, to: creator.email,subject: "Design project "+design.title+' completed'})
+                    if (user.VatNumber)
+                      mailer.send('mailer/design/vatnumber',{designer: user,design:design,user:creator},{from: settings.mailer.noReply, to: settings.admins.emails,subject: "Paied designer with VAT number"})
+                    res.redirect 'design/project/'+req.params.id
+                  else
+                    res.send 500
+                )
           else
             res.send 500
         )
@@ -370,14 +370,15 @@ module.exports = (app) ->
         moreTime=parseInt(req.body.moreTime)
         if (design.additionalHourRequested==moreTime)
           oldValue=design.order
+
           design.order=
             preHourly:oldValue.preHourly+design.additionalHourRequested,
             preAmount:oldValue.preAmount,
             designer: oldValue.designer,
             placedAt: oldValue.placedAt,
-          designerPayment=design.additionalHourRequested*design.order.preAmount
-          businessGain=designerPayment*settings.payment.threeDoersDesigner
-          taxes=businessGain*settings.payment.taxes
+          designerPayment=Math.round(design.additionalHourRequested*design.order.preAmount*100) / 100
+          businessGain=Math.round(designerPayment*settings.payment.threeDoersDesigner*100) / 100
+          taxes=Math.round(businessGain*settings.payment.taxes*100) / 100
           businessPayment=designerPayment+businessGain+taxes
 
           design.designerPayment+=designerPayment
@@ -471,14 +472,12 @@ module.exports = (app) ->
   app. post '/design/project/pay/:id' ,decorators.loginRequired, (req,res) ->
     models.STLDesign.findOne({_id: req.params.id}).exec().then( (design) ->
       if design
-        design.designerPayment=Math.round(design.order.preHourly*design.order.preAmount) / 100
-        design.businessGain=Math.round(design.designerPayment*settings.payment.threeDoersDesigner) / 100
+        design.designerPayment=Math.round(design.order.preHourly*design.order.preAmount*100) / 100
+        design.businessGain=Math.round(design.designerPayment*settings.payment.threeDoersDesigner*100) / 100
 
-        design.taxes=Math.round(design.businessGain*settings.payment.taxes) / 100
+        design.taxes=Math.round(design.businessGain*settings.payment.taxes*100) / 100
 
         design.businessPayment=design.designerPayment+design.businessGain+design.taxes
-        console.log design.businessPayment
-        console.log 'compute'
         paypalSdk = new Paypal
           userId: settings.paypal.adaptive.user
           password:  settings.paypal.adaptive.password,

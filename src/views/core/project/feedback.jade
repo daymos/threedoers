@@ -2,7 +2,7 @@ extends ../base
 
 block body
     -if (!doc.rating)
-        form(action='/project/feedback/#{project.id}',method='POST').form-horizontal
+        form(action='/project/feedback/#{doc._id}',method='POST').form-horizontal
             .from-group
                 label.col-sm-3.col-sm-offset-2.control-label.margin-top-30 Quality of the realized object
                 .col-sm-7
@@ -32,7 +32,6 @@ block body
                 .col-sm-7
                     input(type="number",name='quality',value='#{doc.rating.quality}',data-readonly="true",data-min=0,data-max=5,data-show-clear="false",step=0.5,data-size="lg").rating.form-control-feedback
             .from-group
-
                 label.col-sm-3.col-sm-offset-2.control-label.margin-top-30 Comunication with the printer
                 .col-sm-7
                     input(type="number",name='comunication',value='#{doc.rating.comunication}',data-readonly="true",data-min=0,data-max=5,data-show-clear="false",step=0.5,data-size="lg").rating.form-control-feedback

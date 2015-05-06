@@ -185,9 +185,9 @@ module.exports = (app, io) ->
     )
   app.get '/project/feedback/:id', (req, res, next) ->
     models.STLProject.findOne({_id: req.params.id}).exec().then( (doc) ->
+      console.log 'asd'
       if doc
-        console.log doc
-        return res.render 'core/project/feedback' ,doc:doc
+          return res.render 'core/project/feedback' ,doc:doc
       else
         return res.send 404
     ).fail((reason) ->
@@ -199,7 +199,8 @@ module.exports = (app, io) ->
     models.STLProject.findOne({_id: req.params.id}).exec().then( (doc) ->
       if doc
         if (doc.rating)
-          return res.send 401
+          console.log 4
+          #return res.send 401
         doc.rating =
           quality:parseFloat(req.body.quality)
           comunication:parseFloat(req.body.comunication)
