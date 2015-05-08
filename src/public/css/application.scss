@@ -83,7 +83,43 @@ a.link-inverse:focus {
   background-color: #fff;
 }
 .main-banner {
+  position: relative;
   text-align: center;
+}
+.main-banner .caption {
+  bottom: 0;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+.main-banner .caption:before {
+  content: '';
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+}
+.main-banner .caption .slogan {
+  display: inline-block;
+  vertical-align: middle;
+  width: 90%;
+}
+.slogan h1 {
+  color: #FFFFFF;
+  font-weight: 500;
+  margin-bottom: 5px;
+  -webkit-text-shadow: 1px 1px 0 #7bf282;
+  -moz-text-shadow: 1px 1px 0 #7bf282;
+  text-shadow: 1px 1px 0 #7bf282;
+}
+.slogan h3 {
+  color: #FFFFFF;
+  font-size: 20px;
+  font-weight: 400;
+  margin-top: 5px;
+  -webkit-text-shadow: 1px 1px 0 #4EB476;
+  -moz-text-shadow: 1px 1px 0 #4EB476;
+  text-shadow: 1px 1px 0 #4EB476;
 }
 #footer {
   border-top: 1px solid #126f76;
@@ -174,12 +210,13 @@ a.link-inverse:focus {
 }
 .box .content h3 {
   font-size: 24px;
-  font-weight: 600;
+  font-weight: 500;
   margin-top: 0;
 }
 .box .content p {
   font-size: 16px;
   font-weight: 300;
+  min-height: 150px;
 }
 .box .content .btn-lg {
   font-size: 16px;
@@ -201,6 +238,11 @@ a.link-inverse:focus {
 .box .content-blue p {
   color: #f3fff4;
   text-align: justify;
+}
+.box .content.printer-bg {
+  background-image: url("../images/printer_icon.png");
+  background-repeat: no-repeat;
+  background-position: 95% 90%;
 }
 .contact {
   background: url("../images/contactus_background.png") left top no-repeat;
@@ -406,6 +448,12 @@ a.link-inverse:focus {
   .navbar .nav > li > .dropdown-menu:before,
   .navbar .nav > li > .dropdown-menu:after {
     content: none;
+  }
+  .slogan h1 {
+    font-size: 26px;
+  }
+  .slogan h3 {
+    font-size: 16px;
   }
 }
 @media (min-width: 768px) {

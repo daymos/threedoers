@@ -66,7 +66,7 @@ block content
                         figure.job-image: img.img-responsive(src='/#{project.image}')
                         .job-status
                           i Status:
-                            a(style="color:black", href="/project/#{project._id}") #{project.humanizedStatus()}
+                            a(href="/project/#{project._id}") #{project.humanizedStatus()}
                 - if (designProjects.length > 0)
                   - for (project in designProjects)
                     - project = designProjects[project]
@@ -77,7 +77,7 @@ block content
                         figure.job-image: img.img-responsive(src='/img/icons_#{project.dasherizedStatus()}.png')
                         .job-status
                           i Status:
-                            a(style="color:black", href="/design/project/#{project._id}") #{project.humanizedStatus()}
+                            a(href="/design/project/#{project._id}") #{project.humanizedStatus()}
 
 
                 - if (projects.length > 0)
@@ -91,7 +91,7 @@ block content
                         figure.job-image: img.img-responsive(src='/#{project.image}')
                         .job-status
                           i Status:
-                            a(style="color:black", href="/project/#{project._id}") #{project.humanizedStatus()}
+                            a(href="/project/#{project._id}") #{project.humanizedStatus()}
 
         br
         br
