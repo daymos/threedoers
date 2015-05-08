@@ -80,7 +80,7 @@ module.exports = (app, io) ->
             req.user.VatNumber=req.body.VatNumber
         req.user.save((error, user) ->
           if error
-            logger.error error
+            console.log arguments
             return res.send 500
           else
              return res.redirect '/profile/settings'
@@ -132,7 +132,7 @@ module.exports = (app, io) ->
     project.file = req.files.thumbnail.path.split('/').pop()
     project.save (err, doc) ->
       if err
-        logger.error err
+        console.log arguments
         res.send 500
       else
         res.send redirectTo: "/project/#{project.id}"
@@ -148,13 +148,13 @@ module.exports = (app, io) ->
           filename = doc.file.split('.')[0]
           fs.writeFile "#{ settings.upload.to + filename }.png", matches[2], 'base64', (err) ->
             if err
-              logger.error err
+              console.log arguments
             else
               doc.image = "#{ filename }.png"
               doc.save()
             res.send 200
     ).fail((reason) ->
-      logger.error reason
+      console.log arguments
       res.send 500
     )
 
@@ -179,7 +179,7 @@ module.exports = (app, io) ->
       else
         next()
     ).fail((reason) ->
-      logger.error reason
+      console.log arguments
       res.send 500
     )
   app.get '/project/feedback/:id', (req, res, next) ->
@@ -190,7 +190,7 @@ module.exports = (app, io) ->
       else
         return res.send 404
     ).fail((reason) ->
-      logger.error reason
+      console.log arguments
       return res.send 500
     )
   app.post '/project/feedback/:id', (req, res, next) ->
@@ -209,7 +209,7 @@ module.exports = (app, io) ->
       else
         return res.send 404
     ).fail((reason) ->
-      logger.error reason
+      console.log arguments
       return res.send 500
     )
 
@@ -219,7 +219,7 @@ module.exports = (app, io) ->
       models.STLProject.find({user: req.user._id, status: {"$lte": models.PROJECT_STATUSES.PRINT_REVIEW[0]}}).sort(createdAt: -1).exec().then( (docs) ->
         res.render 'core/profile/list_projects', {projects: docs, printingProjects: [], designProjects: []}
       ).fail( ->
-        logger.error arguments
+        console.log arguments
         res.send 500
       )
     else if req.user.printer=='accepted' and req.user.filemanager!="accepted"
@@ -233,7 +233,7 @@ module.exports = (app, io) ->
     models.STLProject.find({user: req.user._id, status: {"$lt": models.PROJECT_STATUSES.ARCHIVED[0], "$gt": models.PROJECT_STATUSES.PRINT_REQUESTED[0]}}).sort(createdAt: -1).exec().then((docs) ->
       res.render 'core/profile/list_projects', {projects: docs, printingProjects: [], designProjects: []}
     ).fail( ->
-      logger.error arguments
+      console.log arguments
       res.send 500
     )
 
@@ -246,7 +246,7 @@ module.exports = (app, io) ->
           res.render 'core/profile/list_projects', {printingProjects: printings, designProjects: design, projects:[]}
         )
     ).fail( ->
-      logger.error arguments
+      console.log arguments
       res.send 500
     )
 
@@ -273,7 +273,7 @@ module.exports = (app, io) ->
 
     req.user.save (error, user)->
       if error
-        logger.error error
+        console.log arguments
 
       res.render 'core/profile/settings'
 
@@ -335,7 +335,7 @@ module.exports = (app, io) ->
               data['order.shipping'] = shipping_tmp
               project.update data, (error) ->
                 if error
-                  logger.error error
+                  console.log arguments
               shipping(shipping_tmp)
             )
 
@@ -347,7 +347,7 @@ module.exports = (app, io) ->
         res.json
           message: "Printer don't exists, please contact support"
     ).fail( (reason) ->
-      logger.error reason
+      console.log arguments
       res.json
         message: reason.raw.message
     )
@@ -396,12 +396,12 @@ module.exports = (app, io) ->
               req.user.shippingAddresses.push address
               req.user.save (error, user) ->
                 if error
-                  logger.error error
+                  console.log arguments
                   res.send 500
                 else
                   requestShippingRate address, doc, res
             , (error) ->
-              logger.error error
+              console.log arguments
               res.json
                 message: error.raw.message
               return
@@ -409,7 +409,7 @@ module.exports = (app, io) ->
       else
         res.send 400
     ).fail( (reason) ->
-      logger.error reason
+      console.log arguments
       res.send 500
     )
 
@@ -451,7 +451,7 @@ module.exports = (app, io) ->
       shippo.address.create(address).then( (address) ->
         callback(address)
       , (error) ->
-        logger.error(error)
+        console.log arguments
         res.render 'core/profile/address_form',
               message: error.raw.message
               title: title
@@ -502,7 +502,7 @@ module.exports = (app, io) ->
         req.user.shippingAddresses.push address
         req.user.save((error, doc) ->
           if error
-            logger.error error
+            console.log arguments
         )
         res.redirect('/profile/settings')
     )
@@ -570,7 +570,7 @@ module.exports = (app, io) ->
         else
           res.send 404
       ).fail( ->
-        logger.error arguments
+        console.log arguments
         res.send 500
       )
 
@@ -590,7 +590,7 @@ module.exports = (app, io) ->
         else
           res.send 404
       ).fail( ->
-        logger.error arguments
+        console.log arguments
         res.send 500
       )
 
@@ -615,7 +615,7 @@ module.exports = (app, io) ->
         else
           res.send 404
       ).fail( ->
-        logger.error arguments
+        console.log arguments
         res.send 500
       )
 
@@ -641,7 +641,7 @@ module.exports = (app, io) ->
         else
           res.send 404
       ).fail( ->
-        logger.error arguments
+        console.log arguments
         res.send 500
       )
 
@@ -656,7 +656,6 @@ module.exports = (app, io) ->
         res.send 404
     ).fail( ->
       console.log arguments
-      logger.error arguments
       res.send 500
     )
 
@@ -691,7 +690,6 @@ module.exports = (app, io) ->
       res.redirect "/project/#{req.params.id}"
     ).fail( ->
       console.log arguments
-      logger.error arguments
       res.send 500
     )
 
@@ -700,7 +698,6 @@ module.exports = (app, io) ->
       res.redirect "/profile/projects"
     ).fail( ->
       console.log arguments
-      logger.error arguments
       res.send 500
     )
 
@@ -729,7 +726,7 @@ module.exports = (app, io) ->
       else
         res.json msg: "Not allowed comments at this moment.", 400
     ).fail( ->
-      logger.error arguments
+      console.log arguments
       res.send 500
     )
 
@@ -782,20 +779,19 @@ module.exports = (app, io) ->
             paypalSdk.pay payload, (err, response) ->
               if err
                 console.log response.error
-                logger.error err
+                console.log arguments
                 res.send 500
               else
                 doc.update {'order.payKey': response.payKey, 'order.secundaryPaid': false}, (error) ->
                   if error
                     console.log error
-                    logger.error error
+                    console.log arguments
                   else
                     res.redirect response.paymentApprovalUrl
       else
         res.send 400
     ).fail( (reason) ->
-      console.log reason
-      logger.error reason
+      console.log arguments
       res.send 500
     )
 
@@ -809,7 +805,7 @@ module.exports = (app, io) ->
       if doc and doc.validateNextStatus(models.PROJECT_STATUSES.PAYED[0])  # test if next state is allowed
         auth.User.findOne(doc.order.printer).exec (err, user) ->
           if err
-            logger.error err
+            console.log arguments
             res.send 500
           else
             updatedData =
@@ -825,7 +821,7 @@ module.exports = (app, io) ->
 
               res.redirect "/project/#{req.params.id}"
     ).fail( ->
-      logger.error arguments
+      console.log arguments
       res.send 500
     )
 
@@ -837,7 +833,7 @@ module.exports = (app, io) ->
         doc.save()
       res.redirect "/project/#{req.params.id}"
     ).fail( ->
-      logger.error arguments
+      console.log arguments
       res.send 500
     )
 
@@ -856,7 +852,7 @@ module.exports = (app, io) ->
             if user.mailNotification
               mailer.send('mailer/project/status', {project: doc, user: user, site:settings.site}, {from: settings.mailer.noReply, to:[user.email], subject: settings.project.status.subject})
     ).fail( ->
-      logger.error arguments
+      console.log arguments
       res.send 500
     )
 
@@ -906,7 +902,7 @@ module.exports = (app, io) ->
 
       # res.redirect "/project/#{req.params.id}"
     ).fail( ->
-      logger.error arguments
+      console.log arguments
       res.send 500
     )
 
@@ -914,13 +910,13 @@ module.exports = (app, io) ->
   app.get '/printing/requests', decorators.printerRequired, (req, res) ->
     models.STLProject.find(status: {"$lt": models.PROJECT_STATUSES.ARCHIVED[0], "$gt": models.PROJECT_STATUSES.PRINT_REQUESTED[0]}, 'order.printer': req.user.id).sort(createdAt: -1).exec (err, docs) ->
       if err
-        logger.error err
+        console.log arguments
         res.send 500
       else
         printerJobs = req.user.printerJobs || 1  # backward compatibility
         models.STLProject.find(status: models.PROJECT_STATUSES.PRINT_REQUESTED[0]).exec (err, available) ->
           if err
-            logger.error err
+            console.log arguments
             res.send 500
           else
             if docs and docs.length > printerJobs
@@ -932,7 +928,7 @@ module.exports = (app, io) ->
   app.get '/printing/jobs', decorators.printerRequired, (req, res) ->
     models.STLProject.find('order.printer': req.user.id, status: {"$lt": models.PROJECT_STATUSES.ARCHIVED[0], "$gt": models.PROJECT_STATUSES.PRINT_REQUESTED[0]}).sort(createdAt: -1).exec (err, docs) ->
       if err
-        logger.error err
+        console.log arguments
         res.send 500
       else
         res.render 'core/printing/jobs', {projects: docs}
@@ -944,7 +940,7 @@ module.exports = (app, io) ->
       )
     ).fail( (reason) ->
       console.log reason
-      logger.error reason
+      console.log arguments
       res.send 500
     )
 
@@ -976,7 +972,7 @@ module.exports = (app, io) ->
       else
         res.json msg: "Looks like someone accepted, try with another", 400
     ).fail( ->
-      logger.error arguments
+      console.log arguments
       res.send 500
     )
 
@@ -1001,7 +997,7 @@ module.exports = (app, io) ->
       else
         res.json msg: "Looks like someone accepted, try with another", 400
     ).fail( ->
-      logger.error arguments
+      console.log arguments
       res.send 500
     )
 
@@ -1021,7 +1017,7 @@ module.exports = (app, io) ->
       if doc and doc.status == models.PROJECT_STATUSES.PRINT_ACCEPTED[0]
         res.json msg: "Looks like someone accepted, try with another", 400
     ).fail( ->
-      logger.error arguments
+      console.log arguments
       res.send 500
     )
 
@@ -1060,7 +1056,7 @@ module.exports = (app, io) ->
           doc.update data, (error) ->
             if error
               console.log error
-              logger.error error
+              console.log arguments
             else
               res.send 200
         else
@@ -1104,7 +1100,7 @@ module.exports = (app, io) ->
         else
           socket.emit 'error', msg: "Document not found"
       ).fail( (reason) ->
-        logger.error reason
+        console.log arguments
         socket.emit 'error', msg: "Error searching for project. Mongo Error"
       )
     else
@@ -1117,7 +1113,7 @@ module.exports = (app, io) ->
         if doc
           socket.join("notification-#{doc._id.toHexString()}")
       ).fail( (reason) ->
-        logger.error reason
+        console.log arguments
         socket.emit 'error', msg: "Error searching for project. Mongo Error"
       )
     else
@@ -1183,15 +1179,13 @@ module.exports = (app, io) ->
 
           doc.save()
         catch e
-          logger.error e
-          logger.error stderr
+          console.log arguments
           doc.bad = true
           doc.save()
       else
         doc.bad = true
         doc.save()
-        logger.error e
-        logger.error stderr
+        console.log arguments
 
       cloned = utils.cloneObject(doc._doc)
       cloned.status = doc.humanizedStatus()  # to show good in browser
