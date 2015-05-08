@@ -113,7 +113,8 @@ module.exports = (app, io) ->
       res.json errors: thumbnail: msg: "This field is required"
       return
 
-    if req.files.thumbnail.type != 'application/octet-stream' or req.files.thumbnail.path.split('/').pop().split('.').pop().toLowerCase() != 'stl'
+    # if req.files.thumbnail.type != 'application/octet-stream' or req.files.thumbnail.path.split('/').pop().split('.').pop().toLowerCase() != 'stl'
+    if req.files.thumbnail.path.split('/').pop().split('.').pop().toLowerCase() != 'stl'
       console.log req.files.thumbnail.type
       console.log req.files.thumbnail.path.split('/').pop().split('.').pop().toLowerCase()
       res.json errors: thumbnail: msg: "Is not a valid format, you need to upload a STL file."
