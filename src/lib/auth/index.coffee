@@ -56,7 +56,7 @@ module.exports = (app) ->
     else
       passport.authenticate('local', (err, user, info) ->
         if err
-          logger.error err
+          console.log arguments
           res.send(500)
         else
           if user
@@ -82,7 +82,7 @@ module.exports = (app) ->
 
     user.save (err, doc) ->
       if err
-        logger.error err
+        console.log arguments
         res.send 500
       else
         res.send 200
@@ -108,7 +108,7 @@ module.exports = (app) ->
           user.resetPassword = true
           user.save (err) ->
             if err
-              logger.error err
+              console.log arguments
               res.send 500
             else
               context =
@@ -116,7 +116,7 @@ module.exports = (app) ->
               mailer.send('mailer/accounts/reset-password', context, {from: settings.mailer.noReply, to:[user.email], subject: settings.accounts.reset.subject}).then( ->
                 res.redirect '/accounts/reset-password/done'
               ).fail((reason)->
-                logger.error reason
+                console.log arguments
                 res.send 500
               )
 
