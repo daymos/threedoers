@@ -55,10 +55,11 @@ block content
               h4.light Here you can find printing and design jobs
               br
               .row
+                - var index = 1
                 - if (printingProjects.length > 0)
                   - for (project in printingProjects)
                     - project = printingProjects[project]
-                    .col-md-3.col-sm-6
+                    .col-md-3.col-sm-6(class=(index%4 === 0? 'clear-left':''))
                       article.job
                         h4.job-name
                           a(href="/project/#{project._id}") #{project.title}
@@ -67,10 +68,11 @@ block content
                         .job-status
                           i Status:
                             a(href="/project/#{project._id}") #{project.humanizedStatus()}
+                    - index++
                 - if (designProjects.length > 0)
                   - for (project in designProjects)
                     - project = designProjects[project]
-                    .col-md-3.col-sm-6
+                    .col-md-3.col-sm-6(class=(index%4 === 0? 'clear-left':''))
                       article.job
                         h4.job-name
                           a(href="/design/project/#{project._id}") #{project.title}
@@ -78,12 +80,11 @@ block content
                         .job-status
                           i Status:
                             a(href="/design/project/#{project._id}") #{project.humanizedStatus()}
-
-
+                    - index++
                 - if (projects.length > 0)
                   - for (project in projects)
                     - project = projects[project]
-                    .col-md-3.col-sm-6
+                    .col-md-3.col-sm-6(class=(index%4 === 0? 'clear-left':''))
                       article.job
                         h4.job-name
                           a(href="/project/#{project._id}") #{project.title}
@@ -92,6 +93,7 @@ block content
                         .job-status
                           i Status:
                             a(href="/project/#{project._id}") #{project.humanizedStatus()}
+                    - index++
 
         br
         br

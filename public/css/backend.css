@@ -32,6 +32,14 @@ h5.normal {
 .nav-tabs.nav-tabs-3doers-small > li > a {
   font-size: 24px;
 }
+.navbar-3doers .navbar-text > .navbar-link.navbar-link-inverse.notifications {
+  color: #4eb476;
+}
+.navbar-3doers .navbar-text > .navbar-link.navbar-link-inverse.notifications:hover,
+.navbar-3doers .navbar-text > .navbar-link.navbar-link-inverse.notifications:focus{
+  color: #58a2a1;
+  border-bottom-color: transparent;
+}
 .step p {
   font-size: 12px;
 }
@@ -379,6 +387,12 @@ table.job-payment .final-price {
   font-weight: 300;
   padding: 10px 20px 20px 20px;
 }
+
+/* Clears */
+.clear-left {
+  clear: left;
+}
+
 @media (min-width: 768px) {
   .text-right {
     text-align: right;
