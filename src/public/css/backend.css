@@ -393,6 +393,11 @@ table.job-payment .final-price {
   clear: left;
 }
 
+/* Canvas */
+#cv {
+  height: 310px;
+}
+
 @media (min-width: 768px) {
   .text-right {
     text-align: right;
