@@ -241,17 +241,18 @@
                   .tab-content
                     #saved.tab-pane.active.fade.in
                       - if (user.shippingAddresses.length > 0)
-                        for address in user.shippingAddresses
-                          address.col-md-4
-                            strong #{address['company']}
-                            br
-                            |#{address['street1']}
-                            br
-                            |#{address['city']}, #{address['zip']}, #{address['country']}
-                            br
-                            |#{address['phone']}
-                            br
-                            a.select-saved-address.btn-default.btn-xs.grey-3doers(data-id="#{ address.id }", href="#") Select
+                        .row
+                          for address in user.shippingAddresses
+                            address.col-md-4
+                              strong #{address['company']}
+                              br
+                              |#{address['street1']}
+                              br
+                              |#{address['city']}, #{address['zip']}, #{address['country']}
+                              br
+                              |#{address['phone']}
+                              br
+                              a.select-saved-address.btn.btn-default.btn-xs.grey-3doers(data-id="#{ address.id }", href="#") Select
                       - else
                         | you don't have saved any address
                       button.close-payment-modal.btn.btn-lg.btn-green Cancel
@@ -307,20 +308,33 @@
     .conversation
       #comment-list
         - for comment in project.comments
-          - var myclass=(user.username===comment.username ? 'mine-chat':'other-chat')
-          div(class=myclass).media
-            .media-body.text-right
-              .message #{comment.content}
-              p.meta
-                |  By
-                strong  #{comment.username==user.username?"you":comment.username}
-                |  at
-                strong  #{ prettyDate(comment.createdAt) }
-                |  at
-                strong  #{ prettyHour(comment.createdAt) } pm
-            .media-right
-              a(href='#')
-                img.media-object(src='/#{comment.photo}', style='width:50px; height:50px')
+          div.media
+            - if (user.username===comment.username)
+              .media-body.text-right
+                .message #{comment.content}
+                p.meta
+                  |  By
+                  strong  #{comment.username==user.username?"you":comment.username}
+                  |  at
+                  strong  #{ prettyDate(comment.createdAt) }
+                  |  at
+                  strong  #{ prettyHour(comment.createdAt) } pm
+              .media-right
+                a(href='#')
+                  img.media-object(src='/#{comment.photo}', style='width:50px; height:50px')
+            - else
+              .media-left
+                a(href='#')
+                  img.media-object(src='/#{comment.photo}', style='width:50px; height:50px')
+              .media-body
+                .message #{comment.content}
+                p.meta
+                  |  By
+                  strong  #{comment.username==user.username?"you":comment.username}
+                  |  at
+                  strong  #{ prettyDate(comment.createdAt) }
+                  |  at
+                  strong  #{ prettyHour(comment.createdAt) } pm
       .form-group
         textarea#comment-text.form-control(rows=4, placeholder='Write a comment')
       .row
