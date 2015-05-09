@@ -182,20 +182,33 @@
     .conversation
       #comment-list
         - for comment in project.comments
-          - var myclass=(user.username===comment.username ? 'mine-chat':'other-chat')
-          div(class=myclass).media
-            .media-body.text-right
-              .message #{comment.content}
-              p.meta
-                |  By
-                strong  #{comment.username==user.username?"you":comment.username}
-                |  at
-                strong  #{ prettyDate(comment.createdAt) }
-                |  at
-                strong  #{ prettyHour(comment.createdAt) } pm
-            .media-right
-              a(href='#')
-                img.media-object(src='/#{comment.photo}', style='width:50px; height:50px')
+          div.media
+            - if (user.username===comment.username)
+              .media-body.text-right
+                .message #{comment.content}
+                p.meta
+                  |  By
+                  strong  #{comment.username==user.username?"you":comment.username}
+                  |  at
+                  strong  #{ prettyDate(comment.createdAt) }
+                  |  at
+                  strong  #{ prettyHour(comment.createdAt) } pm
+              .media-right
+                a(href='#')
+                  img.media-object(src='/#{comment.photo}', style='width:50px; height:50px')
+            - else
+              .media-left
+                a(href='#')
+                  img.media-object(src='/#{comment.photo}', style='width:50px; height:50px')
+              .media-body
+                .message #{comment.content}
+                p.meta
+                  |  By
+                  strong  #{comment.username==user.username?"you":comment.username}
+                  |  at
+                  strong  #{ prettyDate(comment.createdAt) }
+                  |  at
+                  strong  #{ prettyHour(comment.createdAt) } pm
       .form-group
         textarea#comment-text.form-control(rows=4, placeholder='Write a comment')
       .row
