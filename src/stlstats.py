@@ -280,14 +280,14 @@ if __name__ == '__main__':
     dimension = s.get_bbox(options.unit)
 
     print """
-    { "volume": %s,
-      "weight": %s,
+    { "volume": %.2f,
+      "weight": %.2f,
       "density": %s,
       "unit": "%s",
       "dimension": {
-        "width": %s,
-        "height": %s,
-        "length": %s
+        "width": %.2f,
+        "height": %.2f,
+        "length": %.2f
       },
       "surface": %s
     }""" % (volume, weight, options.density, options.unit, dimension['width'], dimension['height'], dimension['length'], s.surface)

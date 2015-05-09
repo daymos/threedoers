@@ -42,7 +42,7 @@ block content
                       h4.job-name #{project.title}
                       figure.job-image: img.img-responsive(src='/#{project.image}')
                       .job-wtime This order has been waiting for
-                        h5(data-time='/#{project.order.placedAt}') 3h 25m
+                        h5(data-time='/#{project.order.placedAt}')
                       .form-group.text-center
                         a.btn.btn-lg.btn-green.review(href=toApply?"/printing/review/#{ project.id }":"#") REVIEW ORDER
         br
@@ -85,7 +85,7 @@ block scripts
         var minutes = Math.floor(moment.duration(ms).asMinutes());
 
         // concatonate the variables
-        var diff = "" + hours + "h " +  minutes + "m";
+        var diff = "" + (23 - hours) + "h " +  (60 - minutes) + "m";
 
         $(this).html(diff);
       });

@@ -18,7 +18,7 @@ module.exports = (app, io) ->
   designModels = require('../design/models')
   shippo = require('shippo')('mattia.spinelli@zoho.com', 'mattia13')
 
-  # Hack for update docs instead of cron, this is for a while
+  # Hack for update docs instead of cron, this is for a while
 
   app.get (req, res, next) ->
     query = {'order.reviewStartAt': {$lt: new Date(current.getTime() - 86400000)}, status: {$lt: models.PROJECT_STATUSES.PAYED[0]}}
@@ -30,7 +30,7 @@ module.exports = (app, io) ->
       res.redirect '/profile/projects'
     else
       models.STLProject.find().sort(createdAt: -1).limit(6).exec (err, projects) ->
-          auth.User.find().sort(createdAt: -1).limit(15).exec (err, users) ->
+          auth.User.find().limit(15).exec (err, users) ->
             res.render 'core/index', {message: null, error: false, message: false, users: users, projects: projects}
 
   app.post '/', (req, res) ->
@@ -170,12 +170,16 @@ module.exports = (app, io) ->
       if doc
         if not doc.volume or doc.bad or not doc.dimension
           processVolumeWeight(doc)
-        res.render 'core/project/detail',
-          project: doc
-          colors: models.PROJECT_COLORS
-          materials: models.PROJECT_MATERIALS
-          statuses: models.PROJECT_STATUSES
-          countries: auth.EuropeCountries
+
+        auth.User.findOne(doc.order.printer).exec().then( (printer) ->
+          res.render 'core/project/detail',
+            project: doc
+            printer: printer
+            colors: models.PROJECT_COLORS
+            materials: models.PROJECT_MATERIALS
+            statuses: models.PROJECT_STATUSES
+            countries: auth.EuropeCountries
+        )
       else
         next()
     ).fail((reason) ->
@@ -908,7 +912,7 @@ module.exports = (app, io) ->
 
 
   app.get '/printing/requests', decorators.printerRequired, (req, res) ->
-    models.STLProject.find(status: {"$lt": models.PROJECT_STATUSES.ARCHIVED[0], "$gt": models.PROJECT_STATUSES.PRINT_REQUESTED[0]}, 'order.printer': req.user.id).sort(createdAt: -1).exec (err, docs) ->
+    models.STLProject.find(status: {"$lt": models.PROJECT_STATUSES.ARCHIVED[0], "$gt": models.PROJECT_STATUSES.PRINT_REQUESTED[0]}, 'order.printer': req.user.id).sort(placedAt: -1).exec (err, docs) ->
       if err
         console.log arguments
         res.send 500
@@ -1073,6 +1077,7 @@ module.exports = (app, io) ->
   ###############################################
 
   io.of('/project').on('connection', (socket) ->
+    console.log socket.handshake.query
     if socket.handshake.query.project?
       models.STLProject.findOne(
         {_id: socket.handshake.query.project, user: socket.handshake.session.passport.user},

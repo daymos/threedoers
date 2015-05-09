@@ -60,16 +60,14 @@ $(document).ready ->
   # Socket IO
   ###
   try
-    user
-    socket_project = io.connect(":#{port}/project")
+    # user
+    socket_project = io.connect(":#{port}/project", { query: 'project=' + project.id})
   catch e
     console.log { query: {project: window.location.pathname.split( '/' ).pop()} }
     socket_project = io.connect(":#{port}/project",{ query: 'project='+window.location.pathname.split( '/' ).pop()})
 
   socket_project.on 'error', (data) ->
     console.log data.msg
-
-
 
   socket_project.on 'update', (data) ->
 
