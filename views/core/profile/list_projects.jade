@@ -89,7 +89,11 @@ block content
                         h4.job-name
                           a(href="/project/#{project._id}") #{project.title}
                         h6.job-created-at Created on #{prettyDate(project.createdAt)} at #{prettyHour(project.createdAt)} pm
-                        figure.job-image: img.img-responsive(src='/#{project.image}')
+                        figure.job-image
+                          - if (project.image)
+                            img.img-responsive(src='/#{project.image}')
+                          - else
+                            img.img-responsive(src='/images/job-preview-no-screen.jpg')
                         .job-status
                           i Status:
                             a(href="/project/#{project._id}") #{project.humanizedStatus()}
