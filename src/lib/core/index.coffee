@@ -171,15 +171,23 @@ module.exports = (app, io) ->
         if not doc.volume or doc.bad or not doc.dimension
           processVolumeWeight(doc)
 
-        auth.User.findOne(doc.order.printer).exec().then( (printer) ->
+        if doc.order and doc.order.printer
+          auth.User.findOne(doc.order.printer).exec().then( (printer) ->
+            res.render 'core/project/detail',
+              project: doc
+              printer: printer
+              colors: models.PROJECT_COLORS
+              materials: models.PROJECT_MATERIALS
+              statuses: models.PROJECT_STATUSES
+              countries: auth.EuropeCountries
+          )
+        else
           res.render 'core/project/detail',
-            project: doc
-            printer: printer
-            colors: models.PROJECT_COLORS
-            materials: models.PROJECT_MATERIALS
-            statuses: models.PROJECT_STATUSES
-            countries: auth.EuropeCountries
-        )
+              project: doc
+              colors: models.PROJECT_COLORS
+              materials: models.PROJECT_MATERIALS
+              statuses: models.PROJECT_STATUSES
+              countries: auth.EuropeCountries
       else
         next()
     ).fail((reason) ->
