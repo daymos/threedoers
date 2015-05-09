@@ -1085,7 +1085,6 @@ module.exports = (app, io) ->
   ###############################################
 
   io.of('/project').on('connection', (socket) ->
-    console.log socket.handshake.query
     if socket.handshake.query.project?
       models.STLProject.findOne(
         {_id: socket.handshake.query.project, user: socket.handshake.session.passport.user},
