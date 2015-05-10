@@ -677,9 +677,9 @@ module.exports = (app, io) ->
       if doc and doc.validateNextStatus(models.PROJECT_STATUSES.PRINT_REQUESTED[0])
         ammount =  Math.abs(if (req.body.ammount and parseInt(req.body.ammount)) then parseInt(req.body.ammount) else 1)
         total_price = calculateOrderPrice(doc.price, ammount)
-        taxes = decimal.fromNumber(total_price * 0.21, 2)
+        taxes = decimal.fromNumber(total_price * 0.0522, 2)
         price = decimal.fromNumber(total_price - taxes, 2)
-        printerPayment = decimal.fromNumber(price * 0.75, 2)
+        printerPayment = decimal.fromNumber(price * 0.7105, 2)
         doc.status = models.PROJECT_STATUSES.PRINT_REQUESTED[0]
         doc.order =
           ammount: ammount
@@ -1168,6 +1168,9 @@ module.exports = (app, io) ->
 
           # final price - add fixed cost then this is multiplied by amount
           price = pb + fixed_cost
+
+	  # task https://trello.com/c/gPjZHlxk/190-increase-price-by-30
+          price = price + ( price * 0.3 )
 
           # another values
           doc.volume = result.volume
