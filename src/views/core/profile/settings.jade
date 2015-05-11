@@ -103,21 +103,21 @@ block content
                   | Here you can Upgrade your profile for FREE!
           .col-md-12
             .row
-              -if(user.filemanager!="accepted")
-                .col-md-6
-                  - if(user.filemanager=="request")
-                    a(href="#upgradeYourProfile")
-                      div.pending-request.circular.small-circular
-                        |Pending
-                  - else
-                    a(data-toggle="modal",data-target="#becomeDesigner",href="#")
-                      img(src='/img/icons_printing.png').circular.small-circular
-                  div
-                      h4 Become a Designer
-                      p
-                          | Are you a Designer?
-                          | Updgrade your profile
-                          | and earn money!
+              // -if(user.filemanager!="accepted")
+              //   .col-md-6
+              //     - if(user.filemanager=="request")
+              //       a(href="#upgradeYourProfile")
+              //         div.pending-request.circular.small-circular
+              //           |Pending
+              //     - else
+              //       a(data-toggle="modal",data-target="#becomeDesigner",href="#")
+              //         img(src='/img/icons_printing.png').circular.small-circular
+              //     div
+              //         h4 Become a Designer
+              //         p
+              //             | Are you a Designer?
+              //             | Updgrade your profile
+              //             | and earn money!
 
               -if(user.printer!="accepted")
                 .col-md-6

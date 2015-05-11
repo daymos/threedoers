@@ -1209,7 +1209,7 @@ module.exports = (app, io) ->
 
 
   calculateOrderPrice = (basePrice, ammount) ->
-      decimal.fromNumber(basePrice * ammount, 2)
+      decimal.fromNumber((basePrice * ammount) - (7 * (ammount - 1)), 2)
 
 # app.get "/", (req, res) ->
 
