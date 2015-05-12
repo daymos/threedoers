@@ -279,6 +279,13 @@ a.link-inverse:focus {
 .contact .text.green {
   color: #88d6a7;
 }
+.page-info {
+  color: #bab9b9;
+
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 300;
+  }
+}
 .page-header,
 .page-subheader {
   border-bottom: 1px solid #dde5de;
