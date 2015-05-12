@@ -22,15 +22,21 @@ div(role='tabpanel')
         | Shipping
   .tab-content
     .tab-pane.fade.in.active(id='tab-crete-order')
-      h4.light Create lorem ipsum.
+      h4.light Preview your file and decide printing features.
     .tab-pane.fade(id='tab-place-order')
-      h4.light Place lorem ipsum.
+      h4.light
+        | Your order is now available for printers to review.
+        br
+        | You'll be notified once the work is accepted in order to proceed with the final payment.
     .tab-pane.fade(id='tab-accepted')
-      h4.light Accepted lorem ipsum.
+      h4.light Please proceed with the final payment within the next 24 hours to allow our printer to start working on your order.
     .tab-pane.fade(id='tab-printing')
-      h4.light Printing lorem ipsum.
+      h4.light You order is printing. You'll be notified when it's shipped.
     .tab-pane.fade(id='tab-shipping')
-      h4.light Shipping lorem ipsum.
+      h4.light
+        | Your order has been shipped and should be delivered to you in the next 48 hours.
+        br
+        | You can track it directly from the courrier service website using the code below.
 
 .job-order
   h4.job-name#title(data-type="text", data-url="/project/title/#{project.id}", data-title="Enter the Title") #{ project.title }
@@ -76,6 +82,33 @@ div(role='tabpanel')
                 button#order-button.btn.btn-lg.btn-block.btn-green(type='submit', disabled='disabled') PLACE ORDER
               else
                 button#order-button.btn.btn-lg.btn-block.btn-green(type='button', disabled='disabled', data-toggle='modal', data-target="#pleaseLogin") PLACE ORDER
+       if user
+        .row
+          br
+          div.col-md-12
+            a(href='#', data-toggle='modal', data-target='#orderModal') Cancel order
+
+  .modal.fade(id='orderModal', role='dialog')
+    .modal-dialog.modal-md
+      .modal-content
+        .modal-header
+          button.close(data-dismiss='modal')
+            span &times;
+          h4.modal-title &nbsp;
+        .modal-body
+          p
+            | Once deleted the order won't be accesible anymore.
+            br
+            | Do you want to proceed?
+          br
+          form(action='/project/delete/#{ project._id }', method='post')
+            .row
+              .col-md-5
+                .form-group
+                  a.btn.btn-xlg.btn-block.btn-green-inverse(data-dismiss='modal', href='#') Undo
+              .col-md-7
+                .form-group
+                  button.btn.btn-xlg.btn-block.btn-green(type='submit') CANCEL ORDER
 
 
 - if (!project.checkHeight || !project.checkLenght || !project.checkWidth)

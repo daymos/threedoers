@@ -94,6 +94,7 @@ block content
           a#link.direct-link-ship-address.btn-default.btn-xs.btn(href='/profile/settings/new-shipping-direction') Add new direction
           &nbsp;&nbsp;&nbsp;
           a#link.direct-link-ship-address.btn-primary.btn-xs.btn(href='/accounts/logout') Logout
+
         .row#upgradeYourProfile
           .col-md-12
               h2
@@ -102,21 +103,21 @@ block content
                   | Here you can Upgrade your profile for FREE!
           .col-md-12
             .row
-              -if(user.filemanager!="accepted")
-                .col-md-6
-                  - if(user.filemanager=="request")
-                    a(href="#upgradeYourProfile")
-                      div.pending-request.circular.small-circular
-                        |Pending
-                  - else
-                    a(data-toggle="modal",data-target="#becomeDesigner",href="#")
-                      img(src='/img/icons_printing.png').circular.small-circular
-                  div
-                      h4 Become a Designer
-                      p
-                          | Are you a Designer?
-                          | Updgrade your profile
-                          | and earn money!
+              // -if(user.filemanager!="accepted")
+              //   .col-md-6
+              //     - if(user.filemanager=="request")
+              //       a(href="#upgradeYourProfile")
+              //         div.pending-request.circular.small-circular
+              //           |Pending
+              //     - else
+              //       a(data-toggle="modal",data-target="#becomeDesigner",href="#")
+              //         img(src='/img/icons_printing.png').circular.small-circular
+              //     div
+              //         h4 Become a Designer
+              //         p
+              //             | Are you a Designer?
+              //             | Updgrade your profile
+              //             | and earn money!
 
               -if(user.printer!="accepted")
                 .col-md-6

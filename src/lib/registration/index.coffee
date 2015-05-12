@@ -14,7 +14,7 @@ module.exports = (app) ->
   app.post '/accounts/signup', (req, res, next) ->
     password = req.body.password
 
-    req.assert('username', regex: "Invalid username.").regex(/^[a-z0-9_-]{3,16}$/)
+    req.assert('username', regex: "Invalid username.").regex(/^[a-z0-9_-]{2,24}$/)
     req.assert('email').isEmail()
     req.assert('password', regex: "Should contains from 4 to 15, letters(uppercase, downcase), digits, first should be a letter.").regex(/^[a-zA-Z]\w{3,14}$/)
     req.assert('passwordConfirm', {regex: "Should contains from 4 to 15, letters(uppercase, downcase), digits, first should be a letter.", equals: "Passwords didn't match"}).regex(/^[a-zA-Z]\w{3,14}$/).equals(password)

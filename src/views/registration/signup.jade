@@ -16,9 +16,10 @@ block content
           form.form-3doers#registration(action='/accounts/signup', method='POST', role='form', accept-charset='utf-8', name='signup-form')
             input(type='hidden', name='_csrf', value=csrfToken)
             .form-group
-              input.form-control(type='text', placeholder='username', name='username')
+              input.form-control(type='text', placeholder='username', name='username', value="#{ locals.username?username:"" }")
+              p(style="color:#9B9B9B; font-size:9.5px;") Username should be between 4 to 24 characteres. Please do not use capital letters, special characteres (for example è à ù ò ç). punctuations (.,:') or spaces. Underscore and score (_-) are allowed.
             .form-group.no-margin
-              input.form-control(type='email', placeholder='email', name='email')
+              input.form-control(type='email', placeholder='email', name='email', value="#{ locals.email?email:"" }")
             .form-group.no-margin
               input.form-control(type='password', placeholder='password', name='password')
             .form-group.no-margin
