@@ -388,6 +388,27 @@ table.job-payment .final-price {
   padding: 10px 20px 20px 20px;
 }
 
+/* Notify icon */
+.notify-icon {
+  background-image: url('../images/icon-notification.png');
+  background-repeat: no-repeat;
+  background-position: 0 0;
+  display: block;
+  height: 26px;
+  width: 42px;
+}
+.notify-icon:hover,
+.notify-icon:focus {
+  background-position: 0 -26px;
+}
+.notify-icon.fluo-3doers {
+  background-position: 0 -52px;
+}
+.notify-icon.fluo-3doers:hover,
+.notify-icon.fluo-3doers:focus {
+  background-position: 0 -78px;
+}
+
 /* Clears */
 .clear-left {
   clear: left;

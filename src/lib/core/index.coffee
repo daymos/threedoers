@@ -1087,7 +1087,7 @@ module.exports = (app, io) ->
   io.of('/project').on('connection', (socket) ->
     if socket.handshake.query.project?
       models.STLProject.findOne(
-        {_id: socket.handshake.query.project, user: socket.handshake.session.passport.user},
+        {_id: socket.handshake.query.project} #, user: socket.handshake.session.passport.user},
         {title: 1, volume:1, status: 1, editable: 1}).exec().then( (doc) ->
         if doc
           socket.join(doc._id.toHexString())
@@ -1141,6 +1141,7 @@ module.exports = (app, io) ->
       if not err and  not stderr
         try
           result = JSON.parse(stdout)
+          console.log result
           # Calculate price
           material_price = if doc.material == 'ABS' then 0.5 else 0.5 * 1.1  # ABS
           density = doc.density

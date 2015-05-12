@@ -55,9 +55,9 @@ class STLStats:
         if unit == 'mm':
             return self.volume
         elif unit == 'cm':
-            return self.volume/1000
+            return self.volume/1000.0
         else:
-            return self._inch3(self.volume/1000)
+            return self._inch3(self.volume/1000.0)
 
     def get_weight(self):
         """Returns the calculated Weight (gm) of the 3D object represented in the binary STL."""
