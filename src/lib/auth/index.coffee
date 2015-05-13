@@ -47,7 +47,7 @@ module.exports = (app) ->
   app.post '/accounts/login', (req, res, next) ->
 
     req.assert('username', regex: "Is required.").len(2)
-    req.assert('password', len: 'Should have between 6 - 20 characters.').len(6, 20)
+    req.assert('password', len: 'Should have between 4 - 20 characters.').len(2)
 
     errors = req.validationErrors(true)
 
