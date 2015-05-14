@@ -567,6 +567,19 @@ module.exports = (app, io) ->
       else
         res.send 200
 
+  app.post '/profile/settings/activate-shipping-direction/:id', decorators.loginRequired, (req, res) ->
+    for address in req.user.shippingAddresses
+      if address._id.equals(req.params.id)
+        address.active = true
+      else
+        address.active = false
+
+    req.user.save (error, user) ->
+      if error
+        res.send 400
+      else
+        res.send 200
+
 
   app.post '/project/title/:id', decorators.loginRequired, (req, res) ->
     req.assert('value').len(4)

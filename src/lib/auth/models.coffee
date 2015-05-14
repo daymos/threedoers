@@ -302,6 +302,10 @@ Address = new Schema
 
   messages:
     type: []
+  
+  active:
+    type: Boolean
+    default: false
 
 
 User = new Schema
@@ -400,6 +404,9 @@ User = new Schema
 
   shippingAddresses:
     type: [Address]
+
+  shippingAddress:
+    type: {} 
 
   printerAddress:
     type: Object

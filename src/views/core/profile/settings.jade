@@ -73,6 +73,7 @@ block content
 
             if user.shippingAddresses
               h2 Shipping Addresses
+              p The default address will be used for shipping, don't forget update before set an order.
               .margin-address
               for direction in user.shippingAddresses
                   address.col-md-5
@@ -85,6 +86,11 @@ block content
                    |#{direction['phone']}
                    br
                    a.remove-shipping-address.btn-default.btn-xs.btn(href='/profile/settings/delete-shipping-direction/#{ direction.id }') Delete
+                   unless direction.active
+                     a.activate-shipping-address.btn-default.btn-xs.btn(href='/profile/settings/activate-shipping-direction/#{ direction.id }') Activate
+                   else
+                     br
+                     span This address is the active one
 
               else
                 strong you still don't have any direction
