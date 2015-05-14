@@ -21,7 +21,7 @@
       .tab-pane.fade(id='tab-review')
         h4.light You have 24 hours to review and accept this order before it goes automatically back to the Workplace.
       .tab-pane.fade(id='tab-accepted')
-        h4.light 
+        h4.light
       .tab-pane.fade.in.active(id='tab-printing')
         h4.light
           | You can now proceed with the printing, remember that a faster service will result in a higher rating for you.
@@ -81,7 +81,7 @@
   .row
     .col-md-3
       .form-group
-        h4: a(href='/#{project.file}') Download STF file
+        h4: a(href='/#{project.file}') Download STL file
     .col-md-4.col-md-offset-5
       form(role="form", action="/project/printed/#{project.id}", method="post")
         input(type='hidden', name='_csrf', value=csrfToken)
@@ -115,7 +115,7 @@
             .tab-pane.fade(id='tab-review')
               h4.light You have 24 hours to review and accept this order before it goes automatically back to the Workplace.
             .tab-pane.fade(id='tab-accepted')
-              h4.light 
+              h4.light
             .tab-pane.fade.in.active(id='tab-printing')
               h4.light
                 | You can now proceed with the printing, remember that a faster service will result in a higher rating for you.

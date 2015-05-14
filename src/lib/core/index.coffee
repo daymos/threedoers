@@ -294,7 +294,7 @@ module.exports = (app, io) ->
     auth.User.findOne({_id: project.order.printer}).exec().then( (printer) ->
       if printer
         shipping = (shipping) ->
-          shippo.rate.list(object_id: shipping.object_id, currency: 'EUR').then((rates)->
+          shippo.shipment.rates(shipping.object_id, 'EUR').then((rates)->
             if rates.count and rates.count > 0
               rate = null
               price = 9999999999.0 # a lot
@@ -306,6 +306,7 @@ module.exports = (app, io) ->
 
               if rate
                 project.update 'order.rate': rate, ->
+                  console.log rate
                   return
                 res.json
                   ok: 'successes'
@@ -335,6 +336,8 @@ module.exports = (app, io) ->
               submission_date = new Date()
               submission_date.setDate(submission_date.getDate() + 2)
 
+              console.log parcel
+
               shippo.shipment.create(
                 object_purpose: "PURCHASE"
                 address_from: printer.printerAddress.object_id
@@ -344,6 +347,7 @@ module.exports = (app, io) ->
                 submission_date: submission_date)
 
             ).then( (shipping_tmp) ->
+              console.log shipping_tmp
               data['order.shipping'] = shipping_tmp
               project.update data, (error) ->
                 if error
@@ -777,7 +781,7 @@ module.exports = (app, io) ->
               receiverList:
                 receiver: [
                   {
-                      email:  'mattia@3doers.it',
+                      email:  'mattia@3doers.it',  # 3doers@gmail.com : mattia@3doers.it
                       amount: businessPayment,  # total price
                       primary: 'true'
                   },
