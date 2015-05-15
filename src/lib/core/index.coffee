@@ -290,7 +290,7 @@ module.exports = (app, io) ->
       res.render 'core/profile/settings'
 
 
-  requestShippingRate = (address, project, res) ->
+  requestShippingRate = (address, project) ->
     auth.User.findOne({_id: project.order.printer}).exec().then( (printer) ->
       if printer
         shipping = (shipping) ->
@@ -308,13 +308,6 @@ module.exports = (app, io) ->
                 project.update 'order.rate': rate, ->
                   console.log rate
                   return
-                res.json
-                  ok: 'successes'
-                  address: address
-                  charge: rate.amount_local
-            else
-              res.json
-                message: "There is not rate, use another address"
           )
 
         if printer.printerAddress
@@ -336,8 +329,6 @@ module.exports = (app, io) ->
               submission_date = new Date()
               submission_date.setDate(submission_date.getDate() + 2)
 
-              console.log parcel
-
               shippo.shipment.create(
                 object_purpose: "PURCHASE"
                 address_from: printer.printerAddress.object_id
@@ -354,80 +345,73 @@ module.exports = (app, io) ->
                   console.log arguments
               shipping(shipping_tmp)
             )
-
-        else
-          res.json
-            message: "Printer doesn't have address, please contact support or printer to add address."
       else
         logger.warning "printer #{printer} do not exists"
-        res.json
-          message: "Printer don't exists, please contact support"
+
     ).fail( (reason) ->
       console.log arguments
-      res.json
-        message: reason.raw.message
     )
 
-  app.get '/validate-address-and-rate/:id', decorators.loginRequired, (req, res) ->
-    models.STLProject.findOne({_id: req.params.id}).exec().then( (doc) ->
-      if doc
-        # if has id we already validated but search for it
-        if req.query.id
-          address = req.user.shippingAddresses.id(req.query.id)
-          requestShippingRate address, doc, res
-          return
-        else
-          req.assert('name', len: 'This field is required.').len(2)
-          req.assert('street1', len: 'This field is required.').len(2)
-          req.assert('city', len: 'This field is required.').len(2)
-          req.assert('zip_code', len: 'This field is required.').len(2)
-          req.assert('phone_no', len: 'This field is required.').len(2)
-          req.assert('country', len: 'This field is required.').len(2)
+  # app.get '/validate-address-and-rate/:id', decorators.loginRequired, (req, res) ->
+  #   models.STLProject.findOne({_id: req.params.id}).exec().then( (doc) ->
+  #     if doc
+  #       # if has id we already validated but search for it
+  #       if req.query.id
+  #         address = req.user.shippingAddresses.id(req.query.id)
+  #         requestShippingRate address, doc, res
+  #         return
+  #       else
+  #         req.assert('name', len: 'This field is required.').len(2)
+  #         req.assert('street1', len: 'This field is required.').len(2)
+  #         req.assert('city', len: 'This field is required.').len(2)
+  #         req.assert('zip_code', len: 'This field is required.').len(2)
+  #         req.assert('phone_no', len: 'This field is required.').len(2)
+  #         req.assert('country', len: 'This field is required.').len(2)
 
-          errors = req.validationErrors(true)
+  #         errors = req.validationErrors(true)
 
-          address =
-            object_purpose: "PURCHASE"
-            name: req.query.name
-            company: req.query.company
-            street1: req.query.street1
-            street_no: req.query.street_no
-            street2: req.query.street2
-            city: req.query.city
-            state: req.query.state
-            zip: req.query.zip_code
-            phone: req.query.phone_no
-            country: req.query.country
-            email: req.user.email
+  #         address =
+  #           object_purpose: "PURCHASE"
+  #           name: req.query.name
+  #           company: req.query.company
+  #           street1: req.query.street1
+  #           street_no: req.query.street_no
+  #           street2: req.query.street2
+  #           city: req.query.city
+  #           state: req.query.state
+  #           zip: req.query.zip_code
+  #           phone: req.query.phone_no
+  #           country: req.query.country
+  #           email: req.user.email
 
-          if errors
-            res.render 'core/profile/address_form',
-              errors: errors
-              title: title
-              address: address
-              postURL: postURL
-              countries: auth.EuropeCountries
-          else
-            shippo.address.create(address).then( (address) ->
-              req.user.shippingAddresses.push address
-              req.user.save (error, user) ->
-                if error
-                  console.log arguments
-                  res.send 500
-                else
-                  requestShippingRate address, doc, res
-            , (error) ->
-              console.log arguments
-              res.json
-                message: error.raw.message
-              return
-            )
-      else
-        res.send 400
-    ).fail( (reason) ->
-      console.log arguments
-      res.send 500
-    )
+  #         if errors
+  #           res.render 'core/profile/address_form',
+  #             errors: errors
+  #             title: title
+  #             address: address
+  #             postURL: postURL
+  #             countries: auth.EuropeCountries
+  #         else
+  #           shippo.address.create(address).then( (address) ->
+  #             req.user.shippingAddresses.push address
+  #             req.user.save (error, user) ->
+  #               if error
+  #                 console.log arguments
+  #                 res.send 500
+  #               else
+  #                 requestShippingRate address, doc, res
+  #           , (error) ->
+  #             console.log arguments
+  #             res.json
+  #               message: error.raw.message
+  #             return
+  #           )
+  #     else
+  #       res.send 400
+  #   ).fail( (reason) ->
+  #     console.log arguments
+  #     res.send 500
+  #   )
 
 
   # used for other views
@@ -766,6 +750,10 @@ module.exports = (app, io) ->
         printerPayment = parseFloat(doc.order.printerPayment)
         businessPayment = parseFloat(doc.order.totalPrice)
 
+        unless doc.order.rate
+          res.redirect "/project/#{ doc._id }"
+          return
+
         if req.body.shippingMethod == 'shipping' and doc.order.rate
           businessPayment = decimal.fromNumber(businessPayment + parseFloat(doc.order.rate.amount), 2).toString()
           businessPayment = parseFloat(businessPayment)
@@ -1010,19 +998,39 @@ module.exports = (app, io) ->
       if doc and doc.validateNextStatus(models.PROJECT_STATUSES.PRINT_ACCEPTED[0])
         auth.User.findOne(doc.user).exec (err, user) ->
           if user
+            # Look for user address
+            address = null
+            for _address in user.shippingAddresses
+              if _address.active
+                address = _address
+            unless address?
+              res.json msg: "User doesn't have a shipping address please ask him to add an address and activate it.", 400
+              return
+
+            # Test if printer have an address
+            unless req.user.printerAddress or req.user.printerAddress.object_id
+              res.json msg: "You don't have a shipping address please ask him to add an address and activate it.", 400
+              return
+
             if user.mailNotification
               mailer.send('mailer/printing/accept', {project: doc, user: user, site:settings.site}, {from: settings.mailer.noReply, to:[user.email], subject: settings.printing.accept.subject})
-            doc.status = models.PROJECT_STATUSES.PRINT_ACCEPTED[0]
-            doc.save()
-            res.json msg: "Accepted"
 
-            # send notification
-            auth.User.where('_id').in([req.user.id, user.id]).exec().then (docs)->
-              if docs.length
-                utils.sendNotification(io, docs, "Project <a href='/project/#{doc.id}'>#{doc.title}</a> was accepted.", 'Status changed', 'info')
-                for user in docs
-                  if user.mailNotification
-                    mailer.send('mailer/project/status', {project: doc, user: user, site:settings.site}, {from: settings.mailer.noReply, to:[user.email], subject: settings.project.status.subject})
+            doc.status = models.PROJECT_STATUSES.PRINT_ACCEPTED[0]
+            doc.save( (error, project) ->
+              unless error
+                res.json msg: "Accepted"
+                requestShippingRate(address, doc)
+                # send notification
+                auth.User.where('_id').in([req.user.id, user.id]).exec().then (docs)->
+                  if docs.length
+                    utils.sendNotification(io, docs, "Project <a href='/project/#{doc.id}'>#{doc.title}</a> was accepted.", 'Status changed', 'info')
+                    for user in docs
+                      if user.mailNotification
+                        mailer.send('mailer/project/status', {project: doc, user: user, site:settings.site}, {from: settings.mailer.noReply, to:[user.email], subject: settings.project.status.subject})
+              else
+                res.json "error saving project, please try again."
+            )
+
       else
         res.json msg: "Looks like someone accepted, try with another", 400
     ).fail( ->
@@ -1096,6 +1104,18 @@ module.exports = (app, io) ->
       )
     else
       res.send 400
+
+  app.post '/cron/update-rates', (req, res) ->
+    models.STLProject.find( 'order.rate' : {"$exists": false} ).exec().then (docs) ->
+      for project in docs
+        auth.User.findOne(project.user).exec().then (user) ->
+          address = null
+          for _address in user.shippingAddresses
+            if _address.active
+              address = _address
+          requestShippingRate(address, project)
+
+    res.send 200
 
   ###############################################
   # Socket IO event handlers
@@ -1187,7 +1207,7 @@ module.exports = (app, io) ->
           # final price - add fixed cost then this is multiplied by amount
           price = pb + fixed_cost
 
-	  # task https://trello.com/c/gPjZHlxk/190-increase-price-by-30
+          # task https://trello.com/c/gPjZHlxk/190-increase-price-by-30
           price = price + ( price * 0.3 )
 
           # another values

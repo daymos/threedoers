@@ -21,7 +21,7 @@
       .tab-pane.fade(id='tab-review')
         h4.light You have 24 hours to review and accept this order before it goes automatically back to the Workplace.
       .tab-pane.fade.in.active(id='tab-accepted')
-        h4.light 
+        h4.light
       .tab-pane.fade(id='tab-printing')
         h4.light
           | You can now proceed with the printing, remember that a faster service will result in a higher rating for you.
@@ -111,7 +111,7 @@
             .tab-pane.fade(id='tab-review')
               h4.light You have 24 hours to review and accept this order before it goes automatically back to the Workplace.
             .tab-pane.fade.in.active(id='tab-accepted')
-              h4.light 
+              h4.light
             .tab-pane.fade(id='tab-printing')
               h4.light
                 | You can now proceed with the printing, remember that a faster service will result in a higher rating for you.
@@ -176,7 +176,7 @@
                     td.value #{project.order.printerPayment} €
                   tr
                     td.desc Shipping:
-                    td.value -
+                    td.value #{project.order.rate?"" + project.order.rate + " €": "Waiting for rate."}
                   tr.separator-small
                     td(col-span='2')
                   tr
@@ -214,7 +214,7 @@
                               button.btn.btn-xlg.btn-block.btn-green(type='submit') CANCEL ORDER
 
           .col-md-4.col-md-offset-5
-            form#payment-form
+            form#hidden-pay-form(action="/project/pay/#{project.id}", method="post")
               .form-group
                 button.btn.btn-xlg.btn-block.btn-green(href='#', type='submit') PROCEED WITH PAYMENT
             p.text-muted.text-light.text-xsmall The payment will be secured on 3Doers account and won’t be released to the printer until the order has been completed and delivered to you.
@@ -222,95 +222,95 @@
         .page-subheader
           h3 Conversation with printer:
 
-        form#hidden-pay-form(action="/project/pay/#{project.id}", method="post")
-          input(type='hidden', name='_csrf', value=csrfToken)
-          input#shippingAddress(type='hidden', name='shippingAddress')
-          input#shippingMethod(type='hidden', name='shippingMethod')
-          input#shippingRate(type='hidden', name='shippingRate')
+        //- form#hidden-pay-form(action="/project/pay/#{project.id}", method="post")
+        //-   input(type='hidden', name='_csrf', value=csrfToken)
+        //-   input#shippingAddress(type='hidden', name='shippingAddress')
+        //-   input#shippingMethod(type='hidden', name='shippingMethod')
+        //-   input#shippingRate(type='hidden', name='shippingRate')
 
-        #payment-modal.modal.modal-3d.fade.in
-          .modal-dialog
-            .modal-content
-              .modal-header
-                button.close(type='button', data-dismiss='modal')
-                  span(aria-hidden='true') &times;
-                    span.sr-only Close
-                h4.modal-title Shipping
-              .modal-body
-                div#address-selection
-                  h4.light Select the address where we has to ship.
-                  // Nav tabs
-                  ul.nav.nav-tabs.nav-tabs-3doers-small.nav-justified(role='tablist')
-                    li.active
-                      a(href='#saved', role='tab', data-toggle='tab') Saved
-                    li
-                      a(href='#new', role='tab', data-toggle='tab') New
-                  //
-                     Tab panes
-                  .tab-content
-                    #saved.tab-pane.active.fade.in
-                      - if (user.shippingAddresses.length > 0)
-                        .row
-                          for address in user.shippingAddresses
-                            address.col-md-4
-                              strong #{address['company']}
-                              br
-                              |#{address['street1']}
-                              br
-                              |#{address['city']}, #{address['zip']}, #{address['country']}
-                              br
-                              |#{address['phone']}
-                              br
-                              a.select-saved-address.btn.btn-default.btn-xs.grey-3doers(data-id="#{ address.id }", href="#") Select
-                      - else
-                        | you don't have saved any address
-                      button.close-payment-modal.btn.btn-lg.btn-green Cancel
-                    #new.tab-pane.fade
-                      form
-                        .form-group
-                          input.form-control.input-text(type='text', placeholder='CONTACT', name='name')
-                        .form-group
-                          input.form-control.input-text(type='text', placeholder='COMPANY', name='company')
-                        .form-group
-                          input.form-control.input-text(type='text', placeholder='ADDRESS 1', name='street1')
-                        .form-group
-                          input.form-control.input-text(type='text', placeholder='BUILDING NO (OPTIONAL)', name='street_no')
-                        .form-group
-                          input.form-control.input-text(type='text', placeholder='ADDRESS 2 (OPTIONAL)', name='street2')
-                        .form-group
-                          input.form-control.input-text(type='text', placeholder='CITY', name='city')
-                        .form-group
-                          input.form-control.input-text(type='text', placeholder='STATE', name='state')
-                        .form-group
-                          input.form-control.input-text(type='text', placeholder='ZIP CODE', name='zip_code')
-                        .form-group
-                          input.form-control.input-text(type='text', placeholder='PHONE NO.', name='phone_no')
-                        .form-group
-                          select.form-control(name="country")
-                            for country in countries
-                              option#country(value='#{ country.abbr }') #{ country.name }
+        //- #payment-modal.modal.modal-3d.fade.in
+        //-   .modal-dialog
+        //-     .modal-content
+        //-       .modal-header
+        //-         button.close(type='button', data-dismiss='modal')
+        //-           span(aria-hidden='true') &times;
+        //-             span.sr-only Close
+        //-         h4.modal-title Shipping
+        //-       .modal-body
+        //-         div#address-selection
+        //-           h4.light Select the address where we has to ship.
+        //-           // Nav tabs
+        //-           ul.nav.nav-tabs.nav-tabs-3doers-small.nav-justified(role='tablist')
+        //-             li.active
+        //-               a(href='#saved', role='tab', data-toggle='tab') Saved
+        //-             li
+        //-               a(href='#new', role='tab', data-toggle='tab') New
+        //-           //
+        //-              Tab panes
+        //-           .tab-content
+        //-             #saved.tab-pane.active.fade.in
+        //-               - if (user.shippingAddresses.length > 0)
+        //-                 .row
+        //-                   for address in user.shippingAddresses
+        //-                     address.col-md-4
+        //-                       strong #{address['company']}
+        //-                       br
+        //-                       |#{address['street1']}
+        //-                       br
+        //-                       |#{address['city']}, #{address['zip']}, #{address['country']}
+        //-                       br
+        //-                       |#{address['phone']}
+        //-                       br
+        //-                       a.select-saved-address.btn.btn-default.btn-xs.grey-3doers(data-id="#{ address.id }", href="#") Select
+        //-               - else
+        //-                 | you don't have saved any address
+        //-               button.close-payment-modal.btn.btn-lg.btn-green Cancel
+        //-             #new.tab-pane.fade
+        //-               form
+        //-                 .form-group
+        //-                   input.form-control.input-text(type='text', placeholder='CONTACT', name='name')
+        //-                 .form-group
+        //-                   input.form-control.input-text(type='text', placeholder='COMPANY', name='company')
+        //-                 .form-group
+        //-                   input.form-control.input-text(type='text', placeholder='ADDRESS 1', name='street1')
+        //-                 .form-group
+        //-                   input.form-control.input-text(type='text', placeholder='BUILDING NO (OPTIONAL)', name='street_no')
+        //-                 .form-group
+        //-                   input.form-control.input-text(type='text', placeholder='ADDRESS 2 (OPTIONAL)', name='street2')
+        //-                 .form-group
+        //-                   input.form-control.input-text(type='text', placeholder='CITY', name='city')
+        //-                 .form-group
+        //-                   input.form-control.input-text(type='text', placeholder='STATE', name='state')
+        //-                 .form-group
+        //-                   input.form-control.input-text(type='text', placeholder='ZIP CODE', name='zip_code')
+        //-                 .form-group
+        //-                   input.form-control.input-text(type='text', placeholder='PHONE NO.', name='phone_no')
+        //-                 .form-group
+        //-                   select.form-control(name="country")
+        //-                     for country in countries
+        //-                       option#country(value='#{ country.abbr }') #{ country.name }
 
-                        .row
-                          .col-xs-6
-                            button.btn.btn-lg.btn-default.close-payment-modal Cancel
-                          .col-xs-6.text-right
-                            button#validate-address.btn.btn-lg.btn-green
-                              span Validate
-                        .text-right
-                div#pay-values(style='display: none;')
-                  h5 Pay Now
-                  p Price:&nbsp;
-                    span#pay-product-price
-                  p Estimated Shipping:&nbsp;
-                    span#pay-shipping-price
-                  hr
-                  p Estimated Total:&nbsp;
-                    span#pay-total-price
+        //-                 .row
+        //-                   .col-xs-6
+        //-                     button.btn.btn-lg.btn-default.close-payment-modal Cancel
+        //-                   .col-xs-6.text-right
+        //-                     button#validate-address.btn.btn-lg.btn-green
+        //-                       span Validate
+        //-                 .text-right
+        //-         div#pay-values(style='display: none;')
+        //-           h5 Pay Now
+        //-           p Price:&nbsp;
+        //-             span#pay-product-price
+        //-           p Estimated Shipping:&nbsp;
+        //-             span#pay-shipping-price
+        //-           hr
+        //-           p Estimated Total:&nbsp;
+        //-             span#pay-total-price
 
-                  button.close-payment-modal Cancel
-                  button#pay-payment-modal.btn.btn-default.btn-lg.btn-xsmall Pay
+        //-           button.close-payment-modal Cancel
+        //-           button#pay-payment-modal.btn.btn-default.btn-lg.btn-xsmall Pay
 
-        br
+        //- br
 
 .row
   .col-md-8
