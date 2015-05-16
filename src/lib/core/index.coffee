@@ -306,6 +306,7 @@ module.exports = (app, io) ->
 
               if rate
                 project.update 'order.rate': rate, ->
+                  console.log project.title + ": " + rate
                   return
           )
 
