@@ -180,9 +180,9 @@
                   tr.separator-small
                     td(col-span='2')
                   tr
-                    td.desc.text-shadow-3doers Printer:
+                    td.desc.text-shadow-3doers Total Price:
                     td.value
-                      h3.normal #{project.order.totalPrice} €
+                      h3.normal #{project.order.totalPrice + project.order.rate.amount} €
                   tr
                     td(colspan='2')
                       p.final-price *Final price will include a shipping fee and will be calculated once the order has been accepted by a printer.
