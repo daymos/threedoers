@@ -306,7 +306,6 @@ module.exports = (app, io) ->
 
               if rate
                 project.update 'order.rate': rate, ->
-                  console.log rate
                   return
           )
 
@@ -338,7 +337,6 @@ module.exports = (app, io) ->
                 submission_date: submission_date)
 
             ).then( (shipping_tmp) ->
-              console.log shipping_tmp
               data['order.shipping'] = shipping_tmp
               project.update data, (error) ->
                 if error
@@ -1113,7 +1111,8 @@ module.exports = (app, io) ->
           for _address in user.shippingAddresses
             if _address.active
               address = _address
-          requestShippingRate(address, project)
+          if address?
+            requestShippingRate(address, project)
 
     res.send 200
 
