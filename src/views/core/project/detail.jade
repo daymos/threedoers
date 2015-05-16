@@ -118,7 +118,14 @@ block scripts
         $('#deny, #accept').click(
           function(event) {
             event.preventDefault();
-            $.post($(this).attr('href'), function(){location.reload();})
+            $.ajax({
+              url: $(this).attr('href'),
+              success: function() { location.reload(); },
+              method: 'POST',
+              statusCode: {
+                400: function (data) { alert(data.responseJSON.msg) }
+              }
+            });
           }
         );
         $(window).resize(respondCanvas);

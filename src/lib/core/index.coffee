@@ -1008,8 +1008,8 @@ module.exports = (app, io) ->
               return
 
             # Test if printer have an address
-            unless req.user.printerAddress or req.user.printerAddress.object_id
-              res.json msg: "You don't have a shipping address please ask him to add an address and activate it.", 400
+            unless req.user.printerAddress and req.user.printerAddress.object_id
+              res.json msg: "You don't have a shipping address please add an address.", 400
               return
 
             if user.mailNotification
