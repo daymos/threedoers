@@ -300,7 +300,7 @@ module.exports = (app, io) ->
               price = 9999999999.0 # a lot
               for rate_tmp in rates.results
                 price_tmp = parseFloat(rate_tmp.amount_local)
-                if rate_tmp.object_purpose == "PURCHASE" and price > price_tmp and price_tmp > 0
+                if rate_tmp.object_purpose == "PURCHASE" and rate_tmp.currency == 'EUR' and price > price_tmp and price_tmp > 0
                   rate = rate_tmp
                   price = price_tmp
 

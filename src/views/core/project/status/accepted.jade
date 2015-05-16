@@ -75,7 +75,7 @@
               td.value #{project.order.businessPayment} €
             tr
               td.desc Shipping:
-              td.value -
+              td.value #{project.order.rate?"" + project.order.rate.ammount + " €": "Waiting for rate."}
             tr.separator
               td(col-span='2')
             tr
@@ -176,7 +176,7 @@
                     td.value #{project.order.printerPayment} €
                   tr
                     td.desc Shipping:
-                    td.value #{project.order.rate?"" + project.order.rate + " €": "Waiting for rate."}
+                    td.value #{project.order.rate?"" + project.order.rate.ammount + " €": "Waiting for rate."}
                   tr.separator-small
                     td(col-span='2')
                   tr
