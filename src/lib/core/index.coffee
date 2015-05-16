@@ -931,7 +931,7 @@ module.exports = (app, io) ->
         res.send 500
       else
         printerJobs = req.user.printerJobs || 1  # backward compatibility
-        models.STLProject.find(status: models.PROJECT_STATUSES.PRINT_REQUESTED[0]).exec (err, available) ->
+        models.STLProject.find(status: models.PROJECT_STATUSES.PRINT_REQUESTED[0], user: {$ne: req.user.id}).exec (err, available) ->
           if err
             console.log arguments
             res.send 500
