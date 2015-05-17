@@ -761,11 +761,12 @@ module.exports = (app, io) ->
           res.redirect "/project/#{ doc._id }?msg=Your project doesn't have a rate, please wait while we are collecting it."
           return
 
-        if req.body.shippingMethod == 'shipping' and doc.order.rate
-          businessPayment = decimal.fromNumber(businessPayment + parseFloat(doc.order.rate.amount), 2).toString()
-          businessPayment = parseFloat(businessPayment)
+        # no more control of shipping method
+        # if req.body.shippingMethod == 'shipping' and doc.order.rate
+        businessPayment = decimal.fromNumber(businessPayment + parseFloat(doc.order.rate.amount), 2).toString()
+        businessPayment = parseFloat(businessPayment)
 
-        req.session.deliveryMethod = req.body.shippingMethod
+        req.session.deliveryMethod = 'shipping' # req.body.shippingMethod
 
         paypalSdk = new Paypal
           userId: settings.paypal.adaptive.user
