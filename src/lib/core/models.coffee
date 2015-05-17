@@ -5,6 +5,7 @@ models = require('./models')
 modelsNot = require('../notification/models')
 mailer = require('../mailer').mailer
 settings = require('../../config')
+decimal = require('Deci-mal').decimal
 Schema = mongoose.Schema
 ObjectId = Schema.ObjectId
 
@@ -219,6 +220,14 @@ STLProject.methods.validNextStatus = ->
     9: [PROJECT_STATUSES.ARCHIVED]
 
   return states[@status]
+
+STLProject
+  .virtual('orderPrice')
+  .get  ->
+    if this.order.rate?
+      decimal.fromNumber(parseFloat(this.order.totalPrice) + parseFloat(this.order.rate.amount), 2).toString()
+    else
+      this.order.totalPrice
 
 STLProject.pre 'save', (next) ->
   # only editable at this points, only status should be edited later
