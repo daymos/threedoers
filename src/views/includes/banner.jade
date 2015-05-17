@@ -2,8 +2,12 @@
   .row
     .col-md-6
       .step
-        a(href="/project/upload")
-          img.img-circle(src='/img/icons_printing.png', style='width: 100px; height: 100px;')
+        if user.printer == 'accepted'
+          a(href="#", title="As a printer you can not upload files. Create a new profile as a user to place orders.")
+            img.img-circle(src='/img/icons_printing.png', style='width: 100px; height: 100px;')
+        else
+          a(href="/project/upload")
+            img.img-circle(src='/img/icons_printing.png', style='width: 100px; height: 100px;')
         h5 Send to print
         p
           | Upload an STL file, see the price
