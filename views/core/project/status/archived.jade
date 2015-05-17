@@ -21,7 +21,7 @@
       .tab-pane.fade(id='tab-review')
         h4.light You have 24 hours to review and accept this order before it goes automatically back to the Workplace.
       .tab-pane.fade(id='tab-accepted')
-        h4.light 
+        h4.light
       .tab-pane.fade(id='tab-printing')
         h4.light
           | You can now proceed with the printing, remember that a faster service will result in a higher rating for you.
@@ -37,7 +37,10 @@
         .job-details
           .row
             .col-md-5
-              figure: img.img-responsive(src='/#{project.image}')
+              - if (project.image)
+                img.img-responsive(src='/#{project.image}')
+              - else
+                img.img-responsive(src='/images/job-preview-no-screen.jpg')
             .col-md-7
               .info
                 p
@@ -101,7 +104,7 @@
             .tab-pane.fade(id='tab-review')
               h4.light You have 24 hours to review and accept this order before it goes automatically back to the Workplace.
             .tab-pane.fade(id='tab-accepted')
-              h4.light 
+              h4.light
             .tab-pane.fade.in.active(id='tab-printing')
               h4.light
                 | You can now proceed with the printing, remember that a faster service will result in a higher rating for you.
@@ -130,7 +133,10 @@
               .job-details
                 .row
                   .col-md-5
-                    figure: img.img-responsive(src='/#{project.image}')
+                    - if (project.image)
+                      img.img-responsive(src='/#{project.image}')
+                    - else
+                      img.img-responsive(src='/images/job-preview-no-screen.jpg')
                   .col-md-7
                     .info
                       p

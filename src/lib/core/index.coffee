@@ -673,6 +673,14 @@ module.exports = (app, io) ->
 
 
   app.post '/project/order/:id', decorators.loginRequired, (req, res, next) ->
+    address = null
+    for _address in req.user.shippingAddresses
+      if _address.active
+        address = _address
+    # if not address ask user to add and activate an address before allowing to place an order
+    unless address?
+      res.redirect "/project/#{req.params.id}?msg=You don't have an active address, add and/or activate one it before order."
+      return
     models.STLProject.findOne({_id: req.params.id}).exec().then( (doc) ->
       if doc and doc.validateNextStatus(models.PROJECT_STATUSES.PRINT_REQUESTED[0])
         ammount =  Math.abs(if (req.body.ammount and parseInt(req.body.ammount)) then parseInt(req.body.ammount) else 1)
@@ -699,7 +707,7 @@ module.exports = (app, io) ->
             for user in docs
               if user.mailNotification
                 mailer.send('mailer/project/status', {project: doc, user: user, site:settings.site}, {from: settings.mailer.noReply, to:[user.email], subject: settings.project.status.subject})
-      res.redirect "/project/#{req.params.id}"
+        res.redirect "/project/#{req.params.id}"
     ).fail( ->
       console.log arguments
       res.send 500
@@ -750,7 +758,7 @@ module.exports = (app, io) ->
         businessPayment = parseFloat(doc.order.totalPrice)
 
         unless doc.order.rate
-          res.redirect "/project/#{ doc._id }"
+          res.redirect "/project/#{ doc._id }?msg=Your project doesn't have a rate, please wait while we are collecting it."
           return
 
         if req.body.shippingMethod == 'shipping' and doc.order.rate

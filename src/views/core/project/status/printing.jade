@@ -37,7 +37,10 @@
         .job-details
           .row
             .col-md-5
-              figure: img.img-responsive(src='/#{project.image}')
+              - if (project.image)
+                img.img-responsive(src='/#{project.image}')
+              - else
+                img.img-responsive(src='/images/job-preview-no-screen.jpg')
             .col-md-7
               .info
                 p
@@ -131,7 +134,10 @@
               .job-details
                 .row
                   .col-md-5
-                    figure: img.img-responsive(src='/#{project.image}')
+                    - if (project.image)
+                      img.img-responsive(src='/#{project.image}')
+                    - else
+                      img.img-responsive(src='/images/job-preview-no-screen.jpg')
                   .col-md-7
                     .info
                       p

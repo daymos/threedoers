@@ -40,7 +40,10 @@ block content
                   .col-md-3.col-sm-6
                     article.job
                       h4.job-name #{project.title}
-                      figure.job-image: img.img-responsive(src='/#{project.image}')
+                      - if (project.image)
+                        img.img-responsive(src='/#{project.image}')
+                      - else
+                        img.img-responsive(src='/images/job-preview-no-screen.jpg')
                       .job-wtime This order has been waiting for
                         h5(data-time='/#{project.order.placedAt}')
                       .form-group.text-center

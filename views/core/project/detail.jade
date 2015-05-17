@@ -140,7 +140,18 @@ block scripts
       mycanvas.attr('height', jQuery("#wrapper-canvas").height());
     }
 
+    function getParameterByName(name) {
+       name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+       var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+           results = regex.exec(location.search);
+       return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+    }
 
+    var message = getParameterByName('msg');
+
+    if (message) {
+      alert(message);
+    }
 
     //Initial call
     respondCanvas();

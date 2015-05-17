@@ -42,7 +42,10 @@
         .job-details
           .row
             .col-md-5
-              figure: img.img-responsive(src='/#{project.image}')
+              - if (project.image)
+                img.img-responsive(src='/#{project.image}')
+              - else
+                img.img-responsive(src='/images/job-preview-no-screen.jpg')
             .col-md-7
               .info
                 p
@@ -140,7 +143,10 @@
               .job-details
                 .row
                   .col-md-5
-                    figure: img.img-responsive(src='/#{project.image}')
+                    - if (project.image)
+                      img.img-responsive(src='/#{project.image}')
+                    - else
+                      img.img-responsive(src='/images/job-preview-no-screen.jpg')
                   .col-md-7
                     .info
                       p
@@ -182,7 +188,7 @@
                   tr
                     td.desc.text-shadow-3doers Total Price:
                     td.value
-                      h3.normal #{project.order.totalPrice + project.order.rate.amount} €
+                      h3.normal #{project.order.rate?(project.order.totalPrice + project.order.rate.amount):project.order.totalPrice} €
                   tr
                     td(colspan='2')
                       p.final-price *Final price will include a shipping fee and will be calculated once the order has been accepted by a printer.
