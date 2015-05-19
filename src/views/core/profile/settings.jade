@@ -86,7 +86,7 @@ block content
               form(action='/paypal/verify', method='post')
                 br
                 .form-group
-                  input.form-control.input-text.resize-input-form(name="email")
+                  input.form-control.input-text.resize-input-form(name="email", value="#{user.paypalEmail?user.paypalEmail:''}")
                 .form-group
                   input.btn.btn-green(type="submit", value=" Validate Paypal Account ")
 
