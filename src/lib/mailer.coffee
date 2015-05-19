@@ -27,6 +27,9 @@ class Mailer
       else
         throw new Error "No options sent to mailer" unless options?
         options.html = html
+        console.log "******************* mailer **********************"
+        console.log options
+        console.log "***************** end mailer ********************"
         @transport.sendMail options, (err, response) ->
           if err
             deferred.reject err

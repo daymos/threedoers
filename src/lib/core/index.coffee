@@ -1077,7 +1077,6 @@ module.exports = (app, io) ->
         errorLanguage:  'en_US'
 
     paypalSdk.getVerifiedStatus payload, (message, response) ->
-      console.log response
       if response.error
         res.redirect "/profile/settings?msg=#{ response.error[0].message }"
       else
