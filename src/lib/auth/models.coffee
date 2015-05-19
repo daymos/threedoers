@@ -369,7 +369,7 @@ User = new Schema
     default: 1
 
   paypalEmail:
-    type: Number
+    type: String
 
   designJobs:
       type: Number

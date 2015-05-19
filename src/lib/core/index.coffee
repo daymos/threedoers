@@ -795,7 +795,7 @@ module.exports = (app, io) ->
                       primary: 'true'
                   },
                   {
-                      email:  user.email,
+                      email:  user.paypalEmail,
                       amount: printerPayment,
                       primary: 'false'
                   }
@@ -1081,10 +1081,11 @@ module.exports = (app, io) ->
       if response.error
         res.redirect "/profile/settings?msg=#{ response.error[0].message }"
       else
-        if response.accountStatus and response.accountStatus == 'VERIFIED'
+        if response.accountStatus?
           req.user.paypalEmail = req.body.email
-          req.user.save()
-          res.redirect "/profile/settings"
+          req.user.save( (error, doc) ->
+            res.redirect "/profile/settings"
+          )
         else
           res.redirect "/profile/settings?msg=Your account is not verified"
 
