@@ -1020,6 +1020,10 @@ module.exports = (app, io) ->
               res.json msg: "You don't have a shipping address please add an address.", 400
               return
 
+            unless req.user.paypalEmail
+              res.json msg: "You don't have a valid paypal account, please go to settings and setup", 400
+              return
+
             if user.mailNotification
               mailer.send('mailer/printing/accept', {project: doc, user: user, site:settings.site}, {from: settings.mailer.noReply, to:[user.email], subject: settings.printing.accept.subject})
 
@@ -1047,6 +1051,43 @@ module.exports = (app, io) ->
     )
 
   app.post '/'
+
+
+  app.post '/paypal/verify', decorators.printerRequired, (req, res) ->
+    req.assert('email', 'valid email required').isEmail()
+    errors = req.validationErrors()
+
+    if errors
+      res.redirect "/profile/settings"
+      return
+
+    paypalSdk = new Paypal
+      userId: settings.paypal.adaptive.user
+      password:  settings.paypal.adaptive.password
+      signature: settings.paypal.adaptive.signature
+      appId: settings.paypal.adaptive.appId
+      sandbox:   settings.paypal.adaptive.debug
+
+    payload =
+      emailAddress: req.body.email
+      matchCriteria: 'NAME'
+      firstName: req.user.firstName
+      lastName: req.user.lastName
+      requestEnvelope:
+        errorLanguage:  'en_US'
+
+    paypalSdk.getVerifiedStatus payload, (message, response) ->
+      console.log response
+      if response.error
+        res.redirect "/profile/settings?msg=#{ response.error[0].message }"
+      else
+        if response.accountStatus and response.accountStatus == 'VERIFIED'
+          req.user.paypalEmail = req.body.email
+          req.user.save()
+          res.redirect "/profile/settings"
+        else
+          res.redirect "/profile/settings?msg=Your account is not verified"
+
 
   app.post '/printing/deny/:id', decorators.printerRequired, (req, res) ->
     models.STLProject.findOne({_id: req.params.id}).exec().then( (doc) ->

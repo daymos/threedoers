@@ -302,7 +302,7 @@ Address = new Schema
 
   messages:
     type: []
-  
+
   active:
     type: Boolean
     default: false
@@ -368,6 +368,9 @@ User = new Schema
     type: Number
     default: 1
 
+  paypalEmail:
+    type: Number
+
   designJobs:
       type: Number
       default: 0
@@ -406,7 +409,7 @@ User = new Schema
     type: [Address]
 
   shippingAddress:
-    type: {} 
+    type: {}
 
   printerAddress:
     type: Object

@@ -18,7 +18,7 @@ class Mailer
   send: (template, context, options) ->
     deferred = q.defer()
 
-    context.cache = true  # enabling cache for consolidate
+    # context.cache = true  # enabling cache for consolidate
 
     consolidate.jade "#{settings.rootDir}/views/#{template}.jade", context, (err, html) =>
       if err
