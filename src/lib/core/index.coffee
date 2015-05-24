@@ -162,7 +162,8 @@ module.exports = (app, io) ->
   app.get '/project/:id', (req, res, next) ->
     filterDict={_id: req.params.id}
     try
-      filterDict.$or=[{user: req.user.id}, {'order.printer': req.user.id}]
+      unless req.user.admin
+        filterDict.$or=[{user: req.user.id}, {'order.printer': req.user.id}]
     catch e
       console.log e
 
@@ -836,6 +837,7 @@ module.exports = (app, io) ->
             updatedData =
               status: models.PROJECT_STATUSES.PRINTING[0]
               'order.deliveryMethod': req.session.deliveryMethod
+              'order.printingStartedAt': new Date()
             doc.update updatedData, (error) ->
               unless error
                 # send notification
@@ -1107,6 +1109,56 @@ module.exports = (app, io) ->
       res.send 500
     )
 
+
+  app.get '/admin/project/archive/:id', decorators.loginRequired, (req, res) ->
+    unless req.user.admin
+      res.send 503
+      return
+
+    models.STLProject.findOne({_id: req.params.id, status: models.PROJECT_STATUSES.PAYED[0]}).exec().then( (doc) ->
+
+      unless doc
+        res.send 404
+        return
+
+      doc.status = models.PROJECT_STATUSES.ARCHIVED[0]
+      doc.save( ->
+        res.redirect '/admin/projects'
+      )
+    )
+
+  app.get '/admin/project/release-payment/:id', decorators.loginRequired, (req, res) ->
+    unless req.user.admin
+      res.send 503
+      return
+
+    models.STLProject.findOne({_id: req.params.id, 'order.secundaryPaid': false, status: models.PROJECT_STATUSES.PAYED[0]}).exec().then( (doc) ->
+
+      unless doc
+        res.send 404
+        return
+
+      paypalSdk = new Paypal
+        userId: settings.paypal.adaptive.user
+        password:  settings.paypal.adaptive.password
+        signature: settings.paypal.adaptive.signature
+        appId: settings.paypal.adaptive.appId
+        sandbox:   settings.paypal.adaptive.debug
+
+      payload =
+        payKey: doc.order.payKey
+        requestEnvelope:
+          errorLanguage:  'en_US'
+
+      paypalSdk.executePayment payload, ->
+        console.log "payment exec uted"
+        console.log arguments
+        res.redirect '/admin/projects'
+    ).fail ->
+      console.log arguments
+      res.redirect '/admin/projects'
+
+
   app.post '/goshippo-webhook/', (req, res) ->
     if req.body.object_id
       models.STLProject.findOne('order.transaction.object_id': req.body.object_id).exec().then( (doc) ->
@@ -1170,6 +1222,35 @@ module.exports = (app, io) ->
             requestShippingRate(address, project)
 
     res.send 200
+
+  app.get '/admin/projects', decorators.loginRequired, (req, res) ->
+    unless req.user.admin
+      res.send 403  # forbidden if not admin
+      return
+
+    page = parseInt(req.query.page || 1)
+    limit = parseInt(req.query.limit || 10)
+
+    # ensure are valid params
+    page = if page > 0 then page else 1
+    limit = if limit > 1 then limit else 10
+
+    skip = (page - 1) * limit
+
+    models.STLProject.find({'order.secundaryPaid': false, status: models.PROJECT_STATUSES.PAYED[0]}).count().exec().then( (count) ->
+      models.STLProject.find({'order.secundaryPaid': false, status: models.PROJECT_STATUSES.PAYED[0]}, null, {skip: skip, limit: limit}).exec().then( (projects) ->
+        # generate pagination info
+        pagination =
+          hasPrev: page > 1  # if page > 1 of course will have prev
+          hasNext: (skip + projects.length) < count # if skip plus projects length should be less than total
+          page: page
+          pages: Math.floor(if count % limit == 0 then count / limit else (count / limit) + 1)
+        console.log pagination
+        res.render 'admin/projects/list', {projects: projects, pagination: pagination}
+      )
+    ).fail ->
+      console.log arguments
+      res.send 500
 
   ###############################################
   # Socket IO event handlers
