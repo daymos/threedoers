@@ -1152,8 +1152,8 @@ module.exports = (app, io) ->
 
       paypalSdk.executePayment payload, ->
         console.log "payment exec uted"
+        console.log arguments
         doc.update {'order.secundaryPaid': true}, ->
-         console.log arguments
          res.redirect '/admin/projects'
     ).fail ->
       console.log arguments
