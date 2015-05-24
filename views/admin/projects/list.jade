@@ -22,6 +22,7 @@ block content
                 th Title
                 th Amount
                 th Paid
+                th Paymend Released
                 th Waiting Time
                 th Actions
             tbody
@@ -31,10 +32,15 @@ block content
                     a(href="/project/#{ project._id }") #{ project.title }
                   td #{ project.order.ammount }
                   td #{ project.order.totalPrice }
+                  td #{ project.order.secundaryPaid?'True':'False' }
                   td.time(data-time='#{project.order.printingStartedAt}')
                   td
-                    a(href="/admin/project/release-payment/#{project._id}")
-                      span.glyphicon.glyphicon-credit-card
+                    if project.order.secundaryPaid
+                      a(href="/admin/project/release-payment/#{project._id}")
+                        span.glyphicon.glyphicon-credit-card
+                    else
+                      a(href="#")
+                        span.glyphicon.glyphicon-credit-card
                     &nbsp;&nbsp;&nbsp;&nbsp;
                     a(href="#")
                       span.glyphicon.glyphicon-remove-sign

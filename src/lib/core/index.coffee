@@ -1152,8 +1152,9 @@ module.exports = (app, io) ->
 
       paypalSdk.executePayment payload, ->
         console.log "payment exec uted"
-        console.log arguments
-        res.redirect '/admin/projects'
+        doc.update {'order.secundaryPaid': true}, ->
+         console.log arguments
+         res.redirect '/admin/projects'
     ).fail ->
       console.log arguments
       res.redirect '/admin/projects'
@@ -1237,8 +1238,8 @@ module.exports = (app, io) ->
 
     skip = (page - 1) * limit
 
-    models.STLProject.find({$or: [{'order.secundaryPaid': false}, {'order.secundaryPaid': null}], status: models.PROJECT_STATUSES.PRINTED[0]}).count().exec().then( (count) ->
-      models.STLProject.find({$or: [{'order.secundaryPaid': false}, {'order.secundaryPaid': null}], status: models.PROJECT_STATUSES.PRINTED[0]}, null, {skip: skip, limit: limit}).exec().then( (projects) ->
+    models.STLProject.find({status: models.PROJECT_STATUSES.PRINTED[0]}).count().exec().then( (count) ->
+      models.STLProject.find({status: models.PROJECT_STATUSES.PRINTED[0]}, null, {skip: skip, limit: limit}).exec().then( (projects) ->
         # generate pagination info
         pagination =
           hasPrev: page > 1  # if page > 1 of course will have prev
