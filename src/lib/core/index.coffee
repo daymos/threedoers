@@ -1132,7 +1132,7 @@ module.exports = (app, io) ->
       res.send 503
       return
 
-    models.STLProject.findOne({_id: req.params.id, 'order.secundaryPaid': false, status: models.PROJECT_STATUSES.PAYED[0]}).exec().then( (doc) ->
+    models.STLProject.findOne({_id: req.params.id, $or: [{'order.secundaryPaid': false}, {'order.secundaryPaid': null}], status: models.PROJECT_STATUSES.PAYED[0]}).exec().then( (doc) ->
 
       unless doc
         res.send 404
@@ -1237,15 +1237,15 @@ module.exports = (app, io) ->
 
     skip = (page - 1) * limit
 
-    models.STLProject.find({'order.secundaryPaid': false, status: models.PROJECT_STATUSES.PAYED[0]}).count().exec().then( (count) ->
-      models.STLProject.find({'order.secundaryPaid': false, status: models.PROJECT_STATUSES.PAYED[0]}, null, {skip: skip, limit: limit}).exec().then( (projects) ->
+    models.STLProject.find({$or: [{'order.secundaryPaid': false}, {'order.secundaryPaid': null}], status: models.PROJECT_STATUSES.PAYED[0]}).count().exec().then( (count) ->
+      models.STLProject.find({$or: [{'order.secundaryPaid': false}, {'order.secundaryPaid': null}], status: models.PROJECT_STATUSES.PAYED[0]}, null, {skip: skip, limit: limit}).exec().then( (projects) ->
         # generate pagination info
         pagination =
           hasPrev: page > 1  # if page > 1 of course will have prev
           hasNext: (skip + projects.length) < count # if skip plus projects length should be less than total
           page: page
           pages: Math.floor(if count % limit == 0 then count / limit else (count / limit) + 1)
-        console.log pagination
+
         res.render 'admin/projects/list', {projects: projects, pagination: pagination}
       )
     ).fail ->
