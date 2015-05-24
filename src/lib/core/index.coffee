@@ -1150,9 +1150,10 @@ module.exports = (app, io) ->
         requestEnvelope:
           errorLanguage:  'en_US'
 
-      paypalSdk.executePayment payload, ->
-        console.log "payment exec uted"
-        console.log arguments
+      paypalSdk.executePayment payload, (message, response)->
+        console.log "payment executed"
+        if response.error
+          console.log response.error
         doc.update {'order.secundaryPaid': true}, ->
          res.redirect '/admin/projects'
     ).fail ->
