@@ -1159,7 +1159,7 @@ module.exports = (app, io) ->
       res.redirect '/admin/projects'
 
 
-  app.post '/goshippo-webhook/', (req, res) ->
+  app.all '/goshippo-webhook/', (req, res) ->
     if req.body.object_id
       models.STLProject.findOne('order.transaction.object_id': req.body.object_id).exec().then( (doc) ->
         console.log "******************** GoShippo **********************"
