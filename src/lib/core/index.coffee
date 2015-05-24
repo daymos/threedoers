@@ -1154,8 +1154,9 @@ module.exports = (app, io) ->
         console.log "payment executed"
         if response.error
           console.log response.error
-        doc.update {'order.secundaryPaid': true}, ->
-         res.redirect '/admin/projects'
+        else
+          doc.update {'order.secundaryPaid': true}
+        res.redirect '/admin/projects'
     ).fail ->
       console.log arguments
       res.redirect '/admin/projects'

@@ -32,7 +32,7 @@ block content
                     a(href="/project/#{ project._id }") #{ project.title }
                   td #{ project.order.ammount }
                   td #{ project.order.totalPrice }
-                  td.text-right #{ project.order.secundaryPaid?'True':'False' }
+                  td.text-center #{ project.order.secundaryPaid?'True':'False' }
                   td.time(data-time='#{project.order.printingStartedAt}')
                   td
                     if project.order.secundaryPaid
