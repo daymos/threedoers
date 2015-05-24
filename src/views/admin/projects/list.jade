@@ -36,10 +36,10 @@ block content
                   td.time(data-time='#{project.order.printingStartedAt}')
                   td
                     if project.order.secundaryPaid
-                      a(href="/admin/project/release-payment/#{project._id}")
+                      a(href="#")
                         span.glyphicon.glyphicon-credit-card
                     else
-                      a(href="#")
+                      a(href="/admin/project/release-payment/#{project._id}")
                         span.glyphicon.glyphicon-credit-card
                     &nbsp;&nbsp;&nbsp;&nbsp;
                     a(href="#")
