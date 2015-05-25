@@ -2,7 +2,7 @@
   .row
     .col-md-6
       .step
-        if user.printer == 'accepted'
+        if user && user.printer == 'accepted'
           a(href="#", title="As a printer you can not upload files. Create a new profile as a user to place orders.")
             img.img-circle(src='/img/icons_printing.png', style='width: 100px; height: 100px;')
         else

@@ -28,7 +28,9 @@ block content
           .tab-content
             .tab-pane.fade.in.active(id='workplace', role='tabpanel')
             if !toApply
-              h3 You need to complete at least one previous order before you can accept another one.
+              br
+              .alert.alert-warning
+                h4 You need to complete at least one previous order before you can accept another one.
             - if (projects.length==0)
               h4.light There is not any project yet for this list.
             - else
@@ -47,7 +49,10 @@ block content
                       .job-wtime This order has been waiting for
                         h5(data-time='/#{project.order.placedAt}')
                       .form-group.text-center
-                        a.btn.btn-lg.btn-green.review(href=toApply?"/printing/review/#{ project.id }":"#") REVIEW ORDER
+                        if toApply
+                          a.btn.btn-lg.btn-green.review(href="/printing/review/#{ project.id }") REVIEW ORDER
+                        else
+                          a.btn.btn-lg.btn-green.review(href="#", disabled="disabled") REVIEW ORDER
         br
         br
 
