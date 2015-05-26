@@ -78,6 +78,7 @@
       to: (process.env.OPENSHIFT_DATA_DIR || '') + '3doers/uploads/'
     },
     paypal: {
+      primaryReceiver: "mattia@3doers.it",
       port: 5000,
       api: {
         host: "api.sandbox.paypal.com",

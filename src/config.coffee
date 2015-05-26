@@ -79,6 +79,7 @@ config =
   #     client_id: "AbVJNRB86vH_GeBUz853oqhXZvS36ET3-a1DjC2IRP9djSF6hwwjAX7u03pU"
   #     client_secret: "EBuONxDylIjxbPRINS_caUUdG6MqBnucAClogB9CE-rEovnA6ysJ3AhDGr-m"
   paypal:
+    primaryReceiver: "mattia@3doers.it"
     port: 5000
     api:
       host: "api.sandbox.paypal.com"

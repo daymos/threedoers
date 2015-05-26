@@ -739,7 +739,7 @@ module.exports = (app, io) ->
           res.json comment, 200
 
           # send notification
-          auth.User.where('_id').in([req.user.id, doc.printer]).exec().then (docs)->
+          auth.User.where('_id').in([req.user.id, doc.order.printer]).exec().then (docs)->
             if docs.length
               utils.sendNotification(io, docs, "Project <a href='/project/#{doc.id}'>#{doc.title}</a> has new comment.", 'New Comment', 'info')
         else
@@ -791,7 +791,7 @@ module.exports = (app, io) ->
               receiverList:
                 receiver: [
                   {
-                      email:  'mattia@3doers.it',  # 3doers@gmail.com : mattia@3doers.it
+                      email:  settings.paypal.primaryReceiver,
                       amount: businessPayment,  # total price
                       primary: 'true'
                   },
@@ -800,12 +800,11 @@ module.exports = (app, io) ->
                       amount: printerPayment,
                       primary: 'false'
                   }
-
                 ]
+
             paypalSdk.pay payload, (err, response) ->
               if err
                 console.log response.error
-                console.log arguments
                 res.send 500
               else
                 doc.update {'order.payKey': response.payKey, 'order.secundaryPaid': false}, (error) ->
@@ -872,7 +871,7 @@ module.exports = (app, io) ->
       res.redirect "/project/#{req.params.id}"
 
       # send notification
-      auth.User.where('_id').in([req.user.id, doc.printer]).exec().then (docs)->
+      auth.User.where('_id').in([req.user.id, doc.order.printer]).exec().then (docs)->
         if docs.length
           utils.sendNotification(io, docs, "Project <a href='/project/#{doc.id}'>#{doc.title}</a> was archived.", 'Status changed', 'info')
           for user in docs
@@ -899,7 +898,8 @@ module.exports = (app, io) ->
                   doc.update({'order.transaction': transaction, 'status': models.PROJECT_STATUSES.PRINTED[0]}, -> res.redirect "/project/#{req.params.id}" )
 
                 )
-              auth.User.where('id').in([req.user.id, doc.printer]).exec().then (docs)->
+
+              auth.User.where('_id').in([req.user.id, doc.order.printer]).exec().then (docs)->
                 if docs.length
                   utils.sendNotification(io, docs, "Project <a href='/project/#{doc.id}'>#{doc.title}</a> was printed.", 'Status changed', 'info')
                   for user in docs
