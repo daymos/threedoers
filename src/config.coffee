@@ -16,7 +16,7 @@ config =
     protocol: 'http'
 
   io:
-    port: process.env.OPENSHIFT_NODEJS_PORT # 443
+    port: 8000 # 443
 
   db:
     name: 'imake'
