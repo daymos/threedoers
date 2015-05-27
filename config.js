@@ -14,7 +14,7 @@
       protocol: 'http'
     },
     io: {
-      port: 443
+      port: process.env.OPENSHIFT_NODEJS_PORT
     },
     db: {
       name: 'imake',
