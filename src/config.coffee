@@ -16,7 +16,7 @@ config =
     protocol: 'http'
 
   io:
-    port: 80
+    port: 443
 
   db:
     name: 'imake'
