@@ -43,7 +43,8 @@ block content
                       - else
                         img.img-responsive(src='/images/job-preview-no-screen.jpg')
                       .form-group.text-center
-                        a.btn.btn-lg.btn-green.review(href="/project/#{ project._id }") #{project.humanizedStatus()}
+                        br
+                        a.btn.btn-lg.btn-green(href="/project/#{ project._id }") #{project.humanizedStatus()}
                 - for (project in designProjects)
                   - project = printingProjects[project]
                   .col-md-3.col-sm-6
