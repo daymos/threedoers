@@ -14,7 +14,7 @@
       protocol: 'http'
     },
     io: {
-      port: 443
+      port: 80
     },
     db: {
       name: 'imake',
