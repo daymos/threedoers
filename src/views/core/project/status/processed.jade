@@ -64,7 +64,6 @@ div(role='tabpanel')
                     option(value="#{color}") #{color}
               .form-group
                 select.form-control#material-chooser
-                  option(disabled='disabled', selected='selected') What material?
                   - for material in materials
                     option(value="#{material[1]}") #{material[1]}
               .form-group

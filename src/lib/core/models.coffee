@@ -47,6 +47,7 @@ module.exports.PROJECT_DENSITIES = PROJECT_DENSITIES =
   COMPLETE: [1.01, 'complete']
 
 module.exports.PROJECT_MATERIALS = PROJECT_MATERIALS =
+  ANY: [1.01, 'Any Material']
   ABS: [1.01, 'ABS']
   PLA: [1.24, 'PLA']
 
@@ -104,7 +105,7 @@ STLProject = new Schema
 
   density:
     type: Number
-    default: PROJECT_MATERIALS.ABS[0]
+    default: PROJECT_MATERIALS.ANY[0]
     required: true
 
   weight:
@@ -145,7 +146,7 @@ STLProject = new Schema
 
   material:
     type: String
-    default: "ABS"
+    default: "Any Material"
 
   order:
     type: {}
