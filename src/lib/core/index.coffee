@@ -1085,7 +1085,7 @@ module.exports = (app, io) ->
         if response.accountStatus?
           req.user.paypalEmail = req.body.email
           req.user.save( (error, doc) ->
-            res.redirect "/profile/settings"
+            res.redirect "/profile/settings?msg=Email was validated"
           )
         else
           res.redirect "/profile/settings?msg=Your account is not verified"
