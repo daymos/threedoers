@@ -720,12 +720,9 @@ module.exports = (app, io) ->
               doc.order.reviewStartAt = new Date()
               if printer.mailNotification
                 mailer.send('mailer/project/status', {project: doc, user: printer, site:settings.site}, {from: settings.mailer.noReply, to:[printer.email], subject: settings.project.status.subject})
-            doc.save(
-              res.redirect "/project/#{req.params.id}"  # to avoid go to processed
-            )
+            doc.save()
           ).fail ->
             doc.save()
-            res.redirect "/project/#{req.params.id}"
         else
           doc.save()
 
@@ -1382,7 +1379,6 @@ module.exports = (app, io) ->
           doc.weight = result.weight
           doc.unit = result.unit
           doc.dimension = result.dimension
-          doc.status = models.PROJECT_STATUSES.PROCESSED[0]
           doc.price = decimal.fromNumber(price, 2)  # formula from doc sent by mattia
           doc.surface = result.surface / 100
           doc.bad = false
@@ -1396,6 +1392,8 @@ module.exports = (app, io) ->
           if result.dimension.height > models.PROJECT_BOUNDARIES.HEIGHT[0]
             doc.checkHeight = false
 
+          if doc.status < models.PROJECT_STATUSES.PROCESSED[0]
+            doc.status = models.PROJECT_STATUSES.PROCESSED[0]
 
           doc.save()
         catch e
