@@ -734,7 +734,7 @@ module.exports = (app, io) ->
                 if user.mailNotification
                   mailer.send('mailer/project/status', {project: doc, user: user, site:settings.site}, {from: settings.mailer.noReply, to:[user.email], subject: settings.project.status.subject})
 
-          res.redirect "/project/#{req.params.id}"
+      res.redirect "/project/#{req.params.id}"
     ).fail( ->
       console.log arguments
       res.send 500
