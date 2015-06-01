@@ -130,8 +130,6 @@ module.exports = (app, io) ->
 
     # if req.files.thumbnail.type != 'application/octet-stream' or req.files.thumbnail.path.split('/').pop().split('.').pop().toLowerCase() != 'stl'
     if req.files.thumbnail.path.split('/').pop().split('.').pop().toLowerCase() != 'stl'
-      console.log req.files.thumbnail.type
-      console.log req.files.thumbnail.path.split('/').pop().split('.').pop().toLowerCase()
       res.json errors: thumbnail: msg: "Is not a valid format, you need to upload a STL file."
       fs.unlink(req.files.thumbnail.path)
       return
@@ -722,10 +720,12 @@ module.exports = (app, io) ->
               doc.order.reviewStartAt = new Date()
               if printer.mailNotification
                 mailer.send('mailer/project/status', {project: doc, user: printer, site:settings.site}, {from: settings.mailer.noReply, to:[printer.email], subject: settings.project.status.subject})
-            console.log doc
-            doc.save()
+            doc.save(
+              res.redirect "/project/#{req.params.id}"  # to avoid go to processed
+            )
           ).fail ->
             doc.save()
+            res.redirect "/project/#{req.params.id}"
         else
           doc.save()
 
@@ -737,7 +737,7 @@ module.exports = (app, io) ->
                 if user.mailNotification
                   mailer.send('mailer/project/status', {project: doc, user: user, site:settings.site}, {from: settings.mailer.noReply, to:[user.email], subject: settings.project.status.subject})
 
-      res.redirect "/project/#{req.params.id}"
+          res.redirect "/project/#{req.params.id}"
     ).fail( ->
       console.log arguments
       res.send 500
@@ -1414,7 +1414,7 @@ module.exports = (app, io) ->
 
 
   calculateOrderPrice = (basePrice, ammount) ->
-      decimal.fromNumber((basePrice * ammount) - (10 * (ammount - 1)), 2)
+    decimal.fromNumber((basePrice * ammount) - (10 * (ammount - 1)), 2)
 
 # app.get "/", (req, res) ->
 
