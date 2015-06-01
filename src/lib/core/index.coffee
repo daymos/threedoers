@@ -722,10 +722,10 @@ module.exports = (app, io) ->
               doc.order.reviewStartAt = new Date()
               if printer.mailNotification
                 mailer.send('mailer/project/status', {project: doc, user: printer, site:settings.site}, {from: settings.mailer.noReply, to:[printer.email], subject: settings.project.status.subject})
-            doc.save( ->
-              console.log arguments
-            )
+            doc.save()
           ).fail ->
+            console.log "failing???"
+            console.log arguments
             doc.save()
         else
           doc.save()
