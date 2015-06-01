@@ -21,6 +21,7 @@ module.exports = (app, io) ->
   # Hack for update docs instead of cron, this is for a while
 
   app.get (req, res, next) ->
+    current = new Date()
     query = {'order.reviewStartAt': {$lt: new Date(current.getTime() - 86400000)}, status: {$lt: models.PROJECT_STATUSES.PAYED[0]}}
     models.STLProject.find(query).update({$set: {status: models.PROJECT_STATUSES.PRINT_REQUESTED[0]}})
     next()
