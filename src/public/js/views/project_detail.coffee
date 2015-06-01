@@ -265,3 +265,27 @@ $(document).ready ->
     $("#hidden-pay-form #shippingMethod").val(shippingMethod)
     $("#hidden-pay-form #shippingAddress").val(JSON.stringify(address))
     $("#hidden-pay-form").submit()
+
+  $('#printer-input').val('').blur( ->
+      active = $("#printer-input").typeahead("getActive")
+      if active
+        $('#printer-input').val("#{ active.username } <#{ active.email }>")
+        $('#printer-input').closest('div').append("<span class='glyphicon glyphicon-ok form-control-feedback' aria-hidden='true'></span>")
+  )
+  $('#printer-input').typeahead({
+    delay: 300
+    source: (query, process) ->
+      active = $("#printer-input").typeahead("getActive")
+      unless active and "#{ active.username } <#{ active.email }>" == query
+        $.get("/api/printers?q=#{query}").done (data, status, xhr) ->
+          process data
+          $('#printer-input').closest('div').find('.glyphicon').remove()
+    matcher: (item) ->
+      ~( item.username.toLowerCase().indexOf(this.query.toLowerCase()) and item.email.toLowerCase().indexOf(this.query.toLowerCase()) )
+    afterSelect: ->
+      $('#printer-input').closest('div').append("<span class='glyphicon glyphicon-ok form-control-feedback' aria-hidden='true'></span>")
+      active = $("#printer-input").typeahead("getActive")
+      $('#printer-hidden').val(active._id)
+    displayText: (item) ->
+      return "#{ item.username } <#{ item.email }>"
+  })

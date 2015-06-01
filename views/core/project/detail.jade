@@ -99,6 +99,7 @@ block scripts
   script(src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.2/moment.min.js')
   script(type='text/javascript', src='/vendor/jquery.jeditable.js')
   script(type='text/javascript', src='/js/views/project_detail.js')
+  script(type='text/javascript', src='/vendor/bootstrap3-typeahead.js')
   script(type='text/javascript', src='/vendor/jsc3d.min.js')
   script(type='text/javascript', src='/vendor/socket.io.min.js')
   script.
@@ -113,7 +114,7 @@ block scripts
     };
 
     var port = "#{io.port}";
-    console.log(port);
+
     $(document).ready(
       function() {
         $('#deny, #accept').click(

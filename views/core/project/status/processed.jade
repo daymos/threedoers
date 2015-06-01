@@ -68,6 +68,7 @@ div(role='tabpanel')
                     option(value="#{material[1]}") #{material[1]}
               .form-group
                 input#ammount.form-control(type='text', min='1', placeholder='How many items?', name='ammount')
+                input#printer-hidden(type='hidden', name='printer')
               .row
                 .col-sm-7
                   h4.job-quotation Price quotation*:
@@ -81,6 +82,13 @@ div(role='tabpanel')
                 button#order-button.btn.btn-lg.btn-block.btn-green(type='submit', disabled='disabled') PLACE ORDER
               else
                 button#order-button.btn.btn-lg.btn-block.btn-green(type='button', disabled='disabled', data-toggle='modal', data-target="#pleaseLogin") PLACE ORDER
+          .col-sm-12
+            h4 Do you have a printer reference?
+            p If you know who should print your order, insert the printer's e-mail or username directly submit your order to him, otherwise leave it blank.
+            .row
+              .col-md-5
+                .form-group.has-feedback
+                  input#printer-input.form-control(type='text', placeholder="E-mail or username of the printer", autocomplete='off')
        if user
         .row
           br

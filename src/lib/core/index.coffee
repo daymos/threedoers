@@ -25,6 +25,20 @@ module.exports = (app, io) ->
     models.STLProject.find(query).update({$set: {status: models.PROJECT_STATUSES.PRINT_REQUESTED[0]}})
     next()
 
+  app.get '/api/printers', (req, res) ->
+    q = req.query.q.split(' ')[0]
+    query =
+      printer: 'accepted'
+      $or: [
+        {username: {$regex: "#{ q }", $options: 'si'}}
+        {email: {$regex: "#{ q }", $options: 'si'}}
+      ]
+    auth.User.find(query, {id: true, email:true, username: true}).limit(10).exec().then( (data) ->
+      res.json data
+    ).fail ->
+      console.log arguments
+      res.send 500
+
   app.get '/', (req, res) ->
     if req.user
       res.redirect '/profile/projects'
@@ -699,16 +713,29 @@ module.exports = (app, io) ->
           businessPayment: decimal.fromNumber(price - printerPayment, 2).toString()
           placedAt: new Date()
 
-        doc.save()
+        if req.body.printer and req.body.printer.match /^[0-9a-fA-F]{24}$/
+          auth.User.findOne(req.body.printer).exec().then( (printer) ->
+            if printer
+              doc.order.printer = req.body.printer
+              doc.status = models.PROJECT_STATUSES.PRINT_REVIEW[0]
+              doc.order.reviewStartAt = new Date()
+              if printer.mailNotification
+                mailer.send('mailer/project/status', {project: doc, user: printer, site:settings.site}, {from: settings.mailer.noReply, to:[printer.email], subject: settings.project.status.subject})
+            doc.save()
+          ).fail ->
+            doc.save()
+        else
+          doc.save()
 
-        # send notification
-        auth.User.find(printer: 'accepted').exec().then (docs)->
-          if docs.length
-            utils.sendNotification(io, docs, "Project <a href='/project/#{doc.id}'>#{doc.title}</a> is waiting for you.", 'New project', 'info')
-            for user in docs
-              if user.mailNotification
-                mailer.send('mailer/project/status', {project: doc, user: user, site:settings.site}, {from: settings.mailer.noReply, to:[user.email], subject: settings.project.status.subject})
-        res.redirect "/project/#{req.params.id}"
+          # send notification
+          auth.User.find(printer: 'accepted').exec().then (docs)->
+            if docs.length
+              utils.sendNotification(io, docs, "Project <a href='/project/#{doc.id}'>#{doc.title}</a> is waiting for you.", 'New project', 'info')
+              for user in docs
+                if user.mailNotification
+                  mailer.send('mailer/project/status', {project: doc, user: user, site:settings.site}, {from: settings.mailer.noReply, to:[user.email], subject: settings.project.status.subject})
+
+      res.redirect "/project/#{req.params.id}"
     ).fail( ->
       console.log arguments
       res.send 500
