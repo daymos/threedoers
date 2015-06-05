@@ -26,6 +26,12 @@ module.exports = (app, io) ->
     models.STLProject.find(query).update({$set: {status: models.PROJECT_STATUSES.PRINT_REQUESTED[0]}})
     next()
 
+  app.get '/stampatori', (req, res) ->
+    res.render 'core/stampatori'
+
+  app.get '/utenti', (req, res) ->
+    res.render 'core/utenti'
+
   app.get '/api/printers', (req, res) ->
     q = req.query.q.split(' ')[0]
     query =
