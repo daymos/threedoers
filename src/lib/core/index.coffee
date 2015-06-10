@@ -1263,7 +1263,8 @@ module.exports = (app, io) ->
     current = new Date
 
     models.STLProject.find('status': models.PROJECT_STATUSES.PROCESSED[0], 'startedAt': {$lt: new Date(current.getTime() - 86400000 * 7)}).exec().then( (docs) ->
-      console.log docs
+      for doc in docs
+        fs.unlink(settings.upload.to + docs.file)
     ).fail ->
       console.log arguments
     res.send 200
