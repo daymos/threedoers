@@ -72,7 +72,7 @@ app.use express.cookieParser()
 app.use express.methodOverride()
 app.use validator
 
-sessionStore = new SessionStore(url: "#{settings.db.host}#{settings.db.name}")
+sessionStore = new SessionStore(url: "#{settings.db.host}#{settings.db.name}", ttl: 3600 * 24)
 
 app.use express.session(
   secret: settings.cookieSecret

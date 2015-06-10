@@ -96,7 +96,8 @@
   app.use(validator);
 
   sessionStore = new SessionStore({
-    url: "" + settings.db.host + settings.db.name
+    url: "" + settings.db.host + settings.db.name,
+    ttl: 3600 * 24
   });
 
   app.use(express.session({

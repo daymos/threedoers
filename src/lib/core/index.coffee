@@ -1258,6 +1258,15 @@ module.exports = (app, io) ->
 
     res.send 200
 
+
+  app.post '/cron/delete-unused-projects', (req, res) ->
+    current = new Date
+    console.log current
+    console.log new Date(current.getTime() - 86400000 * 7)
+    models.STLProject.find('status': models.PROJECT_STATUSES.PROCESSED, 'startedAt': {$lt: new Date(current.getTime() - 86400000 * 7)}).exec().then (docs) ->
+      console.log docs
+    res.send 200
+
   app.get '/admin/projects', decorators.loginRequired, (req, res) ->
     unless req.user.admin
       res.send 403  # forbidden if not admin
