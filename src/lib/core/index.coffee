@@ -1262,10 +1262,10 @@ module.exports = (app, io) ->
   app.post '/cron/delete-unused-projects', (req, res) ->
     current = new Date
 
-    console.log current
-    console.log new Date(current.getTime() - 86400000 * 7)
-    models.STLProject.find('status': models.PROJECT_STATUSES.PROCESSED, 'startedAt': {$lt: new Date(current.getTime() - 86400000 * 7)}).exec().then (docs) ->
+    models.STLProject.find('status': models.PROJECT_STATUSES.PROCESSED[0], 'startedAt': {$lt: new Date(current.getTime() - 86400000 * 7)}).exec().then( (docs) ->
       console.log docs
+    ).fail ->
+      console.log arguments
     res.send 200
 
   app.get '/admin/projects', decorators.loginRequired, (req, res) ->
