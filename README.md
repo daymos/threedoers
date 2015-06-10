@@ -1,3 +1,40 @@
+3Doers
+======
+
+Requirements Dev
+________________
+
+```bash
+npm install -g coffee-script
+npm install -g hotnode
+npm install
+```
+
+Requirements Prod
+-----------------
+
+```bash
+npm install
+```
+
+
+Run development
+---------------
+
+```bash
+hotcoffee src/server.coffee
+grunt
+```
+
+Deploy on openshift
+-------------------
+
+```bash
+grunt build
+git push
+```
+
+
 #[Node-Login](http://node-login.braitsch.io)
 
 ####A basic login & account management system built in Node.js with the following features :
