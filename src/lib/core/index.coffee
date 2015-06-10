@@ -1261,6 +1261,7 @@ module.exports = (app, io) ->
 
   app.post '/cron/delete-unused-projects', (req, res) ->
     current = new Date
+
     console.log current
     console.log new Date(current.getTime() - 86400000 * 7)
     models.STLProject.find('status': models.PROJECT_STATUSES.PROCESSED, 'startedAt': {$lt: new Date(current.getTime() - 86400000 * 7)}).exec().then (docs) ->
