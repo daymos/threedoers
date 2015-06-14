@@ -1386,9 +1386,6 @@ module.exports = (app, io) ->
           # final price - add fixed cost then this is multiplied by amount
           price = pb + fixed_cost
 
-          # task https://trello.com/c/gPjZHlxk/190-increase-price-by-30
-          price = price + ( price * 0.3 )
-
           # another values
           doc.volume = result.volume
           doc.weight = result.weight
@@ -1427,7 +1424,7 @@ module.exports = (app, io) ->
 
 
   calculateOrderPrice = (basePrice, ammount) ->
-    decimal.fromNumber((basePrice * ammount) - (10 * (ammount - 1)), 2)
+    decimal.fromNumber((basePrice * ammount * 1.12) - (10 * (ammount - 1)), 2)
 
 # app.get "/", (req, res) ->
 
