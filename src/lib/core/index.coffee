@@ -192,7 +192,7 @@ module.exports = (app, io) ->
           processVolumeWeight(doc)
 
         if doc.order and doc.order.printer
-          auth.User.findOne(doc.order.printer).exec().then( (printer) ->
+          auth.User.findOne(_id: doc.order.printer).exec().then( (printer) ->
             res.render 'core/project/detail',
               project: doc
               printer: printer
@@ -653,7 +653,8 @@ module.exports = (app, io) ->
 
 
   app.post '/project/material/:id', decorators.loginRequired, (req, res) ->
-    value = req.body.value
+    value = if req.body.value == models.PROJECT_MATERIALS.ANY[1] then 'ANY' else req.body.value
+
     unless value of models.PROJECT_MATERIALS
       res.send 400
     else
@@ -677,9 +678,7 @@ module.exports = (app, io) ->
         res.send 500
       )
 
-
-  app.get '/project/update/:id', decorators.loginRequired, (req, res) ->
-    models.STLProject.findOne({_id: req.params.id}).exec().then( (doc) ->
+  app.get '/project/update/:id', decorators.loginRequired, (req, res) -> models.STLProject.findOne({_id: req.params.id}).exec().then( (doc) ->
       if doc
         shippo.transaction.retrieve(doc.order.transaction.object_id).then (data) ->
           doc.update {'order.transaction': data}, ->
@@ -690,7 +689,6 @@ module.exports = (app, io) ->
       console.log arguments
       res.send 500
     )
-
 
   app.post '/project/order/:id', decorators.loginRequired, (req, res, next) ->
     address = null
