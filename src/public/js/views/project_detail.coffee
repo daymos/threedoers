@@ -269,14 +269,14 @@ $(document).ready ->
   $('#printer-input').val('').blur( ->
       active = $("#printer-input").typeahead("getActive")
       if active
-        $('#printer-input').val("#{ active.username } <#{ active.email }>")
+        $('#printer-input').val("#{ active.username }")
         $('#printer-input').closest('div').append("<span class='glyphicon glyphicon-ok form-control-feedback' aria-hidden='true'></span>")
   )
   $('#printer-input').typeahead({
     delay: 300
     source: (query, process) ->
       active = $("#printer-input").typeahead("getActive")
-      unless active and "#{ active.username } <#{ active.email }>" == query
+      unless active and "#{ active.username }" == query
         $.get("/api/printers?q=#{query}").done (data, status, xhr) ->
           process data
           $('#printer-input').closest('div').find('.glyphicon').remove()
@@ -287,5 +287,5 @@ $(document).ready ->
       active = $("#printer-input").typeahead("getActive")
       $('#printer-hidden').val(active._id)
     displayText: (item) ->
-      return "#{ item.username } <#{ item.email }>"
+      return "#{ item.username }"
   })

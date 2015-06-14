@@ -1360,7 +1360,7 @@ module.exports = (app, io) ->
           console.log result
           # Calculate price
           material_price = 0.5 # if doc.material == 'ABS' then 0.5 else 0.5 * 1.1  # ABS
-          density = doc.density
+          density =  1.01  # doc.density  # just for formula
           fixed_cost = 8
           # outer shell volume - this calculate the ammount of material used for
           # the outher shell of the object that is printed at full density
