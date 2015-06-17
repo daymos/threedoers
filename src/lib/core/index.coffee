@@ -1359,11 +1359,10 @@ module.exports = (app, io) ->
       if not err and  not stderr
         try
           result = JSON.parse(stdout)
-          console.log result
           # Calculate price
           material_price = 0.5 # if doc.material == 'ABS' then 0.5 else 0.5 * 1.1  # ABS
           density =  1.01  # doc.density  # just for formula
-          fixed_cost = 8
+          fixed_cost = 10
           # outer shell volume - this calculate the ammount of material used for
           # the outher shell of the object that is printed at full density
           # I assume a thickness of 0.09 mm sperimentally checked
@@ -1427,7 +1426,7 @@ module.exports = (app, io) ->
 
   calculateOrderPrice = (basePrice, ammount) ->
     basePrice = parseFloat(basePrice)
-    decimal.fromNumber(((basePrice + 10) * ammount * 1.12) - (10 * (ammount - 1)), 2)
+    decimal.fromNumber((basePrice * ammount * 1.12) - (10 * (ammount - 1)), 2)
 
 # app.get "/", (req, res) ->
 
