@@ -719,7 +719,7 @@ module.exports = (app, io) ->
           placedAt: new Date()
 
         if req.body.printer and req.body.printer.match /^[0-9a-fA-F]{24}$/
-          auth.User.findOne(req.body.printer).exec().then( (printer) ->
+          auth.User.findOne(_id: req.body.printer).exec().then( (printer) ->
             if printer
               doc.order.printer = req.body.printer
               doc.status = models.PROJECT_STATUSES.PRINT_REVIEW[0]
@@ -860,7 +860,7 @@ module.exports = (app, io) ->
   app.get '/project/pay/execute/:id', decorators.loginRequired, (req, res) ->
     models.STLProject.findOne({_id: req.params.id, user: req.user.id}).exec().then( (doc) ->
       if doc and doc.validateNextStatus(models.PROJECT_STATUSES.PAYED[0])  # test if next state is allowed
-        auth.User.findOne(doc.order.printer).exec (err, user) ->
+        auth.User.findOne(_id: doc.order.printer).exec (err, user) ->
           if err
             console.log arguments
             res.send 500
@@ -1006,7 +1006,7 @@ module.exports = (app, io) ->
   app.post '/printing/review/:id', decorators.printerRequired, (req, res) ->
     models.STLProject.findOne({_id: req.params.id}).exec().then( (doc) ->
       if doc and doc.validateNextStatus(models.PROJECT_STATUSES.PRINT_REVIEW[0])
-        auth.User.findOne(doc.user).exec (err, user) ->
+        auth.User.findOne(_id: doc.user).exec (err, user) ->
           if user
             if user.mailNotification
               mailer.send('mailer/printing/accept', {project: doc, user: user, site:settings.site}, {from: settings.mailer.noReply, to:[user.email], subject: settings.printing.accept.subject})
@@ -1038,7 +1038,7 @@ module.exports = (app, io) ->
   app.post '/printing/accept/:id', decorators.printerRequired, (req, res) ->
     models.STLProject.findOne({_id: req.params.id}).exec().then( (doc) ->
       if doc and doc.validateNextStatus(models.PROJECT_STATUSES.PRINT_ACCEPTED[0])
-        auth.User.findOne(doc.user).exec (err, user) ->
+        auth.User.findOne(_id: doc.user).exec (err, user) ->
           if user
             # Look for user address
             address = null
@@ -1248,7 +1248,7 @@ module.exports = (app, io) ->
   app.post '/cron/update-rates', (req, res) ->
     models.STLProject.find( 'order.rate' : {"$exists": false} ).exec().then (docs) ->
       for project in docs
-        auth.User.findOne(project.user).exec().then (user) ->
+        auth.User.findOne(_id: project.user).exec().then (user) ->
           address = null
           for _address in user.shippingAddresses
             if _address.active
@@ -1321,7 +1321,7 @@ module.exports = (app, io) ->
 
           # for calculating order
           socket.on('order-price', (data) ->
-            models.STLProject.findOne(doc._id).exec().then (doc) ->
+            models.STLProject.findOne(_id: doc._id).exec().then (doc) ->
               ammount =  Math.abs(if (data.ammount and parseInt(data.ammount)) then parseInt(data.ammount) else 1)
               price = calculateOrderPrice doc.price, ammount
               io.of('/project').in(doc._id.toHexString()).emit 'update-price-order', price: price.toString()
