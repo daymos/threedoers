@@ -1426,9 +1426,7 @@ module.exports = (app, io) ->
 
 
   calculateOrderPrice = (basePrice, ammount) ->
-    console.log basePrice, ammount
-    console.log (basePrice * ammount * 1.12)
-    console.log 10 * (ammount - 1)
+    basePrice = parseFloat(basePrice)
     decimal.fromNumber(((basePrice + 10) * ammount * 1.12) - (10 * (ammount - 1)), 2)
 
 # app.get "/", (req, res) ->
