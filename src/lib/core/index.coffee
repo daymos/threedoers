@@ -518,6 +518,8 @@ module.exports = (app, io) ->
       "<h1 class='page-title'><span>New</span></h1><h1 class='page-title'><span>Direction</span></h1>",
       '/profile/settings/new-shipping-direction',
       (address) ->
+        if req.user.shippingAddresses.length == 0
+          address.active = true
         req.user.shippingAddresses.push address
         req.user.save((error, doc) ->
           if error
@@ -723,7 +725,7 @@ module.exports = (app, io) ->
               doc.status = models.PROJECT_STATUSES.PRINT_REVIEW[0]
               doc.order.reviewStartAt = new Date()
               if printer.mailNotification
-                mailer.send('mailer/project/status', {project: doc, user: printer, site:settings.site}, {from: settings.mailer.noReply, to:[printer.email], subject: settings.project.status.subject})
+                mailer.send('mailer/project/offer', {project: doc, user: printer, site:settings.site}, {from: settings.mailer.noReply, to:[printer.email], subject: settings.project.status.subject})
             doc.save()
           ).fail ->
             doc.save()
@@ -1424,7 +1426,10 @@ module.exports = (app, io) ->
 
 
   calculateOrderPrice = (basePrice, ammount) ->
-    decimal.fromNumber((basePrice * ammount * 1.12) - (10 * (ammount - 1)), 2)
+    console.log basePrice, ammount
+    console.log (basePrice * ammount * 1.12)
+    console.log 10 * (ammount - 1)
+    decimal.fromNumber(((basePrice + 10) * ammount * 1.12) - (10 * (ammount - 1)), 2)
 
 # app.get "/", (req, res) ->
 

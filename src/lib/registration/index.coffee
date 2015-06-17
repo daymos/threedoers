@@ -14,10 +14,10 @@ module.exports = (app) ->
   app.post '/accounts/signup', (req, res, next) ->
     password = req.body.password
 
-    req.assert('username', regex: "Invalid username.").regex(/^[a-z0-9_-]{2,24}$/)
+    req.assert('username', regex: "Invalid username.").regex(/^[a-z0-9\_\-]{2,24}$/)
     req.assert('email').isEmail()
-    req.assert('password', regex: "Should contains from 4 to 15, letters(uppercase, downcase), digits, first should be a letter.").regex(/^[a-zA-Z]\w{3,14}$/)
-    req.assert('passwordConfirm', {regex: "Should contains from 4 to 15, letters(uppercase, downcase), digits, first should be a letter.", equals: "Passwords didn't match"}).regex(/^[a-zA-Z]\w{3,14}$/).equals(password)
+    req.assert('password', regex: "Should contains from 4 to 24, letters(uppercase, downcase), digits.").regex(/^[\w\d\/\-\_]{3,24}$/)
+    req.assert('passwordConfirm', {regex: "Should contains from 4 to 24, letters(uppercase, downcase), digits, first should be a letter.", equals: "Passwords didn't match"}).regex(/^[\w\d\/\-\_]{3,24}$/).equals(password)
 
     errors = req.validationErrors(true)
 
