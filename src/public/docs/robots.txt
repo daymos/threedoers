@@ -1,0 +1,4 @@
+User-agent: robot
+
+Disallow: /pp.pdf
+Disallow: /terms.pdf
