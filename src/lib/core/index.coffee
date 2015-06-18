@@ -1298,6 +1298,12 @@ module.exports = (app, io) ->
       console.log arguments
       res.send 500
 
+
+
+      app.get '/robots.txt', (req, res) ->
+    res.render 'doc/robots.txt'
+
+
   ###############################################
   # Socket IO event handlers
   ###############################################
