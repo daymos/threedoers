@@ -1,4 +1,0 @@
-User-agent: *
-
-Disallow: /pp.pdf
-Disallow: /terms.pdf

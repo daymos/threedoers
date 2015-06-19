@@ -1299,9 +1299,10 @@ module.exports = (app, io) ->
       res.send 500
 
 
-
-      app.get '/robots.txt', (req, res) ->
-    res.render 'doc/robots.txt'
+  app.get '/robots.txt', (req, res) ->
+   res.set 'Content-Type', 'text/plain'
+   res.send 'User-agent: *\nDisallow: /pp.pdf\nDisallow: /terms.pdf\nSitemap: /sitemap.xml'
+  
 
 
   ###############################################
