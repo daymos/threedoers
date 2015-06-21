@@ -1302,6 +1302,9 @@ module.exports = (app, io) ->
   app.get '/robots.txt', (req, res) ->
    res.set 'Content-Type', 'text/plain'
    res.send 'User-agent: *\nDisallow: /pp.pdf\nDisallow: /terms.pdf\nSitemap: /sitemap.xml'
+
+  app.get '/sitemap.xml', (req, res) ->
+   res.render 'sitemap'
   
 
 
