@@ -47,6 +47,7 @@ module.exports = (app, io) ->
       res.send 500
 
   app.get '/', (req, res) ->
+
     if req.user
       res.redirect '/profile/projects'
     else
@@ -1301,7 +1302,10 @@ module.exports = (app, io) ->
 
   app.get '/robots.txt', (req, res) ->
    res.set 'Content-Type', 'text/plain'
-   res.send 'User-agent: *\nDisallow: /pp.pdf\nDisallow: /terms.pdf\nSitemap: /sitemap.xml'
+   res.send 'User-agent: *\nDisallow: /docs/pp.pdf\nDisallow: /docsterms.pdf\nSitemap: /sitemap.xml'
+
+  app.get '/sitemap.xml', (req, res) ->
+   res.render 'sitemap.xml'
   
 
 
