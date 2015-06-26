@@ -69,7 +69,7 @@ module.exports = (app) ->
                   user.address = req.body.address
 
                 if req.body.location
-                  location: req.body.location.split(',')
+                  user.location = req.body.location.split(',')
 
                 user.password = req.body.password
 
