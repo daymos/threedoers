@@ -829,7 +829,7 @@ module.exports = (app, io) ->
                       primary: 'true'
                   },
                   {
-                      email:  user.paypalEmail,
+                      email:  user.paypal.email,
                       amount: printerPayment,
                       primary: 'false'
                   }
@@ -1055,7 +1055,7 @@ module.exports = (app, io) ->
               res.json msg: "You don't have a shipping address please add an address.", 400
               return
 
-            unless req.user.paypalEmail
+            unless req.user.paypal and req.user.paypal.email
               res.json msg: "You don't have a valid paypal account, please go to settings and setup", 400
               return
 
@@ -1090,10 +1090,12 @@ module.exports = (app, io) ->
 
   app.post '/paypal/verify', decorators.printerRequired, (req, res) ->
     req.assert('email', 'valid email required').isEmail()
+    req.assert('firstName', 'First name is required').notEmpty()
+    req.assert('lastName', 'Last name is required').notEmpty()
     errors = req.validationErrors()
 
     if errors
-      res.redirect "/profile/settings"
+      res.redirect "/profile/settings?msg=#{ errors[0]['msg'] }"
       return
 
     paypalSdk = new Paypal
@@ -1106,8 +1108,8 @@ module.exports = (app, io) ->
     payload =
       emailAddress: req.body.email
       matchCriteria: 'NAME'
-      firstName: req.user.firstName
-      lastName: req.user.lastName
+      firstName: req.body.firstName
+      lastName: req.body.lastName
       requestEnvelope:
         errorLanguage:  'en_US'
 
@@ -1116,7 +1118,9 @@ module.exports = (app, io) ->
         res.redirect "/profile/settings?msg=#{ response.error[0].message }"
       else
         if response.accountStatus?
-          req.user.paypalEmail = req.body.email
+          req.user.paypal.email = req.body.email
+          req.user.paypal.firstName = req.body.firstName
+          req.user.paypal.lastName = req.body.lastName
           req.user.save( (error, doc) ->
             res.redirect "/profile/settings?msg=Email was validated"
           )
@@ -1306,7 +1310,7 @@ module.exports = (app, io) ->
 
   app.get '/sitemap.xml', (req, res) ->
    res.render 'sitemap.xml'
-  
+
 
 
   ###############################################

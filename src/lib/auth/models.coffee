@@ -368,8 +368,13 @@ User = new Schema
     type: Number
     default: 1
 
-  paypalEmail:
-    type: String
+  paypal:
+    email:
+      type: String
+    firstName:
+      type: String
+    lastName:
+      type: String
 
   designJobs:
       type: Number
