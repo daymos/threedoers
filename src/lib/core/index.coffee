@@ -1315,7 +1315,7 @@ module.exports = (app, io) ->
 
   app.get '/robots.txt', (req, res) ->
    res.set 'Content-Type', 'text/plain'
-   res.send 'User-agent: *\nDisallow: /docs/pp.pdf\nDisallow: /docsterms.pdf\nSitemap: /sitemap.xml'
+   res.send 'User-agent: *\nDisallow: /docs/pp.pdf\nDisallow: /docs/terms.pdf\nSitemap: /sitemap.xml'
 
   app.get '/sitemap.xml', (req, res) ->
    res.render 'sitemap.xml'
@@ -1406,7 +1406,7 @@ module.exports = (app, io) ->
 
           # base price - just sum price for outer shell and inner filling
 
-          pb = p_vs + p_vi
+          pb = (p_vs + p_vi) * 0.9
 
           # final price - add fixed cost then this is multiplied by amount
           price = pb + fixed_cost
@@ -1450,7 +1450,8 @@ module.exports = (app, io) ->
 
   calculateOrderPrice = (basePrice, ammount) ->
     basePrice = parseFloat(basePrice)
-    decimal.fromNumber((basePrice * ammount * 1.12) - (10 * (ammount - 1)), 2)
+    decimal.fromNumber((basePrice * ammount) - (10 * (ammount - 1)), 2)
+
 
 # app.get "/", (req, res) ->
 
