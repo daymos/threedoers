@@ -54,27 +54,31 @@ module.exports = (app) ->
                 url: "#{settings.site}/accounts/activation/#{activation.hashedEmail}"
                 username: req.body.username
 
-              mailer.send('mailer/accounts/registration', context, {from: settings.mailer.noReply, to:[activation.email], subject: settings.registration.activation.subject}).then ->
-                user = new auth.User
-                  username: req.body.username
-                  email: req.body.email
+              user = new auth.User
+                username: req.body.username
+                email: req.body.email
 
-                if req.body.city
-                  user.city = req.body.city
+              if req.body.city
+                user.city = req.body.city
 
-                if req.body.country
-                  user.country = req.body.country
+              if req.body.country
+                user.country = req.body.country
 
-                if req.body.address
-                  user.address = req.body.address
+              if req.body.address
+                user.address = req.body.address
 
-                if req.body.location
-                  user.location = req.body.location.split(',')
+              if req.body.location
+                user.location = req.body.location.split(',')
 
-                user.password = req.body.password
+              user.password = req.body.password
 
-                user.save ->
+              user.save (_, error) ->
+                unless error
+                  mailer.send('mailer/accounts/registration', context, {from: settings.mailer.noReply, to:[activation.email], subject: settings.registration.activation.subject})
                   res.redirect '/accounts/signup/done'
+                else
+                  console.log arguments
+                  res.send 500
 
             else
               next(err)
