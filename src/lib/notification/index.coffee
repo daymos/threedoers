@@ -6,14 +6,33 @@ module.exports = (app) ->
   models = require('./models')
 
   app.get '/notifications', decorators.loginRequired, (req, res) ->
-    models.Notification.find({recipient: req.user.id, type:2,deleted:false}).sort({createAt: 'desc'}).limit(15).exec().then( (nots) ->
+    models.Notification.find({recipient: req.user.id, type:2,deleted:false}).sort({createat: 'desc'}).limit(15).exec().then( (nots) ->
       res.render 'notification/notifications',
-      userNotif: nots
+        userNotif: nots
     ).fail((reason) ->
       logger.error reason
       res.send 500
     )
 
+  app.get '/message-notifications', decorators.loginRequired, (req, res) ->
+    models.Notification.find({recipient: req.user.id, type:1,deleted:false}).sort({createat: 'desc'}).limit(15).exec().then( (nots) ->
+      res.render 'notification/message-notifications',
+        userNotif: nots
+    ).fail((reason) ->
+      logger.error reason
+      res.send 500
+    )
+
+  app.get '/getMessageNotifications', decorators.loginRequired, (req, res) ->
+    models.Notification.find({recipient: req.user.id, type:1, read: false,deleted:false}).exec().then( (nots) ->
+       if nots
+         res.json notifications:nots
+       else
+         res.json notifications:{}
+    ).fail((reason) ->
+      logger.error reason
+      res.send 500
+    )
 
   app.post '/getNotifications', decorators.loginRequired, (req, res) ->
     models.Notification.find({recipient: req.user.id, type:2, read: false,deleted:false}).exec().then( (nots) ->

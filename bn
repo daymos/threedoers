@@ -181,9 +181,6 @@ module.exports = (app, io) ->
 
 
   app.get '/project/:id', (req, res, next) ->
-
-    if req.user
-      notificationModels.Notification.update({recipient: req.user.id, relatedObject: req.params.id, type:1, read: false}, {read: true}).exec()
     filterDict={_id: req.params.id}
     try
       unless req.user.admin
@@ -772,10 +769,9 @@ module.exports = (app, io) ->
             createdAt: Date.now()
 
           doc.comments.push(comment)
-          recipient = if req.user._id.equals(doc.user) then doc.order.printer else doc.user
-          notificationModels.Notification.find({recipient: recipient, relatedObject: doc.id, type:1, read: false}).exec().then (notifications) ->
+          notificationModels.Notification.find({relatedObject: doc.id, type:1, read: false}).exec().then (notifications) ->
             unless notifications.length
-              notification = new notificationModels.Notification(relatedObject: doc.id, read: false, type: 1, deleted: false, recipient: recipient, creator: req.user.id, title: "New message on project #{ doc.title }")
+              notification = new Notification(relatedObject: doc.id, read: false, type: 1, detele
               notification.save()
           doc.save()
           res.json comment, 200
