@@ -19,14 +19,6 @@ module.exports = (app, io) ->
   notificationModels = require('../notification/models')
   shippo = require('shippo')('mattia.spinelli@zoho.com', 'mattia13')
 
-  # Hack for update docs instead of cron, this is for a while
-
-  app.get (req, res, next) ->
-    current = new Date()
-    query = {'order.reviewStartAt': {$lt: new Date(current.getTime() - 86400000)}, status: {$lt: models.PROJECT_STATUSES.PAYED[0]}}
-    models.STLProject.find(query).update({$set: {status: models.PROJECT_STATUSES.PRINT_REQUESTED[0]}})
-    next()
-
   app.get '/stampatori', (req, res) ->
     res.render 'core/stampatori'
 
@@ -1260,6 +1252,12 @@ module.exports = (app, io) ->
       res.send 400
 
   app.post '/cron/update-rates', (req, res) ->
+    # update status
+    current = new Date()
+    query = {'order.reviewStartAt': {$lt: new Date(current.getTime() - 86400000)}, status: {$lt: models.PROJECT_STATUSES.PAYED[0]}}
+    models.STLProject.find(query).update({$set: {status: models.PROJECT_STATUSES.PRINT_REQUESTED[0]}})
+
+    # update rates
     models.STLProject.find( 'order.rate' : {"$exists": false} ).exec().then (docs) ->
       for project in docs
         auth.User.findOne(_id: project.user).exec().then (user) ->
