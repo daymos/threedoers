@@ -54,5 +54,8 @@ Notification = new Schema
     type: Boolean
     default: false
 
+  relatedObject:
+    type: ObjectId
+
 # Expose Activation Status
 module.exports.Notification = mongoose.model 'Notification', Notification

@@ -1,4 +1,6 @@
 updateFrontEnd = (data) ->
+  if data.volume == 0
+    $('#message-error').removeClass('hide')
   for key of data
     element = $("##{key}")
     if element.length == 1
@@ -10,7 +12,10 @@ updateFrontEnd = (data) ->
         $('.object-volume').text('processing')
       else
         $('.object-volume-unit').removeClass('hide')
-        $('#order-button').prop('disabled', false)
+        unless data.volume == 0
+          $('#order-button').prop('disabled', false)
+        else
+          $('#order-button').prop('disabled', true)
 
     if key == 'order'
       $('#order-placed-order').text(" #{data[key].price}  ")
