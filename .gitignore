@@ -27,3 +27,7 @@ py-env
 
 # vim
 *.swp
+
+.node-version
+codeit.sh
+npm-debug.log

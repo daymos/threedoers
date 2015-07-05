@@ -769,6 +769,13 @@ module.exports = (app, io) ->
             unless notifications.length
               notification = new notificationModels.Notification(relatedObject: doc.id, read: false, type: 1, deleted: false, recipient: recipient, creator: req.user.id, title: "New message on project #{ doc.title }")
               notification.save()
+              auth.User.findOne(_id: recipient).exec().then (recipient) ->
+                if recipient
+                  context =
+                    user: recipient
+                    site: settings.site
+                    project: doc
+                  mailer.send('mailer/project/commented', context, {from: settings.mailer.noReply, to:[recipient.email], subject: "New comment on project"})
           doc.save()
           res.json comment, 200
 
