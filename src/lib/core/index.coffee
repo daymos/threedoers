@@ -1411,7 +1411,7 @@ module.exports = (app, io) ->
 
           # base price - just sum price for outer shell and inner filling
 
-          pb = (p_vs + p_vi) * 0.9
+          pb = (p_vs + p_vi)
 
           # final price - add fixed cost then this is multiplied by amount
           price = pb + fixed_cost
