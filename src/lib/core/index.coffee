@@ -1288,9 +1288,9 @@ module.exports = (app, io) ->
       'order.rate' : {"$exists": true}
       status: models.PROJECT_STATUSES.PRINTING[0]
 
+    console.log query
     models.STLProject.find( query ).exec().then (docs) ->
       for project in docs
-        console.log project
         auth.User.findOne(_id: project.user).exec().then (user) ->
           address = null
           for _address in user.shippingAddresses
