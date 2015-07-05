@@ -1275,6 +1275,31 @@ module.exports = (app, io) ->
           if address?
             requestShippingRate(address, project)
 
+
+  app.post '/cron/update-printing-rates', (req, res) ->
+    current = new Date()
+    # update rates when printing if exced the time for rate live
+    # or query
+    query =
+      $or: [
+        {'order.printingStartedAt': {$lt: new Date(current.getTime() - 86400000 * 6)}, 'order.rateLastUpdate': {$lt: new Date(current.getTime() - 86400000*6)}}
+        {'order.printingStartedAt': {$lt: new Date(current.getTime() - 86400000 * 6)}, 'order.rateLastUpdate': {$exists: false}}
+      ]
+      'order.rate' : {"$exists": true}
+      status: models.PROJECT_STATUSES.PRINTING[0]
+
+    models.STLProject.find( query ).exec().then (docs) ->
+      for project in docs
+        console.log project
+        auth.User.findOne(_id: project.user).exec().then (user) ->
+          address = null
+          for _address in user.shippingAddresses
+            if _address.active
+              address = _address
+          if address?
+            requestShippingRate(address, project)
+        project.update 'order.rateLastUpdate': current
+
     res.send 200
 
 
@@ -1411,7 +1436,7 @@ module.exports = (app, io) ->
 
           # base price - just sum price for outer shell and inner filling
 
-          pb = (p_vs + p_vi)
+          pb = (p_vs + p_vi) * 0.9
 
           # final price - add fixed cost then this is multiplied by amount
           price = pb + fixed_cost
