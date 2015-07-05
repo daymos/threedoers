@@ -976,7 +976,7 @@ module.exports = (app, io) ->
 
 
   app.get '/printing/requests', decorators.printerRequired, (req, res) ->
-    models.STLProject.find(status: {"$lt": models.PROJECT_STATUSES.ARCHIVED[0], "$gt": models.PROJECT_STATUSES.PRINT_REQUESTED[0]}, 'order.printer': req.user.id).sort(placedAt: -1).exec (err, docs) ->
+    models.STLProject.find(status: {"$lt": models.PROJECT_STATUSES.SHIPPING[0], "$gt": models.PROJECT_STATUSES.PRINT_REQUESTED[0]}, 'order.printer': req.user.id).sort(placedAt: -1).exec (err, docs) ->
       if err
         console.log arguments
         res.send 500
