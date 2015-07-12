@@ -72,7 +72,7 @@ module.exports = (app) ->
 
               user.password = req.body.password
 
-              user.save (_, error) ->
+              user.save (error, data) ->
                 unless error
                   mailer.send('mailer/accounts/registration', context, {from: settings.mailer.noReply, to:[activation.email], subject: settings.registration.activation.subject})
                   res.redirect '/accounts/signup/done'
