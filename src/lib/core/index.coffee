@@ -1267,13 +1267,13 @@ module.exports = (app, io) ->
     # update rates
     models.STLProject.find( 'order.rate' : {"$exists": false} ).exec().then (docs) ->
       for project in docs
+        console.log "Processing project id #{ project.id }"
         auth.User.findOne(_id: project.user).exec().then (user) ->
           address = null
           for _address in user.shippingAddresses
             if _address.active
               address = _address
           if address?
-            console.log "Processing project id #{ project._id }"
             requestShippingRate(address, project)
           else
             console.log "Project id #{ project._id } has not address."
