@@ -1273,7 +1273,10 @@ module.exports = (app, io) ->
             if _address.active
               address = _address
           if address?
+            console.log "Processing project id #{ project._id }"
             requestShippingRate(address, project)
+          else
+            console.log "Project id #{ project._id } has not address."
 
 
   app.post '/cron/update-printing-rates', (req, res) ->
