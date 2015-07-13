@@ -1265,7 +1265,7 @@ module.exports = (app, io) ->
     models.STLProject.find(query).update({$set: {comments: [], status: models.PROJECT_STATUSES.PRINT_REQUESTED[0]}})
 
     # update rates
-    models.STLProject.find( 'order.rate' : {"$exists": false} ).exec().then (docs) ->
+    models.STLProject.find( status: models.PROJECT_STATUSES.PRINT_ACCEPTED[0], 'order.rate' : {"$exists": false} ).exec().then (docs) ->
       for project in docs
         console.log "Processing project id #{ project.id }"
         auth.User.findOne(_id: project.user).exec().then (user) ->
