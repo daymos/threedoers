@@ -1,0 +1,196 @@
+extends ../../layouts/_app
+
+block title
+  |  Your Profile
+
+block extra-headers
+  meta(name="csrf-token", content="#{csrfToken}")
+
+block content
+  .page
+    .container
+      br
+      br
+      .row
+        include ../../includes/banner
+
+    .bg-3doers
+      .container
+        .row
+          .col-sm-12
+            br
+            a.btn.btn-green-inverse.pull-right(href="/accounts/logout") &nbsp;&nbsp;&nbsp;&nbsp;Logout&nbsp;&nbsp;&nbsp;&nbsp;
+            br
+        .row
+          .col-md-6.col-sm-7
+            p#result
+            form#registration.form-3doers(action='/profile/settings', method='POST', role='form', accept-charset='utf-8')
+              input(type='hidden', name='authenticity_token')
+              input(type='hidden', name='_csrf', value=csrfToken)
+              .photoedit(style="position:relative")
+                - if (user.photo)
+                  img#profile_image.circular(width='142', height='142', src='/#{ user.photo }', alt='#{ user.firstName } #{ user.lastName }')
+                - else
+                  img#profile_image.circular(width='142', height='142', src='/img/edit_photo_placeholder.png?1396277523', alt='profile image')
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                a#clickable.btn.btn-green(style="position:absolute; bottom:0;") &nbsp;&nbsp;&nbsp;&nbsp;Edit Photo&nbsp;&nbsp;&nbsp;&nbsp;
+              .form-group
+                br
+                input#username.form-control.input-text.resize-input-form(value=(user.username)?"#{user.username}":"", placeholder='Username', name='username')
+              .form-group
+                input#email.form-control.input-text.resize-input-form(value=(user.email)?"#{user.email}":"", placeholder='Email', name='email')
+              .form-group
+                input#firstName.form-control.input-text.resize-input-form(value=(user.firstName)?"#{user.firstName}":"", placeholder='First name', name='firstName')
+              .form-group
+                input#lastName.form-control.input-text.resize-input-form(value=(user.lastName)?"#{user.lastName}":"", placeholder='Last name', name='lastName')
+              .form-group
+                input#address.form-control.input-text.resize-input-form(value=(user.address)?"#{user.address}":"", placeholder='Address', name='address')
+              br
+              .form-group
+                .checkbox
+                  input.input-text.resize-input-form#mailNotification(name='mailNotification', type='checkbox', checked=(user.mailNotification===true ? "checked" : undefined))
+                  label.col-sm-10.input-text.resize-input-form Receave mail notification
+              .form-group
+                input#city(type='hidden', name='city')
+                input#country(type='hidden', name='country')
+                input#location(type='hidden', name='location')
+
+              .form-group
+                br
+                br
+                button#submit.btn.btn-green(type='submit') &nbsp;&nbsp;&nbsp;&nbsp;Edit profile info&nbsp;&nbsp;&nbsp;&nbsp;
+
+          .col-md-6.col-sm-7
+            if user.printer == 'accepted'
+              h4 Printer Address
+              hr
+              dl
+                if user.printerAddress
+                  address
+                      strong #{user.printerAddress['company']}
+                      br
+                      |#{user.printerAddress['street1']}
+                      br
+                      |#{user.printerAddress['city']}, #{user.printerAddress['zip']}, #{user.printerAddress['country']}
+                      br
+                      |#{user.printerAddress['phone']}
+
+              a#link.direct-link-ship-address.btn-green.btn(href='/profile/settings/printer-direction') &nbsp;&nbsp;&nbsp;&nbsp;Update&nbsp;&nbsp;&nbsp;&nbsp;
+              br
+              br
+              h4 Payment information
+              hr
+              p.text-muted Complete your Paypal information to make sure we can pay your printer fee. Make sure your first name and last name are same as in paypal.
+              unless user.paypal && user.paypal.email
+                strong You don't have a valid paypal email account.
+              form.form-3doers(action='/paypal/verify', method='post')
+                br
+                .form-group
+                  input.form-control.input-text.resize-input-form(name="email", value="#{(user.paypal && user.paypal.email)?user.paypal.email:''}", placeholder="Paypal Email Address")
+                .form-group
+                  .row
+                    .col-md-6
+                      input.form-control.input-text.col-md-6(name="firstName", value="#{(user.paypal && user.paypal.firstName)?user.paypal.firstName:''}", placeholder="Paypal First Name")
+                    .col-md-6
+                      input.form-control.input-text.col-md-6(name="lastName", value="#{(user.paypal && user.paypal.lastName)?user.paypal.lastName:''}", placeholder="Paypal Last Name")
+                .form-group
+                  input.btn.btn-green(type="submit", value=" Validate Paypal Account ")
+
+            unless user.printer == 'accepted'
+              h4 Shipping Addresses
+              hr
+              p.text-muted The default address will be used for shipping, don't forget update before set an order.
+              .row
+                .col-md-12
+                  for direction in user.shippingAddresses
+                    br
+                    .margin-address
+                      .row
+                        .col-md-6
+                          address
+                            strong #{direction['company']}
+                            br
+                            |#{direction['street1']}
+                            br
+                            |#{direction['city']}, #{direction['zip']}, #{direction['country']}
+                            br
+                            |#{direction['phone']}
+                        .col-md-6
+                          unless direction.active
+                            a.activate-shipping-address.btn-green.btn(href='/profile/settings/activate-shipping-direction/#{ direction.id }') Activate
+                            &nbsp;&nbsp;
+                          else
+                            br
+                            p.text-muted This address is the active one
+                          a.remove-shipping-address.btn-green-inverse.btn(href='/profile/settings/delete-shipping-direction/#{ direction.id }') Delete
+
+              if user.shippingAddresses.length == 0
+                strong You still don't have any direction
+                br
+                br
+              a#link.direct-link-ship-address.btn-green.btn(href='/profile/settings/new-shipping-direction') &nbsp;&nbsp;&nbsp;&nbsp;Add new direction&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+        if (user.printer!='accepted')
+          .row#upgradeYourProfile
+            .col-md-12
+                h2
+                    | Upgrade Your Profile
+                p
+                    | Here you can Upgrade your profile for FREE!
+            .col-md-12
+              .row
+                // -if(user.filemanager!="accepted")
+                //   .col-md-6
+                //     - if(user.filemanager=="request")
+                //       a(href="#upgradeYourProfile")
+                //         div.pending-request.circular.small-circular
+                //           |Pending
+                //     - else
+                //       a(data-toggle="modal",data-target="#becomeDesigner",href="#")
+                //         img(src='/img/icons_printing.png').circular.small-circular
+                //     div
+                //         h4 Become a Designer
+                //         p
+                //             | Are you a Designer?
+                //             | Updgrade your profile
+                //             | and earn money!
+
+                -if(user.printer!="accepted")
+                  .col-md-6
+                    - if(user.printer=="request")
+                      a(href='#')
+                          div.pending-request.circular.small-circular
+                            |Pending
+                    - else
+                      a(data-toggle="modal",data-target="#becomePrinter",href="#")
+                          img(src='/img/icon-1.png').circular.small-circular
+                    div
+                        h4 Become a Printer
+                        p
+                            | Are you a Printer?
+                            | Upgrade your profile
+                            | and earn money!
+        br
+        br
+
+block scripts
+  script(src='/vendor/jquery.ajaxupload.js')
+  script(src='/js/views/settings.js')
+  script(src='https://maps.googleapis.com/maps/api/js?v=3.exp&&libraries=places&language=en')
+  script.
+    var address = "#{user.address}"
+
+    function getParameterByName(name) {
+       name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+       var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+           results = regex.exec(location.search);
+       return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+    }
+
+    var message = getParameterByName('msg');
+
+    if (message) {
+      alert(message);
+    }
+

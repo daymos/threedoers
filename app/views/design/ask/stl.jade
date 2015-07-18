@@ -1,0 +1,42 @@
+extends ../../layouts/_app
+
+block title
+    | Notifications
+
+
+block content
+  .bg-3doers
+    .container
+      .page-header
+        if user
+          h1 Upload resources to design your STL
+      br
+      br
+      .row
+        .col-md-8
+          - if (error.length != 0)
+            p.info-3d #{error}
+          div#maindiv
+            div#formdiv
+            form.form-3doers(enctype="multipart/form-data",action="/design/stl/upload",method="post")
+              input(type='hidden', name='_csrf', value=csrfToken)
+              div.form-group
+                input.form-control(name="title",type="text",placeholder="Insert a title for this project")
+              div.form-group
+                textarea.form-control(rows="2",name="abstract",placeholder="Insert an abstract")
+              div.form-group#filediv
+                input.form-control#file(name="file[]",type="file")
+              div.form-group
+                textarea#textarea-id.form-control(rows="3",name="stl_desc",placeholder="Insert a description")
+              br
+              .form-group
+                input.btn.btn-lg.btn-green#add_more.upload(type="button", value="Add More Files")
+                input.btn.btn-lg.btn-green#upload.upload(type="submit",value="Upload File",name="submit")
+      br
+      br
+      br
+      br
+      br
+      br
+      br
+      br

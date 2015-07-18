@@ -1,0 +1,91 @@
+extends ../../layouts/_app
+
+block title
+  |  Upload Project
+
+block extra-headers
+  meta(name="csrf-token", content="#{csrfToken}")
+
+block content
+  .page
+    .container
+      br
+      br
+      .row
+        include ../../includes/banner
+
+    .bg-3doers
+      .container
+        div(role='tabpanel')
+          ul.nav.nav-justified.nav-3doers
+            li.nav-step.active
+              a(href='#tab-crete-order')
+                span.step-one
+                | Create order
+            li.nav-step
+              a(href='#tab-place-order')
+                span.step-two
+                | Place order
+            li.nav-step
+              a(href='#tab-accepted')
+                span.step-three
+                | Accepted
+            li.nav-step
+              a(href='#tab-printing')
+                span.step-four
+                | Printing
+            li.nav-step
+              a(href='#tab-shipping')
+                span.step-five
+                | Shipping
+
+        .row
+          .col-md-5
+            h4.light Upload your STL file and let us take care of the rest
+            .upload-stl
+              .preview-print#clickable-stl
+                p#promptzone.upload
+                 img(src="/images/icon_stlfile.png")
+                 br
+                 a.btn.btn-xlg.btn-green.fileinput-button CHOOSE FILE
+                #result
+                .progress.hide
+                  .progress-bar(aria-valuemax='100', aria-valuemin='0', aria-valuenow='0', role='progressbar')
+                    span.sr-only  0% Complete
+
+        .job-order
+          h5.job-volume
+
+
+        br
+        br
+//-   .page
+//-     .container
+//-       br
+//-       br
+//-       .row
+//-         include ../../includes/banner
+
+//-     .bg-3doers
+//-       .container
+//-         h1.page-header Send to Print
+//-             h2.subtitle-upload Upload your STL and let us take care of the rest
+//-         .preview-print#clickable-stl.col-md-6
+//-           p#promptzone.upload
+//-            img(src="/img/stl_icon.png")
+//-            br
+//-            a.btn-default.btn-lg Choose File
+//-           #result
+//-           .progress.hide
+//-             .progress-bar(aria-valuemax='100', aria-valuemin='0', aria-valuenow='0', role='progressbar')
+//-               span.sr-only  0% Complete
+
+
+//-         br
+//-         br
+//-         br
+
+block scripts
+  script(src='/vendor/jquery.ajaxupload.js')
+  script(src='/js/views/upload.js')
+

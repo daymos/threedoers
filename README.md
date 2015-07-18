@@ -1,6 +1,10 @@
 3Doers
 ======
 
+Will be based on this style guide: #[airbnb style guide](https://github.com/airbnb/javascript/tree/master/es5)
+
+Don't edit .coffee files... will be replaced!
+
 Requirements Dev
 ---------------
 

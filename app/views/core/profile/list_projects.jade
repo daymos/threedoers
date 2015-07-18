@@ -1,0 +1,113 @@
+extends ../../layouts/_app
+
+
+block title
+  |  Your Projects
+
+block content
+  -function prettyDate(dateString){
+  -var date = new Date(dateString);
+  -var d = date.getDate();
+  -var monthNames = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ];
+  -var m = monthNames[date.getMonth()];
+  -var y = date.getFullYear();
+  -var h = date.getHours()
+  -var mm = date.getMinutes()
+  -return d+'/'+m+'/'+y;
+  -}
+
+  -function prettyHour(dateString){
+  -var date = new Date(dateString);
+  -var d = date.getDate();
+  -var monthNames = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ];
+  -var m = monthNames[date.getMonth()];
+  -var y = date.getFullYear();
+  -var h = date.getHours()
+  -var mm = date.getMinutes()
+  -return h+':'+mm;
+  -}
+
+  .page
+    .container
+      br
+      br
+      .row
+        include ../../includes/banner
+
+    .bg-3doers
+      .container
+        div(role='tabpanel')
+          ul.nav.nav-tabs.nav-justified.nav-tabs-3doers(role='tablist')
+            li
+              a(href='/profile/projects', aria-controls='workplace') WorkPlace
+            li
+              a(href='/profile/onprint', aria-controls='printing') Printing
+            li
+              a(href='/design/projects', aria-controls='designing') Designing
+            li
+              a(href='/profile/archived', aria-controls='completed') Completed
+
+          .tab-content
+            .tab-pane.fade.in.active(id='workplace', role='tabpanel')
+            - if (printingProjects.length == 0 && designProjects.length==0 && projects.length==0)
+              h4.light There is not any project yet for this list.
+            - else
+              h4.light Here you can find printing and design jobs
+              br
+              .row
+                - var index = 1
+                - if (printingProjects.length > 0)
+                  - for (project in printingProjects)
+                    - project = printingProjects[project]
+                    .col-md-3.col-sm-6(class=(index%4 === 0? 'clear-left':''))
+                      article.job
+                        h4.job-name
+                          a(href="/project/#{project._id}") #{project.title}
+                        h6.job-created-at Created on #{prettyDate(project.createdAt)} at #{prettyHour(project.createdAt)} pm
+                        figure.job-image: img.img-responsive(src='/#{project.image}')
+                        .job-status
+                          i Status:
+                            a(href="/project/#{project._id}") #{project.humanizedStatus()}
+                    - index++
+                - if (designProjects.length > 0)
+                  - for (project in designProjects)
+                    - project = designProjects[project]
+                    .col-md-3.col-sm-6(class=(index%4 === 0? 'clear-left':''))
+                      article.job
+                        h4.job-name
+                          a(href="/design/project/#{project._id}") #{project.title}
+                        figure.job-image: img.img-responsive(src='/img/icons_#{project.dasherizedStatus()}.png')
+                        .job-status
+                          i Status:
+                            a(href="/design/project/#{project._id}") #{project.humanizedStatus()}
+                    - index++
+                - if (projects.length > 0)
+                  - for (project in projects)
+                    - project = projects[project]
+                    .col-md-3.col-sm-6(class=(index%4 === 0? 'clear-left':''))
+                      article.job
+                        h4.job-name
+                          a(href="/project/#{project._id}") #{project.title}
+                        h6.job-created-at Created on #{prettyDate(project.createdAt)} at #{prettyHour(project.createdAt)} pm
+                        figure.job-image
+                          - if (project.image)
+                            img.img-responsive(src='/#{project.image}')
+                          - else
+                            img.img-responsive(src='/images/job-preview-no-screen.jpg')
+                        .job-status
+                          i Status:
+                            a(href="/project/#{project._id}") #{project.humanizedStatus()}
+                    - index++
+
+        br
+        br
+
+
+block scripts
+  script(src='/js/views/project_list.js')
+  script.
+    $(document).ready(
+      function(event) {
+        $("a[href='#{ nav }']").parent().addClass('active');
+      }
+    );

@@ -1,0 +1,68 @@
+extends ../../layouts/_app
+
+block content
+  .bg-3doers
+    .container
+      .row
+        .col-sm-12
+          h2 Projects
+          br
+
+        if projects.length
+          .col-ms-12.text-right
+            if pagination.hasPrev
+              a(href="/admin/projects?page=#{ pagination.page - 1 }") Previous
+            span Page #{ pagination.page } of #{ pagination.pages }
+            if pagination.hasNext
+              a(href="/admin/projects?page=#{ pagination.page + 1 }") Next
+
+          table.table.table-condensed
+            thead
+              tr
+                th Title
+                th Amount
+                th Paid
+                th Paymend Released
+                th Waiting Time
+                th Actions
+            tbody
+              for project in projects
+                tr
+                  td
+                    a(href="/project/#{ project._id }") #{ project.title }
+                  td #{ project.order.ammount }
+                  td #{ project.order.totalPrice }
+                  td.text-center #{ project.order.secundaryPaid?'True':'False' }
+                  td.time(data-time='#{project.order.printingStartedAt}')
+                  td
+                    if project.order.secundaryPaid
+                      a(href="#")
+                        span.glyphicon.glyphicon-credit-card
+                    else
+                      a(href="/admin/project/release-payment/#{project._id}")
+                        span.glyphicon.glyphicon-credit-card
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    a(href="#")
+                      span.glyphicon.glyphicon-remove-sign
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    a(href="/admin/project/archive/#{project._id}")
+                      span.glyphicon.glyphicon-saved
+        else
+          .col-sm-12
+            br
+            strong There is not projects to handle
+            br
+            br
+            br
+
+
+block scripts
+  script(src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.2/moment.min.js')
+  script
+    $(document).ready(function(){
+      $('td.time').each(function(element){
+        var then = moment($(this).data('time'));
+        $(this).html(moment().diff(then));
+      });
+    });
+

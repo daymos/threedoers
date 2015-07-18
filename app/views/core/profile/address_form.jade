@@ -1,0 +1,62 @@
+extends ../../layouts/_app
+
+block title
+  |  Your Profile
+
+
+block extra-headers
+  meta(name="csrf-token", content="#{csrfToken}")
+
+block content
+  .page
+    .container
+      br
+      br
+      .row
+        include ../../includes/banner
+
+    .bg-3doers
+      .container
+        .row
+            form(action='#{ postURL }', method='post')
+              .col-md-6.col-sm-7
+                  input(type='hidden', name='authenticity_token')
+                  input(type='hidden', name='_csrf', value=csrfToken)
+                  .form-group
+                    input.form-control.input-text.resize-input-form(value=(address.name)?"#{address.name}":"", type='text', placeholder='Contact', name='name')
+                  .form-group
+                    input.form-control.input-text.resize-input-form(value=(address.company)?"#{address.company}":"", type='text', placeholder='Company', name='company')
+                  .form-group
+                    input.form-control.input-text.resize-input-form(value=(address.street1)?"#{address.street1}":"", type='text', placeholder='Address 1', name='street1')
+                  .form-group
+                    input.form-control.input-text.resize-input-form(value=(address.street_no)?"#{address.street_no}":"", type='text', placeholder='Building NO (optional)', name='street_no')
+                  .form-group
+                    input.form-control.input-text.resize-input-form(value=(address.street2)?"#{address.street2}":"", type='text', placeholder='Address 2 (optional)', name='street2')
+              .col-md-6.col-sm-7
+                  .form-group
+                    input.form-control.input-text.resize-input-form(value=(address.city)?"#{address.city}":"", type='text', placeholder='City', name='city')
+                  .form-group
+                    input.form-control.input-text.resize-input-form(value=(address.state)?"#{address.state}":"", type='text', placeholder='State or Province', name='state')
+                  .form-group
+                    input.form-control.input-text.resize-input-form(value=(address.zip)?"#{address.zip}":"", type='text', placeholder='ZIP CODE', name='zip_code')
+                  .form-group
+                    input.form-control.input-text.resize-input-form(value=(address.phone)?"#{address.phone}":"", type='text', placeholder='Phone NO.', name='phone_no')
+                  .form-group
+                    select.form-control.resize-input-form(name="country")
+                      for country in countries
+                        option#country(value='#{ country.abbr }', selected=(address.country==country.abbr)) #{ country.name }
+                  br
+                  br
+                  .form-group.photoedit.col-md-offset-9
+                      button#submit.btn-default.btn-lg.btn(type='submit') Update
+
+
+block scripts
+  if locals.message
+    script
+        alert("#{ message }");
+
+  if locals.errors
+    - for (key in errors)
+      script
+        alert("#{key}: #{errors[key].msg}");

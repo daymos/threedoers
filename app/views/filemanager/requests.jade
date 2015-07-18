@@ -1,0 +1,65 @@
+
+extends base
+
+block title
+  |  Filemanager :: Your Projects
+
+block content-profile
+  .tab-content
+    if !toApply
+      .container
+        h3 You need to complete the previous order before you can accept another one.
+        br
+        br
+    #projects.panel-group.panel-group-3d
+      - if (projects.length == 0)
+        .container
+          p.info-3d There is not any project yet for this list.
+      - for (project in projects)
+        - project = projects[project]
+        .panel
+          .panel-heading
+            .container
+              h4.panel-title
+                span PROJECT NAME:
+                | #{project.title}
+                a.accordion-btn.collapsed(data-toggle='collapse', data-parent='#projects', href='#project-#{project.id}')
+          div.panel-collapse.collapse(id='project-#{project.id}')
+            .panel-body
+              .container
+                br
+                br
+                p.info-3d
+                  span.title Description:
+                  | #{project.description}
+                br
+                p.info-3d
+                  span.title STATUS
+                  | #{project.humanizedStatus()}
+                br
+                br
+                p.info-3d
+                  span.image.align-left
+                    img(src='/img/icons_time_order.png')
+                  span.title QUESTO ORDINE ASPETTA DA: #{timeago(project.createdAt)}
+                br
+                br
+
+              br
+              br
+              if toApply
+                .container
+                  a(href=toApply?"/filemanager/pre-accept/#{ project.id }":"#", class="btn btn-default btn-lg btn-medium review")
+                    span ACCEPT
+                  br
+                  br
+                  br
+        .container
+          .divider
+
+
+block extra-headers
+  meta(name="csrf-token", content="#{csrfToken}")
+
+block scripts
+    script(src='/js/views/filemanager_requests.js')

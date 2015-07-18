@@ -59,12 +59,7 @@
 
   validator = expressValidator();
 
-  db = mongoose.connect("" + settings.db.host + settings.db.name, {
-    db: {
-      safe: true,
-      autoIndex: false
-    }
-  }, function(err) {
+  db = mongoose.connect(nconf.get('mongo:url'), nconf.get('mongo:options'), function(err) {
     if (err) {
       return logger.error(err);
     }

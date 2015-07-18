@@ -1,0 +1,227 @@
+-if (user.id == project.order.printer)
+  div(role='tabpanel')
+    ul.nav.nav-justified.nav-3doers
+      li.nav-step.complete
+        a(href='#tab-review')
+          span.step-one
+          | Review
+      li.nav-step.complete
+        a(href='#tab-accepted')
+          span.step-two
+          | Accepted
+      li.nav-step.active
+        a(href='#tab-printing')
+          span.step-three
+          | Printing
+      li.nav-step
+        a(href='#tab-shipping')
+          span.step-four
+          | Shipping
+    .tab-content
+      .tab-pane.fade(id='tab-review')
+        h4.light You have 24 hours to review and accept this order before it goes automatically back to the Workplace.
+      .tab-pane.fade(id='tab-accepted')
+        h4.light
+      .tab-pane.fade.in.active(id='tab-printing')
+        h4.light
+          | You can now proceed with the printing, remember that a faster service will result in a higher rating for you.
+          br
+          | Once you've completed the order, please click on "ORDER PRINTED" to generate a shipping label.
+      .tab-pane.fade(id='tab-shipping')
+        h4.light Print the shipping label, pack the item and attach the label on it.
+
+  .job-review
+    h4.job-name #{ project.title }
+    .row
+      .col-md-8
+        .job-details
+          .row
+            .col-md-5
+              - if (project.image)
+                img.img-responsive(src='/#{project.image}')
+              - else
+                img.img-responsive(src='/images/job-preview-no-screen.jpg')
+            .col-md-7
+              .info
+                p
+                  strong COLOR:
+                  |  #{project.color}
+                p
+                  strong MATERIAL:
+                  |  #{project.material}
+                p
+                  strong AMOUNT:
+                  |  #{project.order.ammount} pieces
+                p
+                  strong VOLUME:
+                  |  #{project.volume} cm3
+                p
+                  strong WEIGHT:
+                  |  #{project.weight} g
+                if project.dimension
+                  p
+                    strong DIMENSIONS:
+                    |  #{project.dimension.width} cm (W) #{project.dimension.height} cm (H) #{project.dimension.length}(L)
+      .col-md-4
+        table.job-payment
+          tbody
+            tr
+              td.desc Taxes:
+              td.value  #{project.order.taxes} €
+            tr
+              td.desc 3Doers:
+              td.value #{project.order.businessPayment} €
+            tr
+              td.desc Shipping:
+              td.value #{project.order.rate.amount_local } €
+            tr.separator
+              td(col-span='2')
+            tr
+              td.desc.text-shadow-3doers Printer:
+              td.value
+                h3.normal #{project.order.printerPayment} €
+
+  .row
+    .col-md-3
+      .form-group
+        h4: a(href='/#{project.file}') Download STL file
+    .col-md-4.col-md-offset-5
+      form(role="form", action="/project/printed/#{project.id}", method="post")
+        input(type='hidden', name='_csrf', value=csrfToken)
+        .form-group
+          button.btn.btn-xlg.btn-block.btn-green(type='submit') ORDER PRINTED
+      p.text-muted.text-light.text-xsmall Click the button above to generate a shipping label
+
+  .page-subheader
+    h3 Conversation with project owner:
+
+- else
+  div(role='tabpanel')
+          ul.nav.nav-justified.nav-3doers
+            li.nav-step.complete
+              a(href='#tab-review')
+                span.step-one
+                | Review
+            li.nav-step.complete
+              a(href='#tab-accepted')
+                span.step-two
+                | Accepted
+            li.nav-step.active
+              a(href='#tab-printing')
+                span.step-three
+                | Printing
+            li.nav-step
+              a(href='#tab-shipping')
+                span.step-four
+                | Shipping
+          .tab-content
+            .tab-pane.fade(id='tab-review')
+              h4.light
+            .tab-pane.fade(id='tab-accepted')
+              h4.light
+            .tab-pane.fade.in.active(id='tab-printing')
+              h4.light
+            .tab-pane.fade(id='tab-shipping')
+              h4.light
+
+        .job-review
+          h4.job-name #{ project.title }
+          .row
+            .col-md-8
+              .job-details
+                .row
+                  .col-md-5
+                    - if (project.image)
+                      img.img-responsive(src='/#{project.image}')
+                    - else
+                      img.img-responsive(src='/images/job-preview-no-screen.jpg')
+                  .col-md-7
+                    .info
+                      p
+                        strong COLOR:
+                        |  #{project.color}
+                      p
+                        strong MATERIAL:
+                        |  #{project.material}
+                      p
+                        strong AMOUNT:
+                        |  #{project.order.ammount} pieces
+                      p
+                        strong VOLUME:
+                        |  #{project.volume} cm3
+                      p
+                        strong WEIGHT:
+                        |  #{project.weight} g
+                      if project.dimension
+                        p
+                          strong DIMENSIONS:
+                          |  #{project.dimension.width} cm (W) #{project.dimension.height} cm (H) #{project.dimension.length}(L)
+            .col-md-4
+              table.job-payment
+                tbody
+                  tr
+                    td.desc Taxes:
+                    td.value #{project.order.taxes} €
+                  tr
+                    td.desc 3Doers:
+                    td.value #{project.order.businessPayment} €
+                  tr
+                    td.desc Printer:
+                    td.value #{project.order.printerPayment} €
+                  tr
+                    td.desc Shipping:
+                    td.value #{project.order.rate.amount_local } €
+                  tr.separator-small
+                    td(col-span='2')
+                  tr
+                    td.desc.text-shadow-3doers Total Price:
+                    td.value
+                      h3.normal #{project.orderPrice} €
+                  tr
+                    td(colspan='2')
+                      p.final-price *Final price will include a shipping fee and will be calculated once the order has been accepted by a printer.
+
+        .page-subheader
+          h3 Conversation with printer:
+
+        br
+
+.row
+  .col-md-8
+    .conversation
+      #comment-list
+        - for comment in project.comments
+          div.media
+            - if (user.username===comment.username)
+              .media-body.text-right
+                .message #{comment.content}
+                p.meta
+                  |  By
+                  strong  #{comment.username==user.username?"you":comment.username}
+                  |  at
+                  strong  #{ prettyDate(comment.createdAt) }
+                  |  at
+                  strong  #{ prettyHour(comment.createdAt) } pm
+              .media-right
+                a(href='#')
+                  img.media-object(src='/#{comment.photo}', style='width:50px; height:50px')
+            - else
+              .media-left
+                a(href='#')
+                  img.media-object(src='/#{comment.photo}', style='width:50px; height:50px')
+              .media-body
+                .message #{comment.content}
+                p.meta
+                  |  By
+                  strong  #{comment.username==user.username?"you":comment.username}
+                  |  at
+                  strong  #{ prettyDate(comment.createdAt) }
+                  |  at
+                  strong  #{ prettyHour(comment.createdAt) } pm
+      .form-group
+        textarea#comment-text.form-control(rows=4, placeholder='Write a comment')
+      .row
+        .col-xs-3.col-xs-offset-9
+          button#comment-button.btn.btn-md.btn-block.btn-green-inverse(type='submit') Send
+br
+br

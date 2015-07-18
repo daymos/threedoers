@@ -1,0 +1,31 @@
+extends ../base
+
+block base-scripts
+  script.
+    $(document).ready(
+      function(event) {
+        $(".header a[href='/profile/projects']").parent().addClass('active');
+        $(".subnav a[href='#{ nav }']").parent().addClass('active');
+      }
+    );
+
+block body
+
+  div.subnav
+    .container
+      ul.nav.nav-tabs
+        li#printing_request
+          a(href="/printing/requests")
+            span.resize-title WorkPlace
+        li#jobs_available
+          a(href="/printing/jobs")
+            span.resize-title WorkSpace
+        li#proposal
+          a(href="/design/projects")
+            span.resize-title On Design
+        li#archived
+          a(href="/printing/archived")
+            span.resize-title Archived
+      .line
+
+      block content-profile

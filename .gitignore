@@ -31,3 +31,8 @@ py-env
 .node-version
 codeit.sh
 npm-debug.log
+.env
+
+# some project that shouldn't be loaded
+stls
+3doers/public
