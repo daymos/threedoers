@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  {% block open-graph %}
+  <meta property='og:title'>
+  <meta property='og:type' content='website'>
+  <meta property='og:description'>
+  <meta property='og:url' content='http://www.3doers.it'>
+  <meta property='og:site_name' content='3doers'>
+  <meta property='og:app_id'>
+  {% endblock open-graph %}
+  {% block seo-tags %}
+  <meta name="description" content="3doers is a distributed 3D Printing service, 3D printer sharing community, 3D modelling communit">
+  <meta name="keywords" content="3D Printer, 3D print, printer 3D, stampa 3D, stampa 3D milano, stampa 3D torino, stampa 3D roma">
+  <meta name="author" content="">
+  <meta name="revisit-after" content="3 days">
+  {% endblock seo-tags %}
+
+  {# FIXME: Improve this for SEO, format pagename|site some are two long! 6 first words are relevants! #}
+  <title>3doers: 3D Printing services and 3D Printers</title>
+
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+
+  <link rel="stylesheet" href="/css/app.css">
+  {% if DEBUG %}
+    <script src="http://localhost:35729/livereload.js"></script>
+  {% endif %}
+</head>
+<body>
+
+  {% block content %}{% endblock %}
+  <script src="/javascript/app.js" type="text/javascript"></script>
+</body>
+</html>
