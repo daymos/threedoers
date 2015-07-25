@@ -1,9 +1,28 @@
+/**
+ *  Copyright (c) 2015 [3Doers]
+ *
+ *  @author Luis Carlos Cruz Carballo [lcruzc@linkux-it.com]
+ *  @version 0.1.0
+ */
+
+// Setup babel to use es6 till is supported at full
+require('babel/register');
+
+// Setting up react requirements
+require('node-jsx').install({extension: 'jsx'});
+
+
 var express = require('express');
-var config = require('./config/config');
 var glob = require('glob');
 var mongoose = require('mongoose');
 var nconf = require('nconf');
 var PrettyError = require('pretty-error');
+var raven = require('raven');
+var winston = require('winston');
+
+var config = require('./config/config');
+// Controllers modules
+var Printing = require('controllers/printing');
 
 // Refactored code
 
@@ -19,6 +38,11 @@ var PrettyError = require('pretty-error');
 // });
 
 var app = express();
+
+if (app.get('env') === 'development') {
+  raven.middleware.express.requestHandler(nconf.get('sentry:DSN'));
+}
+
 
 // Old code
   var settings = require('./config');
@@ -78,7 +102,9 @@ var app = express();
     res.locals.nav = req.path;
     res.locals.csrfToken = req.session._csrf;
     res.locals.io = settings.io;
-    res.locals.site =nconf.get('site');
+    res.locals.site = nconf.get('site');
+    res.locals.DEBUG = app.get('env') === 'development';
+    res.locals.PRODUCTION = app.get('env') === 'production';
     return next();
   });
 
@@ -123,6 +149,16 @@ var app = express();
     });
   }
 
+  // FIXME: This is Real code now put in right place latter
+  var printingRouter = express.Router();
+
+  printingRouter.param('projectID', Printing.paramProject);
+  printingRouter.get('/:projectID', Printing.projectDetail);
+
+  app.use('/project', printingRouter);
+  // ENDFIXME
+
+
   _ref = ['admin', 'filemanager', 'core', 'auth', 'registration', 'notification', 'design', 'api'];
   for (_i = 0, _len = _ref.length; _i < _len; _i++) {
     appName = _ref[_i];
@@ -130,6 +166,7 @@ var app = express();
     require("./lib/" + appName)(app, io);
   }
 
+  // TODO: This is latest code should work!
   app.use(function (req, res, next) {
     var err = new Error('not found');
     err.status = 404;
@@ -141,7 +178,8 @@ var app = express();
   pe.skipNodeFiles();
   pe.skipPackage('express');
 
-  if(app.get('env') === 'development'){
+  // TODO: Do a error handler for Ajax
+  if (app.get('env') === 'development') {
     app.use(function (err, req, res, next) {
       console.log(pe.render(err));
       res.status(err.status || 500);
@@ -154,6 +192,7 @@ var app = express();
   } else {
     // This will handle all errors, render the appropiate view
     // and also will log to sentry
+    app.use(raven.middleware.express.errorHandler(nconf.get('sentry:DSN')))
     app.use(function (err, req, res, next) {
       console.log(pe.render(err));
       res.status(err.status || 500);

@@ -5,6 +5,47 @@ Will be based on this style guide: #[airbnb style guide](https://github.com/airb
 
 Don't edit .coffee files... will be replaced!
 
+Development
+-----------
+
+To install all dependencies and dev dependencies run this:
+
+```bash
+npm install
+```
+
+To run local dev server just run
+
+```bash
+gulp
+```
+
+Deploy on openshift
+-------------------
+
+```bash
+git push
+```
+
+Tools used
+----------
+
+* Reactjs used to create very complex UI and create isomorphic application
+* Babel to enable es6 to write cleaner code
+* Mongodb as backend
+* python to process stl files
+* Bootstrap as css framework
+* Livereload to help on reload page when assets changes (development)
+
+Take in mind when coding
+------------------------
+
+* All files except 'app.js' will use es6 for coding
+* All imports and requires in backend are relative NODE_PATH is set to app and frontend/scripts
+* All imports in frontend are local imports like require('./components/component.jsx')
+
+*Bellow instructions are not used anymore*
+
 Requirements Dev
 ---------------
 
@@ -28,14 +69,6 @@ Run development
 ```bash
 hotcoffee src/server.coffee
 grunt
-```
-
-Deploy on openshift
--------------------
-
-```bash
-grunt build
-git push
 ```
 
 

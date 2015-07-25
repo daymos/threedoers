@@ -37,10 +37,10 @@ defaults.mongo = {
 };
 
 defaults.mailer = {
-  servide: process.env.MAILER_SERVICE,
+  service: process.env.MAILER_SERVICE,
   username: process.env.MAILER_USERNAME,
   password: process.env.MAILER_PASSWORD,
-  servide: process.env.MAILER_DEFAULT
+  default_from: process.env.MAILER_DEFAULT
 };
 
 defaults.emailSubjects = {
@@ -55,7 +55,11 @@ defaults.emailSubjects = {
     paid: 'Project was paid',
     status: 'Project Status'
   }
-}
+};
+
+defaults.admins = {
+  emails: ['3doers@gmail.com']
+};
 
 defaults.adminEmailAddresses = [
   '3doers@gmail.com',

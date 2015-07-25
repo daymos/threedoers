@@ -16,6 +16,7 @@
   "private": true,
   "dependencies": {
     "Deci-mal": "~0.2.0",
+    "babel": "^5.6.23",
     "body-parser": "~1.12.0",
     "bufferpack": "0.0.6",
     "coffee-script": "*",
@@ -40,6 +41,7 @@
     "morgan": "~1.5.0",
     "multer": "^0.1.8",
     "nconf": "^0.7.1",
+    "node-jsx": "^0.13.3",
     "node-uuid": "*",
     "nodemailer": "~0.6.0",
     "passport": "^0.2.2",
@@ -49,6 +51,10 @@
     "primus": "^3.1.1",
     "q": "1.0.1",
     "raven": "^0.8.1",
+    "react": "^0.13.3",
+    "react-bootstrap": "^0.23.7",
+    "react-router": "^0.13.3",
+    "reflux": "^0.2.10",
     "serve-favicon": "~2.2.0",
     "shippo": "^1.0.0",
     "socket.io": "^1.3.6",
@@ -59,6 +65,8 @@
     "winston": "^1.0.1"
   },
   "devDependencies": {
+    "babelify": "^6.1.3",
+    "browserify": "^11.0.0",
     "gulp": "^3.9.0",
     "gulp-compass": "^2.1.0",
     "gulp-concat": "^2.6.0",
@@ -68,12 +76,14 @@
     "gulp-nodemon": "^2.0.3",
     "gulp-plumber": "^1.0.1",
     "gulp-sass": "^2.0.3",
+    "gulp-streamify": "0.0.5",
     "gulp-uglify": "^1.2.0",
     "mocha": "^1.18.2",
     "pre-commit": "^1.0.10",
     "request": "*",
     "should": "*",
-    "supertest": "^0.12.1"
+    "supertest": "^0.12.1",
+    "vinyl-source-stream": "^1.1.0"
   },
   "engines": {
     "node": "0.10.38",
@@ -81,7 +91,7 @@
   },
   "subdomain": "me3doers",
   "scripts": {
-    "start": "NODE_ENV=production node app.js --websocket-port=8000 --log-level=1"
+    "start": "NODE_ENV=production NODE_PATH=app node app.js --websocket-port=8000 --log-level=1"
   },
   "main": "app.js"
 }

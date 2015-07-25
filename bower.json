@@ -1,0 +1,12 @@
+{
+  "name": "3doers",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "bootstrap-sass": "~3.3.5",
+    "components-font-awesome": "~4.3.0",
+    "animate.css": "~3.3.0"
+  },
+  "devDependencies": {},
+  "exportsOverride": {}
+}

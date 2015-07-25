@@ -7,60 +7,64 @@ var compass = require('gulp-compass');
 var minifyCSS = require('gulp-minify-css');
 var uglify = require('gulp-uglify');
 var concat = require('gulp-concat');
-var htmlreplace = require('gulp-html-replace');
+var babelify = require('babelify');
+var source = require('vinyl-source-stream');
+var streamify = require('gulp-streamify');
+var browserify = require('browserify');
+
 
 // This gulp task will be only used production
 gulp.task('scripts', function() {
-  gulp.src('./frontend/javascript/*.js')
-    .pipe(concat('app.js'))
-    .pipe(uglify())
-    .pipe(gulp.dest('./public/javascript/'));
+  // build frontend files
+  browserify({
+    entries: 'frontend/javascript/index.jsx',
+    extensions: ['.jsx'],
+    debug: true
+  })
+  .transform(babelify)
+  .bundle()
+  .pipe(source('app.js'))
+  .pipe(streamify(uglify()))
+  .pipe(gulp.dest('public/javascript'))
+  .pipe(livereload());
 });
+
 
 gulp.task('sass', function () {
   gulp.src('./frontend/scss/*.scss')
     .pipe(plumber())
     .pipe(sass())
-    .pipe(gulp.dest('./frontend/temp/css'))
+    .pipe(minifyCSS({compatibility: 'ie8'}))
+    .pipe(gulp.dest('./public/styles'))
     .pipe(livereload());
 });
 
+
 gulp.task('watch', function() {
   gulp.watch('./frontend/scss/*.scss', ['sass']);
+  gulp.watch('./frontend/javascript/**/*.jsx', ['scripts']);
 });
+
 
 gulp.task('develop', function () {
   livereload.listen();
   nodemon({
     watch: ['app', 'app.js', 'config', 'lib'],
     script: 'app.js',
-    ext: 'js coffee swig',
+    ext: 'js jsx coffee html',
+    env: { 'NODE_PATH': 'app' }
   }).on('restart', function () {
     setTimeout(function () {
       livereload.changed(__dirname);
-    }, 500);
+    }, 5000);
   });
 });
 
-gulp.task('performance', function(){
-  gulp.src('app/views/layout.swig')
-    .pipe(htmlreplace({
-      'css': 'css/app.css',
-      'js': 'javascript/app.js',
-      'js-header': 'javascript/header.js',
-      'js-vendor': 'javascript/vendor.js'
-    }))
-    .pipe(gulp.dest('app/views/layout-prod.swig'));
-});
 
 gulp.task('default', [
   'sass',
+  'scripts',
   'develop',
   'watch'
 ]);
 
-gulp.task('production', [
-  'sass',
-  'script',
-  'performance'
-]);

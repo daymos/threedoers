@@ -22,9 +22,9 @@ var flash = require('connect-flash');
 
 module.exports = function(app, db, config) {
   // Setup template engines
-  app.engine('swig', swig.renderFile);
+  app.engine('html', swig.renderFile);
   app.set('views', nconf.get('rootDir') + '/app/views');
-  app.set('view engine', 'swig');
+  app.set('view engine', 'html');
 
   // TODO: Remove this later! when refactor will be finished
   app.engine('jade', require('consolidate').jade);
@@ -70,11 +70,6 @@ module.exports = function(app, db, config) {
   app.use(gzippo.compress());
   app.disable("x-powered-by");
   app.use(flash());
-
-  // This config only available if not debug
-  if (!nconf.get('debug')) {
-    app.use(raven.middleware.express(nconf.get('sentry:DSN')));
-  }
 
   // settings
   if (app.get('env') == 'development') {

@@ -36,3 +36,5 @@ npm-debug.log
 # some project that shouldn't be loaded
 stls
 3doers/public
+.DS_Store
+bower_components

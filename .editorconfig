@@ -15,7 +15,7 @@ indent_size = 4
 [Makefile]
 indent_style = tab
 
-[*.{jade,js,coffee,html,css,scss}]
+[*.{jsx,jade,js,coffee,html,css,scss}]
 indent_style = space
 indent_size = 2
 charset = utf-8

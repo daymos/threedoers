@@ -1,0 +1,6 @@
+@mixin text-shadow($value) {
+  -webkit-text-shadow: $value;
+     -moz-text-shadow: $value;
+      -ms-text-shadow: $value;
+          text-shadow: $value;
+}
