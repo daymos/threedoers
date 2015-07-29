@@ -45,40 +45,16 @@
   {% else %}
     {% include "partials/anonymous_header.html" %}
   {% endif %}
-
-  {% block content %}{% endblock %}
-
-  <div id="footer">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-8">
-          <nav>
-            <ul class="list-inline nav-inline">
-              <li><a href="#">3doers s.r.l. copyright 2015, 3D print community</a>
-              </li>
-              <li><a href="/docs/terms.pdf">Terms and Conditions</a>
-              </li>
-              <li><a href="/docs/pp.pdf">Privacy Policy</a>
-              </li>
-            </ul>
-          </nav>
-        </div>
-        <div class="col-md-4">
-          <nav>
-            <ul class="list-inline nav-social">
-              <li><a href="#" class="social-link"><i class="fa fa-fw fa-twitter"></i></a>
-              </li>
-              <li><a href="#" class="social-link"><i class="fa fa-fw fa-facebook"></i></a>
-              </li>
-              <li><a href="#" class="social-link"><i class="fa fa-fw fa-pinterest-p"></i></a>
-              </li>
-            </ul>
-          </nav>
-        </div>
-      </div>
-    </div>
+  <div id="beta-label" class="hidden-xs hidden-sm">
+    <img src="/images/beta_label.png" alt="3doers beta">
   </div>
+  {% block content %}
+  <div id="react-root">{{ reactHTML|safe }}</div>
+  {% endblock %}
+
+  {% include "partials/footer.html" %}
 
   <script src="/javascript/app.js" type="text/javascript"></script>
+  {% block extra-js-footer %}{% endblock extra-js-footer %}
 </body>
 </html>

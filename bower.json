@@ -5,7 +5,7 @@
   "dependencies": {
     "bootstrap-sass": "~3.3.5",
     "components-font-awesome": "~4.3.0",
-    "animate.css": "~3.3.0"
+    "hover": "~2.0.2"
   },
   "devDependencies": {},
   "exportsOverride": {}

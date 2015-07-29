@@ -5,11 +5,11 @@
  *  @version 0.1.0
  */
 
+// Setting up react requirements
+require('node-jsx').install({extension: 'jsx', harmony: true});
+
 // Setup babel to use es6 till is supported at full
 require('babel/register');
-
-// Setting up react requirements
-require('node-jsx').install({extension: 'jsx'});
 
 
 var express = require('express');
@@ -18,11 +18,14 @@ var mongoose = require('mongoose');
 var nconf = require('nconf');
 var PrettyError = require('pretty-error');
 var raven = require('raven');
-var winston = require('winston');
 
 var config = require('./config/config');
 // Controllers modules
 var Printing = require('controllers/printing');
+
+// React stuff
+var React = require('react');
+var Forbidden = React.createFactory(require('components/forbidden'));
 
 // Refactored code
 
@@ -64,7 +67,7 @@ if (app.get('env') === 'development') {
   global.env = env;
   global.root = __dirname;
   logger.info('');
-  logger.info('***********************************************************************');
+  logger.info('***************************************************');
   logger.info('* Starting 3doers server:');
   logger.info('*');
 
@@ -122,7 +125,7 @@ if (app.get('env') === 'development') {
       logger.info('*   Mongo Database:', settings.db.name);
       logger.info('*   Pid File:', process.pid);
       logger.info('*');
-      return logger.info('***********************************************************************');
+      return logger.info('***************************************************');
     });
     io = io.listen(server);
   } else {
@@ -133,7 +136,7 @@ if (app.get('env') === 'development') {
       logger.info('*   Pid File:', process.pid);
       logger.info('*   Environment:', app.settings.env);
       logger.info('*');
-      return logger.info('***********************************************************************');
+      return logger.info('***************************************************');
     });
     io = io.listen(server);
   }
@@ -162,14 +165,13 @@ if (app.get('env') === 'development') {
   _ref = ['admin', 'filemanager', 'core', 'auth', 'registration', 'notification', 'design', 'api'];
   for (_i = 0, _len = _ref.length; _i < _len; _i++) {
     appName = _ref[_i];
-    logger.debug("Loading app " + appName);
     require("./lib/" + appName)(app, io);
   }
 
   // TODO: This is latest code should work!
   app.use(function (req, res, next) {
     var err = new Error('not found');
-    err.status = 404;
+    err.status = HTTPStatus.NOT_FOUND;
     next(err);
   });
 
@@ -178,16 +180,46 @@ if (app.get('env') === 'development') {
   pe.skipNodeFiles();
   pe.skipPackage('express');
 
-  // TODO: Do a error handler for Ajax
+  // Forbidden middleware handler
+  app.use(function (err, req, res, next) {
+    if (err.status == HTTPStatus.FORBIDDEN) {
+      res.status(err.status);
+      if (req.xhr) {
+        return res.send({message: err.message});
+      } else {
+        var reactHTML = React.renderToString(Forbidden({message: err.message, loggedIn: !!req.user}));
+        return res.render('forbidden.html', {reactHTML: reactHTML});
+      }
+    } else {
+      return next(err);
+    }
+  });
+
+  // Not found middleware handler
+  app.use(function (err, req, res, next) {
+    if (err.status == HTTPStatus.NOT_FOUND) {
+      console.log('*****************');
+      console.log(req.xhr);
+      res.status(err.status);
+      return req.xhr ? res.end() : res.render('not-found.html');
+    } else {
+      return next(err);
+    }
+  });
+
   if (app.get('env') === 'development') {
     app.use(function (err, req, res, next) {
       console.log(pe.render(err));
       res.status(err.status || 500);
-      res.render('error', {
-        message: err.message,
-        error: err,
-        title: 'error'
-      });
+      if (req.xhr) {
+        return res.end();
+      } else {
+        return res.render('error.html', {
+          message: err.message,
+          error: err,
+          title: 'error'
+        });
+      }
     });
   } else {
     // This will handle all errors, render the appropiate view
@@ -196,11 +228,15 @@ if (app.get('env') === 'development') {
     app.use(function (err, req, res, next) {
       console.log(pe.render(err));
       res.status(err.status || 500);
-      res.render('error', {
-        message: err.message,
-        error: {},
-        title: 'error'
-      });
+      if (req.xhr) {
+        return res.end();
+      } else {
+        return res.render('error.html', {
+          message: err.message,
+          error: {},
+          title: 'error'
+        });
+      }
     });
   }
 

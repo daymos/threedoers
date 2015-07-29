@@ -1,1 +1,40 @@
 {% extends '../layout.html' %}
+
+{% block content %}
+<div class="page">
+  <div class="container">
+    <br>
+    <br>
+    <div class="row">
+      <div class="col-md-10 col-md-offset-1">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="step">
+              <a href="/project/upload"><img src="/img/icons_printing.png" style="width: 100px; height: 100px;" class="img-circle"></a>
+              <h5>Send to print</h5>
+              <p>Upload an STL file, see the price
+                <br>and order your print</p>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="step">
+              <a href="/profile/settings"><img src="/img/icon-22.png" style="width: 100px; height: 100px;" class="img-circle"></a>
+              <h5>Upgrade your Profile</h5>
+              <p>Are you a printer or a designer?
+                <br>Click here to upgrade your profile
+                <br>and start to print or design for
+                <br>&nbsp;others</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-3doers">
+    <div class="container" id="react-root">
+      {{ reactHTML|safe }}
+    </div>
+  </div>
+</div>
+{% endblock content %}

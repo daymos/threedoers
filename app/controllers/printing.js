@@ -6,19 +6,31 @@
  */
 
 // Third party modules
-import winston from 'winston'
-import HTTPStatus from "http-status"
+import nconf from 'nconf';
+import HTTPStatus from "http-status";
 
 // Model modules
-import mProjects from 'models/project'
-import mUsers from 'models/user'
+import mProjects from 'models/project';
+import mUsers from 'models/user';
+
+// React components
+import React from 'react';
+import Router from 'react-router';
+import routes from 'components/routes.jsx';
+
+// Extra modules
+import getLogger from 'utils/logger';
+
+
+// Other globals
+let logger = getLogger('printing');
 
 
 /**
  *  Utility methods
  */
 
-exports.paramProject = function paramProject (req, res, next, project) {
+exports.paramProject = function paramProject (req, res, next, projectID) {
   /**
    * This method should be used in express app as param that will be used in all views
    * that needs a project inside.
@@ -29,42 +41,44 @@ exports.paramProject = function paramProject (req, res, next, project) {
    *  3 Will display the project for owner or admin.
    */
 
-  let query = mProjects.STLProject.findOne({_id: project});
+  let query = mProjects.STLProject.findOne({_id: projectID});
 
   // FIXME: req.user.printer is backward compatibility remove later!
+  /*
   if (req.user && !(req.user.isPrinter && req.user.printer === 'accepted')) {
     // Test if normal user so ask for ownership
     query.where('user').equals(req.user.id)
   }
+  */
 
   query.exec(function(err, project) {
-    if (err) return next(err);
+    if (err) { return next(err); }
 
     if (project) {
       // Test if printer has rights to see
       // FIXME: req.user.printer is backward compatibility remove later!
-      let ifQuery = req.user && req.user.isPrinter && req.user.printer === 'accepted';
+      let isPrinter = req.user && req.user.isPrinter && req.user.printer === 'accepted';
 
       // FIXME: Modify this when multiorder is ready
-      ifQuery = project.order && project.order.printer && !req.user.id.equal(project.order.printer);
+      let canSee = isPrinter && project.order && project.order.printer && req.user._id.equals(project.order.printer);
+      canSee = canSee || (req.user && req.user._id.equals(project.user));
+      canSee = canSee || (req.session.projects && req.session.projects.indexOf(project._id.toHexString()) === -1);
 
-      if (ifQuery) {
-        let error = new Error('You don\'t have permission to see this');
+      if (!canSee) {
+        let error = new Error('You don\'t have permission to see this project.');
         error.status = HTTPStatus.FORBIDDEN;
         return next(error);
       }
-
-      // TODO: Test if anonymous user has permission
 
       req.project = project;
       next();
     } else {
       let error = new Error("Project not found.");
       error.status = HTTPStatus.NOT_FOUND;
-      return next(error)
+      return next(error);
     }
   });
-}
+};
 
 
 /**
@@ -72,20 +86,29 @@ exports.paramProject = function paramProject (req, res, next, project) {
  */
 
 exports.projectDetail = function projectDetail(req, res, next) {
-  res.render('printing/project.html');
   // Process project if not processed
   if (!req.project.volume || req.project.bad || !req.project.dimension) {
     processVolumeWeight(req.project);
   }
 
-  if (req.project.order && req.project.order.printer) {
-    // TODO: Remove this logic when working with multiorders
-    mUser.findOne({id: req.project.order.printer}).exec(function (error, printer) {
-      if (error) return next(error);
+  Router.run(routes, req.originalUrl, function (Root, state) {
+    if (req.project.order && req.project.order.printer) {
+      // TODO: Remove this logic when working with multiorders
+      mUser.findOne({id: req.project.order.printer}).exec(function (error, printer) {
+        if (error) { return next(error); }
 
-
-    });
-  }
+        let props = {
+          project: req.project.toJSON(),
+          printer: printer.toJSON()
+        };
+        let reactHTML = React.renderToString(<Root project={req.project} printer={req.printer} />);
+        return res.render('printing/project.html', {reactHTML});
+      });
+    } else {
+        let reactHTML = React.renderToString(<Root project={req.project} />);
+        return res.render('printing/project.html', {reactHTML});
+    }
+  });
   // var e, filterDict;
   //      if (req.user) {
   //        notificationModels.Notification.update({
@@ -133,4 +156,4 @@ exports.projectDetail = function projectDetail(req, res, next) {
   //      });
   //    });
 
-}
+};

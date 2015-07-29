@@ -24,9 +24,8 @@ gulp.task('scripts', function() {
   .transform(babelify)
   .bundle()
   .pipe(source('app.js'))
-  .pipe(streamify(uglify()))
-  .pipe(gulp.dest('public/javascript'))
-  .pipe(livereload());
+  // .pipe(streamify(uglify()))
+  .pipe(gulp.dest('public/javascript'));
 });
 
 
@@ -42,7 +41,7 @@ gulp.task('sass', function () {
 
 gulp.task('watch', function() {
   gulp.watch('./frontend/scss/*.scss', ['sass']);
-  gulp.watch('./frontend/javascript/**/*.jsx', ['scripts']);
+  gulp.watch(['./frontend/javascript/**/*.jsx', './app/components/**/*.jsx'], ['scripts']);
 });
 
 
@@ -52,7 +51,7 @@ gulp.task('develop', function () {
     watch: ['app', 'app.js', 'config', 'lib'],
     script: 'app.js',
     ext: 'js jsx coffee html',
-    env: { 'NODE_PATH': 'app' }
+    env: { 'NODE_PATH': 'app:libs' }
   }).on('restart', function () {
     setTimeout(function () {
       livereload.changed(__dirname);

@@ -10,7 +10,7 @@ defaults.rootDir = ROOT_DIR;
 defaults.logFile = ROOT_DIR + '/logs/error.log';
 
 // Log config
-defaults.logLevel = parseInt(process.env.LOG_LEVEL || 5);
+defaults.logLevel = process.env.LOG_LEVEL || 'warn';
 
 // Site
 defaults.site = 'https://www.3doers.it';

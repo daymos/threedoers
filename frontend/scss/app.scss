@@ -1,6 +1,7 @@
 @import './vars';
 @import '../../bower_components/bootstrap-sass/assets/stylesheets/bootstrap';
 @import '../../bower_components/components-font-awesome/scss/font-awesome';
+@import '../../bower_components/hover/scss/hover';
 
 @import './backend';
 
@@ -364,19 +365,19 @@ a.link-inverse:focus {
   color: $primary-color-text;
 }
 
-.btn-green {
+.btn.btn-green {
   background-color: #88D6A7;
   @include border-radius(5px);
   color: #FFFFFF;
 }
 
-.btn-green:hover
-.btn-green:focus {
+.btn.btn-green:hover
+.btn.btn-green:focus {
   background-color: #65BB87;
   color: #FFFFFF;
 }
 
-.btn-green-inverse {
+.btn.btn-green-inverse {
   background-color: transparent;
   border: 2px solid #88D6A7;
   color: #88D6A7;
@@ -522,6 +523,16 @@ a.link-inverse:focus {
   .navbar .nav > li > .dropdown-menu:before,
   .navbar .nav > li > .dropdown-menu:after {
     content: none;
+  }
+}
+
+.error-page {
+  h1 {
+    font-size: 10em;
+  }
+
+  .lead {
+    font-size: 2.5em;
   }
 }
 

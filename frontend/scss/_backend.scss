@@ -263,7 +263,7 @@ table.job-payment {
 
 .nav-step {
 
-  span {
+  span[class^="step-"] {
     background-position: 0 -38px;
     background-repeat: no-repeat;
     display: inline-block;
