@@ -19,6 +19,7 @@
         "no-underscore-dangle": 0
     },
     global: {
-      "window": true
+      "window": true,
+      "env": true
     }
 }

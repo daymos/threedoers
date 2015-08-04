@@ -22,6 +22,7 @@ var raven = require('raven');
 var config = require('./config/config');
 // Controllers modules
 var Printing = require('controllers/printing');
+var logger = require('utils/logger');
 
 // React stuff
 var React = require('react');
@@ -153,11 +154,16 @@ if (app.get('env') === 'development') {
   }
 
   // FIXME: This is Real code now put in right place latter
+  var apiRouter = express.Router();
+  apiRouter.param('projectID', Printing.paramProject);
+  apiRouter.get('/projects/:projectID', Printing.projectDetailAPI);
+
   var printingRouter = express.Router();
 
   printingRouter.param('projectID', Printing.paramProject);
   printingRouter.get('/:projectID', Printing.projectDetail);
 
+  app.use('/api/v1', apiRouter);
   app.use('/project', printingRouter);
   // ENDFIXME
 
@@ -198,8 +204,7 @@ if (app.get('env') === 'development') {
   // Not found middleware handler
   app.use(function (err, req, res, next) {
     if (err.status == HTTPStatus.NOT_FOUND) {
-      console.log('*****************');
-      console.log(req.xhr);
+      logger.debug(req.xhr);
       res.status(err.status);
       return req.xhr ? res.end() : res.render('not-found.html');
     } else {
@@ -211,6 +216,7 @@ if (app.get('env') === 'development') {
     app.use(function (err, req, res, next) {
       console.log(pe.render(err));
       res.status(err.status || 500);
+      logger.debug(req.xhr);
       if (req.xhr) {
         return res.end();
       } else {
@@ -227,6 +233,7 @@ if (app.get('env') === 'development') {
     app.use(raven.middleware.express.errorHandler(nconf.get('sentry:DSN')))
     app.use(function (err, req, res, next) {
       console.log(pe.render(err));
+      logger.debug(req.xhr);
       res.status(err.status || 500);
       if (req.xhr) {
         return res.end();

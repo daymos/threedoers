@@ -94,7 +94,7 @@ exports.projectDetail = function projectDetail(req, res, next) {
   Router.run(routes, req.originalUrl, function (Root, state) {
     if (req.project.order && req.project.order.printer) {
       // TODO: Remove this logic when working with multiorders
-      mUser.findOne({id: req.project.order.printer}).exec(function (error, printer) {
+      mUsers.User.findOne({id: req.project.order.printer}).exec(function (error, printer) {
         if (error) { return next(error); }
 
         let props = {
@@ -156,4 +156,19 @@ exports.projectDetail = function projectDetail(req, res, next) {
   //      });
   //    });
 
+};
+
+
+exports.projectDetailAPI = function projectDetail(req, res, next) {
+    if (req.project.order && req.project.order.printer) {
+      // TODO: Remove this logic when working with multiorders
+      mUsers.User.findOne({id: req.project.order.printer}).exec(function (error, printer) {
+        if (error) { return next(error); }
+        let project = req.project.toJSON();
+        project.order.printer = printer.toJSON();
+        return res.json(project);
+      });
+    } else {
+        return res.json(req.project.toJSON());
+    }
 };

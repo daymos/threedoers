@@ -8,7 +8,8 @@
 import React from 'react';
 import {RouteHandler, NotFoundRoute, Route} from 'react-router';
 
-import {Project} from './project.jsx';
+import { Project } from './project.jsx';
+import { Order } from './order.jsx';
 
 
 let routes;
@@ -31,6 +32,6 @@ class ThreeDoersApp extends React.Component {
 
 export default routes = (
   <Route handler={ThreeDoersApp}>
-    <Route path="/project/:id" handler={Project} />
+    <Route path="/project/:id" handler={Order} />
   </Route>
 );
