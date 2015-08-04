@@ -19,6 +19,7 @@
     "bufferpack": "0.0.6",
     "coffee-script": "*",
     "consolidate": "0.5.x",
+    "datejs": "^1.0.0-rc3",
     "emailjs": "0.3.3",
     "express": "3.0.4",
     "express-validator": "1.0.1",
@@ -28,6 +29,7 @@
     "jade": "^0.27.7",
     "moment": "1.7.2",
     "mongoose": "3.8.x",
+    "node-uuid": "*",
     "nodemailer": "~0.6.0",
     "passport": "0.1.15",
     "passport-local": "0.1.6",
@@ -40,8 +42,7 @@
     "socket.io-session": "0.0.5",
     "timeago": "^0.1.0",
     "when": "^3.5.0",
-    "winston": "0.7.3",
-    "node-uuid":"*"
+    "winston": "0.7.3"
   },
   "devDependencies": {
     "mocha": "*",
