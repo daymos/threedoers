@@ -160,14 +160,12 @@ if (app.get('env') === 'development') {
   }
 
   if (app.get('env') !== 'development') {
-    io.configure(function() {
       io.set('log level', 1);
       io.set('transports', ["websocket"]);
       io.enable("browser client minification");
       io.enable("browser client etag");
       io.enable("browser client gzip");
-      return io.set('polling duration', 30);
-    });
+      io.set('polling duration', 30);
   }
 
   require('./config/primus')(app, primus, shared);
