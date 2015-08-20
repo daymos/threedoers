@@ -5,11 +5,7 @@
  *  @version 0.1.0
  */
 
-try {
-  require('dotenv').load();
-} catch (err) {
-  console.log('There is not .env file, using env variables.');
-}
+require('dotenv').load();
 
 import nconf from 'nconf';
 import path from 'path';
