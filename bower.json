@@ -5,7 +5,8 @@
   "dependencies": {
     "bootstrap-sass": "~3.3.5",
     "components-font-awesome": "~4.3.0",
-    "hover": "~2.0.2"
+    "hover": "~2.0.2",
+    "awesome-bootstrap-checkbox": "~0.3.4"
   },
   "devDependencies": {},
   "exportsOverride": {}

@@ -18,8 +18,11 @@
         "camelcase": 0,
         "no-underscore-dangle": 0
     },
-    global: {
+    globals: {
       "window": true,
-      "env": true
+      "$": true,
+      "env": true,
+      "JSC3D": true,
+      "Primus": true
     }
 }

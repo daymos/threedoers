@@ -12,5 +12,8 @@ import routes from '../../app/components/routes.jsx';
 
 
 Router.run(routes, Router.HistoryLocation, (Root, state) => {
-  React.render(<Root/>, document.getElementById('react-root'));
+  React.render(<Root { ...window.__STATE__ }/>, document.getElementById('react-root'));
+
+  // Reset state when first render
+  window.__STATE__ = {};
 });

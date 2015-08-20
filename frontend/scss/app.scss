@@ -1,7 +1,7 @@
 @import './vars';
 @import '../../bower_components/bootstrap-sass/assets/stylesheets/bootstrap';
 @import '../../bower_components/components-font-awesome/scss/font-awesome';
-@import '../../bower_components/hover/scss/hover';
+@import '../../bower_components/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox';
 
 @import './backend';
 
@@ -17,6 +17,18 @@
 
 a {
   color: $primary-color-text;
+
+  &.green {
+    color: #88D6A7;
+  }
+  &.green:hover {
+    color: #95D4b5;
+    text-decoration: underline;
+  }
+  &.green:focus {
+    color: #95D4b5;
+    text-decoration: underline;
+  }
 }
 
 a:hover,
@@ -478,6 +490,43 @@ a.link-inverse:focus {
   }
 }
 
+div.list-order-items {
+  background-color: #FFF;
+  border-bottom: #97BAA5 solid 1px;
+  margin-top: 30px;
+
+  h4.job-name {
+    margin-top: 15px;
+  }
+}
+
+ul.list-order-items {
+  background-color: #FFF;
+  width: 100%;
+  padding: 0;
+
+  li {
+    padding: 15px;
+    list-style: none;
+    font-style: italic;
+    font-size: 1.5em;
+    cursor: pointer;
+
+    .normal {
+      font-style: normal;
+      color: #000;
+    }
+
+    span.normal {
+      padding-right: 40px;
+    }
+  }
+
+  li.active, li:hover {
+    background-color: #87D5A7;
+  }
+}
+
 // Others
 #beta-label {
   height: 77px;
@@ -485,6 +534,10 @@ a.link-inverse:focus {
   position: fixed;
   top: 74px;
   width: 51px;
+}
+
+.title-case {
+  text-transform: capitalize;
 }
 
 // Responsive

@@ -147,6 +147,16 @@ h5.normal {
     @include text-shadow(1px 1px 0 #7BF282);
   }
 
+  .checkbox-label {
+    font-size: 18px;
+    font-style: italic;
+    font-weight: 400;
+    line-height: 17px;
+    margin-bottom: 0;
+    margin-top: 10px;
+    @include text-shadow(1px 1px 0 #7BF282);
+  }
+
   .job-price {
     background-color: #FFFFFF;
     font-size: 24px;
@@ -258,6 +268,12 @@ table.job-payment {
 
   a:hover, a:focus {
     background-color: transparent;
+  }
+}
+
+.tab-content.nav-3doers {
+  h4.light {
+    white-space: pre;
   }
 }
 

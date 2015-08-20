@@ -1,16 +1,25 @@
+/**
+ *  @copyright 2015 [3Doers]
+ *
+ *  @author Luis Carlos Cruz Carballo [lcruzc@linkux-it.com]
+ *  @version 0.1.0
+ */
+
 require('dotenv').load();
 
-var nconf = require('nconf');
-var path = require("path");
-var ROOT_DIR = path.normalize(__dirname + '/..');
-var defaults = {};
+import nconf from 'nconf';
+import path from 'path';
+
+
+let ROOT_DIR = path.normalize(path.join(__dirname, '/..'));
+let defaults = {};
 
 // Some paths
 defaults.rootDir = ROOT_DIR;
-defaults.logFile = ROOT_DIR + '/logs/error.log';
+defaults.logFile = path.join(ROOT_DIR, '/logs/error.log');
 
 // Log config
-defaults.logLevel = process.env.LOG_LEVEL || 'warn';
+defaults.logLevel = process.env.LOG_LEVEL || 'warn';
 
 // Site
 defaults.site = 'https://www.3doers.it';
@@ -18,7 +27,7 @@ defaults.site = 'https://www.3doers.it';
 // Host
 defaults.host = {
   ip: process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1',
-  port: process.env.OPENSHIFT_NODEJS_PORT || 3000,
+  port: process.env.OPENSHIFT_NODEJS_PORT || 3000,
   protocol: process.env.PROTOCOL || 'https'
 };
 
@@ -31,7 +40,7 @@ defaults.mongo = {
   options: {
     db: {
       safe: true,
-      autoIndex: false,
+      autoIndex: false
     }
   }
 };
@@ -62,7 +71,7 @@ defaults.admins = {
 };
 
 defaults.adminEmailAddresses = [
-  '3doers@gmail.com',
+  '3doers@gmail.com'
 ];
 
 defaults.commissions = {
@@ -84,7 +93,7 @@ defaults.media = {
 
 defaults.static = {
   path: ROOT_DIR + '/public/'
-}
+};
 
 defaults.paypal = {
   primaryReceiver: 'mattia@3doers.it',
@@ -99,7 +108,7 @@ defaults.paypal = {
 
 defaults.sentry = {
   DSN: 'http://5146b6fd7b08424991adcfa6a2b94ce5:e279691b1c9444d69043eaab14220e2b@sentry.linkux-it.com/6'
-}
+};
 
 /*
  * Setup nconf to use (in order):

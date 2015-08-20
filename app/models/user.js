@@ -497,6 +497,11 @@ User.method('authenticate', function(plainText) {
   return this.encryptPassword(plainText) === this.hashedPassword;
 });
 
+User.method('getVisibleFields', function () {
+  let {email, username, printer, isPrinter, isAdmin} = this.toObject();
+  return {email, username, printer, isPrinter, isAdmin};
+});
+
 module.exports.User = mongoose.model('User', User);
 
 module.exports.User.schema.path('printer').validate(function(value) {

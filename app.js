@@ -11,17 +11,21 @@ require('node-jsx').install({extension: 'jsx', harmony: true});
 // Setup babel to use es6 till is supported at full
 require('babel/register');
 
-
 var express = require('express');
 var glob = require('glob');
 var mongoose = require('mongoose');
 var nconf = require('nconf');
 var PrettyError = require('pretty-error');
 var raven = require('raven');
+var multer = require('multer');
+var Primus = require('primus');
 
 var config = require('./config/config');
+
 // Controllers modules
-var Printing = require('controllers/printing');
+var Project = require('controllers/projects');
+var Order = require('controllers/orders');
+
 var logger = require('utils/logger');
 
 // React stuff
@@ -97,7 +101,7 @@ if (app.get('env') === 'development') {
   app.use(enableCORS);
 
   // TODO: This is new code should keep
-  ioSession = require('./config/express')(app, db, config);
+  var shared = require('./config/express')(app, db, config);
 
   app.use(validator);
 
@@ -112,15 +116,23 @@ if (app.get('env') === 'development') {
     return next();
   });
 
+  var primus;
+  var primusOptions = {
+    transformer: 'SockJS',
+    parser: 'JSON'
+  };
+
   app.locals.timeago = require('timeago');
 
   if (settings.protocol === 'https') {
     https = require('https');
+
     ssl_options = {
       key: fs.readFileSync(settings.ssl_key),
       cert: fs.readFileSync(settings.ssl_pem),
       ca: fs.readFileSync(settings.ssl_crt)
     };
+
     server = https.createServer(ssl_options, app).listen(nconf.get('host:port'), nconf.get('host:ip'), function() {
       logger.info("*   Visit page: " + nconf.get('host:protocol') + "://" + nconf.get('host:ip') + ":" + nconf.get('host:port'));
       logger.info('*   Mongo Database:', settings.db.name);
@@ -128,9 +140,12 @@ if (app.get('env') === 'development') {
       logger.info('*');
       return logger.info('***************************************************');
     });
+
     io = io.listen(server);
+    primus = new Primus(server, primusOptions);
   } else {
     http = require('http');
+
     server = http.createServer(app).listen(nconf.get('host:port'), nconf.get('host:ip'), function() {
       logger.info("*   Visit page: " + nconf.get('host:protocol') + "://" + nconf.get('host:ip') + ":" + nconf.get('host:port'));
       logger.info('*   Mongo Database:', settings.db.name);
@@ -139,7 +154,9 @@ if (app.get('env') === 'development') {
       logger.info('*');
       return logger.info('***************************************************');
     });
+
     io = io.listen(server);
+    primus = new Primus(server, primusOptions);
   }
 
   if (app.get('env') !== 'development') {
@@ -153,18 +170,36 @@ if (app.get('env') === 'development') {
     });
   }
 
+  require('./config/primus')(app, primus, shared);
+  require('controllers/primus').setRealTime(primus);
+
   // FIXME: This is Real code now put in right place latter
-  var apiRouter = express.Router();
-  apiRouter.param('projectID', Printing.paramProject);
-  apiRouter.get('/projects/:projectID', Printing.projectDetailAPI);
+  var upload = multer({ dest: nconf.get('media:upload:to')});
 
-  var printingRouter = express.Router();
+  var apiRouter = new express.Router();
+  apiRouter.param('projectID', Project.paramProject);
+  apiRouter.param('orderID', Order.paramOrder);
 
-  printingRouter.param('projectID', Printing.paramProject);
-  printingRouter.get('/:projectID', Printing.projectDetail);
+  apiRouter.route('/orders/:orderID/items/:itemID')
+    .patch(Order.patchOrderItemApi)
+    .delete(Order.deleteOrderItemAPI);
+
+  apiRouter.get('/projects/:projectID', Project.projectDetailAPI);
+  apiRouter.post('/orders/:orderID/upload', upload, Project.uploadProject);
+  apiRouter.post('/projects/upload', upload, Project.uploadProject);
+
+  var orderRouter = new express.Router();
+  orderRouter.param('orderID', Order.paramOrder);
+  orderRouter.get('/create', Order.createOrder);
+  orderRouter.get('/:orderID', Order.orderDetail);
+
+  var projectRouter = new express.Router();
+  projectRouter.param('projectID', Project.paramProject);
+  projectRouter.get('/:projectID', Project.projectDetail);
 
   app.use('/api/v1', apiRouter);
-  app.use('/project', printingRouter);
+  app.use('/project', projectRouter);
+  app.use('/order', orderRouter);
   // ENDFIXME
 
 
@@ -216,9 +251,8 @@ if (app.get('env') === 'development') {
     app.use(function (err, req, res, next) {
       console.log(pe.render(err));
       res.status(err.status || 500);
-      logger.debug(req.xhr);
       if (req.xhr) {
-        return res.end();
+        return res.end(err.json || err.message);
       } else {
         return res.render('error.html', {
           message: err.message,
@@ -230,13 +264,12 @@ if (app.get('env') === 'development') {
   } else {
     // This will handle all errors, render the appropiate view
     // and also will log to sentry
-    app.use(raven.middleware.express.errorHandler(nconf.get('sentry:DSN')))
+    app.use(raven.middleware.express.errorHandler(nconf.get('sentry:DSN')));
     app.use(function (err, req, res, next) {
       console.log(pe.render(err));
-      logger.debug(req.xhr);
       res.status(err.status || 500);
       if (req.xhr) {
-        return res.end();
+        return res.end(err.json || err.message);
       } else {
         return res.render('error.html', {
           message: err.message,
@@ -247,3 +280,4 @@ if (app.get('env') === 'development') {
     });
   }
 
+  primus.save(__dirname + '/public/javascript/primus.js');

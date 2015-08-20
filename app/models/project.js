@@ -5,61 +5,22 @@
  *  @version 0.1.0
  */
 
-var mongoose = require('mongoose');
-var inflection = require('inflection');
-var nconf = require('nconf');
-var decimal = require('Deci-mal').decimal;
+import mongoose from 'mongoose';
+import filePlugin from 'mongoose-file';
+import timestamps from 'mongoose-timestamp';
+import inflection from 'inflection';
+import nconf from 'nconf';
+import { decimal } from 'Deci-mal';
 
-var Schema = mongoose.Schema;
-var ObjectId = Schema.ObjectId;
+import mNotification from 'models/notification';
+import getLogger from 'utils/logger';
+import { PROJECT_COLORS, PROJECT_MATERIALS } from 'utils/constants';
 
-var mNotification = require('models/notification');
 
+let logger = getLogger('model::stlproject');
+let Schema = mongoose.Schema;
+let ObjectId = Schema.ObjectId;
 
-// Some constants
-// FIXME: This will change when multiorder will be implemented
-module.exports.PROJECT_STATUSES = {
-  PROCESSING: [1, 'processing'],
-  PROCESSED: [2, 'processed'],
-  PRINT_REQUESTED: [3, 'print requested'],
-  PRINT_REVIEW: [4, 'print review'],
-  PRINT_ACCEPTED: [5, 'print accepted'],
-  PAYED: [6, 'payed'],  // TODO: Remove when refactor was done
-  PAID: [6, 'paid'], // Backward compatibility... fix typo error
-  PRINTING: [7, 'printing'],
-  PRINTED: [8, 'printed'],
-  SHIPPING: [9, 'shipping'],
-  ARCHIVED: [10, 'archived']
-};
-
-// TODO: Document What is this used for?
-module.exports.PROJECT_BOUNDARIES = {
-  WIDTH: [1, 'width boundary'],
-  HEIGHT: [1, 'height boundary'],
-  LENGTH: [1, 'lenght boundary']
-};
-
-module.exports.PROJECT_COLORS = {
-  BLACK: 'black',
-  WHITE: 'white',
-  YELLOW: 'yellow',
-  RED: 'red',
-  BLUE: 'blue',
-  GREEN: 'green'
-};
-
-module.exports.PROJECT_DENSITIES = {
-  LOW: [0.25, 'low'],
-  MEDIUM: [0.5, 'medium'],
-  HIGH: [0.75, 'high'],
-  COMPLETE: [1.01, 'complete']
-};
-
-module.exports.PROJECT_MATERIALS = {
-  ANY: [1.01, 'Any Material'],
-  ABS: [1.01, 'ABS'],
-  PLA: [1.24, 'PLA']
-};
 
 // FIXME: This will be removed when multiorder will be implemented
 var Comment = new Schema({
@@ -85,125 +46,110 @@ var Comment = new Schema({
 });
 
 
-var STLProject = new Schema({
+let STLProjectSchema = new Schema({
 
-  title: {
-    type: String,
-    required: true,
-    "default": "Untitled Project"
-  },
+  title: {type: String, required: true},
 
-  file: {
-    type: String,
-    required: true
-  },
-
-  image: {
-    type: String
-  },
-
-  volume: {
-    type: Number
-  },
-
-  density: {
-    type: Number,
-    "default": module.exports.PROJECT_MATERIALS.ANY[0],
-    required: true
-  },
-
-  weight: {
-    type: Number
-  },
-
-  surface: {
-    type: Number
-  },
-
-  unit: {
-    type: String
-  },
-
-  status: {
-    type: Number,
-    "default": module.exports.PROJECT_STATUSES.PROCESSING[0],
-    required: true
-  },
-
-  user: {
-    type: ObjectId,
-    required: false
-  },
-
-  color: {
-    type: String,
-    required: true,
-    "default": module.exports.PROJECT_COLORS.WHITE
-  },
-
-  price: {
-    type: String,
-    required: true,
-    "default": '0.0'
-  },
-
-  // TODO: Maybe this will be removed
-  bad: {
-    type: Boolean,
-    "default": false
-  },
-
-  editable: {
-    type: Boolean,
-    "default": true
-  },
-
-  material: {
-    type: String,
-    "default": "Any Material"
-  },
-
-  order: {
-    type: {}
-  },
-
+  volume: {type: Number},
+  weight: {type: Number},
+  surface: {type: Number},
+  unit: {type: String},
+  density: {type: Number, required: true, default: PROJECT_MATERIALS.ANY[0]},
+  color: {type: String, required: true, default: PROJECT_COLORS.WHITE},
   dimension: {
-    type: {}
+    length: Number,
+    height: Number,
+    width: Number
   },
 
-  comments: {
-    type: [Comment]
-  },
+  user: {type: ObjectId, ref: 'User'},
 
-  createdAt: {
-    type: Date
-  },
-
-  checkWidth: {
-    type: Boolean,
-    "default": true
-  },
-
-  checkLenght: {
-    type: Boolean,
-    "default": true
-  },
-
-  checkHeight: {
-    type: Boolean,
-    "default": true
-  },
+  // NOTE: This maybe will be unused
+  material: {type: String, default: "Any Material"},
+  checkWidth: {type: Boolean, default: true},
+  checkLength: {type: Boolean, default: true},
+  checkHeight: {type: Boolean, default: true},
 
   rating: {
     type: {}
+  },
+
+  // TODO: Remove this when not need
+  order_id: {type: ObjectId},
+
+  // TODO: This should be removed later, just for compatibility
+  status: {type: Number},
+  price: {type: String},
+
+  // TODO: Maybe this will be removed
+  bad: {type: Boolean},
+  editable: {type: Boolean},
+  order: {type: {}},
+  comments: {type: [Comment]}
+});
+
+
+/**
+ * Enabling plugins
+ *
+ */
+STLProjectSchema.plugin(timestamps);
+
+logger.debug('Project will upload to', nconf.get('media:upload:to'));
+
+STLProjectSchema.plugin(filePlugin.filePlugin, {
+  name: 'thumbnail',
+  upload_to: filePlugin.make_upload_to_model(nconf.get('media:upload:to'),
+                                             'stlproject-thumbnails'),
+  relative_to: nconf.get('media:upload:to')
+});
+
+STLProjectSchema.plugin(filePlugin.filePlugin, {
+  name: 'design',
+  upload_to: filePlugin.make_upload_to_model(nconf.get('media:upload:to'),
+                                             'stlproject-designs'),
+  relative_to: nconf.get('media:upload:to'),
+  change_cb: function () {
+    this._callbackUpload();
   }
 });
+
+// TODO: Refactor!
+// Some constants
+// FIXME: This will change when multiorder will be implemented
+module.exports.PROJECT_STATUSES = {
+  PROCESSING: [1, 'processing'],
+  PROCESSED: [2, 'processed'],
+  PRINT_REQUESTED: [3, 'print requested'],
+  PRINT_REVIEW: [4, 'print review'],
+  PRINT_ACCEPTED: [5, 'print accepted'],
+  PAYED: [6, 'payed'],  // TODO: Remove when refactor was done
+  PAID: [6, 'paid'], // Backward compatibility... fix typo error
+  PRINTING: [7, 'printing'],
+  PRINTED: [8, 'printed'],
+  SHIPPING: [9, 'shipping'],
+  ARCHIVED: [10, 'archived']
+};
+
+// TODO: Document What is this used for?
+module.exports.PROJECT_BOUNDARIES = {
+  WIDTH: [1, 'width boundary'],
+  HEIGHT: [1, 'height boundary'],
+  LENGTH: [1, 'lenght boundary']
+};
+
+module.exports.PROJECT_DENSITIES = {
+  LOW: [0.25, 'low'],
+  MEDIUM: [0.5, 'medium'],
+  HIGH: [0.75, 'high'],
+  COMPLETE: [1.01, 'complete']
+};
 
 
 /**
  * Returns the correct text used to show the user
  */
-STLProject.methods.humanizedStatus = function() {
+STLProjectSchema.methods.humanizedStatus = function() {
   for (var key in module.exports.PROJECT_STATUSES) {
     if (module.exports.PROJECT_STATUSES[key][0] === this.status) {
       return module.exports.PROJECT_STATUSES[key][1];
@@ -211,7 +157,7 @@ STLProject.methods.humanizedStatus = function() {
   }
 };
 
-STLProject.methods.dasherizedStatus = function() {
+STLProjectSchema.methods.dasherizedStatus = function() {
   for (var key in module.exports.PROJECT_STATUSES) {
     if (module.exports.PROJECT_STATUSES[key][0] === this.status) {
       return inflection.dasherize(module.exports.PROJECT_STATUSES[key][1]).replace('-', '_');
@@ -223,7 +169,7 @@ STLProject.methods.dasherizedStatus = function() {
 // TODO: Remove this... Deprecaited in favor of queries
 var PROJECT_STATUSES = module.exports.PROJECT_STATUSES;
 
-STLProject.methods.validateNextStatus = function(value) {
+STLProjectSchema.methods.validateNextStatus = function(value) {
   var states;
   states = {
     1: [PROJECT_STATUSES.PROCESSED[0]],
@@ -239,7 +185,7 @@ STLProject.methods.validateNextStatus = function(value) {
   return (states[this.status].indexOf(value) >= 0);
 };
 
-STLProject.methods.validNextStatus = function() {
+STLProjectSchema.methods.validNextStatus = function() {
   var states;
   states = {
     1: [PROJECT_STATUSES.PROCESSED],
@@ -255,7 +201,7 @@ STLProject.methods.validNextStatus = function() {
   return states[this.status];
 };
 
-STLProject.virtual('orderPrice').get(function() {
+STLProjectSchema.virtual('orderPrice').get(function() {
   if (this.order.rate != null) {
     return decimal.fromNumber(parseFloat(this.order.totalPrice) + parseFloat(this.order.rate.amount), 2).toString();
   } else {
@@ -263,7 +209,7 @@ STLProject.virtual('orderPrice').get(function() {
   }
 });
 
-STLProject.post('save', function(doc) {
+STLProjectSchema.post('save', function(doc) {
   if (doc.status === module.exports.PROJECT_STATUSES.SHIPPING[0]) {
     return mailer.send('mailer/printer/feedback', {
       project: doc
@@ -275,11 +221,11 @@ STLProject.post('save', function(doc) {
   }
 });
 
-module.exports.STLProject = mongoose.model('STLProject', STLProject);
+module.exports.STLProject = mongoose.model('STLProject', STLProjectSchema);
 module.exports.Comment = mongoose.model('Comment', Comment);
 
 // FIXME: Improve this one
-STLProject.pre('save', function(next) {
+STLProjectSchema.pre('save', function(next) {
   var now, that, _ref;
   this.editable = (_ref = this.status) === module.exports.PROJECT_STATUSES.PROCESSED[0] || _ref === module.exports.PROJECT_STATUSES.PRINT_REVIEW[0];
   now = new Date();
@@ -303,7 +249,6 @@ STLProject.pre('save', function(next) {
   });
   return next();
 });
-
 
 module.exports.STLProject.schema.path('color').validate(function(value) {
   if (value == null) {

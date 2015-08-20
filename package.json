@@ -1,33 +1,36 @@
 {
   "name": "3doers",
   "version": "1.0.0",
-  "description": "Website for designers",
+  "description": "Website for designers and 3D printers",
   "author": {
     "name": "Luis Carlos Cruz",
     "email": "lcruzc@linkux-it.com"
   },
   "website": {
-    "url": "3doers.it"
+    "url": "http://www.3doers.it"
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:daymos/imake_0.2.git"
+    "url": "https://github.com/daymos/threedoers"
   },
   "private": true,
   "dependencies": {
     "Deci-mal": "~0.2.0",
+    "airflux": "^0.2.2",
     "babel": "^5.6.23",
     "body-parser": "~1.12.0",
     "bufferpack": "0.0.6",
     "classnames": "^2.1.3",
     "coffee-script": "*",
+    "colors": "^1.1.2",
     "compression": "~1.4.1",
     "connect-flash": "^0.1.1",
     "connect-mongo": "^0.8.2",
     "consolidate": "0.5.x",
     "cookie-parser": "~1.3.3",
-    "dotenv": "^1.2.0",
     "datejs": "^1.0.0-rc3",
+    "decimal.js": "^4.0.2",
+    "dotenv": "^1.2.0",
     "emailjs": "0.3.3",
     "express": "~4.12.0",
     "express-session": "^1.11.3",
@@ -38,9 +41,12 @@
     "inflection": "^1.3.7",
     "jade": "^0.27.7",
     "jquery": "^2.1.4",
+    "lodash": "^3.10.1",
     "method-override": "~2.3.0",
-    "moment": "1.7.2",
+    "moment": "^1.7.2",
     "mongoose": "~4.0.1",
+    "mongoose-file": "0.0.2",
+    "mongoose-timestamp": "^0.4.0",
     "morgan": "~1.5.0",
     "multer": "^0.1.8",
     "nconf": "^0.7.1",
@@ -51,14 +57,16 @@
     "passport-local": "^1.0.0",
     "paypal-adaptive": "^0.4.2",
     "pretty-error": "^1.1.2",
-    "primus": "^3.1.1",
+    "primus": "^3.2.1",
+    "primus-multiplex": "^3.2.0",
+    "primus-rooms": "^3.3.0",
     "q": "1.0.1",
     "raven": "^0.8.1",
     "react": "^0.13.3",
     "react-bootstrap": "^0.23.7",
     "react-inline-edit": "^1.1.0",
+    "react-mixin": "^1.7.0",
     "react-router": "^0.13.3",
-    "reflux": "^0.2.11",
     "restful.js": "^0.7.0",
     "serve-favicon": "~2.2.0",
     "shippo": "^1.0.0",
@@ -96,7 +104,9 @@
   },
   "subdomain": "me3doers",
   "scripts": {
-    "start": "NODE_ENV=production NODE_PATH=app:libs node app.js --websocket-port=8000 --log-level=1"
+    "start": "NODE_ENV=production NODE_PATH=app:libs node app.js --websocket-port=8000 --log-level=1",
+    "migration": "NODE_PATH=app:libs migrate up",
+    "rollback": "NODE_PATH=app:libs migrate down"
   },
   "main": "app.js"
 }

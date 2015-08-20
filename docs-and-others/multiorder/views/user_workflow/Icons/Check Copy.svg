@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="16px" height="12px" viewBox="0 0 16 12" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <!-- Generator: Sketch 3.3.2 (12043) - http://www.bohemiancoding.com/sketch -->
+    <title>Icons/Check Copy</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+        <g id="01d-Create-order" sketch:type="MSArtboardGroup" transform="translate(-445.000000, -618.000000)" fill="#4A4A4A">
+            <g id="Rectangle-31-Copy-3-+-Icons/Check-Copy" sketch:type="MSLayerGroup" transform="translate(442.000000, 614.000000)">
+                <g id="Icons/Check-Copy" transform="translate(3.000000, 4.000000)" sketch:type="MSShapeGroup">
+                    <path d="M15.1367368,2.45399889 C15.1367368,2.21528333 15.0390804,1.97656777 14.863299,1.80469257 L13.5351724,0.506079906 C13.3593909,0.334204701 13.11525,0.238718476 12.8711091,0.238718476 C12.6269682,0.238718476 12.3828273,0.334204701 12.2070458,0.506079906 L5.80078817,6.77952488 L2.92969099,3.96268125 C2.75390953,3.79080604 2.50976862,3.69531982 2.2656277,3.69531982 C2.02148678,3.69531982 1.77734587,3.79080604 1.60156441,3.96268125 L0.273437826,5.26129391 C0.0976563664,5.43316911 0,5.67188468 0,5.91060024 C0,6.1493158 0.0976563664,6.38803136 0.273437826,6.55990657 L3.80859829,10.0165079 L5.13672487,11.3151206 C5.31250633,11.4869958 5.55664725,11.582482 5.80078817,11.582482 C6.04492908,11.582482 6.28907,11.4869958 6.46485146,11.3151206 L7.79297804,10.0165079 L14.863299,3.10330522 C15.0390804,2.93143002 15.1367368,2.69271446 15.1367368,2.45399889 L15.1367368,2.45399889 Z" id="Icons/Check"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
