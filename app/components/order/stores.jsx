@@ -11,7 +11,7 @@
  * }}
  */
 
-import Airflux from 'Airflux';
+import Airflux from 'airflux';
 import _ from 'lodash';
 
 import {OrderActions} from './actions.jsx';
