@@ -162,9 +162,6 @@ if (app.get('env') === 'development') {
   if (app.get('env') !== 'development') {
       io.set('log level', 1);
       io.set('transports', ["websocket"]);
-      io.enable("browser client minification");
-      io.enable("browser client etag");
-      io.enable("browser client gzip");
       io.set('polling duration', 30);
   }
 
