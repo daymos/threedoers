@@ -104,7 +104,7 @@
   },
   "subdomain": "me3doers",
   "scripts": {
-    "start": "NODE_ENV=production NODE_PATH=app:libs node app.js --websocket-port=8000 --log-level=1",
+    "start": "NODE_PATH=app:libs node app.js --websocket-port=8000 --log-level=1",
     "migration": "NODE_PATH=app:libs migrate up",
     "rollback": "NODE_PATH=app:libs migrate down"
   },
