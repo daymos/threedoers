@@ -9,7 +9,6 @@
  */
 import express from 'express';
 import glob from 'glob';
-import gzippo from 'gzippo';
 import favicon from 'serve-favicon';
 import logger from 'morgan';
 import bodyparser from 'body-parser';
@@ -78,7 +77,6 @@ module.exports = function(app, db, config) {
 
   app.use(passport.initialize());
   app.use(passport.session());
-  // app.use(gzippo.compress());
   app.disable("x-powered-by");
   app.use(flash());
 
