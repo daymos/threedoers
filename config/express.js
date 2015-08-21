@@ -78,7 +78,7 @@ module.exports = function(app, db, config) {
 
   app.use(passport.initialize());
   app.use(passport.session());
-  app.use(gzippo.compress());
+  //app.use(gzippo.compress());
   app.disable("x-powered-by");
   app.use(flash());
 

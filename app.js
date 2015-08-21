@@ -113,7 +113,6 @@ if (app.get('env') === 'development') {
     res.locals.site = nconf.get('site');
     res.locals.DEBUG = app.get('env') === 'development';
     res.locals.PRODUCTION = app.get('env') === 'production';
-    logger.debug("Calling");
     return next();
   });
 
