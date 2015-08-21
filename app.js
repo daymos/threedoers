@@ -160,7 +160,7 @@ if (app.get('env') === 'development') {
   }
 
   if (app.get('env') !== 'development') {
-      io.set('log level', 1);
+      // io.set('log level', 1);
       io.set('transports', ["websocket"]);
       io.set('polling duration', 30);
   }
