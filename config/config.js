@@ -28,7 +28,8 @@ defaults.site = 'https://www.3doers.it';
 defaults.host = {
   ip: process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1',
   port: process.env.OPENSHIFT_NODEJS_PORT || 3000,
-  protocol: process.env.PROTOCOL || 'https'
+  protocol: process.env.PROTOCOL || 'https',
+  ws: process.env.WEBSOCKET_SERVER || 'localhost:3000'
 };
 
 defaults.websocket = {

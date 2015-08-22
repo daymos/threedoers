@@ -38,7 +38,7 @@ export class OrderStore extends Airflux.Store {
       let primus;
       let orderStore = this;
 
-      primus = Primus.connect(':8000').channel('orders');
+      primus = Primus.connect(window.__WEBSOCKET_SERVER__).channel('orders');
 
       primus.on('open', function(msg) {
         primus.write({action: 'join', order: orderStore._state.order._id});

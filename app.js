@@ -107,10 +107,13 @@ if (app.get('env') === 'development') {
 
   app.use(function(req, res, next) {
     res.locals.user = req.user;
+    res.locals.loggedUser = (req.user) ? req.user.toObject() : {};
+    res.locals.loggedUser = JSON.stringify(res.locals.loggedUser);
     res.locals.nav = req.path;
     res.locals.csrfToken = req.session._csrf;
     res.locals.io = settings.io;
     res.locals.site = nconf.get('site');
+    res.locals.wsServer = nconf.get('host:ws');
     res.locals.DEBUG = app.get('env') === 'development';
     res.locals.PRODUCTION = app.get('env') === 'production';
     return next();

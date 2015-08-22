@@ -41,6 +41,8 @@
   {% if reactState %}
   <script>
     window.__STATE__ = {{ reactState|safe }};
+    window.__USER__ = {{ loggedUser|safe }};
+    window.__WEBSOCKET_SERVER__ = '{{ wsServer }}';
   </script>
   {% endif %}
 </head>
