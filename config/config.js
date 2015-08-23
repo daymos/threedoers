@@ -89,7 +89,7 @@ defaults.python = {
 
 defaults.media = {
   upload: {
-    to: (process.env.OPENSHIFT_DATA_DIR || ROOT_DIR) + '/3doers/uploads/'
+    to: path.join((process.env.OPENSHIFT_DATA_DIR || ROOT_DIR), '/3doers/uploads/')
   }
 };
 

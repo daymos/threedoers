@@ -46,6 +46,7 @@ export let createOrder = function (req, res, next) {
 };
 
 export let orderDetail = function (req, res, next) {
+  console.log(req.signedCookies);
   Router.run(routes, req.originalUrl, function (Root, state) {
     let reactHTML = React.renderToString(<Root order={req.order.toObject()} />);
     let user = req.user ? req.user.getVisibleFields() : undefined;
