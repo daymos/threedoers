@@ -12,7 +12,10 @@ import multiplex from 'primus-multiplex';
 import rooms from 'primus-rooms';
 
 import mUser from 'models/user';
+import getLogger from 'utils/logger';
 
+
+let logger = getLogger('Primus::Config');
 let configurePrimus;
 
 function _session (options) {
@@ -37,8 +40,10 @@ function _session (options) {
     //
     // The session id is stored in the cookies.
     // `req.signedCookies` is assigned by the `cookie-parser` middleware.
-    //
+
     var sid = req.signedCookies[key];
+    logger.debug(sid);
+    console.log(req.signedCookies);
 
     //
     // Default to an empty session.
