@@ -26,7 +26,10 @@ import flash from 'connect-flash';
 let MongoStore = require('connect-mongo')(session);
 
 module.exports = function(app, db, config) {
-  var cookies = cookieParser(nconf.get('SECRET_KEY'));
+  var cookies = cookieParser(nconf.get('SECRET_KEY'), {
+    domain: nconf.get('host:domain')
+  });
+
   var sessionStore = new MongoStore({
     mongooseConnection: db.connection,
     ttl: 24 * 60 * 60
