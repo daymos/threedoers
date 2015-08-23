@@ -39,7 +39,8 @@ module.exports = function(app, db, config) {
     secret: nconf.get('SECRET_KEY'),
     resave: true,
     saveUninitialized: true,
-    store: sessionStore
+    store: sessionStore,
+    cookie: {domain: nconf.get('host:domain')}
   });
 
   // Setup template engines
