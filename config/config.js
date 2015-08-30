@@ -30,7 +30,7 @@ defaults.host = {
   port: process.env.OPENSHIFT_NODEJS_PORT || 3000,
   protocol: process.env.PROTOCOL || 'https',
   ws: process.env.WEBSOCKET_SERVER || 'localhost:3000',
-  domain: process.env.DOMAIN || '.localhost'
+  domain: process.env.DOMAIN || undefined
 };
 
 defaults.websocket = {

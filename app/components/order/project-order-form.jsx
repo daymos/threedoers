@@ -77,6 +77,17 @@ export default class ProjectOrderForm extends React.Component {
   }
 
   render () {
+    // create cool layout
+    let amountClassName = 'form-group';
+    let amountErrorText = '';
+
+    if (parseInt(this.state.amount) <= 0) {
+      amountClassName = 'form-group has-error';
+      amountErrorText = (
+        <span className="help-block">Amount should be more than zero.</span>
+      );
+    }
+
     return (
       <form role="form" acceptCharset="utf-8" className="form-3doers">
         <div className="form-group">
@@ -99,9 +110,8 @@ export default class ProjectOrderForm extends React.Component {
           </select>
         </div>
 
-        <div className="form-group">
+        <div className={amountClassName}>
           <input
-            id="ammount"
             min="1"
             placeholder="How many items?"
             className="form-control"
@@ -109,6 +119,7 @@ export default class ProjectOrderForm extends React.Component {
             value={this.state.amount}
             onChange={this.onChangeAmount.bind(this)}
           />
+          {amountErrorText}
         </div>
 
         <div className="checkbox">

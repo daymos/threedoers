@@ -6,6 +6,8 @@
  */
 
 import React from 'react';
+import _ from 'lodash';
+import Decimal from 'decimal.js';
 import {Modal, Button, ProgressBar} from 'react-bootstrap';
 
 import OrderNavigationStatus from './navigation.jsx';
@@ -40,6 +42,16 @@ export default class Order extends PageWithMenu {
   }
 
   // utility functions
+
+  getTotalPrice () {
+    let totalPrice = new Decimal(0);
+    // we need to collect all values
+    _.forEach(this.state.order.projects, function(project) {
+      totalPrice = totalPrice.plus(project.totalPrice);
+    });
+
+    return totalPrice.toDecimalPlaces(2).toString();
+  }
 
   _setupUploader () {
     // if not uploader available we don't need to setup anything
@@ -241,6 +253,28 @@ export default class Order extends PageWithMenu {
                       }()
                     }
                   </ul>
+                </div>
+
+                <div className="col-sm-12">
+                  <div className="row">
+                    <div className="col-sm-9">
+                      <h4 className="job-quotation">Price quotation*:</h4>
+
+                      <p className="text-muted final-price">
+                        <small>
+                          * Final price will include a shipping fee and will
+                          be calculated once the order has been accepted.
+                        </small>
+                      </p>
+                    </div>
+
+                    <div className="col-sm-3">
+                      <h3 className="job-price">
+                        <span>{this.getTotalPrice()}</span>
+                        <span>&nbsp; €</span>
+                      </h3>
+                    </div>
+                  </div>
                 </div>
 
                 <div className="col-sm-12">

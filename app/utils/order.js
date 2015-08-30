@@ -76,17 +76,20 @@ export function processVolumeWeight (item, callback) {
 
 export function calculatePrice (data, amount) {
   amount = parseInt(amount);
+  let totalPrice = 0;
 
-  let materialPrice = 0.5;
-  let density = 1.01;
-  let fixedCost = 10;
-  let v_s = data.surface / 100 * 0.09;
-  let p_vs = v_s * density * materialPrice;
-  let v_i = data.volume - v_s;
-  let p_vi = v_i * 0.20 * materialPrice;
-  let pb = (p_vs + p_vi) * 0.9;
-  let price = pb + fixedCost;
-  let totalPrice = (price * amount) - (10 * (amount - 1));
+  if (amount > 0) {
+    let materialPrice = 0.5;
+    let density = 1.01;
+    let fixedCost = 10;
+    let v_s = data.surface / 100 * 0.09;
+    let p_vs = v_s * density * materialPrice;
+    let v_i = data.volume - v_s;
+    let p_vi = v_i * 0.20 * materialPrice;
+    let pb = (p_vs + p_vi) * 0.9;
+    let price = pb + fixedCost;
+    totalPrice = (price * amount) - (10 * (amount - 1));
+  }
 
   return (new Decimal(totalPrice.toFixed(4))).toDecimalPlaces(2);
 }

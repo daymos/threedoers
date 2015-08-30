@@ -182,8 +182,10 @@ export let uploadProject = function uploadProject(req, res, next) {
             if (_err) {
               return next(_err);
             } else {
-              req.session.orders = req.session.orders || [];
-              req.session.orders.push(newOrder._id.toHexString());
+              if (!req.user) {
+                req.session.orders = req.session.orders || [];
+                req.session.orders.push(newOrder._id.toHexString());
+              }
               res.status(HTTPStatus.CREATED);
               res.send({id: newOrder._id});
             }
