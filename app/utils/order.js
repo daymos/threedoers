@@ -18,6 +18,9 @@ export function getRelatedOrder (req, orderID, callback) {
    *    to se visible for printer.
    *  3 Will display the order for owner or admin.
    */
+
+  // FIXME: Now primus has a bug and this will patch for some time
+  let session = req.wsSession || req.session;
   let query = Order.findOne({_id: orderID})
   .populate('customer', 'photo avatar username email')
   .populate('printer', 'photo avatar username email')
@@ -38,8 +41,8 @@ export function getRelatedOrder (req, orderID, callback) {
         (req.user &&
          order.customer && req.user._id.equals(order.customer._id));
       canSee = canSee ||
-        (req.session.orders &&
-         req.session.orders.indexOf(order._id.toHexString()) !== -1);
+        (session.orders &&
+         session.orders.indexOf(order._id.toHexString()) !== -1);
 
       if (!canSee) {
         let error = new Error('You don\'t have permission to see this order.');

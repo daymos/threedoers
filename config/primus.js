@@ -42,8 +42,6 @@ function _session (options) {
     // `req.signedCookies` is assigned by the `cookie-parser` middleware.
 
     var sid = req.signedCookies[key];
-    logger.debug(sid);
-    console.log(req.signedCookies);
 
     //
     // Default to an empty session.
@@ -83,6 +81,9 @@ function _session (options) {
 
       if (sess) {
         store.createSession(req, sess);
+        //FIXME: Path so we can have session on primus
+        // session is converted to string
+        req.wsSession = req.session;
       }
 
       next();
