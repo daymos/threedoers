@@ -25,6 +25,7 @@ var config = require('./config/config');
 // Controllers modules
 var Project = require('controllers/projects');
 var Order = require('controllers/orders');
+var Printer = require('controllers/printers');
 
 var logger = require('utils/logger');
 
@@ -178,13 +179,19 @@ if (app.get('env') === 'development') {
   apiRouter.param('projectID', Project.paramProject);
   apiRouter.param('orderID', Order.paramOrder);
 
+  apiRouter.post('/orders/:orderID/upload', upload, Project.uploadProject);
   apiRouter.route('/orders/:orderID/items/:itemID')
     .patch(Order.patchOrderItemApi)
     .delete(Order.deleteOrderItemAPI);
 
-  apiRouter.get('/projects/:projectID', Project.projectDetailAPI);
-  apiRouter.post('/orders/:orderID/upload', upload, Project.uploadProject);
+  apiRouter.route('/orders/:orderID')
+    .delete(Order.removeOrderApi);
+
   apiRouter.post('/projects/upload', upload, Project.uploadProject);
+  apiRouter.route('/projects/:projectID')
+    .get(Project.projectDetailAPI);
+
+  apiRouter.get('/printers', Printer.getPrinters);
 
   var orderRouter = new express.Router();
   orderRouter.param('orderID', Order.paramOrder);

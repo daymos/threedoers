@@ -8,6 +8,7 @@
 // Third party modules
 import nconf from 'nconf';
 import HTTPStatus from 'http-status';
+import _ from 'lodash';
 
 // React components
 import React from 'react';
@@ -15,6 +16,7 @@ import Router from 'react-router';
 
 import routes from 'components/routes.jsx';
 import Order from 'models/order';
+import mProjects from 'models/project';
 import * as OrderUtils from 'utils/order';
 import getLogger from 'utils/logger';
 import {orderChannel} from 'controllers/primus';
@@ -66,6 +68,43 @@ export let orderCreateApi = function (req, res, next) {
 
 export let orderDetailApi = function (req, res, next) {
   res.json(req.order.toObject());
+};
+
+
+export let removeOrderApi = function (req, res, next) {
+  let error;
+  let canModify = req.order.customer &&
+    req.user._id.equals(req.order.customer._id);
+
+  canModify = canModify ||
+    (req.session.orders &&
+     req.session.orders.indexOf(req.order._id.toHexString()) !== -1);
+
+  if (canModify && req.order.status < ORDER_STATUSES.PRINT_ACCEPTED[0]) {
+    let projects = _.pluck(req.order.projects, 'project');
+    projects = _.pluck(projects, '_id');
+
+    req.order.remove(function (orderDeleteError) {
+      if (orderDeleteError) {
+        return next(orderDeleteError);
+      }
+
+      // if order.cusoter is empty is anonymous so we need to delete
+      if (!req.order.customer) {
+        mProjects.STLProject.find({
+          _id: {$in: projects},
+          user: {$exists: false}
+        }).remove().exec();
+      }
+
+      res.status(HTTPStatus.NO_CONTENT);
+      return res.send();
+    });
+  } else {
+    error = new Error('Order can not be deleted at this status');
+    error.status = HTTPStatus.PRECONDITION_FAILED;
+    return next(error);
+  }
 };
 
 

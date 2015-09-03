@@ -20,5 +20,7 @@ export let OrderActions = {
  changeAdditionalProcessingProject: new Airflux.Action().asFunction,
  selectCurrentItem: new Airflux.Action().asFunction,
  deleteItem: new Airflux.Action().asFunction,
- newItemAdded: new Airflux.Action().asFunction
+ deleteOrder: new Airflux.Action().asFunction,
+ newItemAdded: new Airflux.Action().asFunction,
+ requestPrinters: new Airflux.Action().asFunction
 };

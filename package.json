@@ -66,6 +66,7 @@
     "react-inline-edit": "^1.1.0",
     "react-mixin": "^1.7.0",
     "react-router": "^0.13.3",
+    "react-typeahead-component": "^0.8.0",
     "restful.js": "^0.7.0",
     "serve-favicon": "~2.2.0",
     "shippo": "^1.0.0",

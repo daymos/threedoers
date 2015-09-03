@@ -74,6 +74,8 @@ export let paramProject = function paramProject (req, res, next, projectID) {
  * If has an orderID param will set relationship to it, if not will
  * create an order.
  */
+
+// TODO: Only normal user can upload a project!!
 export let uploadProject = function uploadProject(req, res, next) {
   if (req.files.design.size === 0) {
     let error = new Error('File does not contains data.');

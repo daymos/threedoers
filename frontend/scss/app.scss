@@ -10,6 +10,15 @@
 @import 'mixins/text-shadow';
 @import 'mixins/transition';
 
+.text-lg {
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+
+.btn.btn-green:disabled {
+  background-color: #DEE5DE;
+}
+
 .nav-inline > li {
   padding-left: 10px;
   padding-right: 10px;
@@ -19,7 +28,7 @@ a {
   color: $primary-color-text;
 
   &.green {
-    color: #88D6A7;
+    color: #88d6a7;
   }
   &.green:hover {
     color: #95D4b5;
@@ -543,6 +552,122 @@ ul.list-order-items {
 // Responsive
 .img-responsive {
   display: inline-block;
+}
+
+#typeahead, h1 {
+}
+
+#typeahead {
+  width: 100%;
+}
+
+.react-typeahead-input-container {
+}
+
+.react-typeahead-input-container input {
+  display: block;
+  width: 100%;
+  height: 34px;
+  padding: 6px 12px;
+  font-size: 14px;
+  line-height: 1.42857143;
+  color: #555;
+  background-color: #fff;
+  background-image: none;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+          box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+  -webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
+       -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+          transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+
+  &:focus {
+    border-color: #66afe9;
+    outline: 0;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, .6);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, .6);
+  }
+  &::-moz-placeholder {
+    color: #777;
+    opacity: 1;
+  }
+  &:-ms-input-placeholder {
+    color: #777;
+  }
+  &::-webkit-input-placeholder {
+    color: #777;
+  }
+}
+
+.react-typeahead-options {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1000;
+  display: none;
+  float: left;
+  min-width: 160px;
+  padding: 5px 0;
+  margin: 2px 0 0;
+  font-size: 14px;
+  text-align: left;
+  list-style: none;
+  background-color: #fff;
+  -webkit-background-clip: padding-box;
+          background-clip: padding-box;
+  border: 1px solid #ccc;
+  border: 1px solid rgba(0, 0, 0, .15);
+  border-radius: 4px;
+  -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+          box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+}
+
+.option {
+  display: block;
+  overflow: hidden;
+  padding: 3px 20px;
+  clear: both;
+  font-weight: normal;
+  line-height: 1.42857143;
+  color: #333;
+  white-space: nowrap;
+  cursor: pointer;
+  & > .username {
+    font-weight: bold;
+    margin-right: 10px;
+  }
+}
+
+.selected-option {
+    background-color: #eee;
+}
+
+.autocomplete-printer-found {
+  color: #88D6A7;
+  padding-top: 5px;
+  text-transform: uppercase;
+
+  & img {
+    width: 20px;
+  }
+}
+
+.autocomplete-printer-not-found {
+  color: #ff7272;
+  padding-top: 5px;
+  text-transform: uppercase;
+
+  & img {
+    width: 20px;
+  }
+}
+
+.anonymous {
+  .btn {
+    margin-left: 15px;
+    margin-right: 15px;
+  }
 }
 
 // Containers

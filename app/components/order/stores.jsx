@@ -20,168 +20,219 @@ import getAPIClient from '../utils/api-client';
 
 export class OrderStore extends Airflux.Store {
 
-    constructor(state) {
-        super();
+  constructor(order) {
+    super();
 
-        this._state = state;
-        this.listenToMany(OrderActions);
+    this.listenToMany(OrderActions);
 
-        // Request for order and update status
-        if (!this._state) {
-          // TODO
-        } else {
-          this.setupPrimus();
+    // Request for order and update status
+    if (!order) {
+      // TODO
+    } else {
+      // initialize state
+      this.initialize(order);
+    }
+  }
+
+
+  initialize (order) {
+    this._state = {
+      order: order,
+      currentItem: order.projects[0] || {},
+      printers: []
+    };
+  }
+
+
+  setupPrimus () {
+    let primus;
+    let orderStore = this;
+
+    primus = Primus.connect(window.__WEBSOCKET_SERVER__).channel('orders');
+
+    primus.on('open', function(msg) {
+      primus.write({action: 'join', order: orderStore._state.order._id});
+    });
+
+    primus.on('data', function (data) {
+      if (data.status === 'error') {
+        console.log(data);
+      } else {
+        if (data.action === 'itemUpdated') {
+          let item = _.find(orderStore._state.order.projects,
+                            function (_item) {
+            return _item._id === data.item._id;
+          });
+
+          $.extend(item, data.item);
+          orderStore.setOrder(orderStore._state.order);
         }
-    }
+      }
+    });
 
-    setupPrimus () {
-      let primus;
-      let orderStore = this;
+    this.primus = primus;
+  }
 
-      primus = Primus.connect(window.__WEBSOCKET_SERVER__).channel('orders');
+  getState () {
+    return this._state;
+  }
 
-      primus.on('open', function(msg) {
-        primus.write({action: 'join', order: orderStore._state.order._id});
-      });
+  // Getters
 
-      primus.on('data', function (data) {
-        if (data.status === 'error') {
-          console.log(data);
-        } else {
-          if (data.action === 'itemUpdated') {
-            let item = _.find(orderStore._state.order.projects,
-                              function (_item) {
-              return _item._id === data.item._id;
-            });
+  get state() {
+    return this._state;
+  }
 
-            $.extend(item, data.item);
-            orderStore.setState(orderStore._state.order);
-          }
-        }
-      });
+  get itemEndpoint () {
+    return getAPIClient().one('orders', this.state.order._id)
+    .one('items', this.state.currentItem._id);
+  }
 
-      this.primus = primus;
-    }
+  getItemEndpoint (id) {
+    return getAPIClient().one('orders', this.state.order._id)
+    .one('items', id);
+  }
 
-    // Getters
+  getOrderEndpoint (id) {
+    return getAPIClient().one('orders', this.state.order._id);
+  }
 
-    get state() {
-      return this._state;
-    }
+  get printerEndpoint () {
+    return getAPIClient().all('printers');
+  }
 
-    get itemEndpoint () {
-      return getAPIClient().one('orders', this.state.order._id)
-      .one('items', this.state.currentItem._id);
-    }
+  // Util functions
 
-    getItemEndpoint (id) {
-      return getAPIClient().one('orders', this.state.order._id)
-      .one('items', id);
-    }
-
-    // Util functions
-
-    setState (order) {
-      let orderStore = this;
-      this._state.order = order;
-      this._state.currentItem = _.find(this._state.order.projects,
-                                       function (_item) {
+  setOrder (order) {
+    let orderStore = this;
+    this._state.order = order;
+    this._state.currentItem = _.find(
+      this._state.order.projects,
+      function (_item) {
         return _item._id === orderStore._state.currentItem._id;
-      });
+      }
+    );
 
-      this.publishState();
-    }
+    this.publishState();
+  }
 
-    // Event Handlers
+  // Event Handlers
 
-    onChangeColorProject (value) {
-      let orderStore = this;
-      let item = this.itemEndpoint();
+  onChangeColorProject (value) {
+    let orderStore = this;
+    let item = this.itemEndpoint();
 
-      item.patch({color: value})
-      .then(function (response) {
-        orderStore.setState(response.data);
-      })
-      .catch(function () {
-        console.log(arguments);
-      });
-    }
+    item.patch({color: value})
+    .then(function (response) {
+      orderStore.setOrder(response.data);
+    })
+    .catch(function () {
+      console.log(arguments);
+    });
+  }
 
-    onChangeMaterialProject (value) {
-      let orderStore = this;
-      let item = this.itemEndpoint;
+  onChangeMaterialProject (value) {
+    let orderStore = this;
+    let item = this.itemEndpoint;
 
-      item.patch({material: value})
-      .then(function (response) {
-        orderStore.setState(response.body());
-      })
-      .catch(function () {
-        console.log(arguments);
-      });
-    }
+    item.patch({material: value})
+    .then(function (response) {
+      orderStore.setOrder(response.body());
+    })
+    .catch(function () {
+      console.log(arguments);
+    });
+  }
 
-    onChangeAmountProject (value) {
-      let orderStore = this;
-      let item = this.itemEndpoint;
+  onChangeAmountProject (value) {
+    let orderStore = this;
+    let item = this.itemEndpoint;
 
-      item.patch({amount: value})
-      .then(function (response) {
-        orderStore.setState(response.body());
-      })
-      .catch(function () {
-        console.log(arguments);
-      });
-    }
+    item.patch({amount: value})
+    .then(function (response) {
+      orderStore.setOrder(response.body());
+    })
+    .catch(function () {
+      console.log(arguments);
+    });
+  }
 
-    onChangeAdditionalProcessingProject (value) {
-      let orderStore = this;
-      let item = this.itemEndpoint;
+  onChangeAdditionalProcessingProject (value) {
+    let orderStore = this;
+    let item = this.itemEndpoint;
 
-      item.patch({additionalProcesssing: value})
-      .then(function (response) {
-        orderStore.setState(response.body());
-      })
-      .catch(function () {
-        console.log(arguments);
-      });
-    }
+    item.patch({additionalProcesssing: value})
+    .then(function (response) {
+      orderStore.setOrder(response.body());
+    })
+    .catch(function () {
+      console.log(arguments);
+    });
+  }
 
-    onDeleteItem (id) {
-      let orderStore = this;
-      let item = this.getItemEndpoint(id);
+  onDeleteItem (id) {
+    let orderStore = this;
+    let item = this.getItemEndpoint(id);
 
-      item.delete()
-      .then(function (response) {
-        _.remove(orderStore._state.order.projects,
-                 function (_item) {
+    item.delete()
+    .then(function (response) {
+      _.remove(
+        orderStore._state.order.projects,
+        function (_item) {
           return _item._id === id;
         });
-        if (orderStore._state.currentItem._id === id) {
-          if (orderStore._state.order.projects.length) {
-            orderStore._state.currentItem = orderStore._state.order.projects[0];
-          } else {
-            // this is to avoid break order layout
-            orderStore._state.currentItem = {project: {design: {}}};
-          }
+
+      if (orderStore._state.currentItem._id === id) {
+        if (orderStore._state.order.projects.length) {
+          orderStore._state.currentItem = orderStore._state.order.projects[0];
+        } else {
+          // this is to avoid break order layout
+          orderStore._state.currentItem = {project: {design: {}}};
         }
+      }
+      orderStore.publishState();
+    })
+    .catch(function () {
+      console.log(arguments);
+    });
+  }
+
+  onNewItemAdded (value) {
+    this._state.order.projects.push(value);
+    this._state.currentItem = value;
+    this.publishState();
+  }
+
+  selectCurrentItem (id) {
+    this._state.currentItem = _.find(this._state.order.projects,
+                                     function (_item) {
+      return _item._id === id;
+    });
+    this.publishState();
+  }
+
+  onRequestPrinters (value) {
+    let orderStore = this;
+    if (value.trim() === '') {
+      orderStore._state.printers = [];
+      orderStore.publishState();
+    } else {
+      this.printerEndpoint.getAll({q: value})
+      .then(function (response) {
+        orderStore._state.printers = response().data;
         orderStore.publishState();
       })
       .catch(function () {
         console.log(arguments);
       });
     }
+  }
 
-    onNewItemAdded (value) {
-      this._state.order.projects.push(value);
-      this._state.currentItem = value;
-      this.publishState();
-    }
-
-    selectCurrentItem (id) {
-      this._state.currentItem = _.find(this._state.order.projects,
-                                       function (_item) {
-        return _item._id === id;
-      });
-      this.publishState();
-    }
+  onDeleteOrder () {
+    this.getOrderEndpoint().delete().then(function () {
+      window.location.href = '/';
+    }).catch(function () {
+      console.log(arguments);
+    });
+  }
 }
