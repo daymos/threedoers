@@ -118,7 +118,7 @@ export default class CreateOrder extends PageWithMenu {
   renderBlock () {
     return (
       <div>
-        <OrderNavigationStatus status={1} create={true} />
+        <OrderNavigationStatus status={0} create={true} />
         <div className="row">
           <div className="col-md-5">
             <div className="upload-stl" ref="uploader">
