@@ -118,6 +118,7 @@ export class OrderStore extends Airflux.Store {
       }
     );
 
+    this._state.errors = {};
     this.publishState();
   }
 
@@ -178,6 +179,7 @@ export class OrderStore extends Airflux.Store {
   onDeleteItem (id) {
     let orderStore = this;
     let item = this.getItemEndpoint(id);
+    this._state.errors = {};
 
     item.delete()
     .then(function (response) {
@@ -205,6 +207,7 @@ export class OrderStore extends Airflux.Store {
   onNewItemAdded (value) {
     this._state.order.projects.push(value);
     this._state.currentItem = value;
+    this._state.errors = {};
     this.publishState();
   }
 
@@ -213,11 +216,14 @@ export class OrderStore extends Airflux.Store {
                                      function (_item) {
       return _item._id === id;
     });
+    this._state.errors = {};
     this.publishState();
   }
 
   onRequestPrinters (value) {
     let orderStore = this;
+    this._state.errors = {};
+
     if (value.trim() === '') {
       orderStore._state.printers = [];
       orderStore.publishState();
