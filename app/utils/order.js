@@ -7,6 +7,16 @@ import HTTPStatus from 'http-status';
 import Order from 'models/order';
 
 
+export function populateOrder (order, callback) {
+  console.log(order);
+  order
+  .populate('customer', 'photo avatar username email')
+  .populate('printer', 'photo avatar username email')
+  .populate('projects.project')
+  .exec(callback);
+}
+
+
 export function getRelatedOrder (req, orderID, callback) {
   /**
    * This method should be used in express app as param that will be used in

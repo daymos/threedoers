@@ -321,8 +321,7 @@ table.job-payment {
 .nav-step.complete,
 .nav-step.complete:hover,
 .nav-step.complete:focus {
-
-  span {
+  span[class^='step-'] {
     background-position: 0 0;
     background-image: url('../images/icon_checkedbubble.png');
   }

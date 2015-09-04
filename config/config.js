@@ -51,7 +51,7 @@ defaults.mailer = {
   service: process.env.MAILER_SERVICE,
   username: process.env.MAILER_USERNAME,
   password: process.env.MAILER_PASSWORD,
-  default_from: process.env.MAILER_DEFAULT
+  defaultFrom: process.env.MAILER_DEFAULT
 };
 
 defaults.emailSubjects = {
@@ -60,6 +60,14 @@ defaults.emailSubjects = {
     reset: 'Password reset'
   },
 
+  order: {
+    customer: {
+      review: 'New Order requested to review.',
+      request: 'New Order available'
+    }
+  },
+
+  // TODO: This will be deprecated
   project: {
     accepted: 'Your project was accepted',
     denied: 'Your project was denied',
@@ -110,6 +118,10 @@ defaults.paypal = {
 
 defaults.sentry = {
   DSN: 'http://5146b6fd7b08424991adcfa6a2b94ce5:e279691b1c9444d69043eaab14220e2b@sentry.linkux-it.com/6'
+};
+
+defaults.goshippo = {
+  secret: process.env.GOSHIPPO_SECRETKEY
 };
 
 /*

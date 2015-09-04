@@ -22,10 +22,13 @@ var Primus = require('primus');
 
 var config = require('./config/config');
 
+var middlewares = require('utils/middlewares');
+
 // Controllers modules
 var Project = require('controllers/projects');
 var Order = require('controllers/orders');
 var Printer = require('controllers/printers');
+var User = require('controllers/users');
 
 var logger = require('utils/logger');
 
@@ -180,6 +183,8 @@ if (app.get('env') === 'development') {
   apiRouter.param('orderID', Order.paramOrder);
 
   apiRouter.post('/orders/:orderID/upload', upload, Project.uploadProject);
+  apiRouter.post('/orders/:orderID/order', upload, Order.requestPrintOrder);
+
   apiRouter.route('/orders/:orderID/items/:itemID')
     .patch(Order.patchOrderItemApi)
     .delete(Order.deleteOrderItemAPI);
@@ -187,7 +192,11 @@ if (app.get('env') === 'development') {
   apiRouter.route('/orders/:orderID')
     .delete(Order.removeOrderApi);
 
+  apiRouter.route('/addresses')
+    .post(middlewares.loginAPIRequired, User.createAddress);
+
   apiRouter.post('/projects/upload', upload, Project.uploadProject);
+
   apiRouter.route('/projects/:projectID')
     .get(Project.projectDetailAPI);
 
@@ -241,10 +250,19 @@ if (app.get('env') === 'development') {
     }
   });
 
+  // Bad Request middleware handler
+  app.use(function (err, req, res, next) {
+    if (err.status == HTTPStatus.BAD_REQUEST) {
+      res.status(err.status);
+      return req.xhr ? res.json(err.fields) : res.end();
+    } else {
+      return next(err);
+    }
+  });
+
   // Not found middleware handler
   app.use(function (err, req, res, next) {
     if (err.status == HTTPStatus.NOT_FOUND) {
-      logger.debug(req.xhr);
       res.status(err.status);
       return req.xhr ? res.end() : res.render('not-found.html');
     } else {

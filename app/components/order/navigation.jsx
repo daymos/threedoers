@@ -11,11 +11,11 @@ import React from 'react';
 const headerCreateorder = 'Upload your STL file and let us take care of the rest';
 
 const headersCustomer = {
-  'tab-crete-order': ['Create Order', 'step-one', [0, 1]],
-  'tab-place-order': ['Place Order', 'step-two', [2]],
-  'tab-accepted': ['Accepted', 'step-three', [3]],
-  'tab-printing': ['Printing', 'step-four', [4]],
-  'tab-shipping': ['Shipping', 'step-five', [5]]
+  'tab-crete-order': ['Create Order', 'step-one', [0], 0],
+  'tab-place-order': ['Place Order', 'step-two', [1, 2], 2],
+  'tab-accepted': ['Accepted', 'step-three', [3], 3],
+  'tab-printing': ['Printing', 'step-four', [4], 4],
+  'tab-shipping': ['Shipping', 'step-five', [5], 5]
 };
 
 const tabsCustomer = {
@@ -71,6 +71,10 @@ export default class OrderNavigationStatus extends React.Component {
           let className = 'nav-step';
           if (item === navigation.currentTab){
             className += ' active';
+          }
+
+          if (header[item][3] < navigation.props.status) {
+            className += ' complete';
           }
 
           return (

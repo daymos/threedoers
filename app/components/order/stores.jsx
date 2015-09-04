@@ -39,7 +39,8 @@ export class OrderStore extends Airflux.Store {
     this._state = {
       order: order,
       currentItem: order.projects[0] || {},
-      printers: []
+      printers: [],
+      errors: {}
     };
   }
 
@@ -93,8 +94,12 @@ export class OrderStore extends Airflux.Store {
     .one('items', id);
   }
 
-  getOrderEndpoint (id) {
+  getOrderEndpoint () {
     return getAPIClient().one('orders', this.state.order._id);
+  }
+
+  getAddressEndpoint () {
+    return getAPIClient().all('addresses');
   }
 
   get printerEndpoint () {
@@ -233,6 +238,38 @@ export class OrderStore extends Airflux.Store {
       window.location.href = '/';
     }).catch(function () {
       console.log(arguments);
+    });
+  }
+
+  onRequestOrder ( printer ) {
+    let orderStore = this;
+
+    this.getOrderEndpoint()
+    .all('order')
+    .post({printer}).then(function (response) {
+      delete orderStore._state.errors.address;
+      orderStore.setOrder(response().data);
+      orderStore.publishState();
+    }).catch(function (response) {
+      // WE delete previous errors on address because we try again request
+      delete orderStore._state.errors.address;
+      for (let key in response.data) {
+        orderStore._state.errors[key] = response.data[key];
+      }
+      orderStore.publishState();
+    });
+  }
+
+  onCreateAddress (address) {
+    let orderStore = this;
+
+    this.getAddressEndpoint()
+    .post(address).then(function (response) {
+      orderStore._state.errors.address = {success: true};
+      orderStore.publishState();
+    }).catch(function (response) {
+      orderStore._state.errors.address = response.data;
+      orderStore.publishState();
     });
   }
 }

@@ -255,8 +255,7 @@ var Address = new Schema({
   },
 
   state: {
-    type: String,
-    required: true
+    type: String
   },
 
   zip: {

@@ -16,7 +16,7 @@ import ProjectOrderForm from '../project-order-form.jsx';
 import ProjectOrder from '../project-order.jsx';
 
 import {OrderActions} from '../actions.jsx';
-import {ORDER_STATUSES} from '../../../utils/constants';
+import {ORDER_STATUSES, EUROPE_COUNTRIES} from '../../../utils/constants';
 
 
 class PrinterAutocompleteTemplate extends React.Component {
@@ -53,6 +53,7 @@ export default class OrderStatus extends React.Component {
       error: {isVisible: false},
       printer: {text: '', selected: ''},
       isStartedValidOrder: this.isStartedValidOrder(this.props.order),
+      requestAddress: false,
       showModal: false,
       tryToOrder: false
     };
@@ -64,6 +65,15 @@ export default class OrderStatus extends React.Component {
 
   componentWillReceiveProps (nextProps) {
     this.state.isStartedValidOrder = this.isStartedValidOrder(nextProps.order);
+    this.state.requestAddress = !!nextProps.errors.address &&
+      !nextProps.errors.address.ok;
+    this.state.showModal = this.state.requestAddress;
+    this.state.tryToOrder = this.state.requestAddress;
+
+    if (nextProps.errors.address && nextProps.errors.address.success) {
+      // if address was success
+      this.triggerRequestOrder();
+    }
   }
 
   /**
@@ -72,6 +82,10 @@ export default class OrderStatus extends React.Component {
    * Only used for first step to know if user can place an order.
    */
   isStartedValidOrder (order) {
+    if (order.projects.length === 0) {
+      return false;
+    }
+
     for (let index in order.projects) {
       if (order.projects[index].amount <= 0) {
         return false;
@@ -79,6 +93,19 @@ export default class OrderStatus extends React.Component {
     }
 
     return true;
+  }
+
+  triggerRequestOrder () {
+    let printer;
+    let printerSelected = this.state.printer.text.trim() === '';
+    printerSelected = printerSelected &&
+      this.state.printer.text.trim() === this.state.printer.selected;
+
+    if (printerSelected) {
+      printer = this.state.printer.id;
+    }
+
+    OrderActions.requestOrder(printer);
   }
 
   // utility functions
@@ -150,9 +177,26 @@ export default class OrderStatus extends React.Component {
 
   // Event handlers
 
+  onCreateAddress (event) {
+    let address = {
+      name: React.findDOMNode(this.refs.contact).value,
+      company: React.findDOMNode(this.refs.company).value,
+      street1: React.findDOMNode(this.refs.street1).value,
+      street2: React.findDOMNode(this.refs.street2).value,
+      street_no: React.findDOMNode(this.refs.street_no).value,
+      city: React.findDOMNode(this.refs.city).value,
+      state: React.findDOMNode(this.refs.state).value,
+      zip_code: React.findDOMNode(this.refs.zip_code).value,
+      phone_no: React.findDOMNode(this.refs.phone_no).value,
+      country: React.findDOMNode(this.refs.country).value
+    };
+
+    OrderActions.createAddress(address);
+  }
+
   onClickPlaceOrder (event) {
     if (this.props.user.username) {
-
+      this.triggerRequestOrder();
     } else {
       // If not logged in user will be ask to login or signup
       this.state.showModal = true;
@@ -188,6 +232,7 @@ export default class OrderStatus extends React.Component {
     } else {
       this.state.printer.text = option.username;
       this.state.printer.selected = option.username;
+      this.state.printer.id = option._id;
     }
     this.setState(this.state);
   }
@@ -213,7 +258,158 @@ export default class OrderStatus extends React.Component {
     OrderActions.deleteItem(id);
   }
 
+  getFormGroupClassNames (field) {
+    return (field ? 'form-group has-error' : 'form-group');
+  }
+
+  getFormGroupError (field) {
+    if (field) {
+      return <span className='help-block'>{field.msg}</span>;
+    }
+  }
+
   // render blocks
+  getAddressForm () {
+    return (
+      <form className='form-horizontal'>
+        <div
+          className={
+            () => {
+              return this.getFormGroupClassNames(this.props.errors.address.name);
+            }()
+          }
+          >
+
+          <label forHtml="contact" className="col-sm-4 control-label">Contact *</label>
+          <div className="col-sm-6">
+            <input id="contact" ref="contact" type="text" className="form-control"/>
+            {
+              () => {
+                return this.getFormGroupError(this.props.errors.address.name);
+              }()
+            }
+          </div>
+        </div>
+
+        <div className="form-group">
+          <label forHtml="company" className="col-sm-4 control-label">Company</label>
+          <div className="col-sm-6">
+            <input id="company" ref="company" type="text" className="form-control"/>
+          </div>
+        </div>
+
+        <div
+          className={
+            () => {
+              return this.getFormGroupClassNames(this.props.errors.address.street1);
+            }()
+          }
+          >
+
+          <label forHtml="street1" className="col-sm-4 control-label">Street 1 *</label>
+          <div className="col-sm-6">
+            <input id="street1" ref="street1" type="text" className="form-control"/>
+            {
+              () => {
+                return this.getFormGroupError(this.props.errors.address.street1);
+              }()
+            }
+          </div>
+        </div>
+
+        <div className="form-group">
+          <label forHtml="street2" className="col-sm-4 control-label">Street 2</label>
+          <div className="col-sm-6">
+            <input id="street2" ref="street2" type="text" className="form-control"/>
+          </div>
+        </div>
+
+        <div className="form-group">
+          <label forHtml="street_no" className="col-sm-4 control-label">Street No.</label>
+          <div className="col-sm-6">
+            <input id="street_no" ref="street_no" type="text" className="form-control"/>
+          </div>
+        </div>
+
+        <div
+          className={
+            () => {
+              return this.getFormGroupClassNames(this.props.errors.address.city);
+            }()
+          }
+          >
+
+          <label forHtml="city" className="col-sm-4 control-label">City *</label>
+          <div className="col-sm-6">
+            <input id="city" ref="city" type="text" className="form-control"/>
+            {
+              () => {
+                return this.getFormGroupError(this.props.errors.address.city);
+              }()
+            }
+          </div>
+        </div>
+
+        <div className="form-group">
+          <label forHtml="state" className="col-sm-4 control-label">State or Province</label>
+          <div className="col-sm-6">
+            <input id="state" ref="state" type="text" className="form-control"/>
+          </div>
+        </div>
+
+        <div
+          className={
+            () => {
+              return this.getFormGroupClassNames(this.props.errors.address.zip_code);
+            }()
+          }
+          >
+
+          <label forHtml="zip_code" className="col-sm-4 control-label">Zip Code *</label>
+          <div className="col-sm-6">
+            <input id="zip_code" ref="zip_code" type="text" className="form-control"/>
+            {
+              () => {
+                return this.getFormGroupError(this.props.errors.address.zip_code);
+              }()
+            }
+          </div>
+        </div>
+
+        <div
+          className={
+            () => {
+              return this.getFormGroupClassNames(this.props.errors.address.phone_no);
+            }()
+          }
+          >
+
+          <label forHtml="phone_no" className="col-sm-4 control-label">Phone No. *</label>
+          <div className="col-sm-6">
+            <input id="phone_no" ref="phone_no" type="text" className="form-control"/>
+            {
+              () => {
+                return this.getFormGroupError(this.props.errors.address.phone_no);
+              }()
+            }
+          </div>
+        </div>
+
+        <div className="form-group">
+          <label forHtml="country" className="col-sm-4 control-label">Country</label>
+          <div className="col-sm-6">
+            <select name="country" className="form-control" ref="country">
+              {() => {
+                return EUROPE_COUNTRIES.map(function (item) {
+                  return <option key={item.abbr} value={item.abbr}>{item.name}</option>;
+                });
+              }()}
+            </select>
+          </div>
+        </div>
+      </form>
+    );
+  }
 
   getSelectedPrinter () {
     if (this.state.printer.text.trim() === '') {
@@ -235,35 +431,61 @@ export default class OrderStatus extends React.Component {
 
   get _modalTitle () {
     if (this.state.tryToOrder) {
-      return 'You need to be part of 3Doers';
+      if (this.state.requestAddress) {
+        return 'Address Form';
+      } else {
+        return 'You need to be part of 3Doers';
+      }
     } else {
       return 'Uploading file...';
     }
   }
 
   get _modalFooter () {
+    if (this.state.tryToOrder && this.state.requestAddress) {
+      return (
+        <div>
+          <button
+            className="btn btn-danger"
+            onClick={this.onHideModal.bind(this)}
+            >
+            Cancel
+          </button>
+          <button
+            className="btn btn-green"
+            onClick={this.onCreateAddress.bind(this)}
+            >
+            Create Address
+          </button>
+        </div>
+      );
+    }
   }
 
   get _modalBody () {
     if (this.state.tryToOrder) {
-      return (
-        <div>
-          <h1 className="text-center">Sorry! You missed one step.</h1>
-          <p className="text-center">
-            To order you need to follow what one the following actions.
-          </p>
+      if (this.state.requestAddress) {
+        return this.getAddressForm();
+      } else {
+        return (
+          <div>
+            <h1 className="text-center">Sorry! You missed one step.</h1>
+            <p className="text-center">
+              To order you need to follow what one the following actions.
+            </p>
 
-          <p className="text-center anonymous">
-            <a href="/accounts/signup" className="btn btn-green btn-lg">
-              Signup
-            </a>
-            or
-            <a href="/accounts/login" className="btn btn-green btn-lg">
-              Login
-            </a>
-          </p>
-        </div>
-      );
+            <p className="text-center anonymous">
+              <a href="/accounts/signup" className="btn btn-green btn-lg">
+                Signup
+              </a>
+              or
+              <a href="/accounts/login" className="btn btn-green btn-lg">
+                Login
+              </a>
+            </p>
+          </div>
+        );
+      }
     } else {
       return (
         <div>
