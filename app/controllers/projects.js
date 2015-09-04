@@ -78,13 +78,19 @@ export let paramProject = function paramProject (req, res, next, projectID) {
 // TODO: Only normal user can upload a project!!
 export let uploadProject = function uploadProject(req, res, next) {
   if (req.files.design.size === 0) {
-    let error = new Error('File does not contains data.');
+    let error = new Error();
     error.status = HTTPStatus.BAD_REQUEST;
+    error.fields = {
+      design: 'File does not contains data.'
+    };
     fs.unlink(req.files.design.path);
     return next(error);
   } else if (req.files.design.extension.toLowerCase() !== 'stl') {
-    let error = new Error('Is not and STL file.');
+    let error = new Error();
     error.status = HTTPStatus.BAD_REQUEST;
+    error.fields = {
+      design: 'Is not and STL file.'
+    };
     fs.unlink(req.files.design.path);
     return next(error);
   } else {

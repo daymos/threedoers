@@ -55,7 +55,7 @@ export default class CreateOrder extends PageWithMenu {
 
       success: function(data) {
         if (data.errors) {
-          form.errorMessage = data.errors.thumbnail.msg;
+          form.errorMessage = data.errors.design.msg;
           form.setState({isErrorVisible: true, isProgressVisible: false});
         } else {
           // FIXME: Use transition to instead
