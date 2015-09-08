@@ -60,8 +60,8 @@ export default class STLViewer extends React.Component {
     return (
       <figure>
         <canvas
-          height="315"
-          width="390"
+          height={this.props.height || "315"}
+          width={this.props.width || "390"}
           ref="canvas"
           data-color={this.props.projectColor}
           >

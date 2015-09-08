@@ -109,6 +109,7 @@ export let requestPrintOrder = function (req, res, next) {
     return next(error);
   }
 
+  // TODO: This should be moved when printer accepts the order!!!
   let price = new Decimal(0);
   let taxes, totalPrice, printerPayment, businessPayment;
 

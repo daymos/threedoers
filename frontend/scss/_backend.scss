@@ -97,6 +97,10 @@ h5.normal {
   margin-bottom: 20px;
   margin-top: 20px;
 
+  .row:not(:first-child) {
+    margin-top: 20px;
+  }
+
   .job-name {
     color: #4A4A4A;
     font-size: 22px;
@@ -114,6 +118,12 @@ h5.normal {
     }
     .info {
       padding: 15px 0;
+    }
+  }
+
+  .info {
+    strong {
+      margin-right: 10px;
     }
   }
 }
@@ -432,6 +442,45 @@ table.job-payment {
   font-size: 16px;
   font-weight: 300;
   padding: 10px 20px 20px 20px;
+}
+
+
+.order-details {
+  background-color: #FFFFFF;
+  @include border-radius(5px);
+
+  p {
+    font-weight: 300;
+    padding-left: 15px;
+    padding-right: 15px;
+    font-style: italic;
+    font-weight: bold;
+
+    &:first-child {
+      padding-top: 15px;
+    }
+
+    &:last-child {
+      padding-bottom: 15px;
+    }
+    >span:nth-child(2) {
+      float: right;
+    }
+  }
+
+
+  .info {
+    padding: 15px 0;
+  }
+
+  h4.order-name {
+    color: #4A4A4A;
+    font-size: 22px;
+    margin-top: 0;
+    padding: 15px;
+    border-bottom: 2px solid #A8C3AF;
+    @include text-shadow(1px 1px 0 #7BF282);
+  }
 }
 
 // Responsive

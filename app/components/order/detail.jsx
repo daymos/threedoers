@@ -17,6 +17,7 @@ import {ORDER_STATUSES} from '../../utils/constants';
 
 // Customer order status
 import CustomerOrderStatus from './customer/order.jsx';
+import CustomerRequestStatus from './customer/request.jsx';
 
 // Printer order status
 
@@ -52,6 +53,9 @@ export default class Order extends PageWithMenu {
     switch (this.state.order.status) {
       case ORDER_STATUSES.STARTED[0]:
         rendered = <CustomerOrderStatus {...this.state} user={this.props.user} />;
+        break;
+      case ORDER_STATUSES.PRINT_REQUESTED[0]:
+        rendered = <CustomerRequestStatus {...this.state} user={this.props.user} />;
         break;
     }
 
