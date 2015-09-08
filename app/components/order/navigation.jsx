@@ -33,12 +33,16 @@ export default class OrderNavigationStatus extends React.Component {
   constructor (props, context, updater) {
     // Setup props as empty because now all are state.
     super(props, context, updater);
+    this.setCorrectHeader();
+  }
 
+  setCorrectHeader (props) {
     let navigation = this;
     let header = headersCustomer;
+    let actualProps = props || this.props;
 
     Object.keys(header).map(function (item) {
-      if (header[item][2].indexOf(navigation.props.status) >= 0){
+      if (header[item][2].indexOf(actualProps.status) >= 0){
         navigation.currentTab = item;
       }
     });
@@ -46,6 +50,10 @@ export default class OrderNavigationStatus extends React.Component {
     this.state = {
       hoverTab: this.currentTab
     };
+  }
+
+  componentWillReceiveProps (nextProps) {
+    this.setCorrectHeader(nextProps);
   }
 
   handleNavMouseEnter (event) {

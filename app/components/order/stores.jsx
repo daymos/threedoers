@@ -247,7 +247,7 @@ export class OrderStore extends Airflux.Store {
     });
   }
 
-  onRequestOrder ( printer ) {
+  onRequestOrder (printer) {
     let orderStore = this;
 
     this.getOrderEndpoint()

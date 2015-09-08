@@ -18,8 +18,10 @@ import {ORDER_STATUSES} from '../../utils/constants';
 // Customer order status
 import CustomerOrderStatus from './customer/order.jsx';
 import CustomerRequestStatus from './customer/request.jsx';
+import CustomerReviewStatus from './customer/review.jsx';
 
 // Printer order status
+import PrinterReviewStatus from './printer/review.jsx';
 
 
 export default class Order extends PageWithMenu {
@@ -49,6 +51,9 @@ export default class Order extends PageWithMenu {
 
   renderAppropriateStep () {
     let rendered;
+    let isPrinter = this.props.user.printer &&
+      this.props.user.printer === 'accepted' ||
+      this.props.user.isPrinter;
 
     switch (this.state.order.status) {
       case ORDER_STATUSES.STARTED[0]:
@@ -56,6 +61,13 @@ export default class Order extends PageWithMenu {
         break;
       case ORDER_STATUSES.PRINT_REQUESTED[0]:
         rendered = <CustomerRequestStatus {...this.state} user={this.props.user} />;
+        break;
+      case ORDER_STATUSES.PRINT_REVIEW[0]:
+        if (isPrinter) {
+          rendered = <PrinterReviewStatus {...this.state} user={this.props.user} />;
+        } else {
+          rendered = <CustomerReviewStatus {...this.state} user={this.props.user} />;
+        }
         break;
     }
 

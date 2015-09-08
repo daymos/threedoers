@@ -113,6 +113,11 @@ export default class Request extends React.Component {
   render () {
     return (
       <div>
+        <div className="alert alert-warning">
+          Your order was placed in our marketplace, please wait while a printer
+          request your order for review.
+        </div>
+
         {this.renderItems()}
 
         <div className="row">

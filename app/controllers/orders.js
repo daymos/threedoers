@@ -55,7 +55,7 @@ export let createOrder = function (req, res, next) {
 
 export let orderDetail = function (req, res, next) {
   Router.run(routes, req.originalUrl, function (Root, state) {
-    let reactHTML = React.renderToString(<Root order={req.order.toObject()} />);
+    let reactHTML = React.renderToString(<Root order={req.order.toObject()} user={req.user} />);
     let user = req.user ? req.user.getVisibleFields() : undefined;
     let reactState = {user, order: req.order.toObject()};
     reactState = JSON.stringify(reactState);
@@ -136,7 +136,7 @@ export let requestPrintOrder = function (req, res, next) {
     req.order.status = ORDER_STATUSES.PRINT_REVIEW[0];
     req.order.printer = req.body.printer;
 
-    mUsers.findOne({_id: req.body.printer, printer: 'accepted'})
+    mUsers.User.findOne({_id: req.body.printer, printer: 'accepted'})
     .exec(function (userFetchError, printer) {
       if (userFetchError) {
         return next(userFetchError);

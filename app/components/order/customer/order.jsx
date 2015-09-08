@@ -97,7 +97,7 @@ export default class OrderStatus extends React.Component {
 
   triggerRequestOrder () {
     let printer;
-    let printerSelected = this.state.printer.text.trim() === '';
+    let printerSelected = this.state.printer.text.trim() !== '';
     printerSelected = printerSelected &&
       this.state.printer.text.trim() === this.state.printer.selected;
 

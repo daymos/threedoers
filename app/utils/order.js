@@ -42,11 +42,11 @@ export function getRelatedOrder (req, orderID, callback) {
     if (order) {
       // Test if printer has rights to see
       // FIXME: req.user.printer is backward compatibility remove later!
-      let isPrinter = req.user && req.user.isPrinter &&
+      let isPrinter = req.user && req.user.isPrinter ||
         req.user.printer === 'accepted';
 
-      // FIXME: Modify this when multiorder is ready
-      let canSee = isPrinter && order.printer && req.user._id.equals(order.printer);
+      let canSee = isPrinter && order.printer &&
+        req.user._id.equals(order.printer._id);
       canSee = canSee ||
         (req.user &&
          order.customer && req.user._id.equals(order.customer._id));
