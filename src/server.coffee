@@ -21,7 +21,8 @@ passport = require "passport"
 io = require 'socket.io'
 ioSession = require 'socket.io-session'
 raven = require 'raven'
-
+locale = require "locale"
+i18n = require 'i18n-2'
 logger = require "./lib/logger"
 
 ##
@@ -49,7 +50,18 @@ logger.info '* Starting 3doers server:'
 logger.info '*'
 
 
+
 app = express()
+
+app.use locale(['en', 'it'])
+# Attach the i18n property to the express request object
+# And attach helper methods for use in templates
+i18n.expressBind app,
+  directory: settings.locales.path
+  locales: [
+    'en'
+    'it'
+  ]
 validator = expressValidator()
 
 db = mongoose.connect "#{settings.db.host}#{settings.db.name}", db: {safe: true, autoIndex: false}, (err) ->
@@ -98,6 +110,7 @@ app.configure 'development', ->
   app.use express.errorHandler()
 
 app.use (req, res, next) ->
+  req.i18n.setLocale(req.locale)
   res.locals
     user: req.user
     nav: req.path

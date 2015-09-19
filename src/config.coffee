@@ -68,6 +68,9 @@ config =
     path: __dirname + '/src/stlstats.py'
     bin: '~/app-root/data/3doers-pyenv/bin/python'
 
+  locales:
+    path: __dirname + '/src/locales'
+
   upload:
     to: (process.env.OPENSHIFT_DATA_DIR || '') + '3doers/uploads/'
 
