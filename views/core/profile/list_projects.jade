@@ -39,20 +39,20 @@ block content
         div(role='tabpanel')
           ul.nav.nav-tabs.nav-justified.nav-tabs-3doers(role='tablist')
             li
-              a(href='/profile/projects', aria-controls='workplace') WorkPlace
+              a(href='/profile/projects', aria-controls='workplace') #{__('Workplace')}
             li
-              a(href='/profile/onprint', aria-controls='printing') Printing
+              a(href='/profile/onprint', aria-controls='printing') #{__('Printing')}
             li
-              a(href='/design/projects', aria-controls='designing') Designing
+              a(href='/design/projects', aria-controls='designing') #{__('Designing')}
             li
-              a(href='/profile/archived', aria-controls='completed') Completed
+              a(href='/profile/archived', aria-controls='completed') #{__('Completed')}
 
           .tab-content
             .tab-pane.fade.in.active(id='workplace', role='tabpanel')
             - if (printingProjects.length == 0 && designProjects.length==0 && projects.length==0)
               h4.light There is not any project yet for this list.
             - else
-              h4.light Here you can find printing and design jobs
+              h4.light #{__('Find Jobs')}
               br
               .row
                 - var index = 1
