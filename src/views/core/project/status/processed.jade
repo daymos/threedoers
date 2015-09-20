@@ -3,47 +3,47 @@ div(role='tabpanel')
     li.nav-step.active
       a(href='#tab-crete-order')
         span.step-one
-        | Create order
+        | #{__("Create order")}
     li.nav-step
       a(href='#tab-place-order')
         span.step-two
-        | Place order
+        | #{__("Place order")}
     li.nav-step
       a(href='#tab-accepted')
         span.step-three
-        | Accepted
+        | #{__("Accepted")}
     li.nav-step
       a(href='#tab-printing')
         span.step-four
-        | Printing
+        | #{__("Printing2")}
     li.nav-step
       a(href='#tab-shipping')
         span.step-five
-        | Shipping
+        | #{__("Shipping")}
   .tab-content
     .tab-pane.fade.in.active(id='tab-crete-order')
-      h4.light Preview your file and decide printing features.
+      h4.light #{__("Preview File")}
     .tab-pane.fade(id='tab-place-order')
       h4.light
-        | Your order is now available for printers to review.
+        | #{__("Review Order2")}
         br
-        | You'll be notified once the work is accepted in order to proceed with the final payment.
+        | #__{("Notify Accepted")}
     .tab-pane.fade(id='tab-accepted')
-      h4.light Please proceed with the final payment within the next 24 hours to allow our printer to start working on your order.
+      h4.light #{__("Payment Indication")}
     .tab-pane.fade(id='tab-printing')
-      h4.light You order is printing. You'll be notified when it's shipped.
+      h4.light #{__("Order Is Printing")}
     .tab-pane.fade(id='tab-shipping')
       h4.light
-        | Your order has been shipped and should be delivered to you in the next 48 hours.
+        | #{__("Order Shipped")}
         br
-        | You can track it directly from the courrier service website using the code below.
+        | #{__("Track Courier")}
 
   #message-error.alert.alert-danger.hide  Error in stl
 
 .job-order
   h4.job-name#title(data-type="text", data-url="/project/title/#{project.id}", data-title="Enter the Title") #{ project.title }
   h5.job-volume
-    strong VOLUME:&nbsp;
+    strong #{__("Volume")}:&nbsp;
     span#volume.object-volume
       | #{project.volume}
     span.object-volume-unit &nbsp; cm3
@@ -61,7 +61,7 @@ div(role='tabpanel')
               input(type='hidden', name='authenticity_token')
               .form-group
                 select.form-control#color-chooser
-                  option(disabled='disabled', selected='selected') What color?
+                  option(disabled='disabled', selected='selected') #{__("What Color")}
                   - for color in colors
                     option(value="#{color}") #{color}
               .form-group
@@ -69,33 +69,33 @@ div(role='tabpanel')
                   - for material in materials
                     option(value="#{material[1]}") #{material[1]}
               .form-group
-                input#ammount.form-control(type='text', min='1', placeholder='How many items?', name='ammount')
+                input#ammount.form-control(type='text', min='1', placeholder='#{__("Items Qty")}', name='ammount')
                 input#printer-hidden(type='hidden', name='printer')
               .row
                 .col-sm-7
-                  h4.job-quotation Price quotation*:
+                  h4.job-quotation #{__("Price Quote")}
                 .col-sm-5
                   h3.job-price
                     span#order-price 0
                     span &nbsp; €
               p.text-muted.final-price
-                small *Final price will include a shipping fee and will be calculated once the order has been accepted.
+                small #{__("Price Descr")}
               if user
-                button#order-button.btn.btn-lg.btn-block.btn-green(type='submit', disabled='disabled') PLACE ORDER
+                button#order-button.btn.btn-lg.btn-block.btn-green(type='submit', disabled='disabled') #{__("Place Order").toUpperCase()}
               else
-                button#order-button.btn.btn-lg.btn-block.btn-green(type='button', disabled='disabled', data-toggle='modal', data-target="#pleaseLogin") PLACE ORDER
+                button#order-button.btn.btn-lg.btn-block.btn-green(type='button', disabled='disabled', data-toggle='modal', data-target="#pleaseLogin") #{__("Place Order").toUpperCase()}
           .col-sm-12
-            h4 Do you have a printer reference?
-            p If you know who should print your order, insert the printer's e-mail or username directly submit your order to him, otherwise leave it blank.
+            h4 #{__("Printer Preference")}
+            p #{__("Preference Descr")}
             .row
               .col-md-5
                 .form-group.has-feedback
-                  input#printer-input.form-control(type='text', placeholder="E-mail or username of the printer", autocomplete='off')
+                  input#printer-input.form-control(type='text', placeholder="#{__("Printer Contact")}", autocomplete='off')
        if user
         .row
           br
           div.col-md-12
-            a(href='#', data-toggle='modal', data-target='#orderModal') Cancel order
+            a(href='#', data-toggle='modal', data-target='#orderModal') #{__("Cancel Order")}
 
   .modal.fade(id='orderModal', role='dialog')
     .modal-dialog.modal-md
@@ -106,18 +106,18 @@ div(role='tabpanel')
           h4.modal-title &nbsp;
         .modal-body
           p
-            | Once deleted the order won't be accesible anymore.
+            | #{__("Delete Message")}
             br
-            | Do you want to proceed?
+            | #{__("Proceed Question")}
           br
           form(action='/project/delete/#{ project._id }', method='post')
             .row
               .col-md-5
                 .form-group
-                  a.btn.btn-xlg.btn-block.btn-green-inverse(data-dismiss='modal', href='#') Undo
+                  a.btn.btn-xlg.btn-block.btn-green-inverse(data-dismiss='modal', href='#') #{__("Undo")}
               .col-md-7
                 .form-group
-                  button.btn.btn-xlg.btn-block.btn-green(type='submit') CANCEL ORDER
+                  button.btn.btn-xlg.btn-block.btn-green(type='submit') #{__("Cancel Order").toUpperCase()}
 
 
 //- - if (!project.checkHeight || !project.checkLenght || !project.checkWidth)
