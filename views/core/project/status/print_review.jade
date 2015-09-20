@@ -4,31 +4,31 @@
       li.nav-step.active
         a(href='#tab-review')
           span.step-one
-          | Review
+          | #{__("Review")}
       li.nav-step
         a(href='#tab-accepted')
           span.step-two
-          | Accepted
+          | #{__("Accepted")}
       li.nav-step
         a(href='#tab-printing')
           span.step-three
-          | Printing
+          | #{__("Printing2")}
       li.nav-step
         a(href='#tab-shipping')
           span.step-four
-          | Shipping
+          | #{__("Shipping")}
     .tab-content
       .tab-pane.fade.in.active(id='tab-review')
-        h4.light You have 24 hours to review and accept this order before it goes automatically back to the Workplace.
+        h4.light #{__("24 Hours Accept")}.
       .tab-pane.fade(id='tab-accepted')
         h4.light
       .tab-pane.fade(id='tab-printing')
         h4.light
-          | You can now proceed with the printing, remember that a faster service will result in a higher rating for you.
+          | #{__("Proceed Printing")}.
           br
-          | Once you've completed the order, please click on "ORDER PRINTED" to generate a shipping label.
+          | #{__("Once Order Completed")}.
       .tab-pane.fade(id='tab-shipping')
-        h4.light Print the shipping label, pack the item and attach the label on it.
+        h4.light #{__("Print Label")}
 
   .job-review
     h4.job-name #{project.title}
@@ -43,54 +43,54 @@
             .col-md-5
               .info
                 p
-                  strong COLOR:
+                  strong #{__("Color")}:
                   |  #{project.color}
                 p
-                  strong MATERIAL:
+                  strong #{__("Material")}:
                   |  #{project.material}
                 p
-                  strong AMOUNT:
+                  strong #{__("Amount")}:
                   |  #{project.order.ammount} pieces
                 p
-                  strong VOLUME:
+                  strong #{__("Volume")}:
                   |  #{project.volume} cm3
                 p
-                  strong WEIGHT:
+                  strong #{__("Weight")}:
                   |  #{project.weight} g
                 if project.dimension
                   p
-                    strong DIMENSIONS:
+                    strong #{__("Dimensions")}:
                     |  #{project.dimension.width} cm (W) #{project.dimension.height} cm (H) #{project.dimension.length}(L)
                 br
-                h4: a(href='/#{project.file}') Download STL file
+                h4: a(href='/#{project.file}') #{__("Download STL")}
       .col-md-4
         table.job-payment
           tbody
             tr
-              td.desc Taxes:
+              td.desc #{__("Taxes")}:
               td.value #{project.order.taxes} €
             tr
-              td.desc 3Doers:
+              td.desc #{__("3Doers")}:
               td.value #{project.order.businessPayment} €
             tr
-              td.desc Shipping:
+              td.desc #{__("Shipping2")}:
               td.value -
             tr.separator
               td(col-span='2')
             tr
-              td.desc.text-shadow-3doers Printer:
+              td.desc.text-shadow-3doers #{__("Printer")}:
               td.value
                 h3.normal #{project.order.printerPayment} €
   .row
     .col-md-3
       .form-group
-        a#deny.btn.btn-xlg.btn-block.btn-green-inverse(href='/printing/deny/#{project.id}') Not for me
+        a#deny.btn.btn-xlg.btn-block.btn-green-inverse(href='/printing/deny/#{project.id}') #{__("Not For Me")}
     .col-md-4.col-md-offset-5
       .form-group
-        a#accept.btn.btn-xlg.btn-block.btn-green(href='/printing/accept/#{project.id}') ACCEPT ORDER
+        a#accept.btn.btn-xlg.btn-block.btn-green(href='/printing/accept/#{project.id}') #{__("Accept Order").toUpperCase()}
 
   .page-subheader
-    h3 Conversation with project owner:
+    h3 #{__("Conversation")}:
 
 - else
   div(role='tabpanel')
@@ -98,31 +98,31 @@
       li.nav-step.active
         a(href='#tab-review')
           span.step-one
-          | Review
+          | #{__("Review")}
       li.nav-step
         a(href='#tab-accepted')
           span.step-two
-          | Accepted
+          | #{__("Accepted")}
       li.nav-step
         a(href='#tab-printing')
           span.step-three
-          | Printing
+          | #{__("Printing")}
       li.nav-step
         a(href='#tab-shipping')
           span.step-four
-          | Shipping
+          | #{__("Shipping")}
     .tab-content
       .tab-pane.fade.in.active(id='tab-review')
-        h4.light You have 24 hours to review and accept this order before it goes automatically back to the Workplace.
+        h4.light #{__("24 Hours Accept")}.
       .tab-pane.fade(id='tab-accepted')
         h4.light
       .tab-pane.fade(id='tab-printing')
         h4.light
-          | You can now proceed with the printing, remember that a faster service will result in a higher rating for you.
+          | #{__("Proceed Printing")}.
           br
-          | Once you've completed the order, please click on "ORDER PRINTED" to generate a shipping label.
+          | #{__("Once Order Completed")}.
       .tab-pane.fade(id='tab-shipping')
-        h4.light Print the shipping label, pack the item and attach the label on it.
+        h4.light #{__("Print Label")}.
 
   .alert.alert-primary
     .media
@@ -134,8 +134,9 @@
             img.media-object(src='data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+PGRlZnMvPjxyZWN0IHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCIgZmlsbD0iI0VFRUVFRSIvPjxnPjx0ZXh0IHg9IjEzLjQ2MDkzNzUiIHk9IjMyIiBzdHlsZT0iZmlsbDojQUFBQUFBO2ZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1mYW1pbHk6QXJpYWwsIEhlbHZldGljYSwgT3BlbiBTYW5zLCBzYW5zLXNlcmlmLCBtb25vc3BhY2U7Zm9udC1zaXplOjEwcHQ7ZG9taW5hbnQtYmFzZWxpbmU6Y2VudHJhbCI+NjR4NjQ8L3RleHQ+PC9nPjwvc3ZnPg==', style='width: 50px; height: 50px')
       .media-body.media-middle
         .message
+          | #{__("Person Reviewing2")}
           strong #{printer.firstName || printer.username}
-          |  is currently reviewing this order and may contact you
+          | #{__("Person Reviewing")}
 
   .job-review
     h4.job-name #{project.name}
@@ -151,38 +152,38 @@
             .col-md-7
               .info
                 p
-                  strong COLOR:
+                  strong #{__("Color")}:
                   |  #{project.color}
                 p
-                  strong MATERIAL:
+                  strong #{__("Material")}:
                   |  #{project.material}
                 p
-                  strong AMOUNT:
+                  strong #{__("Amount")}:
                   |  #{project.order.ammount} pieces
                 p
-                  strong VOLUME:
+                  strong #{__("Volume")}:
                   |  #{project.volume} cm3
                 p
-                  strong WEIGHT:
+                  strong #{__("Weight")}:
                   |  #{project.weight} g
                 if project.dimension
                   p
-                    strong DIMENSIONS:
+                    strong #{__("Dimensions")}:
                     |  #{project.dimension.width} cm (W) #{project.dimension.height} cm (H) #{project.dimension.length}(L)
       .col-md-4
         table.job-payment
           tbody
             tr
-              td.desc Taxes:
+              td.desc #{__("Taxes")}:
               td.value #{project.order.taxes} €
             tr
-              td.desc 3Doers:
+              td.desc #{__("3Doers")}:
               td.value #{project.order.businessPayment} €
             tr
-              td.desc Printer:
+              td.desc #{__("Printer")}:
               td.value #{project.order.printerPayment} €
             tr
-              td.desc Shipping:
+              td.desc #{__("Shipping2")}:
               td.value -
             tr.separator-small
               td(col-span='2')
@@ -192,9 +193,9 @@
                 h3.normal #{project.orderPrice} €
             tr
               td(colspan='2')
-                p.final-price *Final price will include a shipping fee and will be calculated once the order has been accepted by a printer.
+                p.final-price #{__("Price Descr")} by a printer.
   div
-    a(href='#', data-toggle='modal', data-target='#orderModal') Cancel order
+    a(href='#', data-toggle='modal', data-target='#orderModal') #{__("Cancel Order")}
 
   .modal.fade(id='orderModal', role='dialog')
     .modal-dialog.modal-md
@@ -205,18 +206,18 @@
           h4.modal-title &nbsp;
         .modal-body
           p
-            | Once deleted the order won't be accesible anymore.
+            | #{__("Deleted Order")}.
             br
-            | Do you want to proceed?
+            | #{__("Proceed Question")}
           br
           form(action='/project/delete/#{ project._id }', method='post')
             .row
               .col-md-5
                 .form-group
-                  a.btn.btn-xlg.btn-block.btn-green-inverse(data-dismiss='modal', href='#') Undo
+                  a.btn.btn-xlg.btn-block.btn-green-inverse(data-dismiss='modal', href='#') #{__("Undo")}
               .col-md-7
                 .form-group
-                  button.btn.btn-xlg.btn-block.btn-green(type='submit') CANCEL ORDER
+                  button.btn.btn-xlg.btn-block.btn-green(type='submit') #{__("Cancel Order").toUpperCase()}
 
   .page-subheader
     h3 Conversation with printer:
@@ -254,9 +255,9 @@
                   |  at
                   strong  #{ prettyHour(comment.createdAt) } pm
       .form-group
-        textarea#comment-text.form-control(rows=4, placeholder='Write a comment')
+        textarea#comment-text.form-control(rows=4, placeholder='#{__("Write Comment")}')
       .row
         .col-xs-3.col-xs-offset-9
-          button#comment-button.btn.btn-md.btn-block.btn-green-inverse(type='submit') Send
+          button#comment-button.btn.btn-md.btn-block.btn-green-inverse(type='submit') #{__("Send")}
 br
 br

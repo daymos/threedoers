@@ -4,40 +4,40 @@
       li.nav-step.complete
         a(href='#tab-crete-order')
           span.step-one
-          | Create order
+          | #{__("Create order")}
       li.nav-step.active
         a(href='#tab-place-order')
           span.step-two
-          | Place order
+          | #{__("Place order")}
       li.nav-step
         a(href='#tab-accepted')
           span.step-three
-          | Accepted
+          | #{__("Accepted")}
       li.nav-step
         a(href='#tab-printing')
           span.step-four
-          | Printing
+          | #{__("Printing2")}
       li.nav-step
         a(href='#tab-shipping')
           span.step-five
-          | Shipping
+          | #{__("Shipping")}
     .tab-content
       .tab-pane.fade(id='tab-crete-order')
-        h4.light Preview your file and decide printing features.
+        h4.light #{__("Preview File")}
       .tab-pane.fade.in.active(id='tab-place-order')
         h4.light
-          | Your order is now available for printers to review.
+          | #{__("Review Order2")}
           br
-          | You'll be notified once the work is accepted in order to proceed with the final payment.
+          | #__{("Notify Accepted")}
       .tab-pane.fade(id='tab-accepted')
-        h4.light Please proceed with the final payment within the next 24 hours to allow our printer to start working on your order.
+        h4.light #{__("Payment Indication")}
       .tab-pane.fade(id='tab-printing')
-        h4.light You order is printing. You'll be notified when it's shipped.
+        h4.light #{__("Order Is Printing")}
       .tab-pane.fade(id='tab-shipping')
         h4.light
-          | Your order has been shipped and should be delivered to you in the next 48 hours.
+          | #{__("Order Shipped")}
           br
-          | You can track it directly from the courrier service website using the code below.
+          | #{__("Track Courier")}
 
   .job-review
     h4.job-name #{ project.title }
@@ -52,47 +52,47 @@
             .col-md-7
               .info
                 p
-                  strong COLOR:
+                  strong #{__("Color")}:
                   |  #{project.color}
                 p
-                  strong MATERIAL:
+                  strong #{__("Material")}:
                   |  #{project.material}
                 p
-                  strong AMOUNT:
+                  strong #{__("Amount")}:
                   |  #{project.order.ammount} pieces
                 p
-                  strong VOLUME:
+                  strong #{__("Volume")}:
                   |  #{project.volume} cm3
                 p
-                  strong WEIGHT:
+                  strong #{__("Weight")}:
                   |  #{project.weight} g
                 if project.dimension
                   p
-                    strong DIMENSIONS:
+                    strong #{__("Dimensions")}:
                     |  #{project.dimension.width} cm (W) #{project.dimension.height} cm (H) #{project.dimension.length}(L)
       .col-md-4
         table.job-payment
           tbody
             tr
-              td.desc Taxes:
+              td.desc #{__("Taxes")}:
               td.value #{project.order.taxes} €
             tr
               td.desc Item:
               td.value #{project.order.price} €
             tr
-              td.desc Shipping:
+              td.desc #{__("Shipping2")}:
               td.value -
             tr.separator-small
               td(col-span='2')
             tr
-              td.desc.text-shadow-3doers Price quotation*:
+              td.desc.text-shadow-3doers #{__("Price Quote")}
               td.value
                 h3.normal #{project.orderPrice} €
             tr
               td(colspan='2')
-                p.final-price *Final price will include a shipping fee and will be calculated once the order has been accepted by a printer.
+                p.final-price #{__("Price Descr")}
   div
-    a(href='#', data-toggle='modal', data-target='#orderModal') Cancel order
+    a(href='#', data-toggle='modal', data-target='#orderModal') #{__("Cancel Order")}
 
   .modal.fade(id='orderModal', role='dialog')
     .modal-dialog.modal-md
@@ -103,17 +103,17 @@
           h4.modal-title &nbsp;
         .modal-body
           p
-            | Once deleted the order won't be accesible anymore.
+            | #{__("Delete Message")}
             br
-            | Do you want to proceed?
+            | #{__("Proceed Question")}
           br
           form(action='/project/delete/#{ project._id }', method='post')
             .row
               .col-md-5
                 .form-group
-                  a.btn.btn-xlg.btn-block.btn-green-inverse(data-dismiss='modal', href='#') Undo
+                  a.btn.btn-xlg.btn-block.btn-green-inverse(data-dismiss='modal', href='#') #{__("Undo")}
               .col-md-7
                 .form-group
-                  button.btn.btn-xlg.btn-block.btn-green(type='submit') CANCEL ORDER
+                  button.btn.btn-xlg.btn-block.btn-green(type='submit') #{__("Cancel Order").toUpperCase()}
   br
   br

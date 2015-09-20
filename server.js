@@ -1,5 +1,5 @@
 (function() {
-  var HTTPStatus, SessionStore, app, appName, db, engines, env, express, expressValidator, gzippo, http, https, io, ioSession, logger, mongoose, passport, q, raven, server, sessionStore, settings, ssl_options, validator, _i, _len, _ref;
+  var HTTPStatus, SessionStore, app, appName, db, engines, env, express, expressValidator, gzippo, http, https, i18n, io, ioSession, locale, logger, mongoose, passport, q, raven, server, sessionStore, settings, ssl_options, validator, _i, _len, _ref;
 
   settings = require('./config');
 
@@ -31,6 +31,10 @@
 
   raven = require('raven');
 
+  locale = require("locale");
+
+  i18n = require('i18n-2');
+
   logger = require("./lib/logger");
 
   mongoose.Promise.prototype.then = function(fulfilled, rejected) {
@@ -56,6 +60,13 @@
   logger.info('*');
 
   app = express();
+
+  app.use(locale(['en', 'it']));
+
+  i18n.expressBind(app, {
+    directory: settings.locales.path,
+    locales: ['en', 'it']
+  });
 
   validator = expressValidator();
 
@@ -119,6 +130,7 @@
   });
 
   app.use(function(req, res, next) {
+    req.i18n.setLocale(req.locale);
     res.locals({
       user: req.user,
       nav: req.path,

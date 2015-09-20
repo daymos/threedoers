@@ -30,16 +30,16 @@ nav.navbar.nav-3doers(class=(nav!='/home'?'grey-bg':''))
                             li
                                 a.menu-item.padding-0.no-border
                             li
-                                a(href='#howItWorks',data-scroll='howItWorks').menu-item How it works
+                                a(href='#howItWorks',data-scroll='howItWorks').menu-item #{__("How It Works")} How it works
                             li
-                                a(href='#join',data-scroll='join').menu-item Join 3doers
+                                a(href='#join',data-scroll='join').menu-item #{__("Join 3doers")} Join 3doers
                             li
-                                a(href='#contact',data-scroll='contact').menu-item Contact us
+                                a(href='#contact',data-scroll='contact').menu-item #{__("Contact Us")} Contact us
 
                     ul.nav.navbar-nav.navbar-right.margin-top-15
 
                         li
-                            a(href='/accounts/login',class=(nav=='/accounts/login'?'menu-item-green-active':'')).menu-item-green Log in
+                            a(href='/accounts/login',class=(nav=='/accounts/login'?'menu-item-green-active':'')).menu-item-green #{__("Log In")} Log in
 
                         li
                             span.menu-span.menu-item-green /
@@ -51,19 +51,19 @@ nav.navbar.nav-3doers(class=(nav!='/home'?'grey-bg':''))
                                 a(href='#',data-toggle='dropdown',aria-expanded='true').dropdown-toggle.no-focus#landingDrop
                                     img(src='/img/icon/share_icon.svg')
                                 ul(role='menu',aria-labelledby='landingDropdown').dropdown-menu.dropdown-nav.right-bottom-border
-                                    li(role='presentation').dropdown-header.menu-item-color.margin-top-10.text-14 Spread the voice
+                                    li(role='presentation').dropdown-header.menu-item-color.margin-top-10.text-14 #{__("Spread The Voice")}
                                     li(role='presentation').margin-top-10
                                         a(role='menuitem',tab-index='-1',href='#')
                                             i.fa.fa-facebook.lite-grey-color.margin-right-20
-                                            span.lite-grey-color.text-14.weight-lite Share on facebook
+                                            span.lite-grey-color.text-14.weight-lite #{__("Share FB")}
                                     li(role='presentation').margin-top-10
                                         a(role='menuitem',tab-index='-1',href='#')
                                             i.fa.fa-twitter.lite-grey-color.margin-right-20
-                                            span.lite-grey-color.text-14.weight-lite Share on twitter
+                                            span.lite-grey-color.text-14.weight-lite #{__("Share Twitter")}
                                     li(role='presentation').margin-top-10
                                         a(role='menuitem',tab-index='-1',href='#')
                                             i.fa.fa-google.lite-grey-color.margin-right-20
-                                            span.lite-grey-color.text-14.weight-lite Share on facebook
+                                            span.lite-grey-color.text-14.weight-lite #{__("Share G+")}
 
 
 

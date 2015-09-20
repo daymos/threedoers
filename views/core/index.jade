@@ -10,61 +10,59 @@ block content
         img.img-responsive(src='/images/main_pattern.png', alt='3D Printer, 3D print, printer 3D, stampa 3D')
         .caption
           .slogan
-            h1 SIMPLE 3D PRINTING
-            h3 Turn your ideas into real objects
+            h1 #{__("Simple 3D Printing")}
+            h3 #{__("Turn Ideas")}
       .section(data-scroll-index='0')
-        h3.title.text-center HOW IT WORKS
+        h3.title.text-center #{__("How It Works").toUpperCase()}
         p.info.text-center
-          | 3doers is a collective 3d printing service.
+          | #{__("3doers Collective")}
           br
-          | Here you can print your objects or find a designer to model your ideas.
+          | #{__("Print Your Objects")}
         .row.steps
           .col-md-4
             .step
               figure: img(src='/images/step1_icon.png')
-              h4 1. You upload a file
-              a(href='#') Don't have a design yet?
+              h4 #{__("Step 1")}
+              a(href='#') #{__("No Design")}
           .col-md-4
             .step
               figure: img(src='/images/step2_icon.png')
-              h4 2. A printer picks it
+              h4 #{__("Step 2")}
           .col-md-4
             .step
               figure: img(src='/images/step3_icon.png')
               h4
-                | 3. Your object
-                br
-                | is delivered to you
+                | #{__("Step 3")}
         .control-links
-          a.btn.btn-lg.btn-green(href='/project/upload') START PRINTING
+          a.btn.btn-lg.btn-green(href='/project/upload') #{__("Start Printing")}
       .box(data-scroll-index='1')
         .row
           .col-md-7
             .content.content-white.printer-bg
-              h3 DO YOU HAVE A 3D PRINTER?
+              h3 #{__("Have 3D printer")}
               p
-                | You bought a 3d printer and you feel strong about your skills.
+                | #{__("Bought Printer")}
                 br
-                | Join our community and start getting paid for your work.
+                | #{__("Join Community")}
                 br
-                | We offer you
-              a.btn.btn-lg.btn-simple(href='/become') Become a printer
+                | #{__("We Offer You")}
+              a.btn.btn-lg.btn-simple(href='/become') #{__("Become A Printer")}
           .col-md-5
             .content.content-blue
-              h3 ARE YOU A DESIGNER?
-              p So you like to create awesome models with a 3d cad and you feel like taking it to the next level. Start designing for us and get paid for it.
-              a.btn.btn-lg.btn-simple-inverse(href='/profile/settings#upgradeYourProfile') Start designing
+              h3 #{__("Designer")}
+              p #{__("Creates Models")} #{__("Design For Us")}
+              a.btn.btn-lg.btn-simple-inverse(href='/profile/settings#upgradeYourProfile') #{__("Start designing")}
       .contact(data-scroll-index='2')
         .inner
           .row
             .col-lg-3.col-md-3
-              h3 CONTACT US
-              p.info Need help using our service? For business to business enquiries or any other requests, feel free to contact us at this address
-                a(href='mailto:info@3doers.it')  info@3doers.it
+              h3 #{__("Contact Us").toUpperCase()}
+              p.info #{__("Need Help")} #{__("Help Paragraph")}
+                a(href='mailto:info@3doers.it')  #{__("Email")}
           br
           br
           br
           .row
             .col-md-5.col-md-offset-7
-              p.text.white Printing service in US and Europe
-              p.text.green Design service worldwide
+              p.text.white #{__("Printing Continents")}
+              p.text.green #{__("Worldwide Service")}

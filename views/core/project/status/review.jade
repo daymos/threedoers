@@ -25,45 +25,45 @@ block content
             li.nav-step.active
               a(href='#tab-crete-order')
                 span.step-one
-                | Create order
+                | #{__("Create order")}
             li.nav-step
               a(href='#tab-place-order')
                 span.step-two
-                | Place order
+                | #{__("Place order")}
             li.nav-step
               a(href='#tab-accepted')
                 span.step-three
-                | Accepted
+                | #{__("Accepted")}
             li.nav-step
               a(href='#tab-printing')
                 span.step-four
-                | Printing
+                | #{__("Printing2")}
             li.nav-step
               a(href='#tab-shipping')
                 span.step-five
-                | Shipping
+                | #{__("Shipping")}
           .tab-content
             .tab-pane.fade.in.active(id='tab-crete-order')
-              h4.light Preview your file and decide printing features.
+              h4.light #{__("Preview File")}
             .tab-pane.fade(id='tab-place-order')
               h4.light
-                | Your order is now available for printers to review.
+                | #{__("Review Order2")}
                 br
-                | You'll be notified once the work is accepted in order to proceed with the final payment.
+                | #__{("Notify Accepted")}
             .tab-pane.fade(id='tab-accepted')
-              h4.light Please proceed with the final payment within the next 24 hours to allow our printer to start working on your order.
+              h4.light #{__("Payment Indication")}
             .tab-pane.fade(id='tab-printing')
-              h4.light You order is printing. You'll be notified when it's shipped.
+              h4.light #{__("Order Is Printing")}
             .tab-pane.fade(id='tab-shipping')
               h4.light
-                | Your order has been shipped and should be delivered to you in the next 48 hours.
+                | #{__("Order Shipped")}
                 br
-                | You can track it directly from the courrier service website using the code below.
+                | #{__("Track Courier")}
 
         .job-order
           h4.job-name #{project.title}
           h5.job-volume
-            strong VOLUME:
+            strong #{__("Volume")}:
             | 59.7 cm3
           .row
             .col-md-9
@@ -75,27 +75,27 @@ block content
                     form.form-3doers
                       .form-group
                         select.form-control
-                          option What color?
+                          option #{__("What Color")}
                       .form-group
                         select.form-control
-                          option What material?
+                          option #{__("What material")}
                       .form-group
-                        input.form-control(type='text', placeholder='How many items?')
+                        input.form-control(type='text', placeholder='#{__("Items Qty")}')
                       .row
                         .col-sm-7
-                          h4.job-quotation Price quotation*:
+                          h4.job-quotation #{__("Price Quote")}
                         .col-sm-5
                           h3.job-price 0 $
                       p.text-muted.final-price
-                        small *Final price will include a shipping fee and will be calculated once the order has been accepted.
-                      button.btn.btn-lg.btn-block.btn-green(type='submit', disabled='disabled') PLACE ORDER
+                        small #{__("Price Descr")}
+                      button.btn.btn-lg.btn-block.btn-green(type='submit', disabled='disabled') #{__("Place Order").toUpperCase()}
         .row
           .col-md-9
             .alert.alert-danger
               .text-light
-                | Dimensions of the object might exceed printing sizes.
+                | #{__("Object Dimensions")}
                 br
-                | You can proceed with the order anyway, but if no printer picks it up you might consider resizing the object.
+                | #{__("Proceed With Order")}
 
         br
         br
