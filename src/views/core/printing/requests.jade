@@ -16,14 +16,14 @@ block content
       .container
         div(role='tabpanel')
           ul.nav.nav-tabs.nav-justified.nav-tabs-3doers(role='tablist')
-            li.active
-              a(href='/printing/requests', aria-controls='workplace') WorkPlace
             li
-              a(href='/printing/jobs', aria-controls='printing') Printing
+              a(href='/printing/requests', aria-controls='workplace') #{__('Workplace')}
             li
-              a(href='/design/projects', aria-controls='designing') Designing
+              a(href='/printing/jobs', aria-controls='printing') #{__('Printing')}
             li
-              a(href='/printing/archived', aria-controls='completed') Completed
+              a(href='/design/projects', aria-controls='designing') #{__('Designing')}
+            li
+              a(href='/printing/archived', aria-controls='completed') #{__('Completed')}
 
           .tab-content
             .tab-pane.fade.in.active(id='workplace', role='tabpanel')
@@ -34,7 +34,7 @@ block content
             - if (projects.length==0)
               h4.light There is not any project yet for this list.
             - else
-              h4.light Here you can find printing and design jobs
+              h4.light #{__('Find Jobs')}
               br
               .row
                 - for (project in projects)
@@ -50,9 +50,9 @@ block content
                         h5(data-time='/#{project.order.placedAt}')
                       .form-group.text-center
                         if toApply
-                          a.btn.btn-lg.btn-green.review(href="/printing/review/#{ project.id }") REVIEW ORDER
+                          a.btn.btn-lg.btn-green.review(href="/printing/review/#{ project.id }") #{__('Review Order')}
                         else
-                          a.btn.btn-lg.btn-green.review(href="#", disabled="disabled") REVIEW ORDER
+                          a.btn.btn-lg.btn-green.review(href="#", disabled="disabled") #{__('Review Order')}
         br
         br
 
