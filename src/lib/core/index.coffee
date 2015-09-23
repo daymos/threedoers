@@ -22,6 +22,9 @@ module.exports = (app, io) ->
   app.get '/stampatori', (req, res) ->
     res.render 'core/stampatori'
 
+  app.get '/stampa3D', (req, res) ->
+    res.render 'core/stampa3D'
+
   app.get '/utenti', (req, res) ->
     res.render 'core/utenti'
 
