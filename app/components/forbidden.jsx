@@ -24,7 +24,16 @@ export default class Forbidden extends React.Component {
 
     if (!this.props.loggedIn) {
       text = <p>Or</p>;
-      loginButton = <Button block bsSize='large' bsStyle='' className='btn-primary' href="/">Login</Button>;
+      loginButton = (
+        <Button
+          block
+          bsSize='large'
+          bsStyle='primary'
+          href="/"
+          >
+          Login
+        </Button>
+      );
     }
 
     return <div className="container error-page">
@@ -35,15 +44,27 @@ export default class Forbidden extends React.Component {
             <h1>Forbidden</h1>
           </div>
 
-          <p className="lead text-muted"><i className="fa fa-exclamation-circle"></i> { this.props.message }</p>
+          <p className="lead text-muted">
+            <i className="fa fa-exclamation-circle"></i>
+            { this.props.message }
+          </p>
 
           <br />
+
           <div className="col-lg-6 col-lg-offset-3 control-links">
             <br />
             { loginButton }
             <br />
             { text }
-            <Button block bsSize='large' bsStyle='' className='btn-green' href="/">Go Home</Button>
+            <Button
+              block
+              bsSize='large'
+              bsStyle='default'
+              className='btn-green'
+              href="/"
+              >
+              Go Home
+            </Button>
             <br />
           </div>
 

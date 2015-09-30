@@ -24,5 +24,6 @@ export let OrderActions = {
  requestOrder: new Airflux.Action().asFunction,
  newItemAdded: new Airflux.Action().asFunction,
  createAddress: new Airflux.Action().asFunction,
- requestPrinters: new Airflux.Action().asFunction
+ requestPrinters: new Airflux.Action().asFunction,
+ newComment: new Airflux.Action().asFunction
 };

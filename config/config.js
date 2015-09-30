@@ -64,6 +64,9 @@ defaults.emailSubjects = {
     customer: {
       review: 'New Order requested to review.',
       request: 'New Order available'
+    },
+    notification: {
+      newComment: 'New message on your order.'
     }
   },
 

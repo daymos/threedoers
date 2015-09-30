@@ -110,9 +110,11 @@ if (app.get('env') === 'development') {
   app.use(validator);
 
   app.use(function(req, res, next) {
-    res.locals.user = req.user;
     res.locals.loggedUser = (req.user) ? req.user.toObject() : {};
     res.locals.loggedUser = JSON.stringify(res.locals.loggedUser);
+
+    // TODO: Refactor
+    res.locals.user = req.user;
     res.locals.nav = req.path;
     res.locals.csrfToken = req.session._csrf;
     res.locals.io = settings.io;
@@ -184,6 +186,7 @@ if (app.get('env') === 'development') {
 
   apiRouter.post('/orders/:orderID/upload', upload, Project.uploadProject);
   apiRouter.post('/orders/:orderID/order', upload, Order.requestPrintOrder);
+  apiRouter.post('/orders/:orderID/comment', Order.createComment);
 
   apiRouter.route('/orders/:orderID/items/:itemID')
     .patch(Order.patchOrderItemApi)

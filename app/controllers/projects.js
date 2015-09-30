@@ -103,12 +103,13 @@ export let uploadProject = function uploadProject(req, res, next) {
 
     // to handle on design data is ready to be saved.
     project._callbackUpload = function () {
-      project.save(function (err, newProject) {
-        if (err) {
-          return next(err);
+      project.save(function (saveProjectError, newProject) {
+        if (saveProjectError) {
+          return next(saveProjectError);
         }
 
         if (req.params.orderID) {
+
           let item = {
             project: newProject._id,
             color: newProject.color,
@@ -121,9 +122,10 @@ export let uploadProject = function uploadProject(req, res, next) {
           };
 
           req.order.projects.push(item);
-          req.order.save(function (_err, order) {
-            if (_err) {
-              return next(err);
+
+          req.order.save(function (saveOrderError, order) {
+            if (saveOrderError) {
+              return next(saveOrderError);
             } else {
               res.status(HTTPStatus.CREATED);
 
@@ -134,40 +136,7 @@ export let uploadProject = function uploadProject(req, res, next) {
               resItem.project = newProject;
               res.send(resItem);
 
-              OrderUtils.processVolumeWeight(_item, function (__err, data) {
-                let room = orderChannel.room(req.params.orderID);
-
-                if (__err) {
-                  room.write({status: 'error', message: __err.message});
-                } else {
-                  let price = OrderUtils.calculatePrice(data, _item.amount);
-
-                  Order.update({'projects._id': _item._id}, {
-                    '$set': {
-                      'projects.$.volume': data.volume,
-                      'projects.$.weight': data.weight,
-                      'projects.$.density': data.density,
-                      'projects.$.unit': data.unit,
-                      'projects.$.dimension': data.dimension,
-                      'projects.$.surface': data.surface,
-                      'projects.$.totalPrice': price
-                    }
-                  }, function (___err) {
-                    if (___err) {
-                      room.write({status: 'error', message: ___err.message});
-                    } else {
-                      _item.volume = data.volume;
-                      _item.weight = data.weight;
-                      _item.density = data.density;
-                      _item.unit = data.unit;
-                      _item.dimension = data.dimension;
-                      _item.surface = data.surface;
-                      _item.totalPrice = price;
-                      room.write({action: 'itemUpdated', item: _item});
-                    }
-                  });
-                }
-              });
+              OrderUtils.processOrderItem(_item, req.params.orderID);
             }
           });
         } else {
@@ -186,9 +155,9 @@ export let uploadProject = function uploadProject(req, res, next) {
             customer: req.user ? req.user._id : undefined
           };
 
-          Order.create(order, function (_err, newOrder) {
-            if (_err) {
-              return next(_err);
+          Order.create(order, function (createOrderError, newOrder) {
+            if (createOrderError) {
+              return next(createOrderError);
             } else {
               if (!req.user) {
                 req.session.orders = req.session.orders || [];
@@ -196,6 +165,11 @@ export let uploadProject = function uploadProject(req, res, next) {
               }
               res.status(HTTPStatus.CREATED);
               res.send({id: newOrder._id});
+
+              let item = newOrder.projects[newOrder.projects.length - 1];
+              item.project = newProject;
+
+              OrderUtils.processOrderItem(item, req.params.orderID);
             }
           });
         }

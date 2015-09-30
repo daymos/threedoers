@@ -92,6 +92,15 @@ export default class OrderStatus extends React.Component {
       }
     }
 
+    if (this.state && this.state.printer) {
+      if (this.state.printer.text.trim() === '') {
+        return true;
+      } else if (this.state.printer.text.trim() === this.state.printer.selected) {
+        return true;
+      } else {
+        return false;
+      }
+    }
     return true;
   }
 
@@ -234,6 +243,7 @@ export default class OrderStatus extends React.Component {
       this.state.printer.selected = option.username;
       this.state.printer.id = option._id;
     }
+    this.state.isStartedValidOrder = this.isStartedValidOrder(this.props.order);
     this.setState(this.state);
   }
 

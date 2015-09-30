@@ -18,14 +18,16 @@ import Router from 'react-router';
 import routes from 'components/routes.jsx';
 
 import Order from 'models/order';
+import Notification from 'models/notification';
 import mProjects from 'models/project';
 import mUsers from 'models/user';
 
 import * as OrderUtils from 'utils/order';
 import getLogger from 'utils/logger';
 import mailer from 'utils/mailer';
-import {orderChannel} from 'controllers/primus';
-import {ORDER_STATUSES, PROJECT_MATERIALS} from 'utils/constants';
+import { orderChannel } from 'controllers/primus';
+import { ORDER_STATUSES, PROJECT_MATERIALS } from 'utils/constants';
+import { NOTIFICATION_TYPES } from 'utils/constants';
 
 
 let logger = getLogger('Controller::Orders');
@@ -136,8 +138,10 @@ export let requestPrintOrder = function (req, res, next) {
     req.order.status = ORDER_STATUSES.PRINT_REVIEW[0];
     req.order.printer = req.body.printer;
 
-    mUsers.User.findOne({_id: req.body.printer, printer: 'accepted'})
-    .exec(function (userFetchError, printer) {
+    mUsers.User.findOne(
+      {_id: req.body.printer, printer: 'accepted'},
+      {_id: 1, photo: 1, avatar: 1, username: 1, email: 1}
+    ).exec(function (userFetchError, printer) {
       if (userFetchError) {
         return next(userFetchError);
       }
@@ -164,7 +168,9 @@ export let requestPrintOrder = function (req, res, next) {
           context,
           options,
           function (sendEmailError, response) {
-            return res.json(req.order.toObject());
+            let orderResponse = req.order.toObject();
+            orderResponse.printer = printer.toObject();
+            return res.json(orderResponse);
           });
 
       });
@@ -325,41 +331,7 @@ export let patchOrderItemApi = function (req, res, next) {
       if (req.body.material in PROJECT_MATERIALS) {
         item.density = PROJECT_MATERIALS[req.body.material][0];
         item.material = req.body.material;
-
-        OrderUtils.processVolumeWeight(item, function (err, data) {
-          let room = orderChannel.room(req.params.orderID);
-
-          if (err) {
-            room.write({status: 'error', message: err.message});
-          } else {
-            let price = OrderUtils.calculatePrice(data, item.amount);
-
-            Order.update({'projects._id': item._id}, {
-              '$set': {
-                'projects.$.volume': data.volume,
-                'projects.$.weight': data.weight,
-                'projects.$.density': data.density,
-                'projects.$.unit': data.unit,
-                'projects.$.dimension': data.dimension,
-                'projects.$.surface': data.surface,
-                'projects.$.totalPrice': price
-              }
-            }, function (_err) {
-              if (_err) {
-                room.write({status: 'error', message: _err.message});
-              } else {
-                item.volume = data.volume;
-                item.weight = data.weight;
-                item.density = data.density;
-                item.unit = data.unit;
-                item.dimension = data.dimension;
-                item.surface = data.surface;
-                item.totalPrice = price;
-                room.write({action: 'itemUpdated', item});
-              }
-            });
-          }
-        });
+        OrderUtils.processOrderItem(item, req.params.orderID);
         modified = true;
       } else {
         error = new Error(`${req.body.material} is not a valid value.`);
@@ -391,7 +363,7 @@ export let patchOrderItemApi = function (req, res, next) {
             room.write({status: 'error', message: err.message});
           } else {
             item.totalPrice = price;
-            room.write({action: 'itemUpdated', item});
+            room.write({action: 'item-updated', item});
           }
         });
         modified = true;
@@ -425,5 +397,109 @@ export let patchOrderItemApi = function (req, res, next) {
     });
   } else {
     res.send();
+  }
+};
+
+
+/**
+ * Create new comment to order.
+ */
+export let createComment = function (req, res, next) {
+  if (req.order.status >= ORDER_STATUSES.PRINT_REVIEW[0]) {
+
+    if (req.body.comment) {
+      let comment = {
+        author: req.user.id,
+        content: req.body.comment,
+        createdAt: Date.now()
+      };
+
+      req.order.comments.push(comment);
+      req.order.save(function (saveOrderError) {
+        if (saveOrderError) {
+          return next(saveOrderError);
+        }
+
+        comment = req.order.comments[req.order.comments.length - 1];
+        comment.author = {
+          _id: req.user.id,
+          username: req.user.username,
+          firstName: req.user.firstName,
+          lastName: req.user.lastName,
+          photo: req.user.photo,
+          avatar: req.user.avatar
+        };
+
+        res.status(HTTPStatus.CREATED);
+        res.json(comment);
+
+        // Send notification, websocket
+        let room = orderChannel.room(req.params.orderID);
+        room.write({action: 'new-comment', comment: comment});
+
+        // Create new notification!
+        let recipient;
+        if (req.user._id.equals(req.order.customer._id)) {
+          recipient = req.order.printer;
+        } else {
+          recipient = req.order.customer;
+        }
+
+        let query = {
+          recipient: recipient._id,
+          relatedObject: req.order._id,
+          type: NOTIFICATION_TYPES.COMMENT[0],
+          read: false
+        };
+
+        Notification.find(
+          query,
+          function (fetchNotificationError, notifications) {
+            if (notifications.length === 0) {
+              let notification = new Notification({
+                relatedObject: req.order._id,
+                read: false,
+                type: NOTIFICATION_TYPES.COMMENT[0],
+                deleted: false,
+                recipient: recipient._id,
+                creator: req.user._id
+              });
+
+              notification.save();
+
+              let context = {
+                order: req.order,
+                user: recipient,
+                site: nconf.get('site')
+              };
+
+              let options = {
+                from: nconf.get('mailer:defaultFrom'),
+                to: [recipient.email],
+                subject:
+                  nconf.get('emailSubjects:order:notification:newComment')
+              };
+
+              mailer.send(
+                'mail/order/notification/new-comment.html',
+                context,
+                options);
+            }
+          }
+        );
+      });
+    } else {
+      let error = new Error();
+      error.fields = {
+        comment: 'This field is required.'
+      };
+      error.status = HTTPStatus.BAD_REQUEST;
+      return next(error);
+    }
+
+  } else {
+    let error = new Error('Order Item can not be modified at this status');
+    error.status = HTTPStatus.PRECONDITION_FAILED;
+    return next(error);
   }
 };

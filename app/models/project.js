@@ -15,6 +15,7 @@ import { decimal } from 'Deci-mal';
 import mNotification from 'models/notification';
 import getLogger from 'utils/logger';
 import { PROJECT_COLORS, PROJECT_MATERIALS } from 'utils/constants';
+import { NOTIFICATION_TYPES } from 'utils/constants';
 
 
 let logger = getLogger('model::stlproject');
@@ -23,6 +24,7 @@ let ObjectId = Schema.ObjectId;
 
 
 // FIXME: This will be removed when multiorder will be implemented
+// TODO: Refactor!!!!
 var Comment = new Schema({
   author: {
     type: ObjectId,
@@ -239,7 +241,7 @@ STLProjectSchema.pre('save', function(next) {
     var notif;
     if (doc.status !== that.status && doc.status !== 1) {
       notif = new mNotification.Notification();
-      notif.type = mNotification.NOTIFICATION_STATE.CHANGE_STATUS[0];
+      notif.type = NOTIFICATION_TYPES.STATUS_CHANGED[0];
       notif.creator = that.id;
       notif.title = that.title;
       notif.recipient = that.user;

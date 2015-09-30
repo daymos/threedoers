@@ -28,6 +28,25 @@ You'll be notified once the work is accepted in order to proceed with the final 
 You can track it directly from the courrier service website using the code below.`
 };
 
+const headersPrinter = {
+  'tab-review': ['Review', 'step-one', [2], 2],
+  'tab-accepted': ['Accepted', 'step-two', [3], 3],
+  'tab-printing': ['Printing', 'step-three', [4], 4],
+  'tab-shipping': ['Shipping', 'step-four', [5], 5]
+};
+
+const tabsPrinter = {
+  'tab-review': 'You have 24 hours to review and accept this order before it' +
+  'goes automatically back to the Workplace.',
+  'tab-accepted': '',
+  'tab-printing': 'You can now proceed with the printing, remember that a ' +
+  'faster service will result in a higher rating for you.\nOnce you\'ve ' +
+  'completed the order, please click on "ORDER PRINTED" to generate a ' +
+  'shipping label.',
+  'tab-shipping': 'Print the shipping label, pack the item and attach the label on it.'
+};
+
+
 export default class OrderNavigationStatus extends React.Component {
 
   constructor (props, context, updater) {
@@ -38,7 +57,7 @@ export default class OrderNavigationStatus extends React.Component {
 
   setCorrectHeader (props) {
     let navigation = this;
-    let header = headersCustomer;
+    let header = (this.props.isPrinter) ? headersPrinter : headersCustomer;
     let actualProps = props || this.props;
 
     Object.keys(header).map(function (item) {
@@ -66,7 +85,7 @@ export default class OrderNavigationStatus extends React.Component {
   }
 
   renderUL () {
-    let header = headersCustomer;
+    let header = (this.props.isPrinter) ? headersPrinter : headersCustomer;
     let navigation = this;
     return (
       <ul
@@ -101,7 +120,7 @@ export default class OrderNavigationStatus extends React.Component {
   }
 
   renderTab () {
-    let tab = tabsCustomer;
+    let tab = (this.props.isPrinter) ? tabsPrinter : tabsCustomer;
     let content = tab[this.state.hoverTab];
     if (this.props.create && this.state.hoverTab === this.currentTab) {
       content = headerCreateorder;

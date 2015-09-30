@@ -5,10 +5,10 @@ import Decimal from 'decimal.js';
 import HTTPStatus from 'http-status';
 
 import Order from 'models/order';
+import {orderChannel} from 'controllers/primus';
 
 
 export function populateOrder (order, callback) {
-  console.log(order);
   order
   .populate('customer', 'photo avatar username email')
   .populate('printer', 'photo avatar username email')
@@ -32,8 +32,9 @@ export function getRelatedOrder (req, orderID, callback) {
   // FIXME: Now primus has a bug and this will patch for some time
   let session = req.wsSession || req.session;
   let query = Order.findOne({_id: orderID})
-  .populate('customer', 'photo avatar username email')
-  .populate('printer', 'photo avatar username email')
+  .populate('customer', 'photo avatar username email firstName lastName')
+  .populate('printer', 'photo avatar username email firstName lastName')
+  .populate('comments.author', 'photo avatar username email firstName lastName')
   .populate('projects.project');
 
   query.exec(function(err, order) {
@@ -42,8 +43,8 @@ export function getRelatedOrder (req, orderID, callback) {
     if (order) {
       // Test if printer has rights to see
       // FIXME: req.user.printer is backward compatibility remove later!
-      let isPrinter = req.user && req.user.isPrinter ||
-        req.user.printer === 'accepted';
+      let isPrinter = req.user && (req.user.isPrinter ||
+        req.user.printer === 'accepted');
 
       let canSee = isPrinter && order.printer &&
         req.user._id.equals(order.printer._id);
@@ -104,3 +105,46 @@ export function calculatePrice (data, amount) {
   return (new Decimal(totalPrice.toFixed(4))).toDecimalPlaces(2);
 }
 
+/**
+ * @description This function is to help process an order item and
+ * publish this through web sockets.
+ *
+ */
+export function processOrderItem (item, orderID) {
+  processVolumeWeight(item, function (pythonProcessError, data) {
+    let room = orderChannel.room(orderID);
+
+    if (pythonProcessError) {
+      room.write({status: 'error', message: pythonProcessError.message});
+    } else {
+      let price = calculatePrice(data, item.amount);
+
+      Order.update({'projects._id': item._id}, {
+        '$set': {
+          'projects.$.volume': data.volume,
+          'projects.$.weight': data.weight,
+          'projects.$.density': data.density,
+          'projects.$.unit': data.unit,
+          'projects.$.dimension.width': data.dimension.width,
+          'projects.$.dimension.height': data.dimension.height,
+          'projects.$.dimension.length': data.dimension.length,
+          'projects.$.surface': data.surface,
+          'projects.$.totalPrice': price
+        }
+      }, function (updateOrderError) {
+        if (updateOrderError) {
+          room.write({status: 'error', message: updateOrderError.message});
+        } else {
+          item.volume = data.volume;
+          item.weight = data.weight;
+          item.density = data.density;
+          item.unit = data.unit;
+          item.dimension = data.dimension;
+          item.surface = data.surface;
+          item.totalPrice = price;
+          room.write({action: 'itemUpdated', item});
+        }
+      });
+    }
+  });
+}

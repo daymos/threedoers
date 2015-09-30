@@ -49,24 +49,29 @@ export default class Order extends PageWithMenu {
     this.setState(state);
   }
 
+  isPrinter () {
+    return this.props.user.printer &&
+      (this.props.user.printer === 'accepted' ||
+      this.props.user.isPrinter);
+  }
+
   renderAppropriateStep () {
     let rendered;
-    let isPrinter = this.props.user.printer &&
-      this.props.user.printer === 'accepted' ||
-      this.props.user.isPrinter;
+    let isPrinter = this.isPrinter();
+    let props = {...this.state, user: this.props.user, isPrinter};
 
     switch (this.state.order.status) {
       case ORDER_STATUSES.STARTED[0]:
-        rendered = <CustomerOrderStatus {...this.state} user={this.props.user} />;
+        rendered = <CustomerOrderStatus {...props}/>;
         break;
       case ORDER_STATUSES.PRINT_REQUESTED[0]:
-        rendered = <CustomerRequestStatus {...this.state} user={this.props.user} />;
+        rendered = <CustomerRequestStatus {...props}/>;
         break;
       case ORDER_STATUSES.PRINT_REVIEW[0]:
         if (isPrinter) {
-          rendered = <PrinterReviewStatus {...this.state} user={this.props.user} />;
+          rendered = <PrinterReviewStatus {...props}/>;
         } else {
-          rendered = <CustomerReviewStatus {...this.state} user={this.props.user} />;
+          rendered = <CustomerReviewStatus {...props}/>;
         }
         break;
     }
@@ -74,11 +79,13 @@ export default class Order extends PageWithMenu {
     return rendered;
   }
 
-
   renderBlock () {
     return (
       <div>
-        <OrderNavigationStatus status={this.state.order.status}/>
+        <OrderNavigationStatus
+          status={this.state.order.status}
+          isPrinter={this.isPrinter()}
+        />
         {this.renderAppropriateStep()}
       </div>
     );

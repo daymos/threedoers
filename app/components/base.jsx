@@ -12,6 +12,8 @@
 
 import React from 'react';
 import Router from 'react-router';
+import counterpart from 'counterpart';
+
 
 let Link = Router.Link;
 
@@ -20,6 +22,16 @@ let Link = Router.Link;
  * @class BasePage
  */
 export class BasePage extends React.Component {
+
+  constructor (props, context, updater) {
+    let locale = props.locale || 'en';
+    delete props.locale;
+
+    super(props, context, updater);
+
+    counterpart.setLocale(locale);
+  }
+
 }
 
 

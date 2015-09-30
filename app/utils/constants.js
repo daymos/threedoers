@@ -5,6 +5,8 @@
  *  @version 0.1.0
  */
 
+export let EURO_TAXES = 0.0522;
+
 export let PROJECT_COLORS = {
   BLACK: 'black',
   WHITE: 'white',
@@ -78,3 +80,9 @@ export let EUROPE_COUNTRIES = [
   {abbr: "UA", name: "Ukraine", ioc: "UKR"},
   {abbr: "GB", name: "United Kingdom", ioc: "GBR"}
 ];
+
+export let NOTIFICATION_TYPES = {
+  COMMENT: [1, 'order:comment'],
+  STATUS_CHANGED: [2, 'order:status_changed']
+};
+

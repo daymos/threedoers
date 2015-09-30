@@ -9,8 +9,10 @@ import React from 'react';
 import _ from 'lodash';
 import Decimal from 'decimal.js';
 import {OrderActions} from '../actions.jsx';
+import {EURO_TAXES} from '../../../utils/constants';
 
 import STLViewer from '../../utils/stl-viewer.jsx';
+import Comments from '../comments.jsx';
 
 
 export default class Request extends React.Component {
@@ -27,7 +29,13 @@ export default class Request extends React.Component {
 
   calculateTaxes () {
     let price = new Decimal(this.getTotalPrice());
-    return price.times(0.0522).toDecimalPlaces(2).toString();
+    return price.times(EURO_TAXES).toDecimalPlaces(2).toString();
+  }
+
+  getPriceWithoutTaxes (item) {
+    let price = new Decimal(item.totalPrice);
+    let tax = price.times(EURO_TAXES);
+    return price.minus(tax).toDecimalPlaces(2).toString();
   }
 
   onClickCancelOrder (event) {
@@ -89,7 +97,7 @@ export default class Request extends React.Component {
                               let attr = '';
 
                               if (item.dimension) {
-                                attr += item.dimension.weight + ' cm (W) ';
+                                attr += item.dimension.width + ' cm (W) ';
                                 attr += item.dimension.height + ' cm (H) ';
                                 attr += item.dimension.length + ' cm (L) ';
                               }
@@ -142,11 +150,12 @@ export default class Request extends React.Component {
             <div className="order-details">
               <h4 className="order-name">Your order quotation</h4>
               {() => {
+                let reviewComponent = this;
                 return this.props.order.projects.map(function (item) {
                   return (
                     <p>
                       <span>{item.project.title} x {item.amount}</span>
-                      <span>{item.totalPrice} €</span>
+                      <span>{reviewComponent.getPriceWithoutTaxes(item)} €</span>
                     </p>
                   );
                 });
@@ -170,7 +179,7 @@ export default class Request extends React.Component {
           </div>
         </div>
 
-        <div className="job-order">
+        <div className="job-order row">
           <div className="col-sm-8">
             <div className="row">
               <div className="col-sm-9">
@@ -206,6 +215,14 @@ export default class Request extends React.Component {
             </div>
           </div>
         </div>
+
+        <Comments
+          isPrinter={this.props.isPrinter}
+          user={this.props.user}
+          comments={this.props.order.comments}
+        />
+        <br/>
+        <br/>
       </div>
     );
   }

@@ -11,12 +11,14 @@ import Decimal from 'decimal.js';
 import {OrderActions} from '../actions.jsx';
 
 import STLViewer from '../../utils/stl-viewer.jsx';
+import Comments from '../comments.jsx';
 
 
 export default class Request extends React.Component {
 
   getTotalPrice () {
     let totalPrice = new Decimal(0);
+
     // we need to collect all values
     _.forEach(this.props.order.projects, function(project) {
       totalPrice = totalPrice.plus(project.totalPrice);
@@ -30,82 +32,75 @@ export default class Request extends React.Component {
     return price.times(0.0522).toDecimalPlaces(2).toString();
   }
 
-  onClickCancelOrder (event) {
-    event.preventDefault();
-    OrderActions.deleteOrder();
+  onSelectItem (id, event) {
+    OrderActions.selectCurrentItem(id);
   }
 
-  renderItems () {
+  renderCurrentItem () {
     return (
       <div className="job-review">
-        {() => {
-          return this.props.order.projects.map(function (item) {
-            return (
-              <div className="row" key={item._id}>
-                <div className="col-md-12">
-                  <h4 className="job-name">{item.project.title}</h4>
+        <div className="row" key={this.props.currentItem._id}>
+          <div className="col-md-12">
+            <h4 className="job-name">{this.props.currentItem.project.title}</h4>
+          </div>
+          <div className="col-md-8">
+            <div className="job-details">
+              <div className="row">
+                <div className="col-md-7">
+                  <STLViewer
+                    key={this.props.currentItem._id}
+                    width="344"
+                    height="237"
+                    stlURL={'/' + this.props.currentItem.project.design.rel}
+                    projectColor={this.props.currentItem.color}
+                  />
                 </div>
-                <div className="col-md-8">
-                  <div className="job-details">
-                    <div className="row">
-                      <div className="col-md-5">
-                        <STLViewer
-                          key={item._id}
-                          width="237"
-                          height="237"
-                          stlURL={'/' + item.project.design.rel}
-                          projectColor={item.color}
-                        />
-                      </div>
-                      <div className="col-md-7">
-                        <div className="info">
-                          <p>
-                            <strong>COLOR:</strong>
-                            {item.color}
-                          </p>
-                          <p>
-                            <strong>MATERIAL:</strong>
-                            {item.material}
-                          </p>
-                          <p>
-                            <strong>AMOUNT:</strong>
-                            {item.amount} pieces
-                          </p>
-                          <p>
-                            <strong>ADDITIONAL PROCESSING:</strong>
-                            {item.needsAdditionalProcessing ? 'required' : 'not required'}
-                          </p>
-                          <p>
-                            <strong>VOLUME:</strong>
-                            {item.volume} cm3
-                          </p>
-                          <p>
-                            <strong>WEIGHT:</strong>
-                            {item.weight} g
-                          </p>
-                          <p>
-                            <strong>DIMENSIONS:</strong>
-                            {() => {
-                              let attr = '';
+                <div className="col-md-5">
+                  <div className="info">
+                    <p>
+                      <strong>COLOR:</strong>
+                      {this.props.currentItem.color}
+                    </p>
+                    <p>
+                      <strong>MATERIAL:</strong>
+                      {this.props.currentItem.material}
+                    </p>
+                    <p>
+                      <strong>AMOUNT:</strong>
+                      {this.props.currentItem.amount} pieces
+                    </p>
+                    <p>
+                      <strong>ADDITIONAL PROCESSING:</strong>
+                      {this.props.currentItem.needsAdditionalProcessing ? 'required' : 'not required'}
+                    </p>
+                    <p>
+                      <strong>VOLUME:</strong>
+                      {this.props.currentItem.volume} cm3
+                    </p>
+                    <p>
+                      <strong>WEIGHT:</strong>
+                      {this.props.currentItem.weight} g
+                    </p>
+                    <p>
+                      <strong>DIMENSIONS:</strong>
+                      {() => {
+                        let attr = '';
 
-                              if (item.dimension) {
-                                attr += item.dimension.weight + ' cm (W) ';
-                                attr += item.dimension.height + ' cm (H) ';
-                                attr += item.dimension.length + ' cm (L) ';
-                              }
+                        if (this.props.currentItem.dimension) {
+                          attr += this.props.currentItem.dimension.width + ' cm (W) ';
+                          attr += this.props.currentItem.dimension.height + ' cm (H) ';
+                          attr += this.props.currentItem.dimension.length + ' cm (L) ';
+                        }
 
-                              return attr;
-                            }()}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
+                        return attr;
+                      }()}
+                    </p>
                   </div>
                 </div>
               </div>
-            );
-          });
-        }()}
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
@@ -113,12 +108,45 @@ export default class Request extends React.Component {
   render () {
     return (
       <div>
-        <div className="alert alert-warning">
-          Your order was placed in our marketplace, please wait while a printer
-          request your order for review.
-        </div>
 
-        {this.renderItems()}
+        {this.renderCurrentItem()}
+
+        <div className="row">
+          <div className="col-sm-8">
+            <div className="col-sm-12 list-order-items">
+              <h4 className="job-name">Your order</h4>
+              <p>
+                <strong>{this.props.order.projects.length} file(s)</strong>
+              </p>
+            </div>
+
+            <ul className="col-sm-12 list-order-items">
+              {
+                () => {
+                  let self = this;
+                  return this.props.order.projects.map(function (item) {
+                    let className;
+                    if (item._id === self.props.currentItem._id) {
+                      className = 'active';
+                    }
+                    return (
+                      <li
+                        className={className}
+                        key={item._id}
+                        onClick={self.onSelectItem.bind(self, item._id)}
+                        >
+                        {item.project.title}
+                        <span className="pull-right normal">
+                          {item.totalPrice} €
+                        </span>
+                      </li>
+                      );
+                  });
+                }()
+              }
+            </ul>
+          </div>
+        </div>
 
         <div className="row">
           <div className="col-md-8">
@@ -153,7 +181,7 @@ export default class Request extends React.Component {
           </div>
         </div>
 
-        <div className="job-order">
+        <div className="job-order row">
           <div className="col-sm-8">
             <div className="row">
               <div className="col-sm-9">
@@ -181,7 +209,6 @@ export default class Request extends React.Component {
               <div className="col-sm-7 text-lg">
                 <a
                   href="#"
-                  onClick={this.onClickCancelOrder.bind(this)}
                   >
                   Cancel Order
                 </a>
@@ -189,6 +216,13 @@ export default class Request extends React.Component {
             </div>
           </div>
         </div>
+        <Comments
+          isPrinter={this.props.isPrinter}
+          user={this.props.user}
+          comments={this.props.order.comments}
+        />
+        <br/>
+        <br/>
       </div>
     );
   }

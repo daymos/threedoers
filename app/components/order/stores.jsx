@@ -59,7 +59,7 @@ export class OrderStore extends Airflux.Store {
       if (data.status === 'error') {
         console.log(data);
       } else {
-        if (data.action === 'itemUpdated') {
+        if (data.action === 'item-updated') {
           let item = _.find(orderStore._state.order.projects,
                             function (_item) {
             return _item._id === data.item._id;
@@ -67,6 +67,9 @@ export class OrderStore extends Airflux.Store {
 
           $.extend(item, data.item);
           orderStore.setOrder(orderStore._state.order);
+        } else if (data.action === 'new-comment') {
+          orderStore._state.order.comments.push(data.comment);
+          orderStore.publishState();
         }
       }
     });
@@ -105,6 +108,7 @@ export class OrderStore extends Airflux.Store {
   get printerEndpoint () {
     return getAPIClient().all('printers');
   }
+
 
   // Util functions
 
@@ -276,6 +280,15 @@ export class OrderStore extends Airflux.Store {
     }).catch(function (response) {
       orderStore._state.errors.address = response.data;
       orderStore.publishState();
+    });
+  }
+
+  onNewComment (comment) {
+    let orderStore = this;
+
+    this.getOrderEndpoint()
+    .all('comment')
+    .post({comment}).then(function (response) {
     });
   }
 }
