@@ -12,7 +12,7 @@ import {Modal, Button, ProgressBar} from 'react-bootstrap';
 import Typeahead from 'react-typeahead-component';
 import cx from 'classnames';
 
-import ProjectOrderForm from '../project-order-form.jsx';
+import ItemOrderForm from '../ItemOrderForm.jsx';
 import ProjectOrder from '../project-order.jsx';
 
 import {OrderActions} from '../actions.jsx';
@@ -534,7 +534,7 @@ export default class OrderStatus extends React.Component {
                 <div className="col-md-5">
                   <h4>&nbsp;</h4>
                   <h5>&nbsp;</h5>
-                  <ProjectOrderForm
+                  <ItemOrderForm
                     color={this.props.currentItem.color}
                     material={this.props.currentItem.material}
                     amount={this.props.currentItem.amount}

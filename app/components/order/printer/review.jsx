@@ -6,18 +6,17 @@
  */
 
 import React from 'react';
-import _ from 'lodash';
-import Decimal from 'decimal.js';
 import { Modal, Button, Alert } from 'react-bootstrap';
 import { OrderActions } from '../actions.jsx';
-import { PRINTING_PERCENTAGE, EURO_TAXES } from '../../../utils/constants';
 import { EUROPE_COUNTRIES } from '../../../utils/constants';
 
 import STLViewer from '../../utils/stl-viewer.jsx';
 import Comments from '../comments.jsx';
+import OrderFinalPrice from '../OrderFinalPrice.jsx';
+import * as helpers from '../../utils/helpers.js';
 
 
-export default class Request extends React.Component {
+export default class Review extends React.Component {
 
   constructor (props, context, updater) {
     super(props, context, updater);
@@ -57,49 +56,6 @@ export default class Request extends React.Component {
     OrderActions.acceptOrder();
   }
 
-  getTotalPrice () {
-    let totalPrice = new Decimal(0);
-    let self = this;
-
-    // we need to collect all values
-    _.forEach(this.props.order.projects, function(project) {
-      totalPrice = totalPrice.plus(self.getTotalPrinterItem(project));
-    });
-
-    return totalPrice.toDecimalPlaces(2).toString();
-  }
-
-  calculateTaxes () {
-    let price = new Decimal(this.getTotalPrice());
-    return price.times(0.0522).toDecimalPlaces(2).toString();
-  }
-
-  getPrinterPrice (item) {
-    let price = new Decimal(item.totalPrice);
-    let taxes = price.times(EURO_TAXES).toDecimalPlaces(2);
-    price = price.minus(taxes).toDecimalPlaces(2);
-
-    return price.times(PRINTING_PERCENTAGE).toDecimalPlaces(2).toString();
-  }
-
-  getPrinterPolishing (item) {
-    if (item.needsAdditionalProcessing) {
-      let price = new Decimal(item.additionalProcessing);
-      let taxes = price.times(EURO_TAXES).toDecimalPlaces(2);
-      price = price.minus(taxes).toDecimalPlaces(2);
-      return price.times(PRINTING_PERCENTAGE).toDecimalPlaces(2).toString();
-    } else {
-      return '-';
-    }
-  }
-
-  getTotalPrinterItem (item) {
-    let price = new Decimal(this.getPrinterPrice(item));
-    if (item.needsAdditionalProcessing) {
-      price = price.plus(this.getPrinterPolishing(item));
-    }
-    return price.toDecimalPlaces(2).toString();
-  }
 
   onCreateAddress (event) {
     let address = {
@@ -154,7 +110,6 @@ export default class Request extends React.Component {
     this.state.showModal = false;
     this.setState(this.state);
   }
-
 
   getFormGroupClassNames (field) {
     return (field ? 'form-group has-error' : 'form-group');
@@ -510,13 +465,13 @@ export default class Request extends React.Component {
             <p>
               <strong>Printing: </strong>
               <span className="pull-right">
-              {this.getPrinterPrice(this.props.currentItem)} €
+              {helpers.getItemPrice(this.props.currentItem, this.props.isPrinter)} €
               </span>
             </p>
             <p>
               <strong>Polishing: </strong>
               <span className="pull-right">
-              {this.getPrinterPolishing(this.props.currentItem)} €
+              {helpers.getItemPolishingPrice(this.props.currentItem, this.props.isPrinter)} €
               </span>
             </p>
 
@@ -525,7 +480,7 @@ export default class Request extends React.Component {
             <p>
               <strong>Total: </strong>
               <span className="pull-right">
-              {this.getTotalPrinterItem(this.props.currentItem)} €
+              {helpers.getItemTotalPrice(this.props.currentItem, this.props.isPrinter)} €
               </span>
             </p>
           </div>
@@ -568,7 +523,7 @@ export default class Request extends React.Component {
                         >
                         {item.project.title}
                         <span className="pull-right normal">
-                          {self.getTotalPrinterItem(item)} €
+                          {helpers.getItemTotalPrice(item, self.props.isPrinter)} €
                         </span>
                       </li>
                       );
@@ -581,18 +536,10 @@ export default class Request extends React.Component {
 
         <div className="job-order row">
           <div className="col-sm-8">
-            <div className="row">
-              <div className="col-sm-9">
-                <h4 className="job-quotation">Total payment to you*:</h4>
-              </div>
-
-              <div className="col-sm-3">
-                <h3 className="job-price">
-                  <span>{this.getTotalPrice()}</span>
-                  <span>&nbsp; €</span>
-                </h3>
-              </div>
-            </div>
+            <OrderFinalPrice
+              order={this.props.order}
+              isPrinter={this.props.isPrinter}
+            />
           </div>
         </div>
 
