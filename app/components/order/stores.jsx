@@ -59,7 +59,7 @@ export class OrderStore extends Airflux.Store {
       if (data.status === 'error') {
         console.log(data);
       } else {
-        if (data.action === 'item-updated') {
+        if (data.action === 'itemUpdated') {
           let item = _.find(orderStore._state.order.projects,
                             function (_item) {
             return _item._id === data.item._id;
@@ -67,10 +67,10 @@ export class OrderStore extends Airflux.Store {
 
           $.extend(item, data.item);
           orderStore.setOrder(orderStore._state.order);
-        } else if (data.action === 'new-comment') {
+        } else if (data.action === 'newComment') {
           orderStore._state.order.comments.push(data.comment);
           orderStore.publishState();
-        } else if (data.action === 'status-updated') {
+        } else if (data.action === 'statusUpdated') {
           orderStore.setOrder(data.order);
         } else if (data.action === 'deleted') {
           orderStore.order = null;

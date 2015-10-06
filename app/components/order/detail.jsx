@@ -59,7 +59,7 @@ export default class Order extends PageWithMenu {
   }
 
   isPrinter () {
-    return this.props.user.printer &&
+    return this.props.user && this.props.user.printer &&
       (this.props.user.printer === 'accepted' ||
       this.props.user.isPrinter);
   }

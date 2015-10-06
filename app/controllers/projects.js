@@ -167,9 +167,13 @@ export let uploadProject = function uploadProject(req, res, next) {
               res.send({id: newOrder._id});
 
               let item = newOrder.projects[newOrder.projects.length - 1];
-              item.project = newProject;
-
-              OrderUtils.processOrderItem(item, req.params.orderID);
+              // For some reason did not update the project field!
+              item = {
+                _id: item._id,
+                project: newProject,
+                density: item.density
+              };
+              OrderUtils.processOrderItem(item, newOrder._id.toHexString());
             }
           });
         }

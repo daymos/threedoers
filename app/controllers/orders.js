@@ -223,7 +223,7 @@ export let denyOrderApi = function (req, res, next) {
         return next(saveOrderError);
       } else {
         let room = orderChannel.room(req.params.orderID);
-        room.write({action: 'status-updated', order: req.order.toObject()});
+        room.write({action: 'statusUpdated', order: req.order.toObject()});
         return res.sendStatus(200);
       }
     });
@@ -309,7 +309,7 @@ export let acceptOrderApi = function (req, res, next) {
 
 
         let room = orderChannel.room(req.params.orderID);
-        room.write({action: 'status-updated', order: req.order.toObject()});
+        room.write({action: 'statusUpdated', order: req.order.toObject()});
         OrderUtils.requestShippingRate(req.order);
         return res.sendStatus(200);
       }
@@ -469,7 +469,7 @@ export let patchOrderItemApi = function (req, res, next) {
             room.write({status: 'error', message: err.message});
           } else {
             item.totalPrice = price;
-            room.write({action: 'item-updated', item});
+            room.write({action: 'itemUpdated', item});
           }
         });
       } else {
@@ -500,7 +500,7 @@ export let patchOrderItemApi = function (req, res, next) {
           room.write({status: 'error', message: err.message});
         } else {
           item.additionalProcessing = req.body.additionalProcessing;
-          room.write({action: 'item-updated', item});
+          room.write({action: 'itemUpdated', item});
         }
       });
     } else {
@@ -566,7 +566,7 @@ export let createComment = function (req, res, next) {
 
         // Send notification, websocket
         let room = orderChannel.room(req.params.orderID);
-        room.write({action: 'new-comment', comment: comment});
+        room.write({action: 'newComment', comment: comment});
 
         // Create new notification!
         let recipient;

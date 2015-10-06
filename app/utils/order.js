@@ -85,7 +85,6 @@ export function getRelatedOrder (req, orderID, callback) {
 export function processVolumeWeight (item, callback) {
   let cmd = `${nconf.get('python:bin')} ${nconf.get('python:path')}`;
   cmd = `${cmd} ${item.project.design.path} -d ${item.density}`;
-
   exec(cmd, function (err, stdout, stderr) {
     if (err) {
       callback(err, stderr);
@@ -131,7 +130,7 @@ export function processOrderItem (item, orderID) {
     } else {
       let price = calculatePrice(data, item.amount);
 
-      Order.update({'projects._id': item._id}, {
+      Order.find({_id: orderID}).update({'projects._id': item._id}, {
         '$set': {
           'projects.$.volume': data.volume,
           'projects.$.weight': data.weight,
@@ -184,7 +183,7 @@ export function requestShippingRate (order) {
 
         let room = orderChannel.room(order._id.toHexString());
         // TODO: maybe use a better action???
-        room.write({action: 'status-updated', order: order.toObject()});
+        room.write({action: 'statusUpdated', order: order.toObject()});
         logger.info(`New rate for order: #{ order._id.toHexString() }`);
       }
     }, function(reason) {
