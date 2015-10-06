@@ -297,7 +297,7 @@ if (app.get('env') === 'development') {
     // and also will log to sentry
     app.use(raven.middleware.express.errorHandler(nconf.get('sentry:DSN')));
     app.use(function (err, req, res, next) {
-      console.log(pe.render(err));
+     // console.log(pe.render(err));
       res.status(err.status || 500);
       if (req.xhr) {
         return res.end(err.json || err.message);
