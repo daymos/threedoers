@@ -70,6 +70,12 @@ export class OrderStore extends Airflux.Store {
         } else if (data.action === 'new-comment') {
           orderStore._state.order.comments.push(data.comment);
           orderStore.publishState();
+        } else if (data.action === 'status-updated') {
+          orderStore.setOrder(data.order);
+        } else if (data.action === 'deleted') {
+          orderStore.order = null;
+          orderStore.currentItem = null;
+          orderStore.publishState();
         }
       }
     });
@@ -102,7 +108,11 @@ export class OrderStore extends Airflux.Store {
   }
 
   getAddressEndpoint () {
-    return getAPIClient().all('addresses');
+    return getAPIClient().all('users/addresses');
+  }
+
+  getPaypalEndpoint () {
+    return getAPIClient().all('users/validate-paypal');
   }
 
   get printerEndpoint () {
@@ -141,6 +151,16 @@ export class OrderStore extends Airflux.Store {
     });
   }
 
+  onSetAdditionalProcessingProject (value) {
+    let orderStore = this;
+    let item = this.itemEndpoint();
+
+    item.patch({additionalProcessing: value})
+    .catch(function () {
+      console.log(arguments);
+    });
+  }
+
   onChangeMaterialProject (value) {
     let orderStore = this;
     let item = this.itemEndpoint;
@@ -171,7 +191,7 @@ export class OrderStore extends Airflux.Store {
     let orderStore = this;
     let item = this.itemEndpoint;
 
-    item.patch({additionalProcesssing: value})
+    item.patch({additionalProcessing: value})
     .then(function (response) {
       orderStore.setOrder(response.body());
     })
@@ -270,6 +290,35 @@ export class OrderStore extends Airflux.Store {
     });
   }
 
+  onDenyOrder (printer) {
+    let orderStore = this;
+
+    this.getOrderEndpoint()
+    .all('deny')
+    .post()
+    .catch(function (response) { console.log(arguments); });
+  }
+
+  onAcceptOrder (printer) {
+    let orderStore = this;
+
+    this.getOrderEndpoint()
+    .all('accept')
+    .post().then(function (response) {
+      delete orderStore._state.errors.address;
+      delete orderStore._state.errors.paypal;
+      orderStore.publishState();
+    }).catch(function (response) {
+      // WE delete previous errors on address because we try again request
+      delete orderStore._state.errors.address;
+      delete orderStore._state.errors.paypal;
+      for (let key in response.data) {
+        orderStore._state.errors[key] = response.data[key];
+      }
+      orderStore.publishState();
+    });
+  }
+
   onCreateAddress (address) {
     let orderStore = this;
 
@@ -279,6 +328,20 @@ export class OrderStore extends Airflux.Store {
       orderStore.publishState();
     }).catch(function (response) {
       orderStore._state.errors.address = response.data;
+      orderStore.publishState();
+    });
+  }
+
+
+  onValidatePaypalEmailAddress (address) {
+    let orderStore = this;
+
+    this.getPaypalEndpoint()
+    .post(address).then(function (response) {
+      orderStore._state.errors.paypal = {success: true};
+      orderStore.publishState();
+    }).catch(function (response) {
+      orderStore._state.errors.paypal = response.data;
       orderStore.publishState();
     });
   }

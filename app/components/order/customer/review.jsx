@@ -24,6 +24,18 @@ export default class Request extends React.Component {
       totalPrice = totalPrice.plus(project.totalPrice);
     });
 
+    totalPrice = totalPrice.plus(this.getTotalAdditional());
+
+    return totalPrice.toDecimalPlaces(2).toString();
+  }
+
+  getTotalAdditional () {
+    let totalPrice = new Decimal(0);
+    // we need to collect all values
+    _.forEach(this.props.order.projects, function(project) {
+      totalPrice = totalPrice.plus(project.additionalProcessing);
+    });
+
     return totalPrice.toDecimalPlaces(2).toString();
   }
 
@@ -34,6 +46,12 @@ export default class Request extends React.Component {
 
   getPriceWithoutTaxes (item) {
     let price = new Decimal(item.totalPrice);
+    let tax = price.times(EURO_TAXES);
+    return price.minus(tax).toDecimalPlaces(2).toString();
+  }
+
+  getAdditionalWithoutTaxes () {
+    let price = new Decimal(this.getTotalAdditional());
     let tax = price.times(EURO_TAXES);
     return price.minus(tax).toDecimalPlaces(2).toString();
   }
@@ -153,7 +171,7 @@ export default class Request extends React.Component {
                 let reviewComponent = this;
                 return this.props.order.projects.map(function (item) {
                   return (
-                    <p>
+                    <p key={item._id}>
                       <span>{item.project.title} x {item.amount}</span>
                       <span>{reviewComponent.getPriceWithoutTaxes(item)} €</span>
                     </p>
@@ -163,7 +181,7 @@ export default class Request extends React.Component {
 
               <p>
                 <span>Additional processing</span>
-                <span>0 €</span>
+                <span>{this.getAdditionalWithoutTaxes()} €</span>
               </p>
 
               <p>

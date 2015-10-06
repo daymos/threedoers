@@ -158,7 +158,6 @@ export default class Comments extends React.Component {
               {() => {
                   let commentsComponent = this;
                   return this.props.comments.map(function (comment) {
-                    console.log(comment);
                     return commentsComponent.renderComment(comment);
                   });
                 }()}

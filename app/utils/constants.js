@@ -5,6 +5,7 @@
  *  @version 0.1.0
  */
 
+export let PRINTING_PERCENTAGE = 0.7105;
 export let EURO_TAXES = 0.0522;
 
 export let PROJECT_COLORS = {

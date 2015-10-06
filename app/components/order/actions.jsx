@@ -18,12 +18,16 @@ export let OrderActions = {
  changeMaterialProject: new Airflux.Action().asFunction,
  changeAmountProject: new Airflux.Action().asFunction,
  changeAdditionalProcessingProject: new Airflux.Action().asFunction,
+ setAdditionalProcessingProject: new Airflux.Action().asFunction,
  selectCurrentItem: new Airflux.Action().asFunction,
  deleteItem: new Airflux.Action().asFunction,
  deleteOrder: new Airflux.Action().asFunction,
+ denyOrder: new Airflux.Action().asFunction,
+ acceptOrder: new Airflux.Action().asFunction,
  requestOrder: new Airflux.Action().asFunction,
  newItemAdded: new Airflux.Action().asFunction,
  createAddress: new Airflux.Action().asFunction,
+ validatePaypalEmailAddress: new Airflux.Action().asFunction,
  requestPrinters: new Airflux.Action().asFunction,
  newComment: new Airflux.Action().asFunction
 };

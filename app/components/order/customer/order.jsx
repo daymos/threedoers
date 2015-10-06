@@ -268,6 +268,7 @@ export default class OrderStatus extends React.Component {
     OrderActions.deleteItem(id);
   }
 
+  // TODO: Refactor this to use in many components!!!!
   getFormGroupClassNames (field) {
     return (field ? 'form-group has-error' : 'form-group');
   }

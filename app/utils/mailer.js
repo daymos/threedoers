@@ -35,6 +35,11 @@ class Mailer {
     let filePath = path.join(this.path, template);
     let mailer = this;
 
+    // We don't send if user don't want notifications
+    if (context.user && !context.user.mailNotification) {
+      return;
+    }
+
     swig.renderFile(filePath, context, function (renderError, output) {
       if (renderError) {
         return _callback(renderError);

@@ -61,9 +61,12 @@ defaults.emailSubjects = {
   },
 
   order: {
-    customer: {
+    printer: {
       review: 'New Order requested to review.',
-      request: 'New Order available'
+      requested: 'New Order available'
+    },
+    customer: {
+      accepted: 'Your order was accepted'
     },
     notification: {
       newComment: 'New message on your order.'

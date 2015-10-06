@@ -1,11 +1,20 @@
 import {exec} from 'child_process';
 
+import 'datejs';
 import nconf from 'nconf';
+import _ from 'lodash';
 import Decimal from 'decimal.js';
 import HTTPStatus from 'http-status';
+import shippoAPI from 'shippo';
 
 import Order from 'models/order';
 import {orderChannel} from 'controllers/primus';
+
+import getLogger from 'utils/logger';
+
+
+let logger = getLogger('Utils::Orders');
+let shippo = shippoAPI(nconf.get('goshippo:secret'));
 
 
 export function populateOrder (order, callback) {
@@ -31,9 +40,12 @@ export function getRelatedOrder (req, orderID, callback) {
 
   // FIXME: Now primus has a bug and this will patch for some time
   let session = req.wsSession || req.session;
+  let userPopulate =
+    'photo avatar username email firstName lastName emailNotification';
+
   let query = Order.findOne({_id: orderID})
-  .populate('customer', 'photo avatar username email firstName lastName')
-  .populate('printer', 'photo avatar username email firstName lastName')
+  .populate('customer', userPopulate)
+  .populate('printer', userPopulate)
   .populate('comments.author', 'photo avatar username email firstName lastName')
   .populate('projects.project');
 
@@ -147,4 +159,99 @@ export function processOrderItem (item, orderID) {
       });
     }
   });
+}
+
+
+// TODO: add some validation before
+export function requestShippingRate (order) {
+  let requestRate = function (shipping) {
+    shippo.shipment.rates(shipping.object_id, 'EUR')
+    .then(function (rates) {
+      let selectedRate, price = 9999999999.0;
+      for (let rate in rates.results) {
+        let ratePrice = parseFloat(rate.amount_local);
+        if (rate.object_purpose === 'PURCHASE' &&
+            rate.currency === 'EUR' && price > ratePrice && ratePrice > 0) {
+          selectedRate = rate;
+          price = ratePrice;
+        }
+      }
+
+      if (selectedRate) {
+        // Requires callback to save into mongo :S.
+        order.update({'rate': selectedRate}, function () {});
+        order.rate = selectedRate; // this to update frontend!
+
+        let room = orderChannel.room(order._id.toHexString());
+        // TODO: maybe use a better action???
+        room.write({action: 'status-updated', order: order.toObject()});
+        logger.info(`New rate for order: #{ order._id.toHexString() }`);
+      }
+    }, function(reason) {
+      logger.error('Couldn\'t get rates.', JSON.stringify(reason));
+    });
+  };
+
+  let requestShipment = function () {
+    let submissionDate = Date.today().next().friday();
+    shippo.shipment.create({
+      object_purpose: 'PURCHASE',
+      address_from: order.printerAddress,
+      address_to: order.customerAddress,
+      parcel: order.parcel.object_id,
+      submission_type: 'DROPOFF',
+      submission_date: submissionDate
+    }).then(function (shipment) {
+      order.update({shipment}, function () {});
+      order.shipment = shipment; // This to update frontend!
+      requestRate(order.shipment);
+    }, function(reason) {
+      logger.error('Couldn\'t create a shipment', JSON.stringify(reason));
+    });
+  };
+
+  // If parcel was created request the shipment
+  if (order.parcel && order.parcel.object_id) {
+    // If submition date was not expired request new one
+    if (order.shipment && order.shipment.submission_date < Date.today()) {
+      requestRate(order.shipment);
+    } else {
+      requestShipment();
+    }
+  } else {
+    // create parcel stargin with the smallest box
+    let length = 10, width = 10, height = 10, weight = 0, unit;
+
+    _.each(order.projects, function (project) {
+      if (project.dimension.length > length) {
+        length = project.dimension.length;
+      }
+      if (project.dimension.width > width) {
+        width = project.dimension.width;
+      }
+      if (project.dimension.height > height) {
+        height = project.dimension.height;
+      }
+
+      weight += project.weight;
+
+      // always same unit just to avoid hard coding.
+      unit = project.unit;
+    });
+
+    shippo.parcel.create({
+      length,
+      width,
+      height,
+      distance_unit: unit,
+      weight: (new Decimal(weight)).toDecimalPlaces(2).toString(),
+      mass_unit: 'g'
+    }).then(function(parcel) {
+      order.update({parcel}, function () {});
+      order.parcel = parcel; // needs to request shipment
+      requestShipment();
+    }, function(reason) {
+      logger.error('Couldn\'t create a parcel', JSON.stringify(reason));
+    });
+  }
 }

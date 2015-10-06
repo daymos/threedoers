@@ -27,6 +27,7 @@ import getLogger from 'utils/logger';
 import mailer from 'utils/mailer';
 import { orderChannel } from 'controllers/primus';
 import { ORDER_STATUSES, PROJECT_MATERIALS } from 'utils/constants';
+import { EURO_TAXES, PRINTING_PERCENTAGE } from 'utils/constants';
 import { NOTIFICATION_TYPES } from 'utils/constants';
 
 
@@ -104,31 +105,14 @@ export let requestPrintOrder = function (req, res, next) {
   // If not address response with Bad Request
   if (!address) {
     error = new Error();
-    error.status = HTTPStatus.BAD_REQUEST;
+    error.status = HTTPStatus.PRECONDITION_FAILED;
     error.fields = {
       address: 'This field is required'
     };
     return next(error);
   }
 
-  // TODO: This should be moved when printer accepts the order!!!
-  let price = new Decimal(0);
-  let taxes, totalPrice, printerPayment, businessPayment;
-
-  // we need to collect all values
-  _.forEach(req.order.projects, function(project) {
-    price = price.plus(project.totalPrice);
-  });
-
-  taxes = price.times(0.0522).toDecimalPlaces(2);
-  totalPrice = price.minus(taxes).toDecimalPlaces(2);
-  printerPayment = totalPrice.times(0.7105).toDecimalPlaces(2);
-  businessPayment = totalPrice.minus(printerPayment).toDecimalPlaces(2);
-
-  req.order.taxes = taxes;
-  req.order.totalPrice = totalPrice;
-  req.order.printerPayment = printerPayment;
-  req.order.businessPayment = businessPayment;
+  req.order.customerAddress = address.object_id;
 
   let withPrinter = req.body.printer;
   withPrinter = withPrinter && req.body.printer.match(/^[0-9a-fA-F]{24}$/);
@@ -160,19 +144,17 @@ export let requestPrintOrder = function (req, res, next) {
         let options = {
           from: nconf.get('mailer:defaultFrom'),
           to: [printer.email],
-          subject: nconf.get('emailSubjects:order:customer:review')
+          subject: nconf.get('emailSubjects:order:printer:review')
         };
 
         mailer.send(
-          'mail/order/customer/review-request.html',
+          'mail/order/printer/review-requested.html',
           context,
-          options,
-          function (sendEmailError, response) {
-            let orderResponse = req.order.toObject();
-            orderResponse.printer = printer.toObject();
-            return res.json(orderResponse);
-          });
+          options);
 
+        let orderResponse = req.order.toObject();
+        orderResponse.printer = printer.toObject();
+        return res.json(orderResponse);
       });
     });
   } else {
@@ -204,11 +186,11 @@ export let requestPrintOrder = function (req, res, next) {
             options = {
               from: nconf.get('mailer:defaultFrom'),
               to: [printer.email],
-              subject: nconf.get('emailSubjects:order:customer:request')
+              subject: nconf.get('emailSubjects:order:printer:requested')
             };
 
             mailer.send(
-              'mail/order/customer/print-request.html',
+              'mail/order/printer/print-requested.html',
               context,
               options
             );
@@ -218,6 +200,124 @@ export let requestPrintOrder = function (req, res, next) {
         return res.json(req.order.toObject());
       });
     });
+  }
+};
+
+
+export let denyOrderApi = function (req, res, next) {
+  let canModify = req.order.printer &&
+    req.user._id.equals(req.order.printer._id);
+
+  if (canModify && req.order.status === ORDER_STATUSES.PRINT_REVIEW[0]) {
+    // clean all data set by printer
+
+    req.order.printer = null;
+    req.order.status = ORDER_STATUSES.PRINT_REQUESTED[0];
+    req.order.comments = [];
+    _.each(req.order.projects, function (project) {
+      project.additionalProcessing = 0;
+    });
+
+    req.order.save(function (saveOrderError) {
+      if (saveOrderError) {
+        return next(saveOrderError);
+      } else {
+        let room = orderChannel.room(req.params.orderID);
+        room.write({action: 'status-updated', order: req.order.toObject()});
+        return res.sendStatus(200);
+      }
+    });
+  } else {
+    let error = new Error('Order Item can not be modified at this status');
+    error.status = HTTPStatus.PRECONDITION_FAILED;
+    return next(error);
+  }
+};
+
+
+export let acceptOrderApi = function (req, res, next) {
+  let canModify = req.order.printer &&
+    req.user._id.equals(req.order.printer._id);
+
+  if (canModify && req.order.status === ORDER_STATUSES.PRINT_REVIEW[0]) {
+
+    // If printer doesn't have an address return error
+    if (!(req.user.printerAddress && req.user.printerAddress.object_id)) {
+      let error = new Error();
+      error.status = HTTPStatus.PRECONDITION_FAILED;
+      error.fields = {
+        address: 'We need this value set first'
+      };
+      return next(error);
+    }
+
+    // If printer doesn't have a verified paypal email.
+    if (!(req.user.paypal && req.user.paypal.email)) {
+      let error = new Error();
+      error.status = HTTPStatus.PRECONDITION_FAILED;
+      error.fields = {
+        paypal: 'We need this value set first'
+      };
+      return next(error);
+    }
+
+    let price = new Decimal(0);
+    let taxes, totalPrice, printerPayment, businessPayment;
+
+    // we need to collect all values
+    _.forEach(req.order.projects, function(project) {
+      price = price.plus(project.totalPrice);
+      if (project.needsAdditionalProcessing) {
+        price = price.plus(project.additionalProcessing);
+      }
+    });
+
+    taxes = price.times(EURO_TAXES).toDecimalPlaces(2);
+    totalPrice = price.minus(taxes).toDecimalPlaces(2);
+    printerPayment = totalPrice.times(PRINTING_PERCENTAGE).toDecimalPlaces(2);
+    businessPayment = totalPrice.minus(printerPayment).toDecimalPlaces(2);
+
+    req.order.taxes = taxes;
+    req.order.totalPrice = totalPrice;
+    req.order.printerPayment = printerPayment;
+    req.order.businessPayment = businessPayment;
+    req.order.printerAddress = req.user.printerAddress.object_id;
+
+    req.order.status = ORDER_STATUSES.PRINT_ACCEPTED[0];
+
+    req.order.save(function (saveOrderError) {
+      if (saveOrderError) {
+        return next(saveOrderError);
+      } else {
+        let context = {
+          order: req.order,
+          user: req.order.customer,
+          site: nconf.get('site')
+        };
+
+        let options = {
+          from: nconf.get('mailer:defaultFrom'),
+          to: [req.order.customer.email],
+          subject:
+            nconf.get('emailSubjects:order:customer:accepted')
+        };
+
+        mailer.send(
+          'mail/order/customer/print-accepted.html',
+          context,
+          options);
+
+
+        let room = orderChannel.room(req.params.orderID);
+        room.write({action: 'status-updated', order: req.order.toObject()});
+        OrderUtils.requestShippingRate(req.order);
+        return res.sendStatus(200);
+      }
+    });
+  } else {
+    let error = new Error('Order Item can not be modified at this status');
+    error.status = HTTPStatus.PRECONDITION_FAILED;
+    return next(error);
   }
 };
 
@@ -247,6 +347,9 @@ export let removeOrderApi = function (req, res, next) {
           user: {$exists: false}
         }).remove().exec();
       }
+
+      let room = orderChannel.room(req.params.orderID);
+      room.write({action: 'deleted'});
 
       res.status(HTTPStatus.NO_CONTENT);
       return res.send();
@@ -314,6 +417,9 @@ export let patchOrderItemApi = function (req, res, next) {
     (req.session.orders &&
      req.session.orders.indexOf(req.order._id.toHexString()) !== -1);
 
+  let printerCanModify = req.order.printer &&
+    req.user._id.equals(req.order.printer._id);
+
   if (canModify && req.order.status < ORDER_STATUSES.PRINT_REQUESTED[0]) {
     // Handle color update
     if (req.body.color) {
@@ -366,7 +472,6 @@ export let patchOrderItemApi = function (req, res, next) {
             room.write({action: 'item-updated', item});
           }
         });
-        modified = true;
       } else {
         error = new Error(`${req.body.amount} is not a valid number.`);
         error.status = HTTPStatus.BAD_REQUEST;
@@ -374,11 +479,37 @@ export let patchOrderItemApi = function (req, res, next) {
     }
 
     // handle extra work
-    if (req.body.additionalProcesssing !== undefined) {
-      item.needsAdditionalProcessing = req.body.additionalProcesssing;
+    if (req.body.additionalProcessing !== undefined) {
+      item.needsAdditionalProcessing = req.body.additionalProcessing;
       modified = true;
     }
 
+  } else if (printerCanModify &&
+             req.order.status === ORDER_STATUSES.PRINT_REVIEW[0]) {
+    if (!isNaN(req.body.additionalProcessing) &&
+       parseInt(req.body.additionalProcessing) > 0) {
+
+      let room = orderChannel.room(req.params.orderID);
+
+      Order.update({'projects._id': item._id}, {
+        '$set': {
+          'projects.$.additionalProcessing': req.body.additionalProcessing
+        }
+      }, function (err) {
+        if (err) {
+          room.write({status: 'error', message: err.message});
+        } else {
+          item.additionalProcessing = req.body.additionalProcessing;
+          room.write({action: 'item-updated', item});
+        }
+      });
+    } else {
+      error = new Error();
+      error.fields = {
+        additionalProcessing: `${req.body.additionalProcessing} is not a valid number.`
+      };
+      error.status = HTTPStatus.BAD_REQUEST;
+    }
   } else {
     error = new Error('Order Item can not be modified at this status');
     error.status = HTTPStatus.PRECONDITION_FAILED;

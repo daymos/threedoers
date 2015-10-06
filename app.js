@@ -96,11 +96,11 @@ if (app.get('env') === 'development') {
     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With, *');
 
         // intercept OPTIONS method
-    if ('OPTIONS' == req.method) {
+    if ('OPTIONS' === req.method) {
       return res.send(200);
     } else {
       next();
-    };
+    }
   };
   app.use(enableCORS);
 
@@ -137,9 +137,9 @@ if (app.get('env') === 'development') {
     https = require('https');
 
     ssl_options = {
-      key: fs.readFileSync(settings.ssl_key),
-      cert: fs.readFileSync(settings.ssl_pem),
-      ca: fs.readFileSync(settings.ssl_crt)
+      // key: fs.readFileSync(settings.ssl_key),
+      // cert: fs.readFileSync(settings.ssl_pem),
+      // ca: fs.readFileSync(settings.ssl_crt)
     };
 
     server = https.createServer(ssl_options, app).listen(nconf.get('host:port'), nconf.get('host:ip'), function() {
@@ -186,6 +186,8 @@ if (app.get('env') === 'development') {
 
   apiRouter.post('/orders/:orderID/upload', upload, Project.uploadProject);
   apiRouter.post('/orders/:orderID/order', upload, Order.requestPrintOrder);
+  apiRouter.post('/orders/:orderID/deny', upload, Order.denyOrderApi);
+  apiRouter.post('/orders/:orderID/accept', upload, Order.acceptOrderApi);
   apiRouter.post('/orders/:orderID/comment', Order.createComment);
 
   apiRouter.route('/orders/:orderID/items/:itemID')
@@ -195,11 +197,13 @@ if (app.get('env') === 'development') {
   apiRouter.route('/orders/:orderID')
     .delete(Order.removeOrderApi);
 
-  apiRouter.route('/addresses')
+  apiRouter.route('/users/addresses')
     .post(middlewares.loginAPIRequired, User.createAddress);
 
-  apiRouter.post('/projects/upload', upload, Project.uploadProject);
+  apiRouter.route('/users/validate-paypal')
+    .post(middlewares.loginAPIRequired, User.validatePaypalEmailAddress);
 
+  apiRouter.post('/projects/upload', upload, Project.uploadProject);
   apiRouter.route('/projects/:projectID')
     .get(Project.projectDetailAPI);
 
@@ -255,7 +259,8 @@ if (app.get('env') === 'development') {
 
   // Bad Request middleware handler
   app.use(function (err, req, res, next) {
-    if (err.status == HTTPStatus.BAD_REQUEST) {
+    if (err.status === HTTPStatus.BAD_REQUEST ||
+       err.status === HTTPStatus.PRECONDITION_FAILED) {
       res.status(err.status);
       return req.xhr ? res.json(err.fields) : res.end();
     } else {
@@ -265,7 +270,7 @@ if (app.get('env') === 'development') {
 
   // Not found middleware handler
   app.use(function (err, req, res, next) {
-    if (err.status == HTTPStatus.NOT_FOUND) {
+    if (err.status === HTTPStatus.NOT_FOUND) {
       res.status(err.status);
       return req.xhr ? res.end() : res.render('not-found.html');
     } else {
@@ -278,7 +283,7 @@ if (app.get('env') === 'development') {
       console.log(pe.render(err));
       res.status(err.status || 500);
       if (req.xhr) {
-        return res.end(err.json || err.message);
+        return res.end(err.json || err.message);
       } else {
         return res.render('error.html', {
           message: err.message,

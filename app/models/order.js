@@ -28,6 +28,7 @@ let ItemOrderSchema = new Schema({
   project: {type: ObjectId, required: true, ref: 'STLProject'},
   color: {type: String, required: true},
   material: {type: String, required: true},
+  unit: {type: String, required: true},
   density: {type: Number, required: true},
   surface: {type: Number},
   weight: {type: Number},
@@ -40,6 +41,7 @@ let ItemOrderSchema = new Schema({
   checkLenght: {type: Boolean, required: true, default: false},
   checkWidth: {type: Boolean, required: true, default: false},
   needsAdditionalProcessing: {type: Boolean, required: true, default: false},
+  additionalProcessing: {type: Number, default: 0},
   dimension: {
     length: Number,
     height: Number,
@@ -75,10 +77,19 @@ let OrderSchema = new Schema({
    * from shipping provider so don't define nested fields.
    */
   deliveryMethod: {type: String, default: 'shipping'},
-  shipping: {},
+  shipment: {},
   parcel: {},
   rate: {},
-  transaction: {}
+  transaction: {},
+
+  /**
+   * Shipping addresses (Go Shippo IDs)
+   *
+   * This will help with logs, calculate rates when printer accept it and
+   * user has changed his default address, recalculate shipping rates if needed.
+   */
+  customerAddress: {type: String},
+  printerAddress: {type: String}
 });
 
 OrderSchema.plugin(timestamps);

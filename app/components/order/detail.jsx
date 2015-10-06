@@ -46,7 +46,15 @@ export default class Order extends PageWithMenu {
   }
 
   onOrderChanged (state) {
-    this.setState(state);
+    let shouldRedirect = !state.order;
+    shouldRedirect |= (this.isPrinter() && !state.order.printer);
+
+    if (shouldRedirect) {
+      // FIXME: Change this to handle html5 push state
+      window.location.href = '/';
+    } else {
+      this.setState(state);
+    }
   }
 
   isPrinter () {
