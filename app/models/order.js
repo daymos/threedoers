@@ -28,7 +28,7 @@ let ItemOrderSchema = new Schema({
   project: {type: ObjectId, required: true, ref: 'STLProject'},
   color: {type: String, required: true},
   material: {type: String, required: true},
-  unit: {type: String, required: true},
+  unit: {type: String, required: true, default: 'cm'},
   density: {type: Number, required: true},
   surface: {type: Number},
   weight: {type: Number},
