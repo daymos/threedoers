@@ -12,8 +12,9 @@ import ItemOrderDetail from '../ItemOrderDetail.jsx';
 import OrderDescription from '../OrderDescription.jsx';
 import OrderFinalPrice from '../OrderFinalPrice.jsx';
 import StatusOrder from '../StatusOrder.jsx';
-
 import Comments from '../comments.jsx';
+
+import * as helpers from '../../utils/helpers.js';
 
 
 export default class AcceptedStatus extends React.Component {
@@ -23,11 +24,15 @@ export default class AcceptedStatus extends React.Component {
     OrderActions.deleteOrder();
   }
 
-  getPrinterAvatar () {
-    if (this.props.order.printer.photo) {
-      return <img src={"/" + this.props.order.printer.photo} alt="" className="media-object" />;
+  onClickPaymentButton () {
+    event.preventDefault();
+  }
+
+  get shippingPrice () {
+    if (this.props.order.rate) {
+      return this.props.order.rate.amount_local + ' €';
     } else {
-      return <img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+PGRlZnMvPjxyZWN0IHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCIgZmlsbD0iI0VFRUVFRSIvPjxnPjx0ZXh0IHg9IjEzLjQ2MDkzNzUiIHk9IjMyIiBzdHlsZT0iZmlsbDojQUFBQUFBO2ZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1mYW1pbHk6QXJpYWwsIEhlbHZldGljYSwgT3BlbiBTYW5zLCBzYW5zLXNlcmlmLCBtb25vc3BhY2U7Zm9udC1zaXplOjEwcHQ7ZG9taW5hbnQtYmFzZWxpbmU6Y2VudHJhbCI+NjR4NjQ8L3RleHQ+PC9nPjwvc3ZnPg==" className="media-object"/>;
+      return 'Pending';
     }
   }
 
@@ -52,34 +57,57 @@ export default class AcceptedStatus extends React.Component {
           })}
         </div>
 
-        <div className="row">
-          <div className="col-md-8">
-            <OrderDescription
-              order={this.props.order}
-              isPrinter={this.props.isPrinter}
-            />
+        <div className="job-order row">
+          <div className="col-sm-12 text-lg">
+            <a
+              href="#"
+              onClick={this.onClickCancelOrder.bind(this)}
+              >
+              Cancel Order
+            </a>
           </div>
         </div>
 
-        <div className="job-order row">
-          <div className="col-sm-8">
-            <OrderFinalPrice
-              order={this.props.order}
-              isPrinter={this.props.isPrinter}
-            />
-          </div>
+        <div className='row'>
+          <div className='col-md-offset-8 col-md-4'>
+            <p>
+              <strong>Shipping: </strong>
+              <span className="pull-right">
+                {this.shippingPrice}
+              </span>
+            </p>
+            <p>
+              <strong className='text-shadow-3doers'>Total: </strong>
+              <span className="pull-right">
+                <strong>
+                  {helpers.calculateFinalPrice(this.props.order)} €
+                </strong>
+              </span>
+            </p>
 
-          <div className="col-sm-12">
-            <div className="row">
-              <div className="col-sm-7 text-lg">
-                <a
-                  href="#"
-                  onClick={this.onClickCancelOrder.bind(this)}
-                  >
-                  Cancel Order
-                </a>
-              </div>
-            </div>
+            <p className="text-muted text-light text-xsmall">
+              If you need an invoice please contact us
+              at <a mailto='invoicing@3doers.it'>invoicing@3doers.it</a> including
+              your name and VAT number.
+            </p>
+
+            <br />
+
+            <button
+              className="btn btn-xlg btn-block btn-green"
+              onClick={this.onClickPaymentButton.bind(this)}
+              disabled={!this.props.order.rate}
+              >
+              PROCEED WITH PAYMENT
+            </button>
+
+            <br />
+
+            <p className="text-muted text-light text-xsmall">
+              The payment will be secured on 3Doers account and won’t be
+              released to the printer until the order has been completed and
+              delivered to you.
+            </p>
           </div>
         </div>
 

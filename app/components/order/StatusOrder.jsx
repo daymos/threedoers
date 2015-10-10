@@ -25,7 +25,7 @@ export default class StatusOrder extends React.Component {
   }
 
   getClassNames () {
-    let classNames = {alert: true};
+    let classNames = {alert: true, pre: true};
     switch (this.props.status) {
       case ORDER_STATUSES.PRINT_REQUESTED[0]:
         classNames['alert-warning'] = true;
@@ -35,7 +35,9 @@ export default class StatusOrder extends React.Component {
         break;
       case ORDER_STATUSES.PRINT_ACCEPTED[0]:
         if (this.props.isPrinter) {
+          classNames['alert-warning'] = true;
         } else {
+          classNames['alert-primary'] = true;
         }
         break;
     }
@@ -64,9 +66,25 @@ export default class StatusOrder extends React.Component {
         );
       case ORDER_STATUSES.PRINT_ACCEPTED[0]:
         if (this.props.isPrinter) {
+          let text = 'Please wait for the user to complete the payment before' +
+            ' proceeding with the printing.\nYou’ll be notified when the' +
+            ' money is secured on 3doers account.';
+          return text;
         } else {
+          return (
+            <div className="media">
+              <div className="media-left">
+                <a href="#">{this.getPrinterAvatar()}</a>
+              </div>
+              <div className="media-body media-middle">
+                <div className="message">
+                  Your order has been accepted by
+                  <strong> {this.props.printer.username}</strong>.
+                </div>
+              </div>
+            </div>
+          );
         }
-        break;
     }
   }
 

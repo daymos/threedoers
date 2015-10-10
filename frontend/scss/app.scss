@@ -670,6 +670,10 @@ ul.list-order-items {
   }
 }
 
+.pre {
+  white-space: pre;
+}
+
 // Containers
 @media (min-width: 768px) {
   .container {

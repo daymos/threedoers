@@ -56,6 +56,7 @@ export class OrderStore extends Airflux.Store {
     });
 
     primus.on('data', function (data) {
+      console.log(data);
       if (data.status === 'error') {
         console.log(data);
       } else {

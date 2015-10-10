@@ -117,7 +117,9 @@ export default class ItemOrderDetail extends React.Component {
           <p>
             <strong className='text-shadow-3doers'>Total per item: </strong>
             <span className="pull-right">
-              {helpers.getItemFinalPrice(this.props.item, this.props.isPrinter)} €
+              <strong>
+                {helpers.getItemFinalPrice(this.props.item, this.props.isPrinter)} €
+              </strong>
             </span>
           </p>
         </div>

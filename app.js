@@ -29,6 +29,7 @@ var Project = require('controllers/projects');
 var Order = require('controllers/orders');
 var Printer = require('controllers/printers');
 var User = require('controllers/users');
+var Cron = require('controllers/cron');
 
 var logger = require('utils/logger');
 
@@ -218,9 +219,13 @@ if (app.get('env') === 'development') {
   projectRouter.param('projectID', Project.paramProject);
   projectRouter.get('/:projectID', Project.projectDetail);
 
+  var cronRouter = new express.Router();
+  cronRouter.post('/update-rates', Cron.updateRates);
+
   app.use('/api/v1', apiRouter);
   app.use('/project', projectRouter);
   app.use('/order', orderRouter);
+  app.use('/cron', cronRouter);
   // ENDFIXME
 
 

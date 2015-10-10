@@ -148,20 +148,22 @@ export default class Comments extends React.Component {
 
     return (
       <div className="row">
-        <div className="page-subheader">
-          <h3>{header}</h3>
-        </div>
+        <div className='col-md-12'>
+          <div className="page-subheader">
+            <h3>{header}</h3>
+          </div>
 
-        <div className="row">
-          <div className="col-md-8">
-            <div className="conversation">
-              {() => {
-                  let commentsComponent = this;
-                  return this.props.comments.map(function (comment) {
-                    return commentsComponent.renderComment(comment);
-                  });
-                }()}
-              <CommentForm/>
+          <div className="row">
+            <div className="col-md-8">
+              <div className="conversation">
+                {() => {
+                    let commentsComponent = this;
+                    return this.props.comments.map(function (comment) {
+                      return commentsComponent.renderComment(comment);
+                    });
+                  }()}
+                <CommentForm/>
+              </div>
             </div>
           </div>
         </div>

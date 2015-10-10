@@ -23,7 +23,8 @@ import CustomerAcceptedStatus from './customer/accepted.jsx';
 
 // Printer order status
 import PrinterReviewStatus from './printer/review.jsx';
-import PrinterAcceptedStatus from './customer/accepted.jsx';
+import PrinterAcceptedStatus from './printer/accepted.jsx';
+
 
 export default class Order extends PageWithMenu {
 

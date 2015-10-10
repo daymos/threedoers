@@ -18,9 +18,13 @@ let shippo = shippoAPI(nconf.get('goshippo:secret'));
 
 
 export function populateOrder (order, callback) {
+  let userPopulate =
+    'photo avatar username email firstName lastName emailNotification';
+
   order
-  .populate('customer', 'photo avatar username email')
-  .populate('printer', 'photo avatar username email')
+  .populate('customer', userPopulate)
+  .populate('printer', userPopulate)
+  .populate('comments.author', 'photo avatar username email firstName lastName')
   .populate('projects.project')
   .exec(callback);
 }
@@ -168,6 +172,7 @@ export function requestShippingRate (order) {
     .then(function (rates) {
       let selectedRate, price = 9999999999.0;
       for (let rate in rates.results) {
+        rate = rates.results[rate];
         let ratePrice = parseFloat(rate.amount_local);
         if (rate.object_purpose === 'PURCHASE' &&
             rate.currency === 'EUR' && price > ratePrice && ratePrice > 0) {
@@ -184,7 +189,7 @@ export function requestShippingRate (order) {
         let room = orderChannel.room(order._id.toHexString());
         // TODO: maybe use a better action???
         room.write({action: 'statusUpdated', order: order.toObject()});
-        logger.info(`New rate for order: #{ order._id.toHexString() }`);
+        logger.info(`New rate for order: ${ order._id.toHexString() }`);
       }
     }, function(reason) {
       logger.error('Couldn\'t get rates.', JSON.stringify(reason));
@@ -212,11 +217,15 @@ export function requestShippingRate (order) {
   // If parcel was created request the shipment
   if (order.parcel && order.parcel.object_id) {
     // If submition date was not expired request new one
-    if (order.shipment && order.shipment.submission_date < Date.today()) {
+    let expiredShippment = order.shipment &&
+      Date.parse(order.shipment.submission_date) < Date.today();
+
+    if (order.shipment && (!order.rate || expiredShippment)) {
       requestRate(order.shipment);
     } else {
       requestShipment();
     }
+
   } else {
     // create parcel stargin with the smallest box
     let length = 10, width = 10, height = 10, weight = 0, unit;
