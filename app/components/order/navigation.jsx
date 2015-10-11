@@ -14,8 +14,8 @@ const headersCustomer = {
   'tab-crete-order': ['Create Order', 'step-one', [0], 0],
   'tab-place-order': ['Place Order', 'step-two', [1, 2], 2],
   'tab-accepted': ['Accepted', 'step-three', [3], 3],
-  'tab-printing': ['Printing', 'step-four', [4], 4],
-  'tab-shipping': ['Shipping', 'step-five', [5], 5]
+  'tab-printing': ['Printing', 'step-four', [4, 5], 5],
+  'tab-shipping': ['Shipping', 'step-five', [6], 6]
 };
 
 const tabsCustomer = {
@@ -31,8 +31,8 @@ You can track it directly from the courrier service website using the code below
 const headersPrinter = {
   'tab-review': ['Review', 'step-one', [2], 2],
   'tab-accepted': ['Accepted', 'step-two', [3], 3],
-  'tab-printing': ['Printing', 'step-three', [4], 4],
-  'tab-shipping': ['Shipping', 'step-four', [5], 5]
+  'tab-printing': ['Printing', 'step-three', [4, 5], 5],
+  'tab-shipping': ['Shipping', 'step-four', [6], 6]
 };
 
 const tabsPrinter = {

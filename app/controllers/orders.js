@@ -11,6 +11,7 @@ import HTTPStatus from 'http-status';
 import _ from 'lodash';
 import Decimal from 'decimal.js';
 import Paypal from 'paypal-adaptive';
+import shippoAPI from 'shippo';
 
 // React components
 import React from 'react';
@@ -34,7 +35,7 @@ import { NOTIFICATION_TYPES } from 'utils/constants';
 
 
 let logger = getLogger('Controller::Orders');
-
+let shippo = shippoAPI(nconf.get('goshippo:secret'));
 let env = process.env.node_env || 'development';
 let isDevelopment = env === 'development';
 
@@ -785,6 +786,97 @@ export function executePayment (req, res, next) {
       }
 
       return res.redirect(`/order/${req.params.orderID}`);
+    });
+
+  } else {
+    let error = new Error('Order Item can not be modified at this status');
+    error.status = HTTPStatus.PRECONDITION_FAILED;
+    return next(error);
+  }
+}
+
+
+export function orderPrinted (req, res, next) {
+
+  let canModify = req.order.printer &&
+    req.user._id.equals(req.order.printer._id);
+
+    canModify = canModify &&
+      req.order.status === ORDER_STATUSES.PRINTING[0];
+
+  if (canModify) {
+
+    shippo.transaction.create({
+      rate: req.order.rate.object_id
+    }).then(function(transaction) {
+      req.order.transaction = transaction;
+      req.order.status = ORDER_STATUSES.PRINTED[0];
+
+      let updatedData = {
+        status: ORDER_STATUSES.PRINTED[0],
+        transaction
+      };
+
+      req.order.update(updatedData, function(updateOrderError) {
+        if (updateOrderError) {
+          return next(updateOrderError);
+        }
+
+        let room = orderChannel.room(req.params.orderID);
+        room.write({action: 'statusUpdated', order: req.order.toObject()});
+        return res.sendStatus(200);
+      });
+
+    }, function (reason) {
+      let error = new Error();
+      error.status = HTTPStatus.BAD_REQUEST;
+      error.fieldsd = {
+        error: reason.message
+      };
+      return next(error);
+    });
+
+  } else {
+    let error = new Error('Order Item can not be modified at this status');
+    error.status = HTTPStatus.PRECONDITION_FAILED;
+    return next(error);
+  }
+}
+
+
+export function updateTransaction (req, res, next) {
+  let canModify = req.order.printer &&
+    req.user._id.equals(req.order.printer._id);
+
+    canModify = canModify &&
+      req.order.status === ORDER_STATUSES.PRINTED[0];
+
+  if (canModify) {
+
+    shippo.transaction.retrieve(req.order.transaction.object_id).then(
+      function(data) {
+        let updatedData = {
+          transaction: data
+        };
+
+        req.order.update(updatedData, function(updateOrderError) {
+          if (updateOrderError) {
+            return next(updateOrderError);
+          }
+
+          // update transaction to update frontend
+          req.order.transaction = data;
+          let room = orderChannel.room(req.params.orderID);
+          room.write({action: 'statusUpdated', order: req.order.toObject()});
+          return res.sendStatus(200);
+        });
+    }, function (reason) {
+      let error = new Error();
+      error.status = HTTPStatus.BAD_REQUEST;
+      error.fieldsd = {
+        error: reason.message
+      };
+      return next(error);
     });
 
   } else {

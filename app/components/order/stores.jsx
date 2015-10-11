@@ -291,7 +291,7 @@ export class OrderStore extends Airflux.Store {
     });
   }
 
-  onDenyOrder (printer) {
+  onDenyOrder () {
     let orderStore = this;
 
     this.getOrderEndpoint()
@@ -300,7 +300,7 @@ export class OrderStore extends Airflux.Store {
     .catch(function (response) { console.log(arguments); });
   }
 
-  onPayOrder (printer) {
+  onPayOrder () {
     let orderStore = this;
 
     this.getOrderEndpoint()
@@ -316,7 +316,20 @@ export class OrderStore extends Airflux.Store {
     });
   }
 
-  onAcceptOrder (printer) {
+
+  onOrderPrinted () {
+    let orderStore = this;
+
+    this.getOrderEndpoint()
+    .all('printed')
+    .post()
+    .catch(function (response) {
+      orderStore._state.errors.printed = response.data.error;
+      orderStore.publishState();
+    });
+  }
+
+  onAcceptOrder () {
     let orderStore = this;
 
     this.getOrderEndpoint()
@@ -332,6 +345,18 @@ export class OrderStore extends Airflux.Store {
       for (let key in response.data) {
         orderStore._state.errors[key] = response.data[key];
       }
+      orderStore.publishState();
+    });
+  }
+
+  onUpdateTransaction () {
+    let orderStore = this;
+
+    this.getOrderEndpoint()
+    .all('update-transaction')
+    .post()
+    .catch(function (response) {
+      orderStore._state.errors.printed = response.data.error;
       orderStore.publishState();
     });
   }

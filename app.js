@@ -191,6 +191,8 @@ if (app.get('env') === 'development') {
   apiRouter.post('/orders/:orderID/accept', Order.acceptOrderApi);
   apiRouter.post('/orders/:orderID/comment', Order.createComment);
   apiRouter.post('/orders/:orderID/pay', Order.startPayment);
+  apiRouter.post('/orders/:orderID/printed', Order.orderPrinted);
+  apiRouter.post('/orders/:orderID/update-transaction', Order.updateTransaction);
 
   apiRouter.get('/orders/:order/cancel-payment', Order.cancelPayment);
   apiRouter.get('/orders/:orderID/execute-payment', Order.executePayment);

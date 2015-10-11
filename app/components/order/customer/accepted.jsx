@@ -114,7 +114,7 @@ export default class AcceptedStatus extends React.Component {
 
             <p className="text-muted text-light text-xsmall">
               If you need an invoice please contact us
-              at <a mailto='invoicing@3doers.it'>invoicing@3doers.it</a> including
+              at <a href='mailto:invoicing@3doers.it'>invoicing@3doers.it</a> including
               your name and VAT number.
             </p>
 
