@@ -300,6 +300,22 @@ export class OrderStore extends Airflux.Store {
     .catch(function (response) { console.log(arguments); });
   }
 
+  onPayOrder (printer) {
+    let orderStore = this;
+
+    this.getOrderEndpoint()
+    .all('pay')
+    .post()
+    .then(function (response) {
+      let data = response().data;
+      location.href = data.redirectURL;
+    })
+    .catch(function (response) {
+      orderStore._state.errors.paypal = response.data.error;
+      orderStore.publishState();
+    });
+  }
+
   onAcceptOrder (printer) {
     let orderStore = this;
 

@@ -63,7 +63,8 @@ defaults.emailSubjects = {
   order: {
     printer: {
       review: 'New Order requested to review.',
-      requested: 'New Order available'
+      requested: 'New Order available',
+      paid: 'One order was paid.'
     },
     customer: {
       accepted: 'Your order was accepted'
@@ -112,7 +113,7 @@ defaults.static = {
 };
 
 defaults.paypal = {
-  primaryReceiver: 'mattia@3doers.it',
+  primaryReceiver: process.env.PAYPAL_PRIMARY_RECEIVER || 'mattia@3doers.it',
   port: 5000,
   adaptive: {
     user: process.env.PAYPAL_USER,

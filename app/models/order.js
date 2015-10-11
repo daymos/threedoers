@@ -89,7 +89,8 @@ let OrderSchema = new Schema({
    * user has changed his default address, recalculate shipping rates if needed.
    */
   customerAddress: {type: String},
-  printerAddress: {type: String}
+  printerAddress: {type: String},
+  shippingRatePaid: {type: Number}
 });
 
 OrderSchema.plugin(timestamps);

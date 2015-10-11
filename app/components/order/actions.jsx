@@ -23,6 +23,7 @@ export let OrderActions = {
  deleteItem: new Airflux.Action().asFunction,
  deleteOrder: new Airflux.Action().asFunction,
  denyOrder: new Airflux.Action().asFunction,
+ payOrder: new Airflux.Action().asFunction,
  acceptOrder: new Airflux.Action().asFunction,
  requestOrder: new Airflux.Action().asFunction,
  newItemAdded: new Airflux.Action().asFunction,

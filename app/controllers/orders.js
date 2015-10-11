@@ -10,6 +10,7 @@ import nconf from 'nconf';
 import HTTPStatus from 'http-status';
 import _ from 'lodash';
 import Decimal from 'decimal.js';
+import Paypal from 'paypal-adaptive';
 
 // React components
 import React from 'react';
@@ -23,6 +24,7 @@ import mProjects from 'models/project';
 import mUsers from 'models/user';
 
 import * as OrderUtils from 'utils/order';
+import * as helpers from 'components/utils/helpers';
 import getLogger from 'utils/logger';
 import mailer from 'utils/mailer';
 import { orderChannel } from 'controllers/primus';
@@ -32,6 +34,9 @@ import { NOTIFICATION_TYPES } from 'utils/constants';
 
 
 let logger = getLogger('Controller::Orders');
+
+let env = process.env.node_env || 'development';
+let isDevelopment = env === 'development';
 
 
 export let paramOrder = function paramProject (req, res, next, orderID) {
@@ -634,3 +639,157 @@ export let createComment = function (req, res, next) {
     return next(error);
   }
 };
+
+
+export function startPayment (req, res, next) {
+  let canModify = req.order.customer &&
+    req.user._id.equals(req.order.customer._id);
+
+    canModify = canModify &&
+      req.order.status === ORDER_STATUSES.PRINT_ACCEPTED[0];
+
+  if (canModify) {
+    if (!req.order.rate) {
+      let error = new Error();
+      error.status = HTTPStatus.PRECONDITION_FAILED;
+      error.fields = {
+        error: 'Your project doesn\'t have a rate, please wait while we are collecting it.'
+      };
+
+      return next(error);
+    }
+
+    let totalPayment = helpers.calculateFinalPrice(req.order);
+    let printerPayment = helpers.calculateFinalPrinterPrice(req.order);
+
+    let paypalSdk = new Paypal({
+      userId: nconf.get('paypal:adaptive:user'),
+      password: nconf.get('paypal:adaptive:password'),
+      signature: nconf.get('paypal:adaptive:signature'),
+      appId: nconf.get('paypal:adaptive:appID'),
+      sandbox: isDevelopment
+    });
+
+    let payload = {
+      requestEnvelope: {
+        errorLanguage: 'en_US'
+      },
+      actionType: 'PAY_PRIMARY',
+      payKeyDuration: 'P29D',
+      currencyCode: 'EUR',
+      feesPayer: 'EACHRECEIVER',
+      memo: 'Payment for 3D printing in 3doers',
+      returnUrl:
+        `${nconf.get('site')}/api/v1/orders/${req.order.id}/execute-payment`,
+      cancelUrl:
+        `${nconf.get('site')}/api/v1/orders/${req.order.id}/cancel-payment`,
+      receiverList: {
+        receiver: [
+          {
+            email: nconf.get('paypal:primaryReceiver'),
+            amount: totalPayment,
+            primary: 'true'
+          }, {
+            email: req.order.printer.paypal.email,
+            amount: printerPayment,
+            primary: 'false'
+          }
+        ]
+      }
+    };
+
+    paypalSdk.pay(payload, function(paypalError, response) {
+
+      if (paypalError) {
+        let error = new Error();
+        error.status = HTTPStatus.PRECONDITION_FAILED;
+        error.fields = {
+          error: paypalError.message
+        };
+
+        return next(error);
+      } else {
+        req.order.update({
+          'payPaypalKey': response.payKey,
+          'paidToPrinter': false,
+          'shippingRatePaid': req.order.rate.amount_local
+        }, function(updateOrderError) {
+          if (updateOrderError) {
+            return next(updateOrderError);
+          } else {
+            return res.json({
+              redirectURL: response.paymentApprovalUrl
+            });
+          }
+        });
+      }
+    });
+
+  } else {
+    let error = new Error('Order Item can not be modified at this status');
+    error.status = HTTPStatus.PRECONDITION_FAILED;
+    return next(error);
+  }
+}
+
+// just redirect!!!
+export function cancelPayment (req, res) {
+  return res.redirect(`/order/${req.params.order}`);
+}
+
+
+export function executePayment (req, res, next) {
+
+  let canModify = req.order.customer &&
+    req.user._id.equals(req.order.customer._id);
+
+    canModify = canModify &&
+      req.order.status === ORDER_STATUSES.PRINT_ACCEPTED[0];
+
+  if (canModify) {
+    if (!req.order.rate) {
+      let error = new Error();
+      error.status = HTTPStatus.PRECONDITION_FAILED;
+      error.fields = {
+        error: 'Your project doesn\'t have a rate, please wait while we are collecting it.'
+      };
+
+      return next(error);
+    }
+
+
+    let updatedData = {
+      status: ORDER_STATUSES.PRINTING[0],
+      'order.deliveryMethod': 'shipping',
+      'order.printingStartedAt': new Date()
+    };
+
+    req.order.update(updatedData, function(error) {
+      if (error) {
+        let context = {
+          order: req.order,
+          user: req.order.printer,
+          site: nconf.get('site')
+        };
+
+        let options = {
+          from: nconf.get('mailer:defaultFrom'),
+          to: [req.order.printer.email],
+          subject: nconf.get('emailSubjects:order:printer:paid')
+        };
+
+        mailer.send(
+          'mail/order/printer/paid.html',
+          context,
+          options);
+      }
+
+      return res.redirect(`/order/${req.params.orderID}`);
+    });
+
+  } else {
+    let error = new Error('Order Item can not be modified at this status');
+    error.status = HTTPStatus.PRECONDITION_FAILED;
+    return next(error);
+  }
+}

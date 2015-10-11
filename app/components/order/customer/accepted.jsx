@@ -19,6 +19,19 @@ import * as helpers from '../../utils/helpers.js';
 
 export default class AcceptedStatus extends React.Component {
 
+  constructor (props, context, updater) {
+    super(props, context, updater);
+    this.state = {
+      tryToPay: false
+    };
+  }
+
+  componentWillReceiveProps (nextProps) {
+    this.setState({
+      tryToPay: !(this.state.tryToPay && this.props.errors.paypal)
+    });
+  }
+
   onClickCancelOrder (event) {
     event.preventDefault();
     OrderActions.deleteOrder();
@@ -26,6 +39,9 @@ export default class AcceptedStatus extends React.Component {
 
   onClickPaymentButton () {
     event.preventDefault();
+    this.setState({tryToPay: true});
+
+    OrderActions.payOrder();
   }
 
   get shippingPrice () {
@@ -33,6 +49,17 @@ export default class AcceptedStatus extends React.Component {
       return this.props.order.rate.amount_local + ' €';
     } else {
       return 'Pending';
+
+    }
+  }
+
+  renderPaymentError () {
+    if (this.props.errors.paypal) {
+      return (
+        <div className='alert alert-danger'>
+          {this.props.errors.paypal}
+        </div>
+      );
     }
   }
 
@@ -93,10 +120,12 @@ export default class AcceptedStatus extends React.Component {
 
             <br />
 
+            {this.renderPaymentError()}
+
             <button
               className="btn btn-xlg btn-block btn-green"
               onClick={this.onClickPaymentButton.bind(this)}
-              disabled={!this.props.order.rate}
+              disabled={!this.props.order.rate || this.state.tryToPay}
               >
               PROCEED WITH PAYMENT
             </button>

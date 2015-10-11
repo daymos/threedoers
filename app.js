@@ -186,10 +186,14 @@ if (app.get('env') === 'development') {
   apiRouter.param('orderID', Order.paramOrder);
 
   apiRouter.post('/orders/:orderID/upload', upload, Project.uploadProject);
-  apiRouter.post('/orders/:orderID/order', upload, Order.requestPrintOrder);
-  apiRouter.post('/orders/:orderID/deny', upload, Order.denyOrderApi);
-  apiRouter.post('/orders/:orderID/accept', upload, Order.acceptOrderApi);
+  apiRouter.post('/orders/:orderID/order', Order.requestPrintOrder);
+  apiRouter.post('/orders/:orderID/deny', Order.denyOrderApi);
+  apiRouter.post('/orders/:orderID/accept', Order.acceptOrderApi);
   apiRouter.post('/orders/:orderID/comment', Order.createComment);
+  apiRouter.post('/orders/:orderID/pay', Order.startPayment);
+
+  apiRouter.get('/orders/:order/cancel-payment', Order.cancelPayment);
+  apiRouter.get('/orders/:orderID/execute-payment', Order.executePayment);
 
   apiRouter.route('/orders/:orderID/items/:itemID')
     .patch(Order.patchOrderItemApi)

@@ -49,7 +49,7 @@ export function getRelatedOrder (req, orderID, callback) {
 
   let query = Order.findOne({_id: orderID})
   .populate('customer', userPopulate)
-  .populate('printer', userPopulate)
+  .populate('printer', userPopulate + ' paypal')
   .populate('comments.author', 'photo avatar username email firstName lastName')
   .populate('projects.project');
 
