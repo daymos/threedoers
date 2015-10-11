@@ -20,10 +20,12 @@ import CustomerOrderStatus from './customer/order.jsx';
 import CustomerRequestStatus from './customer/request.jsx';
 import CustomerReviewStatus from './customer/review.jsx';
 import CustomerAcceptedStatus from './customer/accepted.jsx';
+import CustomerPrintingStatus from './customer/printing.jsx';
 
 // Printer order status
 import PrinterReviewStatus from './printer/review.jsx';
 import PrinterAcceptedStatus from './printer/accepted.jsx';
+import PrinterPrintingStatus from './printer/printing.jsx';
 
 
 export default class Order extends PageWithMenu {
@@ -89,6 +91,13 @@ export default class Order extends PageWithMenu {
           rendered = <PrinterAcceptedStatus {...props}/>;
         } else {
           rendered = <CustomerAcceptedStatus {...props}/>;
+        }
+        break;
+      case ORDER_STATUSES.PRINTING[0]:
+        if (isPrinter) {
+          rendered = <PrinterPrintingStatus {...props}/>;
+        } else {
+          rendered = <CustomerPrintingStatus {...props}/>;
         }
         break;
     }

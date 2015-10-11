@@ -89,6 +89,14 @@ export default class ItemOrderDetail extends React.Component {
                       return attr;
                     }()}
                   </p>
+
+                  <p>
+                    <a
+                      href={this.props.item.project.design.rel}>
+                      Download STL file
+                    </a>
+                  </p>
+
                 </div>
               </div>
             </div>

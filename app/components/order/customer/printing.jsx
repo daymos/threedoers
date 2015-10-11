@@ -17,18 +17,10 @@ import Comments from '../comments.jsx';
 import * as helpers from '../../utils/helpers.js';
 
 
-export default class AcceptedStatus extends React.Component {
+export default class PrintingStatus extends React.Component {
 
-  onClickPaymentButton () {
-    event.preventDefault();
-  }
-
-  get shippingPrice () {
-    if (this.props.order.rate) {
-      return this.props.order.rate.amount_local + ' €';
-    } else {
-      return 'Pending';
-    }
+  constructor (props, context, updater) {
+    super(props, context, updater);
   }
 
   render () {
@@ -36,11 +28,6 @@ export default class AcceptedStatus extends React.Component {
 
     return (
       <div>
-        <StatusOrder
-          status={this.props.order.status}
-          isPrinter={this.props.isPrinter}
-          printer={this.props.order.printer}
-        />
 
         <div className="job-review">
           {this.props.order.projects.map(function (item) {
@@ -53,15 +40,29 @@ export default class AcceptedStatus extends React.Component {
         </div>
 
         <div className='row'>
-          <div className='col-md-offset-8 col-md-3'>
+          <div className='col-md-offset-8 col-md-4'>
             <p>
-              <strong className='text-shadow-3doers'>Total to you: </strong>
+              <strong>Shipping: </strong>
+              <span className="pull-right">
+                {this.props.order.rate.amount_local} €
+              </span>
+            </p>
+            <p>
+              <strong className='text-shadow-3doers'>Total: </strong>
               <span className="pull-right">
                 <strong>
-                  {helpers.calculateFinalPrinterPrice(this.props.order)} €
+                  {helpers.calculateFinalPrice(this.props.order)} €
                 </strong>
               </span>
             </p>
+
+            <p className="text-muted text-light text-xsmall">
+              If you need an invoice please contact us
+              at <a mailto='invoicing@3doers.it'>invoicing@3doers.it</a> including
+              your name and VAT number.
+            </p>
+
+            <br />
           </div>
         </div>
 

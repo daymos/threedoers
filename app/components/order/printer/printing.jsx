@@ -17,10 +17,26 @@ import Comments from '../comments.jsx';
 import * as helpers from '../../utils/helpers.js';
 
 
-export default class AcceptedStatus extends React.Component {
+export default class PrintingStatus extends React.Component {
+
+  constructor (props, context, updater) {
+    super(props, context, updater);
+    this.state = {
+      tryToPay: false
+    };
+  }
+
+  componentWillReceiveProps (nextProps) {
+    this.setState({
+      tryToPay: !(this.state.tryToPay && this.props.errors.paypal)
+    });
+  }
 
   onClickPaymentButton () {
     event.preventDefault();
+    this.setState({tryToPay: true});
+
+    OrderActions.payOrder();
   }
 
   get shippingPrice () {
@@ -28,6 +44,17 @@ export default class AcceptedStatus extends React.Component {
       return this.props.order.rate.amount_local + ' €';
     } else {
       return 'Pending';
+
+    }
+  }
+
+  renderPaymentError () {
+    if (this.props.errors.paypal) {
+      return (
+        <div className='alert alert-danger'>
+          {this.props.errors.paypal}
+        </div>
+      );
     }
   }
 
@@ -36,11 +63,6 @@ export default class AcceptedStatus extends React.Component {
 
     return (
       <div>
-        <StatusOrder
-          status={this.props.order.status}
-          isPrinter={this.props.isPrinter}
-          printer={this.props.order.printer}
-        />
 
         <div className="job-review">
           {this.props.order.projects.map(function (item) {
@@ -53,7 +75,7 @@ export default class AcceptedStatus extends React.Component {
         </div>
 
         <div className='row'>
-          <div className='col-md-offset-8 col-md-3'>
+          <div className='col-md-offset-8 col-md-4'>
             <p>
               <strong className='text-shadow-3doers'>Total to you: </strong>
               <span className="pull-right">
@@ -61,6 +83,21 @@ export default class AcceptedStatus extends React.Component {
                   {helpers.calculateFinalPrinterPrice(this.props.order)} €
                 </strong>
               </span>
+            </p>
+
+            <br />
+
+            <button
+              className="btn btn-xlg btn-block btn-green"
+              disabled={!this.props.order.rate || this.state.tryToPay}
+              >
+              PROCEED WITH PAYMENT
+            </button>
+
+            <br />
+
+            <p className="text-muted text-light text-xsmall">
+              Click the button above to generate a shipping label.
             </p>
           </div>
         </div>
