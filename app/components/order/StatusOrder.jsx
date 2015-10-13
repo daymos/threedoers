@@ -40,6 +40,17 @@ export default class StatusOrder extends React.Component {
           classNames['alert-primary'] = true;
         }
         break;
+      case ORDER_STATUSES.PRINTED[0]:
+        if (this.props.isPrinter) {
+          classNames['alert-warning'] = true;
+        }
+        break;
+      case ORDER_STATUSES.SHIPPING[0]:
+      case ORDER_STATUSES.ARCHIVED[0]:
+        if (!this.props.isPrinter) {
+          classNames['alert-primary'] = true;
+        }
+        break;
     }
 
     return cx(classNames);
@@ -85,6 +96,34 @@ export default class StatusOrder extends React.Component {
             </div>
           );
         }
+        break;
+      case ORDER_STATUSES.PRINTED[0]:
+        if (this.props.isPrinter) {
+          return <p>
+            To book the courier service send the label in attachment
+            to <a href='mailto:shipping@3doers.it'>shipping@3doers.it</a>. Write
+            inside the object the date and <br /> time when you want the courier
+            to pick it up at your place. Once the courier service collects the
+            order we will <br /> release the payment on the account you provided.
+          </p>;
+        }
+        break;
+      case ORDER_STATUSES.SHIPPING[0]:
+      case ORDER_STATUSES.ARCHIVED[0]:
+        if (!this.props.isPrinter) {
+          return <div>
+            <span className="text-left">
+              Courier service:
+              <strong> {this.props.shippingService}</strong>
+            </span>
+            <span className="pull-right text-left-sm text-left-xs">
+              Tracking Code:
+              <strong> {this.props.shippingCode}</strong>
+            </span>
+          </div>;
+        }
+        break;
+
     }
   }
 
@@ -98,6 +137,19 @@ export default class StatusOrder extends React.Component {
         if (this.props.isPrinter) {
           return true;
         } else {
+          return true;
+        }
+        break;
+      case ORDER_STATUSES.PRINTED[0]:
+        if (this.props.isPrinter) {
+          return true;
+        } else {
+          return true;
+        }
+        break;
+      case ORDER_STATUSES.SHIPPING[0]:
+      case ORDER_STATUSES.ARCHIVED[0]:
+        if (!this.props.isPrinter) {
           return true;
         }
         break;

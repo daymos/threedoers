@@ -110,6 +110,14 @@ export default class Order extends PageWithMenu {
           rendered = <CustomerPrintingStatus {...props}/>;
         }
         break;
+      case ORDER_STATUSES.SHIPPING[0]:
+      case ORDER_STATUSES.ARCHIVED[0]:
+        if (isPrinter) {
+          rendered = <PrinterShippingStatus {...props}/>;
+        } else {
+          rendered = <CustomerShippingStatus {...props}/>;
+        }
+        break;
     }
 
     return rendered;

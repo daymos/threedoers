@@ -28,6 +28,13 @@ export default class PrintingStatus extends React.Component {
 
     return (
       <div>
+        <StatusOrder
+          status={this.props.order.status}
+          isPrinter={this.props.isPrinter}
+          printer={this.props.order.printer}
+          shippingService={this.props.order.rate.provider}
+          shippingCode={this.props.order.transaction.tracking_number}
+        />
 
         <div className="job-review">
           {this.props.order.projects.map(function (item) {

@@ -73,22 +73,6 @@ export default class PrintingStatus extends React.Component {
                 </strong>
               </span>
             </p>
-
-            <br />
-
-            <button
-              className="btn btn-xlg btn-block btn-green"
-              disabled={this.state.tryToSetPrinted}
-              onClick={this.onClickOrderPrinted.bind(this)}
-              >
-              ORDER PRINTED
-            </button>
-
-            <br />
-
-            <p className="text-muted text-light text-xsmall">
-              Click the button above to generate a shipping label.
-            </p>
           </div>
         </div>
 

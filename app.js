@@ -185,6 +185,7 @@ if (app.get('env') === 'development') {
   apiRouter.param('projectID', Project.paramProject);
   apiRouter.param('orderID', Order.paramOrder);
 
+  apiRouter.all('/orders/goshippo', Order.goshippoWebhook);
   apiRouter.post('/orders/:orderID/upload', upload, Project.uploadProject);
   apiRouter.post('/orders/:orderID/order', Order.requestPrintOrder);
   apiRouter.post('/orders/:orderID/deny', Order.denyOrderApi);

@@ -885,3 +885,66 @@ export function updateTransaction (req, res, next) {
     return next(error);
   }
 }
+
+
+export function goshippoWebhook (req, res, next) {
+  if (req.body.object_id) {
+    let query = {
+      'transaction.object_id': req.body.object_id
+    };
+
+    let userPopulate =
+      'photo avatar username email firstName lastName emailNotification';
+
+    Order
+    .findOne(query)
+    .populate('customer', userPopulate)
+    .populate('printer', userPopulate)
+    .populate('comments.author', 'photo avatar username email firstname lastname')
+    .populate('projects.project')
+    .exec(function (orderFetchError, order) {
+      if (order) {
+        let data = {
+          transaction: req.body
+        };
+
+        let status = req.body.tracking_status.status;
+        if (status != null && status === 'TRANSIT' && !order.paidToPrinter) {
+          data.paidToPrinter = true;
+          data.status = ORDER_STATUSES.SHIPPING[0];
+
+          let paypalSdk = new Paypal({
+            userId: nconf.get('paypal:adaptive:user'),
+            password: nconf.get('paypal:adaptive:password'),
+            signature: nconf.get('paypal:adaptive:signature'),
+            appId: nconf.get('paypal:adaptive:appID'),
+            sandbox: isDevelopment
+          });
+
+          let payload = {
+            payKey: order.payPaypalKey,
+            requestEnvelope: {
+              errorLanguage: 'en_US'
+            }
+          };
+
+          paypalSdk.executePayment(payload, function() {});
+        }
+
+        if ((status != null) && status === 'DELIVERED') {
+          data.status = ORDER_STATUSES.ARCHIVED[0];
+        }
+
+        order.update(data, function () {
+          order.transaction = data.transaction;
+          order.status = data.status;
+          let room = orderChannel.room(order.id);
+          room.write({action: 'statusUpdated', order: order.toObject()});
+        });
+      }
+    });
+  }
+
+  res.status = HTTPStatus.OK;
+  res.end();
+}
