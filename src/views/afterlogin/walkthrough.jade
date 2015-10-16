@@ -1,7 +1,7 @@
-extends ../../layouts/_app
+extends ../layouts/_app
 
 block title
-  |  Upload Project
+  |  Walkthrough
 
 block extra-headers
   meta(name="csrf-token", content="#{csrfToken}")
@@ -10,60 +10,125 @@ block content
   .page
     .container
       br
-      br
       .row
-        include ../../includes/choosesolution
+        include /../includes/choosesolution
 
+
+    .container
+      div(role='tabpanel')
+        ul.nav.nav-tabs.nav-justified(role='tablist')
+          li.active(role='presentation')
+            a(href='#tab-ready-print', aria-controls='print', role='tab', data-toggle='tab')
+              | READY FOR PRINT?
+          li(role='presentation')
+            a(href='#tab-open-design', aria-controls='design', role='tab', data-toggle='tab')
+              | NEED AN OPEN SOURCE DESIGN?
+          li(role='presentation')
+            a(href='#tab-look-someone', aria-controls='look', role='tab', data-toggle='tab')
+              | LOOKING FOR SOMEONE TO REALIZE YOUR IDEA?
 
     .bg-3doers
-      .container
-        div(role='tabpanel')
-          ul.nav.nav-justified.nav-3doers
-            li.nav-step.active
-              a(href='#tab-ready-print')
-                span.step-one
-                | READY FOR PRINT?
-            li.nav-step
-              a(href='#tab-open-design')
-                span.step-two
-                | NEED AN OPEN SOURCE DESIGN?
-            li.nav-step
-              a(href='#tab-look-someone')
-                span.step-three
-                | LOOKING FOR SOMEONE TO
-                | REALIZE YOUR IDEA?
+        .tab-content
+
+          #tab-ready-print.tab-pane.active.container
+            br
+            br
+            .col-md-10.col-md-offset-1
+              .row
+                .col-md-12
+                  .step
+                    a.btn.btn-xlg.btn-green.fileinput-button START PRINTING
+
+            .row
+              .col-md-12
+                p 3DOERS is the best solution lorem ipsum dolor sit amet, mea no labore dissentiunt, ad zril scripta copiosae ius. Vel veniam vulputate et, id alia magna oporteat per. Qui idque offendit sensibus no. Per magna noluisse consetetur no, cu ius novum nemore, ei vocent verterem laboramus eam. Eruditi noluisse disputando mei at. Ludus affert nonumy sit ei.
+
+            .row
+              .col-md-8
+
+                p Duis iisque delenit ad vis, ad euripidis vituperata conclusionemque per. Mel copiosae eleifend ea, his porro sapientem sententiae id, omnis debet in pro. Ei altera primis vix, mazim dictas omnium vel ad. Lobortis explicari an cum, zril putent cu mel. Cu eam nihil vivendo menandri. Te has rebum augue repudiare, vix no regione dignissim, id per facete possim. Cu eum salutandi consetetur, ad vis accumsan phaedrum tractatos. Prompta lobortis est an, postea postulant duo te. Qui in nonumes imperdiet expetendis, quo ea nihil officiis vituperatoribus, ex mei minim dignissim reprimique.
+
+              .col-md-4
+                .stl-ilustration
+                  p#promptzone.upload
+                   img(src="/images/icon_stlfile.png")
+
+            .row
+              .col-md-12
+                p In nam illum harum, pro an tota populo theophrastus. Pro ne timeam denique perfecto. Munere verear his ei, nemore aperiri sea ne. Eum minimum gubergren et, eleifend scribentur cu cum. Legimus accusamus reprehendunt pri in, mei solet postea an. His nulla consetetur ei.
+
+            br
+            br
 
 
-        .row
-          .col-md-12
-            p
-            | 3DOERS is the best solution lorem ipsum dolor sit amet, mea no labore dissentiunt, ad zril scripta copiosae
-            | ius. Vel veniam vulputate et, id alia magna oporteat per. Qui idque offendit sensibus no. Per magna noluisse
-            | consetetur no, cu ius novum nemore, ei vocent verterem laboramus eam. Eruditi noluisse disputando mei at.
-            | Ludus affert nonumy sit ei.
+          #tab-open-design.tab-pane.container
+            br
+            br
 
-            p
-            | Duis iisque delenit ad vis, ad euripidis vituperata conclusionemque per.
-            | Mel copiosae eleifend ea, his porro sapientem sententiae id, omnis debet in pro.
-            | Ei altera primis vix, mazim dictas omnium vel ad. Lobortis explicari an cum, zril
-            | putent cu mel. Cu eam nihil vivendo menandri. Te has rebum augue repudiare,
-            | vix no regione dignissim, id per facete possim. Cu eum salutandi consetetur, ad
-            | vis accumsan phaedrum tractatos. Prompta lobortis est an, postea postulant duo
-            | te. Qui in nonumes imperdiet expetendis, quo ea nihil officiis vituperatoribus, ex
-            | mei minim dignissim reprimique.
+            .row
+              .col-md-12
+                p If you can’t realize an .stl file lorem ipsum dolor sit amet, mea no labore dissentiunt, ad zril scripta copiosae ius. Vel veniam vulputate et, id alia magna oporteat per. Qui idque offendit sensibus no. Per magna noluisse consetetur no, cu ius novum nemore, ei vocent verterem laboramus eam. Eruditi noluisse disputando mei at. Ludus affert nonumy sit ei.
 
-            .stl-ilustration
-              p#promptzone.upload
-               img(src="/images/icon_stlfile.png")
+            .row
+              .col-md-12
+                p WHAT SITES CAN YOU CONSULT?
+                  br
+                  | On the internet there are many open source duis iisque delenit ad vis, ad euripidis vituperata conclusionemque per. Mel copiosae eleifend ea, his porro sapientem sententiae id, omnis debet in pro:
 
-            p
-            | In nam illum harum, pro an tota populo theophrastus. Pro ne timeam denique perfecto. Munere verear his ei,
-            | nemore aperiri sea ne. Eum minimum gubergren et, eleifend scribentur cu cum. Legimus accusamus reprehendunt
-            | pri in, mei solet postea an. His nulla consetetur ei.
+              .col-md-8
+                p
+                  | - thingiverse.com
+                  br
+                  | - grabcad.com
+                  br
+                  | - pinshape.com
+                  br
+                  | - youmagine.com
+                  br
+                  | - cubify.com
+              .col-md-4
+                .stl-ilustration
+                  p#promptzone.upload
+                   img(src="/images/icon_stlfile.png")
+
+            .row
+              .col-md-12
+                p In nam illum harum, pro an tota populo theophrastus. Pro ne timeam denique perfecto. Munere verear his ei, nemore aperiri sea ne. Eum minimum gubergren et, eleifend scribentur cu cum. Legimus accusamus reprehendunt pri in, mei solet postea an. His nulla consetetur ei.
+
+            br
+            br
 
 
-        br
-        br
+          #tab-look-someone.tab-pane.container
+            br
+            br
+
+            .row
+              .col-md-12
+                p If you already have a project in mind but you can’t create it mea no labore dissentiunt, ad zril scripta copiosae ius. Vel veniam vulputate et, id alia magna oporteat per. Qui idque offendit sensibus no. Per magna noluisse consetetur no, cu ius novum nemore, ei vocent verterem laboramus eam. Eruditi noluisse disputando mei at. Ludus affert nonumy sit ei.
+
+            .row
+              .col-md-7
+
+                p Duis iisque delenit ad vis, ad euripidis vituperata conclusionemque per. Mel copiosae eleifend ea, his porro sapientem sententiae id, omnis debet in pro. Ei altera primis vix, mazim dictas omnium vel ad. Lobortis explicari an cum, zril putent cu mel. Cu eam nihil vivendo menandri. Te has rebum augue repudiare, vix no regione dignissim, id per facete possim. Cu eum salutandi consetetur, ad vis accumsan phaedrum tractatos. Prompta lobortis est an, postea postulant duo te. Qui in nonumes imperdiet expetendis, quo ea nihil officiis vituperatoribus, ex mei minim dignissim reprimique.
+
+              .col-md-3.col-md-offset-1
+                .stl-ilustration
+                  p#promptzone.upload
+                   img(src="/images/icon_stlfile.png")
+
+            .row
+              .col-md-12
+                p In nam illum harum, pro an tota populo theophrastus. Pro ne timeam denique perfecto. Munere verear his ei, nemore aperiri sea ne. Eum minimum gubergren et, eleifend scribentur cu cum. Legimus accusamus reprehendunt pri in, mei solet postea an. His nulla consetetur ei.
+
+            br
+            br
+
+
+    .container
+      br
+      .row
+        include /../includes/contact
 //-   .page
 //-     .container
 //-       br
@@ -91,6 +156,6 @@ block content
 //-         br
 
 block scripts
-  script(src='/vendor/jquery.ajaxupload.js')
-  script(src='/js/views/upload.js')
+  script(src='/js/lib/jquery.js')
+  script(src='/vendor/bootstrap.min.js')
 

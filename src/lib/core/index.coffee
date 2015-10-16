@@ -1356,6 +1356,8 @@ module.exports = (app, io) ->
    res.render 'sitemap.xml'
 
 
+  app.get '/walkthrough', (req, res) ->
+    res.render 'afterlogin/walkthrough'
 
   ###############################################
   # Socket IO event handlers
