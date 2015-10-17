@@ -6,7 +6,6 @@
  */
 
 import React from 'react';
-import InlineEdit from 'react-inline-edit';
 import restful from 'restful.js';
 
 import STLViewer from '../utils/stl-viewer.jsx';
@@ -29,16 +28,9 @@ export default class ProjectOrder extends React.Component {
   render () {
     return (
       <div>
-        <InlineEdit
-          tagName='h4'
-          className="job-name"
-          placeholder="Enter the Title"
-          autofocus={true}
-          maxLength={200}
-          text={this.props.item.project.title}
-          editing={this.state.editingTile}
-          onChange={this.onChangeTitle}
-        />
+        <h4 className='job-name'>
+          {this.props.item.project.title}
+        </h4>
 
         <h5 className="job-volume">
           <strong>VOLUME:&nbsp;</strong>

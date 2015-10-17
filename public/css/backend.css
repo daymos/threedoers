@@ -91,12 +91,14 @@ h5.normal {
   font-weight: normal;
   padding: 10px;
 }
-.job .job-status a {
+
+.job .job-status a * {
   color: #FFFFFF;
   font-style: normal;
   margin-left: 5px;
-  text-transform: uppercase;
+  text-transform: capitalize;
 }
+
 .job .btn-lg {
   font-size: 15px;
 }

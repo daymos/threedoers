@@ -11,7 +11,7 @@
  * }}
  */
 
-import Airflux from 'airflux';
+import Airflux from '../airflux';
 
 export let OrderActions = {
  changeColorProject: new Airflux.Action().asFunction,
@@ -33,4 +33,8 @@ export let OrderActions = {
  validatePaypalEmailAddress: new Airflux.Action().asFunction,
  requestPrinters: new Airflux.Action().asFunction,
  newComment: new Airflux.Action().asFunction
+};
+
+export let OrderListActions = {
+
 };

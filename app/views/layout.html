@@ -38,13 +38,19 @@
   <script src="http://localhost:35729/livereload.js"></script>
   {% endif %}
 
-  {% if reactState %}
+  {% if reactPrefetchedData %}
   <script>
-    window.__STATE__ = {{ reactState|safe }};
-    window.__USER__ = {{ loggedUser|safe }};
-    window.__WEBSOCKET_SERVER__ = '{{ wsServer }}';
+    window.__REACT_DATA_PREFETCHED__ = {{ reactPrefetchedData|safe }};
   </script>
   {% endif %}
+  {% if reactContext %}
+  <script>
+    window.__REACT_CONTEXT__ = {{ reactContext|safe }};
+  </script>
+  {% endif %}
+  <script>
+    window.__WEBSOCKET_SERVER__ = '{{ wsServer }}';
+  </script>
 </head>
 
 <body>

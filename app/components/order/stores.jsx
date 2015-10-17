@@ -11,10 +11,10 @@
  * }}
  */
 
-import Airflux from 'airflux';
 import _ from 'lodash';
 
-import {OrderActions} from './actions.jsx';
+import Airflux from '../airflux';
+import {OrderActions, OrderListActions} from './actions.jsx';
 import getAPIClient from '../utils/api-client';
 
 
@@ -25,11 +25,7 @@ export class OrderStore extends Airflux.Store {
 
     this.listenToMany(OrderActions);
 
-    // Request for order and update status
-    if (!order) {
-      // TODO
-    } else {
-      // initialize state
+    if (order) {
       this.initialize(order);
     }
   }
@@ -82,6 +78,23 @@ export class OrderStore extends Airflux.Store {
     });
 
     this.primus = primus;
+  }
+
+  teardownPrimus () {
+    this.primus.end();
+  }
+
+  requestOrder (orderID) {
+    let orderStore = this;
+
+    getAPIClient()
+    .one('orders', orderID)
+    .get()
+    .then(function (response) {
+      orderStore.initialize(response().data);
+      orderStore.setupPrimus();
+      orderStore.publishState();
+    });
   }
 
   getState () {
@@ -180,9 +193,6 @@ export class OrderStore extends Airflux.Store {
     let item = this.itemEndpoint;
 
     item.patch({amount: value})
-    .then(function (response) {
-      orderStore.setOrder(response.body());
-    })
     .catch(function () {
       console.log(arguments);
     });
@@ -394,6 +404,96 @@ export class OrderStore extends Airflux.Store {
     this.getOrderEndpoint()
     .all('comment')
     .post({comment}).then(function (response) {
+    });
+  }
+}
+
+
+export class OrderListStore extends Airflux.Store {
+
+  constructor(data, filter) {
+    super();
+
+    this.listenToMany(OrderListActions);
+    this.filter = filter;
+
+    if (data) {
+      this.initialize(data);
+    }
+  }
+
+  getState () {
+    return this._state;
+  }
+
+  setFilter (filter) {
+    this.filter = filter;
+  }
+
+  get state () {
+    return this._state;
+  }
+
+  initialize (data) {
+    this._state = {
+      orders: data.orders
+    };
+  }
+
+  setupPrimus () {
+    // TODO: Here for status changed, maybe?
+
+    // let primus;
+    // let orderStore = this;
+    //
+    // primus = Primus.connect(window.__WEBSOCKET_SERVER__).channel('orders');
+    //
+    // primus.on('open', function(msg) {
+    //   primus.write({action: 'join', order: orderStore._state.order._id});
+    // });
+    //
+    // primus.on('data', function (data) {
+    //   console.log(data);
+    //   if (data.status === 'error') {
+    //     console.log(data);
+    //   } else {
+    //     if (data.action === 'itemUpdated') {
+    //       let item = _.find(orderStore._state.order.projects,
+    //                         function (_item) {
+    //         return _item._id === data.item._id;
+    //       });
+    //
+    //       $.extend(item, data.item);
+    //       orderStore.setOrder(orderStore._state.order);
+    //     } else if (data.action === 'newComment') {
+    //       orderStore._state.order.comments.push(data.comment);
+    //       orderStore.publishState();
+    //     } else if (data.action === 'statusUpdated') {
+    //       orderStore.setOrder(data.order);
+    //     } else if (data.action === 'deleted') {
+    //       orderStore.order = null;
+    //       orderStore.currentItem = null;
+    //       orderStore.publishState();
+    //     }
+    //   }
+    // });
+    //
+    // this.primus = primus;
+  }
+
+  teardownPrimus () {
+    // this.primus.end();
+  }
+
+  requestOrders () {
+    let orderListStore = this;
+
+    getAPIClient().all(`orders?filter=${this.filter}`)
+    .getAll()
+    .then(function (response) {
+      orderListStore.initialize(response().data);
+      orderListStore.publishState();
+      orderListStore.setupPrimus();
     });
   }
 }

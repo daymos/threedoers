@@ -15,9 +15,6 @@ import shippoAPI from 'shippo';
 
 // React components
 import React from 'react';
-import Router from 'react-router';
-
-import routes from 'components/routes.jsx';
 
 import Order from 'models/order';
 import Notification from 'models/notification';
@@ -40,41 +37,102 @@ let env = process.env.node_env || 'development';
 let isDevelopment = env === 'development';
 
 
-export let paramOrder = function paramProject (req, res, next, orderID) {
+export function paramOrder (req, res, next, orderID) {
   OrderUtils.getRelatedOrder(req, orderID, function (err, order) {
     if (err) {
-      next(err);
+      return next(err);
     } else {
       req.order = order;
+      return next();
+    }
+  });
+}
+
+
+export function createOrder (req, res, next) {
+  req.reactContext = {};
+
+  // Collect props for this
+  req.reactContext.user = req.user ? req.user.getVisibleFields() : undefined;
+  next();
+}
+
+
+export function orderDetail (req, res, next) {
+  req.reactProps = {};
+  req.reactContext = {};
+
+  // Collect props for this
+  req.reactContext.user = req.user ? req.user.getVisibleFields() : undefined;
+  req.reactProps.order = req.order.toObject();
+  next();
+}
+
+
+export function myOrders (req, res, next) {
+  req.reactContext = {};
+  req.reactProps = {};
+
+  // Collect props for this
+  req.reactContext.user = req.user ? req.user.getVisibleFields() : undefined;
+  req.query.filter = req.params[0];
+
+  OrderUtils.filterOrders(req, function(error, orders) {
+    if (error) {
+      return next(error);
+    } else {
+      req.reactProps.data = {
+        orders: orders
+      };
       next();
     }
   });
-};
+}
 
 
-export let createOrder = function (req, res, next) {
-  Router.run(routes, req.originalUrl, function (Root, state) {
-    let user = req.user ? req.user.getVisibleFields() : undefined;
-    let reactHTML = React.renderToString(<Root user={user} />);
-    let reactState = {user};
-    reactState = JSON.stringify(reactState);
-    return res.render('layout.html', {reactHTML, reactState});
+/**
+ * This should render the market place for printer.
+ */
+export function marketPlace (req, res, next) {
+  req.reactContext = {};
+  req.reactProps = {};
+
+  // Collect props for this
+  req.reactContext.user = req.user ? req.user.getVisibleFields() : undefined;
+  req.query.filter = 'marketPlace';
+
+  OrderUtils.filterOrders(req, function(error, orders) {
+    if (error) {
+      return next(error);
+    } else {
+      req.reactProps.data = {
+        orders: orders
+      };
+      next();
+    }
   });
-};
+}
 
-export let orderDetail = function (req, res, next) {
-  Router.run(routes, req.originalUrl, function (Root, state) {
-    let reactHTML = React.renderToString(<Root order={req.order.toObject()} user={req.user} />);
-    let user = req.user ? req.user.getVisibleFields() : undefined;
-    let reactState = {user, order: req.order.toObject()};
-    reactState = JSON.stringify(reactState);
-    return res.render('layout.html', {reactHTML, reactState});
-  });
-};
 
 /**
  * API routes
  */
+
+
+export function listOrders (req, res, next) {
+  OrderUtils.filterOrders(req, function(error, orders) {
+    if (error) {
+      return next(error);
+    } else {
+      let data = {
+        orders: orders
+      };
+
+      return res.json(data);
+    }
+  });
+}
+
 
 export let orderCreateApi = function (req, res, next) {
 
@@ -337,7 +395,7 @@ export let removeOrderApi = function (req, res, next) {
     (req.session.orders &&
      req.session.orders.indexOf(req.order._id.toHexString()) !== -1);
 
-  if (canModify && req.order.status < ORDER_STATUSES.PRINT_ACCEPTED[0]) {
+  if (canModify && req.order.status <= ORDER_STATUSES.PRINT_ACCEPTED[0]) {
     let projects = _.pluck(req.order.projects, 'project');
     projects = _.pluck(projects, '_id');
 
@@ -468,7 +526,8 @@ export let patchOrderItemApi = function (req, res, next) {
         let price = OrderUtils.calculatePrice(data, item.amount);
         Order.update({'projects._id': item._id}, {
           '$set': {
-            'projects.$.totalPrice': price
+            'projects.$.totalPrice': price,
+            'projects.$.amount': item.amount
           }
         }, function (err) {
           if (err) {
@@ -522,7 +581,7 @@ export let patchOrderItemApi = function (req, res, next) {
   }
 
   if (error) {
-    next(error);
+    return next(error);
   } else if (modified) {
     // save object
     req.order.save(function (err, _order) {

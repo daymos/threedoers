@@ -30,6 +30,7 @@ var Order = require('controllers/orders');
 var Printer = require('controllers/printers');
 var User = require('controllers/users');
 var Cron = require('controllers/cron');
+var reactControllers = require('controllers/reactify');
 
 var logger = require('utils/logger');
 
@@ -111,9 +112,6 @@ if (app.get('env') === 'development') {
   app.use(validator);
 
   app.use(function(req, res, next) {
-    res.locals.loggedUser = (req.user) ? req.user.toObject() : {};
-    res.locals.loggedUser = JSON.stringify(res.locals.loggedUser);
-
     // TODO: Refactor
     res.locals.user = req.user;
     res.locals.nav = req.path;
@@ -185,6 +183,7 @@ if (app.get('env') === 'development') {
   apiRouter.param('projectID', Project.paramProject);
   apiRouter.param('orderID', Order.paramOrder);
 
+  apiRouter.get('/orders', Order.listOrders);
   apiRouter.all('/orders/goshippo', Order.goshippoWebhook);
   apiRouter.post('/orders/:orderID/upload', upload, Project.uploadProject);
   apiRouter.post('/orders/:orderID/order', Order.requestPrintOrder);
@@ -203,6 +202,7 @@ if (app.get('env') === 'development') {
     .delete(Order.deleteOrderItemAPI);
 
   apiRouter.route('/orders/:orderID')
+    .get(Order.orderDetailApi)
     .delete(Order.removeOrderApi);
 
   apiRouter.route('/users/addresses')
@@ -219,8 +219,13 @@ if (app.get('env') === 'development') {
 
   var orderRouter = new express.Router();
   orderRouter.param('orderID', Order.paramOrder);
-  orderRouter.get('/create', Order.createOrder);
-  orderRouter.get('/:orderID', Order.orderDetail);
+  orderRouter.get('/create', Order.createOrder, reactControllers.renderHTML);
+
+  orderRouter.get(/\/(list|on\-progress|completed)/,
+                  Order.myOrders, reactControllers.renderHTML);
+
+  orderRouter.get('/marketplace', Order.marketPlace, reactControllers.renderHTML);
+  orderRouter.get('/:orderID', Order.orderDetail, reactControllers.renderHTML);
 
   var projectRouter = new express.Router();
   projectRouter.param('projectID', Project.paramProject);
@@ -231,7 +236,7 @@ if (app.get('env') === 'development') {
 
   app.use('/api/v1', apiRouter);
   app.use('/project', projectRouter);
-  app.use('/order', orderRouter);
+  app.use('/orders', orderRouter);
   app.use('/cron', cronRouter);
   // ENDFIXME
 

@@ -7,12 +7,12 @@
 
 import React from 'react';
 import _ from 'lodash';
+import Loader from 'react-loader';
 
 import OrderNavigationStatus from './navigation.jsx';
 
 import {OrderActions} from './actions.jsx';
 import {OrderStore} from './stores.jsx';
-import {PageWithMenu} from '../base.jsx';
 import {ORDER_STATUSES} from '../../utils/constants';
 
 // Customer order status
@@ -31,24 +31,27 @@ import PrinterPrintedStatus from './printer/printed.jsx';
 import PrinterShippingStatus from './printer/shipping.jsx';
 
 
-export default class Order extends PageWithMenu {
+export default class Order extends React.Component {
 
   constructor (props, context, updater) {
-    let order = props.order;
-    delete props.order;
-
     super(props, context, updater);
 
-    this.orderStore = new OrderStore(order);
-    this.state = this.orderStore.getState();
+    this.orderStore = new OrderStore(props.order);
+    this.state = this.orderStore.getState() || {};
   }
 
   componentDidMount () {
-    this.orderStore.setupPrimus();
+    if (!this.state.order) {
+      this.orderStore.requestOrder(this.props.params.id);
+    } else {
+      this.orderStore.setupPrimus();
+    }
+
     this.unsubscribe = this.orderStore.listen(this.onOrderChanged.bind(this));
   }
 
   componentWillUnmount () {
+    this.orderStore.teardownPrimus();
     this.unsubscribe();
   }
 
@@ -65,15 +68,15 @@ export default class Order extends PageWithMenu {
   }
 
   isPrinter () {
-    return this.props.user && this.props.user.printer &&
-      (this.props.user.printer === 'accepted' ||
-      this.props.user.isPrinter);
+    return this.context.user && this.context.user.printer &&
+      (this.context.user.printer === 'accepted' ||
+      this.context.user.isPrinter);
   }
 
   renderAppropriateStep () {
     let rendered;
     let isPrinter = this.isPrinter();
-    let props = {...this.state, user: this.props.user, isPrinter};
+    let props = {...this.state, user: this.context.user, isPrinter};
 
     switch (this.state.order.status) {
       case ORDER_STATUSES.STARTED[0]:
@@ -123,17 +126,23 @@ export default class Order extends PageWithMenu {
     return rendered;
   }
 
-  renderBlock () {
-    return (
-      <div>
+  render () {
+    if (this.state.order) {
+      return <div>
         <OrderNavigationStatus
           status={this.state.order.status}
           isPrinter={this.isPrinter()}
         />
-
         {this.renderAppropriateStep()}
-      </div>
-    );
+      </div>;
+    } else {
+      return <div className="loader">Loading...</div>;
+    }
   }
 }
+
+
+Order.contextTypes = {
+  user: React.PropTypes.object
+};
 

@@ -17,7 +17,6 @@ export default class ItemOrderForm extends React.Component {
 
   constructor (props, context, updater) {
     let amount = props.amount;
-    delete props.amount;
 
     super(props, context, updater);
 

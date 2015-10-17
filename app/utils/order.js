@@ -9,6 +9,7 @@ import shippoAPI from 'shippo';
 
 import Order from 'models/order';
 import {orderChannel} from 'controllers/primus';
+import { ORDER_STATUSES } from 'utils/constants';
 
 import getLogger from 'utils/logger';
 
@@ -85,6 +86,64 @@ export function getRelatedOrder (req, orderID, callback) {
     }
   });
 }
+
+
+export function filterOrders (req, callback) {
+  // default filters if not suplied
+  let filterRequested = (req.user.printer === 'accepted' || req.user.isPrinter) ?
+    'marketplace' : 'list';
+
+  // get preference on filter requested over default
+  filterRequested = req.query.filter || filterRequested;
+
+  let filter = {
+    list: {
+      status: { $lt: ORDER_STATUSES.PRINT_REVIEW[0] }
+    },
+
+    'on-progress': {
+      status: {
+        $lt: ORDER_STATUSES.ARCHIVED[0],
+        $gt: ORDER_STATUSES.PRINT_REQUESTED[0]
+      }
+    },
+
+    completed: {
+      status: ORDER_STATUSES.ARCHIVED[0]
+    },
+
+    marketplace: {
+      status: ORDER_STATUSES.PRINT_REQUESTED[0]
+    }
+  }[filterRequested];
+
+
+  let user = (req.user.printer === 'accepted' || req.user.isPrinter) ?
+    'printer' : 'customer';
+
+  let userQuery = {
+    customer: {customer: req.user.id},
+    printer: {printer: req.user.id}
+  }[user];
+
+  let query = _.assign({}, filter);
+
+  if (filterRequested !== 'marketplace') {
+    query = _.assign(query, userQuery);
+  }
+
+  Order.find(query)
+  .sort('-createdAt')
+  .populate('projects.project', 'title')
+  .exec( function (orderFetchError, orders) {
+    if (orderFetchError) {
+      callback(orderFetchError);
+    } else {
+      callback(null, orders);
+    }
+  });
+}
+
 
 export function processVolumeWeight (item, callback) {
   let cmd = `${nconf.get('python:bin')} ${nconf.get('python:path')}`;

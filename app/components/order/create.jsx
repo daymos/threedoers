@@ -7,10 +7,9 @@
 import React from 'react';
 
 import OrderNavigationStatus from './navigation.jsx';
-import {PageWithMenu} from '../base.jsx';
 
 
-export default class CreateOrder extends PageWithMenu {
+export default class CreateOrder extends React.Component {
 
   constructor (props, context, updater) {
     // Setup props as empty because now all are state.
@@ -27,7 +26,7 @@ export default class CreateOrder extends PageWithMenu {
 
   componentDidMount () {
     let form = this;
-    let element = React.findDOMNode(this.refs.uploader);
+    let element = this.refs.uploader;
     $.ajaxUploadSettings.name = "design";
 
     $(element).ajaxUploadPrompt({
@@ -111,11 +110,7 @@ export default class CreateOrder extends PageWithMenu {
     }
   }
 
-  /**
-   * Will put status as 1 to display good the Navigation
-   *
-   */
-  renderBlock () {
+  render () {
     return (
       <div>
         <OrderNavigationStatus status={0} create={true} />

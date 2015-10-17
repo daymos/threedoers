@@ -6,33 +6,28 @@
  */
 
 import React from 'react';
-import {RouteHandler, NotFoundRoute, Route} from 'react-router';
+import Route from 'react-router/lib/Route';
 
-import CreateOrder from './order/create.jsx';
-import OrderDetail from './order/detail.jsx';
+import ThreeDoersApp from './App.jsx';
+
+import OrderApp from './order/App.jsx';
+import CreateOrder from './order/Create.jsx';
+import OrderDetail from './order/Detail.jsx';
+import OrderList from './order/List.jsx';
 
 
 let routes;
 
-/**
- * Entry point of all code will handle and delegate rendering
- * task to other components.
- *
- * This props will be props! just the underlay component
- * will treat that as state if needed.
- */
-class ThreeDoersApp extends React.Component {
-  render () {
-    return (
-      <RouteHandler {...this.props}/>
-    );
-  }
-}
-
 
 export default routes = (
-  <Route handler={ThreeDoersApp}>
-    <Route path="/order/create" handler={CreateOrder} name="createOrder" />
-    <Route path="/order/:id" handler={OrderDetail} />
+  <Route path='/' component={ThreeDoersApp}>
+    <Route path='orders' component={OrderApp}>
+      <Route path='list' component={OrderList}/>
+      <Route path='marketplace' component={OrderList}/>
+      <Route path='on-progress' component={OrderList}/>
+      <Route path='completed' component={OrderList}/>
+      <Route path='create' component={CreateOrder}/>
+      <Route path=':id' component={OrderDetail} />
+    </Route>
   </Route>
 );

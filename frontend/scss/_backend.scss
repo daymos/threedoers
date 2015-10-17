@@ -50,7 +50,13 @@ h5.normal {
   padding-top: 15px;
 
   .job-name {
+    a {
+      color: #4A4A4A;
+    }
+
     color: #4A4A4A;
+    text-overflow: ellipsis;
+    overflow: hidden;
     font-size: 22px;
     margin-top: 0;
     padding: 0 10px;
@@ -66,6 +72,17 @@ h5.normal {
 
   .job-image {
     text-align: center;
+    position: relative;
+    .badge {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 50px;
+      background: #77B3D4;
+      @include border-radius(8px 8px 8px 8px);
+      font-size: 30px;
+      padding: 10px;
+    }
   }
 
   .job-wtime {
@@ -85,6 +102,12 @@ h5.normal {
     font-size: 16px;
     font-weight: normal;
     padding: 10px;
+    a {
+      color: #FFFFFF;
+      font-style: normal;
+      margin-left: 5px;
+      text-transform: capitalize;
+    }
   }
 
   .btn-lg {

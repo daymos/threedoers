@@ -135,8 +135,8 @@ export default class OrderStatus extends React.Component {
     }
 
     let orderDetail = this;
-    let element = React.findDOMNode(this.refs.uploader);
-    let progress = React.findDOMNode(this.refs.uploadProgress);
+    let element = this.refs.uploader;
+    let progress = this.refs.uploadProgress;
 
     $.ajaxUploadSettings.name = "design";
 
@@ -188,16 +188,16 @@ export default class OrderStatus extends React.Component {
 
   onCreateAddress (event) {
     let address = {
-      name: React.findDOMNode(this.refs.contact).value,
-      company: React.findDOMNode(this.refs.company).value,
-      street1: React.findDOMNode(this.refs.street1).value,
-      street2: React.findDOMNode(this.refs.street2).value,
-      street_no: React.findDOMNode(this.refs.street_no).value,
-      city: React.findDOMNode(this.refs.city).value,
-      state: React.findDOMNode(this.refs.state).value,
-      zip_code: React.findDOMNode(this.refs.zip_code).value,
-      phone_no: React.findDOMNode(this.refs.phone_no).value,
-      country: React.findDOMNode(this.refs.country).value
+      name: this.refs.contact.value,
+      company: this.refs.company.value,
+      street1: this.refs.street1.value,
+      street2: this.refs.street2.value,
+      street_no: this.refs.street_no.value,
+      city: this.refs.city.value,
+      state: this.refs.state.value,
+      zip_code: this.refs.zip_code.value,
+      phone_no: this.refs.phone_no.value,
+      country: this.refs.country.value
     };
 
     OrderActions.createAddress(address);

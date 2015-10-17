@@ -24,11 +24,11 @@ export default class STLViewer extends React.Component {
   }
 
   _createJSC3DViewer () {
-    let canvas = React.findDOMNode(this.refs.canvas);
+    let canvas = this.refs.figure.firstChild;
 
     // this will unbind event and avoid memory leack
     let _canvas = canvas.cloneNode(true);
-    canvas.parentNode.replaceChild(_canvas, canvas);
+    this.refs.figure.replaceChild(_canvas, canvas);
 
     let viewer = new JSC3D.Viewer(_canvas);
     viewer.setParameter('SceneUrl', `${ this.props.stlURL }`);
@@ -58,11 +58,10 @@ export default class STLViewer extends React.Component {
 
   render () {
     return (
-      <figure>
+      <figure ref='figure'>
         <canvas
           height={this.props.height || "315"}
           width={this.props.width || "390"}
-          ref="canvas"
           data-color={this.props.projectColor}
           >
         </canvas>
