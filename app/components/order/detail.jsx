@@ -53,6 +53,7 @@ export default class Order extends React.Component {
   componentWillUnmount () {
     this.orderStore.teardownPrimus();
     this.unsubscribe();
+    this.orderStore.stopListeningToAll();
   }
 
   onOrderChanged (state) {
@@ -60,8 +61,7 @@ export default class Order extends React.Component {
     shouldRedirect |= (this.isPrinter() && !state.order.printer);
 
     if (shouldRedirect) {
-      // FIXME: Change this to handle html5 push state
-      window.location.href = '/';
+      this.context.history.goBack();
     } else {
       this.setState(state);
     }
@@ -143,6 +143,7 @@ export default class Order extends React.Component {
 
 
 Order.contextTypes = {
-  user: React.PropTypes.object
+  user: React.PropTypes.object,
+  history: React.PropTypes.object
 };
 

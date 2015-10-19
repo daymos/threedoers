@@ -497,8 +497,8 @@ User.method('authenticate', function(plainText) {
 });
 
 User.method('getVisibleFields', function () {
-  let {email, username, printer, isPrinter, isAdmin} = this.toObject();
-  return {email, username, printer, isPrinter, isAdmin};
+  let {email, username, printer, isPrinter, isAdmin, printerJobs} = this.toObject();
+  return {email, username, printer, isPrinter, isAdmin, printerJobs};
 });
 
 module.exports.User = mongoose.model('User', User);

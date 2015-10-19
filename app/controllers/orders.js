@@ -77,13 +77,11 @@ export function myOrders (req, res, next) {
   req.reactContext.user = req.user ? req.user.getVisibleFields() : undefined;
   req.query.filter = req.params[0];
 
-  OrderUtils.filterOrders(req, function(error, orders) {
+  OrderUtils.filterOrders(req, function(error, data) {
     if (error) {
       return next(error);
     } else {
-      req.reactProps.data = {
-        orders: orders
-      };
+      req.reactProps.data = data;
       next();
     }
   });
@@ -99,15 +97,13 @@ export function marketPlace (req, res, next) {
 
   // Collect props for this
   req.reactContext.user = req.user ? req.user.getVisibleFields() : undefined;
-  req.query.filter = 'marketPlace';
+  req.query.filter = 'marketplace';
 
-  OrderUtils.filterOrders(req, function(error, orders) {
+  OrderUtils.filterOrders(req, function(error, data) {
     if (error) {
       return next(error);
     } else {
-      req.reactProps.data = {
-        orders: orders
-      };
+      req.reactProps.data = data;
       next();
     }
   });
@@ -120,14 +116,10 @@ export function marketPlace (req, res, next) {
 
 
 export function listOrders (req, res, next) {
-  OrderUtils.filterOrders(req, function(error, orders) {
+  OrderUtils.filterOrders(req, function(error, data) {
     if (error) {
       return next(error);
     } else {
-      let data = {
-        orders: orders
-      };
-
       return res.json(data);
     }
   });

@@ -275,8 +275,12 @@ export class OrderStore extends Airflux.Store {
   }
 
   onDeleteOrder () {
-    this.getOrderEndpoint().delete().then(function () {
-      window.location.href = '/';
+    let orderStore = this;
+    this.getOrderEndpoint()
+    .delete()
+    .then(function () {
+      delete orderStore._state.order;
+      orderStore.publishState();
     }).catch(function () {
       console.log(arguments);
     });
@@ -435,9 +439,7 @@ export class OrderListStore extends Airflux.Store {
   }
 
   initialize (data) {
-    this._state = {
-      orders: data.orders
-    };
+    this._state = {...data};
   }
 
   setupPrimus () {

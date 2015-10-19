@@ -127,19 +127,39 @@ export function filterOrders (req, callback) {
   }[user];
 
   let query = _.assign({}, filter);
+  let orderBy = 'placedAt';
 
   if (filterRequested !== 'marketplace') {
     query = _.assign(query, userQuery);
+    orderBy = '-createdAt';
   }
 
   Order.find(query)
-  .sort('-createdAt')
+  .sort(orderBy)
   .populate('projects.project', 'title')
   .exec( function (orderFetchError, orders) {
     if (orderFetchError) {
       callback(orderFetchError);
     } else {
-      callback(null, orders);
+      if (user === 'printer' && filterRequested === 'marketplace') {
+        let countQuery = {
+          printer: req.user.id,
+          status: {
+            $lt: ORDER_STATUSES.ARCHIVED[0],
+            $gt: ORDER_STATUSES.PRINT_REQUESTED[0]
+          }
+        };
+
+        Order.count(countQuery, function (countOrderError, count) {
+          if (countOrderError) {
+            return callback(countOrderError);
+          } else {
+            return callback(null, {orders, printingOrders: count});
+          }
+        });
+      } else {
+        return callback(null, {orders});
+      }
     }
   });
 }

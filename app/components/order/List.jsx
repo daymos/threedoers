@@ -7,6 +7,7 @@
 
 import React from 'react';
 import moment from 'moment';
+import TimeAgo from 'react-timeago';
 import Link from 'react-router/lib/Link';
 import { PropTypes } from 'react-router';
 
@@ -127,21 +128,34 @@ class Order extends React.Component {
   render () {
     let className = "col-md-3 col-sm-6" + this.props.className;
     let id = this.props.order.id || this.props.order._id;
+    let isMarketPlace = this.context.isPrinter &&
+      this.context.listType === 'marketplace';
+
     let createdAt = moment(this.props.order.createdAt);
 
     return (
       <div className={className}>
         <article className="job">
           <h4 className="job-name">
-            <Link
-              to={`/orders/${id}`}>{this.props.order.projects[0].project.title}
-            </Link>
+            {()=> {
+              if (!isMarketPlace) {
+                return <Link
+                  to={`/orders/${id}`}>{this.props.order.projects[0].project.title}
+                </Link>;
+              } else {
+                return this.props.order.projects[0].project.title;
+              }
+            }()}
           </h4>
 
-          <h6 className="job-created-at">
-            Created on {createdAt.format('DD/MMM/YYYY')} at
-            {createdAt.format('hh:mm a')}
-          </h6>
+          {()=> {
+            if (!isMarketPlace) {
+              return <h6 className="job-created-at">
+                Created on {createdAt.format('DD/MMM/YYYY')} at
+                {createdAt.format('hh:mm a')}
+              </h6>;
+            }
+          }()}
 
           <figure className="job-image">
             <img
@@ -152,19 +166,44 @@ class Order extends React.Component {
             </span>
           </figure>
 
-          <div className="job-status">
-            <i>Status:
-              <Link
-                to={`/orders/${id}`}> {this.orderStatus}
-              </Link>
-            </i>
-          </div>
+          {()=> {
+            if (isMarketPlace) {
+              return <div className="job-wtime">This order has been waiting for
+                <TimeAgo component='h5' date={this.props.order.placedAt}/>
+              </div>;
+            }
+          }()}
+
+          {()=> {
+            if (!isMarketPlace) {
+              return <div className="job-status">
+                <i>Status:
+                  <Link
+                    to={`/orders/${id}`}> {this.orderStatus}
+                  </Link>
+                </i>
+              </div>;
+            } else {
+              return <div className="form-group text-center">
+                <button
+                  className="btn btn-lg btn-green review"
+                  disabled={!this.props.isActive}
+                  >
+                  REVIEW ORDER
+                </button>
+              </div>;
+            }
+          }()}
         </article>
       </div>
     );
   }
-
 }
+
+Order.contextTypes = {
+  listType: React.PropTypes.string,
+  isPrinter: React.PropTypes.bool
+};
 
 
 export default class ListOrder extends React.Component {
@@ -174,6 +213,7 @@ export default class ListOrder extends React.Component {
 
     let filter = props.location.pathname.split('/');
     filter = filter[filter.length - 1];
+    this.filter = filter;
     this.orderListStore = new OrderListStore(props.data, filter);
     this.state = this.orderListStore.getState() || {};
   }
@@ -195,6 +235,7 @@ export default class ListOrder extends React.Component {
 
       let filter = nextProps.location.pathname.split('/');
       filter = filter[filter.length - 1];
+      this.filter = filter;
       this.orderListStore.setFilter(filter);
       this.orderListStore.requestOrders();
     }
@@ -202,6 +243,7 @@ export default class ListOrder extends React.Component {
 
   componentWillUnmount () {
     this.orderListStore.teardownPrimus();
+    this.orderListStore.stopListeningToAll();
     this.unsubscribe();
   }
 
@@ -210,30 +252,60 @@ export default class ListOrder extends React.Component {
   }
 
   renderContent () {
+    let isActive = this.state.orders &&
+      this.context.user.printerJobs > this.state.printingOrders;
+
     if (this.state.orders) {
       return this.state.orders.map( function (item, index) {
         let className = ((index + 1) % 4 === 0) ? 'clear-left' : '';
-        return <Order key={item._id} order={item} className={className}/>;
+        return <Order
+          key={item._id}
+          order={item}
+          isActive={isActive}
+          className={className}/>;
       });
     } else {
       return <div className="loader">Loading...</div>;
     }
+  }
 
+  renderHeader () {
+    if (this.state.orders) {
+      if (this.filter === 'marketplace') {
+        return <h4 className='light'>
+          Here you can find printing and design jobs
+        </h4>;
+      } else if (this.filter === 'list') {
+        return <h4 className='light'>
+          Here are your orders.
+        </h4>;
+      }
+    } else {
+      return <h4 className='light'>There is not any order for this list.</h4>;
+    }
   }
 
   render () {
-    let header;
-    if (this.state.orders) {
-      header = <h4 className='light'>Here are your orders</h4>;
-    } else {
-      header = <h4 className='light'>There is not any project yet for this list.</h4>;
-    }
+    let isActive = this.state.orders &&
+      this.context.user.printerJobs > this.state.printingOrders;
+
     return <div className="container">
       <br/>
       <Navigation/>
       <br/>
 
-      { header }
+      { this.renderHeader() }
+
+      {(() => {
+        if (!isActive) {
+          return <div className="alert alert-warning">
+            <h4>
+              You need to complete at least one previous
+              order before you can accept another one.
+            </h4>
+          </div>;
+        }
+      })()}
 
       <div className='row'>
         {this.renderContent()}
@@ -241,9 +313,20 @@ export default class ListOrder extends React.Component {
     </div>;
   }
 
+  getChildContext () {
+    return {
+      listType: this.filter
+    };
+  }
 }
 
 ListOrder.contextTypes = {
   isLoggedIn: React.PropTypes.bool,
-  isPrinter: React.PropTypes.bool
+  isPrinter: React.PropTypes.bool,
+  user: React.PropTypes.object
 };
+
+ListOrder.childContextTypes = {
+    listType: React.PropTypes.string
+};
+
