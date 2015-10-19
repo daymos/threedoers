@@ -45,7 +45,8 @@ module.exports = (app, io) ->
   app.get '/', (req, res) ->
 
     if req.user
-      res.redirect '/profile/projects'
+      res.redirect '/walkthrough'
+#      res.redirect '/profile/projects'
     else
       models.STLProject.find().sort(createdAt: -1).limit(6).exec (err, projects) ->
           auth.User.find().limit(15).exec (err, users) ->

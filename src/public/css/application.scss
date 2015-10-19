@@ -30,7 +30,8 @@ a.link-inverse:focus {
   transition: border 0.3s;
 }
 .navbar-3doers .navbar-text > .navbar-link:hover,
-.navbar-3doers .navbar-text > .navbar-link:focus {
+.navbar-3doers .navbar-text > .navbar-link:focus,
+.navbar-3doers .navbar-text > .navbar-link .navbar-active {
   border-bottom-color: #88d6a7;
 }
 .navbar-3doers .navbar-text > .navbar-link.navbar-link-inverse {
