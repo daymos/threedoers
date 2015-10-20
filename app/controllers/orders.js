@@ -260,7 +260,7 @@ export let requestPrintOrder = function (req, res, next) {
 };
 
 
-export let denyOrderApi = function (req, res, next) {
+export function denyOrderApi (req, res, next) {
   let canModify = req.order.printer &&
     req.user._id.equals(req.order.printer._id);
 
@@ -288,7 +288,31 @@ export let denyOrderApi = function (req, res, next) {
     error.status = HTTPStatus.PRECONDITION_FAILED;
     return next(error);
   }
-};
+}
+
+
+export function reviewOrder (req, res, next) {
+  let canModify = req.user.isPrinter || req.user.printer === 'accepted';
+
+  if (canModify && req.order.status === ORDER_STATUSES.PRINT_REQUESTED[0]) {
+    let data = {
+      status: ORDER_STATUSES.PRINT_REVIEW[0],
+      printer: req.user._id
+    };
+
+    req.order.update(data, function (saveOrderError) {
+      if (saveOrderError) {
+        return next(saveOrderError);
+      } else {
+        return res.sendStatus(200);
+      }
+    });
+  } else {
+    let error = new Error('Order Item can not be modified at this status');
+    error.status = HTTPStatus.PRECONDITION_FAILED;
+    return next(error);
+  }
+}
 
 
 export let acceptOrderApi = function (req, res, next) {

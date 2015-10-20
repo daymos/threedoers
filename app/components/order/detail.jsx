@@ -57,8 +57,8 @@ export default class Order extends React.Component {
   }
 
   onOrderChanged (state) {
-    let shouldRedirect = !state.order;
-    shouldRedirect |= (this.isPrinter() && !state.order.printer);
+    let shouldRedirect = !state.order ||
+      (this.isPrinter() && !state.order.printer);
 
     if (shouldRedirect) {
       this.context.history.goBack();

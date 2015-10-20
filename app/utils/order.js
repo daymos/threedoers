@@ -63,11 +63,18 @@ export function getRelatedOrder (req, orderID, callback) {
       let isPrinter = req.user && (req.user.isPrinter ||
         req.user.printer === 'accepted');
 
+      // Test if printer was assigned
       let canSee = isPrinter && order.printer &&
         req.user._id.equals(order.printer._id);
+
+      // Test if status is printe request status and isPrinter
+      canSee = canSee ||
+        (order.status === ORDER_STATUSES.PRINT_REQUESTED[0] && isPrinter);
+
       canSee = canSee ||
         (req.user &&
          order.customer && req.user._id.equals(order.customer._id));
+
       canSee = canSee ||
         (session.orders &&
          session.orders.indexOf(order._id.toHexString()) !== -1);

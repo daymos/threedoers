@@ -67,8 +67,8 @@ export class OrderStore extends Airflux.Store {
         } else if (data.action === 'newComment') {
           orderStore._state.order.comments.push(data.comment);
           orderStore.publishState();
-        } else if (data.action === 'statusUpdated') {
-          orderStore.setOrder(data.order);
+        } else if (data.action === 'statusUpdated' && orderStore._state.order) {
+            orderStore.setOrder(data.order);
         } else if (data.action === 'deleted') {
           orderStore.order = null;
           orderStore.currentItem = null;
@@ -311,7 +311,10 @@ export class OrderStore extends Airflux.Store {
     this.getOrderEndpoint()
     .all('deny')
     .post()
-    .catch(function (response) { console.log(arguments); });
+    .then(function () {
+      delete orderStore._state.order;
+      orderStore.publishState();
+    }).catch(function (response) { console.log(arguments); });
   }
 
   onPayOrder () {
@@ -496,6 +499,20 @@ export class OrderListStore extends Airflux.Store {
       orderListStore.initialize(response().data);
       orderListStore.publishState();
       orderListStore.setupPrimus();
+    });
+  }
+
+  onReviewOrder (orderID) {
+    let orderListStore = this;
+
+    getAPIClient().one('orders', orderID)
+    .all('review')
+    .post()
+    .then(function (response) {
+      orderListStore._state.redirectTo = orderID;
+      orderListStore.publishState();
+    }).catch(function (data) {
+      console.log(data);
     });
   }
 }

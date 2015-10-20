@@ -57,7 +57,7 @@ export default class CreateOrder extends React.Component {
           form.errorMessage = data.errors.design.msg;
           form.setState({isErrorVisible: true, isProgressVisible: false});
         } else {
-          this.props.history.pushState(`/orders/${data.id}`)
+          this.props.history.pushState(null, `/orders/${data.id}`);
         }
       }
     });

@@ -13,6 +13,7 @@ import { PropTypes } from 'react-router';
 
 import {ORDER_STATUSES} from '../../utils/constants';
 import {OrderListStore} from './stores.jsx';
+import {OrderListActions} from './actions.jsx';
 
 
 class TabItem extends React.Component {
@@ -117,6 +118,10 @@ class Order extends React.Component {
     super(props, context, updater);
   }
 
+  onClickReviewOrder (orderID) {
+    OrderListActions.reviewOrder(orderID);
+  }
+
   get orderStatus () {
     for (let key in ORDER_STATUSES) {
       if (ORDER_STATUSES[key][0] === this.props.order.status) {
@@ -188,6 +193,8 @@ class Order extends React.Component {
                 <button
                   className="btn btn-lg btn-green review"
                   disabled={!this.props.isActive}
+                  onClick={this.onClickReviewOrder.bind(this,
+                                                        this.props.order._id)}
                   >
                   REVIEW ORDER
                 </button>
@@ -248,7 +255,11 @@ export default class ListOrder extends React.Component {
   }
 
   onStatusChanged (state) {
-    this.setState(state);
+    if (state.redirectTo) {
+      this.props.history.pushState(null, `/orders/${state.redirectTo}`);
+    } else {
+      this.setState(state);
+    }
   }
 
   renderContent () {
@@ -297,7 +308,7 @@ export default class ListOrder extends React.Component {
       { this.renderHeader() }
 
       {(() => {
-        if (!isActive) {
+        if (!isActive && this.context.isPrinter) {
           return <div className="alert alert-warning">
             <h4>
               You need to complete at least one previous

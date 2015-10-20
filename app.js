@@ -22,8 +22,6 @@ var Primus = require('primus');
 
 var config = require('./config/config');
 
-var middlewares = require('utils/middlewares');
-
 // Controllers modules
 var Project = require('controllers/projects');
 var Order = require('controllers/orders');
@@ -31,6 +29,7 @@ var Printer = require('controllers/printers');
 var User = require('controllers/users');
 var Cron = require('controllers/cron');
 var reactControllers = require('controllers/reactify');
+var Auth = require('controllers/auth');
 
 var logger = require('utils/logger');
 
@@ -173,72 +172,151 @@ if (app.get('env') === 'development') {
       io.set('polling duration', 30);
   }
 
-  require('./config/primus')(app, primus, shared);
-  require('controllers/primus').setRealTime(primus);
+require('./config/primus')(app, primus, shared);
+require('controllers/primus').setRealTime(primus);
 
-  // FIXME: This is Real code now put in right place latter
-  var upload = multer({ dest: nconf.get('media:upload:to')});
+// FIXME: This is Real code now put in right place latter
+var upload = multer({ dest: nconf.get('media:upload:to')});
 
-  var apiRouter = new express.Router();
-  apiRouter.param('projectID', Project.paramProject);
-  apiRouter.param('orderID', Order.paramOrder);
 
-  apiRouter.get('/orders', Order.listOrders);
-  apiRouter.all('/orders/goshippo', Order.goshippoWebhook);
-  apiRouter.post('/orders/:orderID/upload', upload, Project.uploadProject);
-  apiRouter.post('/orders/:orderID/order', Order.requestPrintOrder);
-  apiRouter.post('/orders/:orderID/deny', Order.denyOrderApi);
-  apiRouter.post('/orders/:orderID/accept', Order.acceptOrderApi);
-  apiRouter.post('/orders/:orderID/comment', Order.createComment);
-  apiRouter.post('/orders/:orderID/pay', Order.startPayment);
-  apiRouter.post('/orders/:orderID/printed', Order.orderPrinted);
-  apiRouter.post('/orders/:orderID/update-transaction', Order.updateTransaction);
+var apiRouter = new express.Router();
 
-  apiRouter.get('/orders/:order/cancel-payment', Order.cancelPayment);
-  apiRouter.get('/orders/:orderID/execute-payment', Order.executePayment);
+apiRouter.param('projectID',
+                Project.paramProject);
 
-  apiRouter.route('/orders/:orderID/items/:itemID')
-    .patch(Order.patchOrderItemApi)
-    .delete(Order.deleteOrderItemAPI);
+apiRouter.param('orderID',
+                Order.paramOrder);
 
-  apiRouter.route('/orders/:orderID')
-    .get(Order.orderDetailApi)
-    .delete(Order.removeOrderApi);
+// Orders API resources
 
-  apiRouter.route('/users/addresses')
-    .post(middlewares.loginAPIRequired, User.createAddress);
+apiRouter.get('/orders',
+              Auth.loginRequired,
+              Order.listOrders);
 
-  apiRouter.route('/users/validate-paypal')
-    .post(middlewares.loginAPIRequired, User.validatePaypalEmailAddress);
+apiRouter.all('/orders/goshippo',
+              Order.goshippoWebhook);
 
-  apiRouter.post('/projects/upload', upload, Project.uploadProject);
-  apiRouter.route('/projects/:projectID')
-    .get(Project.projectDetailAPI);
+apiRouter.post('/orders/:orderID/upload',
+               upload,
+               Project.uploadProject);
 
-  apiRouter.get('/printers', Printer.getPrinters);
+apiRouter.post('/orders/:orderID/order',
+               Auth.loginRequired,
+               Order.requestPrintOrder);
 
-  var orderRouter = new express.Router();
-  orderRouter.param('orderID', Order.paramOrder);
-  orderRouter.get('/create', Order.createOrder, reactControllers.renderHTML);
+apiRouter.post('/orders/:orderID/review',
+               Auth.loginRequired,
+               Order.reviewOrder);
 
-  orderRouter.get(/\/(list|on\-progress|completed)/,
-                  Order.myOrders, reactControllers.renderHTML);
+apiRouter.post('/orders/:orderID/deny',
+               Auth.loginRequired,
+               Order.denyOrderApi);
 
-  orderRouter.get('/marketplace', Order.marketPlace, reactControllers.renderHTML);
-  orderRouter.get('/:orderID', Order.orderDetail, reactControllers.renderHTML);
+apiRouter.post('/orders/:orderID/accept',
+               Auth.loginRequired,
+               Order.acceptOrderApi);
 
-  var projectRouter = new express.Router();
-  projectRouter.param('projectID', Project.paramProject);
-  projectRouter.get('/:projectID', Project.projectDetail);
+apiRouter.post('/orders/:orderID/comment',
+               Auth.loginRequired,
+               Order.createComment);
 
-  var cronRouter = new express.Router();
-  cronRouter.post('/update-rates', Cron.updateRates);
+apiRouter.post('/orders/:orderID/pay',
+               Auth.loginRequired,
+               Order.startPayment);
 
-  app.use('/api/v1', apiRouter);
-  app.use('/project', projectRouter);
-  app.use('/orders', orderRouter);
-  app.use('/cron', cronRouter);
-  // ENDFIXME
+apiRouter.post('/orders/:orderID/printed',
+               Auth.loginRequired,
+               Order.orderPrinted);
+
+apiRouter.post('/orders/:orderID/update-transaction',
+               Auth.loginRequired,
+               Order.updateTransaction);
+
+apiRouter.get('/orders/:order/cancel-payment',
+              Auth.loginRequired,
+              Order.cancelPayment);
+
+apiRouter.get('/orders/:orderID/execute-payment',
+              Auth.loginRequired,
+              Order.executePayment);
+
+apiRouter.route('/orders/:orderID/items/:itemID')
+  .patch(Order.patchOrderItemApi)
+  .delete(Order.deleteOrderItemAPI);
+
+apiRouter.route('/orders/:orderID')
+  .get(Order.orderDetailApi)
+  .delete(Order.removeOrderApi);
+
+// User API resources
+
+apiRouter.route('/users/addresses')
+  .post(Auth.loginRequired,
+        User.createAddress);
+
+apiRouter.route('/users/validate-paypal')
+  .post(Auth.loginRequired,
+        User.validatePaypalEmailAddress);
+
+// Project API resources
+
+apiRouter.post('/projects/upload',
+               upload,
+               Project.uploadProject);
+
+apiRouter.route('/projects/:projectID')
+  .get(Project.projectDetailAPI);
+
+// Printer API resources
+
+apiRouter.get('/printers', Printer.getPrinters);
+
+// Order Router
+
+var orderRouter = new express.Router();
+
+orderRouter.param('orderID',
+                  Order.paramOrder);
+
+orderRouter.get('/create',
+                Order.createOrder,
+                reactControllers.renderHTML);
+
+orderRouter.get(/\/(list|on\-progress|completed)/,
+                Auth.loginRequired,
+                Order.myOrders,
+                reactControllers.renderHTML);
+
+orderRouter.get('/marketplace',
+                Auth.loginRequired,
+                Order.marketPlace,
+                reactControllers.renderHTML);
+
+orderRouter.get('/:orderID',
+                Order.orderDetail,
+                reactControllers.renderHTML);
+
+
+var projectRouter = new express.Router();
+
+projectRouter.param('projectID',
+                    Project.paramProject);
+
+projectRouter.get('/:projectID',
+                  Project.projectDetail);
+
+
+var cronRouter = new express.Router();
+
+cronRouter.post('/update-rates',
+                Cron.updateRates);
+
+
+app.use('/api/v1', apiRouter);
+app.use('/project', projectRouter);
+app.use('/orders', orderRouter);
+app.use('/cron', cronRouter);
+// ENDFIXME
 
 
   _ref = ['admin', 'filemanager', 'core', 'auth', 'registration', 'notification', 'design', 'api'];
@@ -254,79 +332,86 @@ if (app.get('env') === 'development') {
     next(err);
   });
 
-  // we can now instantiaite Prettyerror:
-  pe = new PrettyError();
-  pe.skipNodeFiles();
-  pe.skipPackage('express');
+// we can now instantiaite Prettyerror:
+var pe = new PrettyError();
+pe.skipNodeFiles();
+pe.skipPackage('express');
 
-  // Forbidden middleware handler
-  app.use(function (err, req, res, next) {
-    if (err.status == HTTPStatus.FORBIDDEN) {
-      res.status(err.status);
-      if (req.xhr) {
-        return res.send({message: err.message});
-      } else {
-        var reactHTML = React.renderToString(Forbidden({message: err.message, loggedIn: !!req.user}));
-        return res.render('forbidden.html', {reactHTML: reactHTML});
-      }
+
+// Forbidden middleware handler
+app.use(function (err, req, res, next) {
+  if (err.status === HTTPStatus.FORBIDDEN) {
+    res.status(err.status);
+    if (req.xhr) {
+      return res.send({message: err.message});
     } else {
-      return next(err);
-    }
-  });
+      var reactHTML = React.renderToString(
+        Forbidden({message: err.message, loggedIn: !!req.user}));
 
-  // Bad Request middleware handler
-  app.use(function (err, req, res, next) {
-    if (err.status === HTTPStatus.BAD_REQUEST ||
-       err.status === HTTPStatus.PRECONDITION_FAILED) {
-      res.status(err.status);
-      return req.xhr ? res.json(err.fields) : res.end();
-    } else {
-      return next(err);
+      return res.render('forbidden.html', {reactHTML: reactHTML});
     }
-  });
-
-  // Not found middleware handler
-  app.use(function (err, req, res, next) {
-    if (err.status === HTTPStatus.NOT_FOUND) {
-      res.status(err.status);
-      return req.xhr ? res.end() : res.render('not-found.html');
-    } else {
-      return next(err);
-    }
-  });
-
-  if (app.get('env') === 'development') {
-    app.use(function (err, req, res, next) {
-      console.log(pe.render(err));
-      res.status(err.status || 500);
-      if (req.xhr) {
-        return res.end(err.json || err.message);
-      } else {
-        return res.render('error.html', {
-          message: err.message,
-          error: err,
-          title: 'error'
-        });
-      }
-    });
   } else {
-    // This will handle all errors, render the appropiate view
-    // and also will log to sentry
-    app.use(raven.middleware.express.errorHandler(nconf.get('sentry:DSN')));
-    app.use(function (err, req, res, next) {
-      // console.log(pe.render(err));
-      console.log(err);
-      res.status(err.status || 500);
-      if (req.xhr) {
-        return res.end(err.json || err.message);
-      } else {
-        return res.render('error.html', {
-          message: err.message,
-          error: {},
-          title: 'error'
-        });
-      }
-    });
+    return next(err);
   }
+});
 
-  primus.save(__dirname + '/public/javascript/primus.js');
+
+// Bad Request middleware handler
+app.use(function (err, req, res, next) {
+  if (err.status === HTTPStatus.BAD_REQUEST ||
+     err.status === HTTPStatus.PRECONDITION_FAILED) {
+    res.status(err.status);
+    return req.xhr ? res.json(err.fields) : res.end();
+  } else {
+    return next(err);
+  }
+});
+
+
+// Not found middleware handler
+app.use(function (err, req, res, next) {
+  if (err.status === HTTPStatus.NOT_FOUND) {
+    res.status(err.status);
+    return req.xhr ? res.end() : res.render('not-found.html');
+  } else {
+    return next(err);
+  }
+});
+
+
+if (app.get('env') === 'development') {
+  app.use(function (err, req, res, next) {
+    console.log(pe.render(err));
+    res.status(err.status || 500);
+    if (req.xhr) {
+      return res.end(err.json || err.message);
+    } else {
+      return res.render('error.html', {
+        message: err.message,
+        error: err,
+        title: 'error'
+      });
+    }
+  });
+} else {
+  // This will handle all errors, render the appropiate view
+  // and also will log to sentry
+  app.use(raven.middleware.express.errorHandler(nconf.get('sentry:DSN')));
+  app.use(function (err, req, res, next) {
+    // console.log(pe.render(err));
+    console.log(err);
+    res.status(err.status || 500);
+    if (req.xhr) {
+      return res.end(err.json || err.message);
+    } else {
+      return res.render('error.html', {
+        message: err.message,
+        error: {},
+        title: 'error'
+      });
+    }
+  });
+}
+
+primus.save(__dirname + '/public/javascript/primus.js');
+

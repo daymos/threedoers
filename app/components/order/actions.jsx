@@ -36,5 +36,5 @@ export let OrderActions = {
 };
 
 export let OrderListActions = {
-
+ reviewOrder: new Airflux.Action().asFunction
 };
