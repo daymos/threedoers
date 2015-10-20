@@ -30,7 +30,8 @@ a.link-inverse:focus {
   transition: border 0.3s;
 }
 .navbar-3doers .navbar-text > .navbar-link:hover,
-.navbar-3doers .navbar-text > .navbar-link:focus {
+.navbar-3doers .navbar-text > .navbar-link:focus,
+.navbar-3doers .navbar-text > .navbar-link .navbar-active {
   border-bottom-color: #88d6a7;
 }
 .navbar-3doers .navbar-text > .navbar-link.navbar-link-inverse {
@@ -478,5 +479,57 @@ a.link-inverse:focus {
   }
   #footer .nav-social {
     margin-top: 20px;
+  }
+}
+
+
+.container.walkthrough {
+  h3 {
+    color: #77B3D4;
+    font-weight: 700;
+  }
+}
+
+.container.walkthrough .nav-tabs,
+.container.walkthrough .nav-tabs,
+.container.walkthrough .nav-tabs {
+  li {
+    a {
+      color: #555;
+      font-size: 1.1em;
+      font-weight: bold;
+      text-decoration: none;
+      border: none;
+    }
+  }
+
+  li.active {
+    font-weight: bold;
+    border-bottom: 5px solid #77B3D4;
+
+    a, a:focus, a:hover {
+      font-size: 1.1em;
+      color: #77B3D4;
+      border: none;
+    }
+  }
+}
+
+.tab-content .step.walkthrough {
+  a {
+    color: white;
+  }
+}
+
+#tab-open-design p a,
+#tab-look-someone .step a {
+  color: #4EB476;
+}
+
+
+.stl-ilustration.walkthrough {
+  img {
+    height: auto;
+    width: 140px;
   }
 }
