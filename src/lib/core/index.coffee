@@ -1358,7 +1358,7 @@ module.exports = (app, io) ->
 
 
   app.get '/walkthrough', (req, res) ->
-    res.render 'afterlogin/walkthrough'
+    res.render 'home/walkthrough'
 
   ###############################################
   # Socket IO event handlers

@@ -66,7 +66,7 @@ module.exports = (app) ->
 
             req.logIn user, (err) ->
               return next(err)  if err
-              res.redirect '/profile/projects'
+              res.redirect '/'
           else
             res.render 'accounts/login', { error: "Invalid username or password", username: req.param('username'), password: req.param('password') }
       )(req, res, next)

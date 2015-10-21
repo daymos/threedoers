@@ -1,0 +1,135 @@
+extends ../layouts/_app
+
+block title
+  |  Walkthrough
+
+block extra-headers
+  meta(name="csrf-token", content="#{csrfToken}")
+
+block content
+  .page
+    .container.walkthrough
+      br
+      .row
+        include /../includes/choosesolution
+
+    br
+    br
+
+    .container.walkthrough
+
+      div(role='tabpanel')
+        ul.nav.nav-tabs.nav-justified(role='tablist')
+          li.active(role='presentation')
+            a(href='#tab-ready-print', aria-controls='print', role='tab', data-toggle='tab')
+              | #{__("Ready To Print 0")}
+          li(role='presentation')
+            a(href='#tab-open-design', aria-controls='design', role='tab', data-toggle='tab')
+              | #{__("What To Print 0")}
+          li(role='presentation')
+            a(href='#tab-look-someone', aria-controls='look', role='tab', data-toggle='tab')
+              | #{__("3D-Model Idea 0a")}
+              br
+              | #{__("3D-Model Idea 0b")}
+
+    .bg-3doers
+        .tab-content
+
+          #tab-ready-print.tab-pane.active.container
+            br
+            .col-md-10.col-md-offset-1
+              .row
+                .col-md-12
+                  .step.walkthrough
+                    a.btn.btn-xlg.btn-green(href='/project/upload') #{__("Start Printing")}
+
+            .row
+              .col-md-12
+                p #{__("Ready To Print 1")}
+
+            .row
+              .col-md-7
+
+                p #{__("Ready To Print 2")}
+
+                p #{__("Ready To Print 3")}
+
+              .col-md-4.col-md-offset-1
+                .stl-ilustration.walkthrough
+                  p
+                   img(src="/images/walkthrough/stl-round.png")
+
+            .row
+              .col-md-12
+                p #{__("Ready To Print 4")}
+
+            br
+            br
+
+
+          #tab-open-design.tab-pane.container
+            br
+            br
+
+            .row
+              .col-md-12
+                p #{__("What To Print 1")}
+
+            .row
+              .col-md-8
+                p  #{__("What To Print 2")}
+                p #{__("What To Print 2a")}
+                ul
+                  li #{__("What To Print 2a1")}
+                  li #{__("What To Print 2a2")}
+
+              .col-md-4
+                .stl-ilustration.walkthrough
+                  p
+                   img(src="/images/walkthrough/3dshape-round.png")
+
+
+            br
+            br
+
+
+          #tab-look-someone.tab-pane.container
+            br
+            br
+
+            .row
+              .col-md-12
+                p #{__("3D-Model Idea 1")}
+
+            .row
+              .col-md-7
+
+                br
+                br
+                p #{__("3D-Model Idea 2")}
+
+              .col-md-3.col-md-offset-1
+                .stl-ilustration.walkthrough
+                  p
+                   img(src="/images/walkthrough/idea-round.png")
+
+            .row
+              .col-md-12
+                p #{__("3D-Model Idea 3")}
+                .step
+                  a(href='www.3doers.it/design/subscription') www.3doers.it/design/subscription
+
+            br
+            br
+
+
+    .container
+      br
+      .row
+        include /../includes/contact
+
+
+block scripts
+  script(src='/js/lib/jquery.js')
+  script(src='/vendor/bootstrap.min.js')
+
