@@ -1357,7 +1357,7 @@ module.exports = (app, io) ->
    res.render 'sitemap.xml'
 
 
-  app.get '/walkthrough', (req, res) ->
+  app.get decorators.loginRequired, '/walkthrough', (req, res) ->
     res.render 'home/walkthrough'
 
   ###############################################
