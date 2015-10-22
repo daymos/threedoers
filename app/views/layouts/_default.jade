@@ -56,7 +56,6 @@ html(lang="en")
 
     script.
       var port = "#{io.port}";
-      var site = "#{site}";
       function toggle(){
         $(".myprofileitem").fadeToggle('slow','linear');
       }
@@ -84,32 +83,32 @@ html(lang="en")
               img(src='/images/logo.png', alt='3doers')
           .collapse.navbar-collapse(id='bs-example-navbar-collapse-1')
             p.navbar-text
-              a.navbar-link(href='#', data-scroll-goto='0') How it works
+              a.navbar-link(href='#', data-scroll-goto='0') #{__("How It Works")}
             p.navbar-text
-              a.navbar-link(href='#', data-scroll-goto='1') Join 3doers
+              a.navbar-link(href='#', data-scroll-goto='1') #{__("Join 3doers")}
             p.navbar-text
-              a.navbar-link(href='#', data-scroll-goto='2') Contact us
+              a.navbar-link(href='#', data-scroll-goto='2') #{__("Contact Us")}
             ul.nav.navbar-nav.navbar-right
               li.navbar-text
-                a.navbar-link.navbar-link-inverse(href='/accounts/login') Log in
+                a.navbar-link.navbar-link-inverse(href='/accounts/login') #{__("Log In")}
               li.navbar-text(style="padding:0; margin-left:0; margin-right:0")
                 span /
               li.navbar-text
-                a.navbar-link.navbar-link-inverse(href='/accounts/signup') Sign up
+                a.navbar-link.navbar-link-inverse(href='/accounts/signup') #{__("Sign Up")}
               li.dropdown
                 a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-expanded='false')
                   img(src='/images/share_icon.png')
                 ul.dropdown-menu(role='menu')
-                  li: span Spread the voice
+                  li: span #{__("Spread The Voice")}
                   li: a.social-popup(href='http://www.facebook.com/sharer/sharer.php?t=3Doers&u=3doers.it', data-title='Facebook')
                         i.fa.fa-fw.fa-lg.fa-facebook
-                        | Share on facebook
+                        | #{__("Share FB")}
                   li: a.social-popup(href='http://twitter.com/share?text=3Doers', data-title='Twitter')
                         i.fa.fa-fw.fa-lg.fa-twitter
-                        | Share on twitter
+                        | #{__("Share Twitter")}
                   li: a.social-popup(href='https://plus.google.com/share?url=3doers.it', data-title='Google +')
                         i.fa.fa-fw.fa-lg.fa-google-plus
-                        | Share on google+
+                        | #{__("Share G+")}
 
     .hidden-xs.hidden-sm(id='beta-label')
       img(src='/images/beta_label.png', alt='3doers beta')
@@ -123,9 +122,9 @@ html(lang="en")
             .col-md-6
               nav
                 ul.list-inline.nav-inline
-                  li: a(href='#') 3doers s.r.l. copyright 2015, 3D print community
-                  li: a(href='/docs/terms.pdf') Terms and Conditions
-                  li: a(href='/docs/pp.pdf') Privacy Policy
+                  li: a(href='#') #{__("Copyright")}, 3D print community
+                  li: a(href='/docs/terms.pdf') #{__("Terms")}
+                  li: a(href='/docs/pp.pdf') #{__("Privacy")}
             .col-md-6
               nav
                 ul.list-inline.nav-social

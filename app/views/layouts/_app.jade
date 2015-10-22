@@ -37,7 +37,7 @@ html(lang="en")
     // link(rel='shortcut icon', href='/img/apple-touch-icon-original.png')
     // // For everything else
     // link(type='image/png', rel='shortcut icon', href='/img/favicon.png')
-    link(type='image/x-icon', rel='shortcut icon', href='/favicon.ico?')
+    link(type='image/x-icon', rel='shortcut icon', href='favicon.ico?')
 
     link(href='/css/application.css', rel='stylesheet')
     link(href='/css/backend.css', rel='stylesheet')
@@ -59,7 +59,6 @@ html(lang="en")
 
     script.
       var port = "#{io.port}";
-      var site = "#{site}";
       function toggle(){
         $(".myprofileitem").fadeToggle('slow','linear');
       }
@@ -104,32 +103,32 @@ html(lang="en")
                       img(src='data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMTQwIiBoZWlnaHQ9IjE0MCIgdmlld0JveD0iMCAwIDE0MCAxNDAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjxkZWZzLz48cmVjdCB3aWR0aD0iMTQwIiBoZWlnaHQ9IjE0MCIgZmlsbD0iI0VFRUVFRSIvPjxnPjx0ZXh0IHg9IjQ0LjA0Njg3NSIgeT0iNzAiIHN0eWxlPSJmaWxsOiNBQUFBQUE7Zm9udC13ZWlnaHQ6Ym9sZDtmb250LWZhbWlseTpBcmlhbCwgSGVsdmV0aWNhLCBPcGVuIFNhbnMsIHNhbnMtc2VyaWYsIG1vbm9zcGFjZTtmb250LXNpemU6MTBwdDtkb21pbmFudC1iYXNlbGluZTpjZW50cmFsIj4xNDB4MTQwPC90ZXh0PjwvZz48L3N2Zz4=', style='width: 50px; height: 50px;')
             - else
               p.navbar-text
-                a.navbar-link(href='#', data-scroll-goto='0') How it works
+                a.navbar-link(href='#', data-scroll-goto='0') #{__("How It Works")}
               p.navbar-text
-                a.navbar-link(href='#', data-scroll-goto='1') Join 3doers
+                a.navbar-link(href='#', data-scroll-goto='1') #{__("Join 3doers")}
               p.navbar-text
-                a.navbar-link(href='#', data-scroll-goto='2') Contact us
+                a.navbar-link(href='#', data-scroll-goto='2') #{__("Contact Us")}
               ul.nav.navbar-nav.navbar-right
                 li.navbar-text
-                  a.navbar-link.navbar-link-inverse(href='/accounts/login') Log in
+                  a.navbar-link.navbar-link-inverse(href='/accounts/login') #{__("Log In")}
                 li.navbar-text(style="padding:0; margin-left:0; margin-right:0")
                   span /
                 li.navbar-text
-                  a.navbar-link.navbar-link-inverse(href='/accounts/signup') Sign up
+                  a.navbar-link.navbar-link-inverse(href='/accounts/signup') #{__("Sign Up")}
                 li.dropdown
                   a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-expanded='false')
                     img(src='/images/share_icon.png')
                   ul.dropdown-menu(role='menu')
-                    li: span Spread the voice
+                    li: span #{__("Spread The Voice")}
                     li: a.social-popup(href='http://www.facebook.com/sharer/sharer.php?t=3Doers&u=3doers.it', data-title='Facebook')
                           i.fa.fa-fw.fa-lg.fa-facebook
-                          | Share on facebook
+                          | #{__("Share FB")}
                     li: a.social-popup(href='http://twitter.com/share?text=3Doers', data-title='Twitter')
                           i.fa.fa-fw.fa-lg.fa-twitter
-                          | Share on twitter
+                          | #{__("Share Twitter")}
                     li: a.social-popup(href='https://plus.google.com/share?url=3doers.it', data-title='Google +')
                           i.fa.fa-fw.fa-lg.fa-google-plus
-                          | Share on google+
+                          | #{__("Share G+")}
 
     .hidden-xs.hidden-sm(id='beta-label')
       img(src='/images/beta_label.png', alt='3doers beta')
@@ -144,9 +143,9 @@ html(lang="en")
             .col-md-6
               nav
                 ul.list-inline.nav-inline
-                  li: a(href='#') 3doers s.r.l. copyright 2015, 3D print community
-                  li: a(href='/docs/terms.pdf') Terms and Conditions
-                  li: a(href='/docs/pp.pdf') Privacy Policy
+                  li: a(href='#') #{__("Copyright")}, 3D print community
+                  li: a(href='/docs/terms.pdf') #{__("Terms")}
+                  li: a(href='/docs/pp.pdf') #{__("Privacy")}
             .col-md-6
               nav
                 ul.list-inline.nav-social
@@ -163,6 +162,6 @@ html(lang="en")
 
     script(src='/js/lib.js')
     script(src='/js/common.js')
-    script(type='text/javascript', src='/socket.io/socket.io.js')
+    script(type='text/javascript', src='/vendor/socket.io.min.js')
     script(src='/js/views/notifyME.js')
     block scripts
