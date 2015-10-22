@@ -203,5 +203,16 @@
   "3D-Model Idea 0b": "IN 3D?",
   "3D-Model Idea 1": "Hai una idea di quello che vuoi costruire ma non sai come modellarlo in 3d? Scrivici a info@3doers.it  con la tua richiesta e lo modelleremo per te.",
   "3D-Model Idea 2": "In 3DOERS  stiamo sviluppando un nuovo servizio dedicato alla modellazione in 3D che ti consentira di scegliere un modellatore secondo le sue caratteristiche, cosí che potrai farlo corrispondere al meglio alle tue richieste.",
-  "3D-Model Idea 3": "Se sei un modellatore clicca il link qui sotto e lasciaci la tua email. Non appena il servizio partira verrai contattato per diventare uno dei nostri designer."
+  "3D-Model Idea 3": "Se sei un modellatore clicca il link qui sotto e lasciaci la tua email. Non appena il servizio partira verrai contattato per diventare uno dei nostri designer.",
+  "Any Doubts 0": "HAI QUALCHE DOMANDA?",
+  "Any Doubts 1": "Scopri di più sul mondo della stampa in 3D. Hai altre domande? Compila il nostro modulo di contatto, e saremo in grado di fornirti direttamente altre informazioni più specifiche.",
+  "File 3D 0": "FILE 3D",
+  "File 3D 1": "Cos’è un file .stl? Come posso crearne uno? Cosa serve per realizzare un modello in 3D della mia idea?",
+  "Materials 0": "MATERIALI",
+  "Materials 1": "Quali materiali utilizzano gli stampatori di 3doers?Come faccio a sapere se lo stampatore può realizzare l’articolo che voglio?",
+  "Learn More Button": "SCOPRI DI PIÙ",
+  "3D Printer 0": "STAMPANTE 3D",
+  "3D Printer 1": "Cos’è una stampante in 3D e come funziona? Cosa può venire stampato con questo metodo?",
+  "About Us 0": "SU DI NOI",
+  "About Us 1": "Quale servizio o riamo? Da dove è nata l’idea di 3doers?"
 }

@@ -205,5 +205,16 @@
   "3D-Model Idea 0b": "MY IDEA",
   "3D-Model Idea 1": "You have a specific idea in mind, but need someone to create the 3dmodel for you. Write us on info@3doers.it with your request and we will model it for you.",
   "3D-Model Idea 2": "At 3DOERS we are developing a new service dedicated to 3d modelling that will allow you to choose your designer according to his skills, so that you can match it best with your request.",
-  "3D-Model Idea 3": "If you a designer you can click the link below and leave us your email. When the service is launched, you will be contacted to become one of our designers."
+  "3D-Model Idea 3": "If you a designer you can click the link below and leave us your email. When the service is launched, you will be contacted to become one of our designers.",
+  "Any Doubts 0": "ANY DOUBTS?",
+  "Any Doubts 1": "Find out more about the world of 3D printing. Do you have any questions? Fill in our contact form and we’ll be happy to provide you more information directly.",
+  "File 3D 0": "3D FILES",
+  "File 3D 1": "What is an .stl file? How can I create one? What will I need to create a 3D model of my idea?",
+  "Materials 0": "MATERIALS",
+  "Materials 1": "What materials do 3doers printers employ? How do I know if the printer can create the item I want?",
+  "Learn More Button": "LEARN MORE",
+  "3D Printer 0": "3D PRINTER",
+  "3D Printer 1": "What’s a 3D printer and how does it work? What can be printed with this method?",
+  "About Us 0": "ABOUT US",
+  "About Us 1": "What service do we offer? How did the idea of 3doers come to life?"
 }
