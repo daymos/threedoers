@@ -1,0 +1,80 @@
+extends ../layouts/_app
+
+block title
+  |  Resources
+
+block extra-headers
+  meta(name="csrf-token", content="#{csrfToken}")
+
+block content
+  .page
+    .container.resources
+      .row
+        .col-md-12
+          h2 HAI QUALCHE DOMANDA?
+          p Scopri di più sul mondo della stampa in 3D. Hai altre domande? Compila il nostro modulo di contatto, e saremo in grado di fornirti direttamente altre informazioni più specifiche.
+    .container.resources
+      .row.text-centered
+        .col-md-6
+          h2.resource-subheading FILE 3D
+        .col-md-6
+          h2.resource-subheading MATERIALI
+      .row
+        .col-md-6
+          p Cos’è un file .stl? Come posso crearne uno? Cosa serve per realizzare un modello in 3D della mia idea?
+        .col-md-6
+          p Quali materiali utilizzano gli stampatori di 3doers?Come faccio a sapere se lo stampatore può realizzare l’articolo che voglio?
+          br
+      .row.text-centered
+        .col-md-6
+          p
+            img(src="/images/resources/file3d.jpg")
+        .col-md-6
+          p
+            img(src="/images/resources/materiali.jpg")
+
+      .row.text-centered.res-btns
+        .col-md-6
+          a.btn.btn-xlg.btn-green(href='#') SCOPRI DI PIÙ
+        .col-md-6
+          a.btn.btn-xlg.btn-green(href='#') SCOPRI DI PIÙ
+    .container.resources
+      .row.text-centered
+        .col-md-6
+          h2.resource-subheading STAMPANTE 3D
+        .col-md-6
+          h2.resource-subheading SU DI NOI
+      .row
+        .col-md-6
+          p Quale servizio o riamo? Da dove è nata l’idea di 3doers?
+
+        .col-md-6
+          p Cos’è una stampante in 3D e come funziona? Cosa può venire stampato con questo metodo?
+          br
+      .row.text-centered
+        .col-md-6
+          p
+            img(src="/images/resources/stampante3d.jpg")
+        .col-md-6
+          p
+            img(src="/images/resources/sudinoi.jpg")
+
+      .row.text-centered.res-btns
+        .col-md-6
+          a.btn.btn-xlg.btn-green(href='#') SCOPRI DI PIÙ
+        .col-md-6
+          a.btn.btn-xlg.btn-green(href='#') SCOPRI DI PIÙ
+
+          br
+          br
+
+    .container
+      br
+      .row
+        include /../includes/contact
+
+
+block scripts
+  script(src='/js/lib/jquery.js')
+  script(src='/vendor/bootstrap.min.js')
+

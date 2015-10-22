@@ -533,3 +533,21 @@ a.link-inverse:focus {
     width: 140px;
   }
 }
+
+.text-centered {
+  text-align: center;
+  margin-bottom: 0.7em;
+}
+
+.resources p img {
+  width: 100%;
+}
+
+.resources h2.resource-subheading {
+  padding-top: 0.5em;
+  border-top: #88d6a7 solid 5px;
+}
+
+.resources .row.res-btns {
+  margin-bottom: 35px;
+}

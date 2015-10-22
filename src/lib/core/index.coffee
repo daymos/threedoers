@@ -1360,6 +1360,9 @@ module.exports = (app, io) ->
   app.get '/walkthrough', decorators.loginRequired, (req, res) ->
     res.render 'home/walkthrough'
 
+  app.get '/resources', decorators.loginRequired, (req, res) ->
+    res.render 'resources/resources'
+
   ###############################################
   # Socket IO event handlers
   ###############################################
