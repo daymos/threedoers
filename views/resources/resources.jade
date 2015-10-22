@@ -1,0 +1,80 @@
+extends ../layouts/_app
+
+block title
+  |  Resources
+
+block extra-headers
+  meta(name="csrf-token", content="#{csrfToken}")
+
+block content
+  .page
+    .container.resources
+      .row
+        .col-md-12
+          h2 #{__("Any Doubts 0")}
+          p #{__("Any Doubts 1")}
+    .container.resources
+      .row.text-centered
+        .col-md-6
+          h2.resource-subheading #{__("File 3D 0")}
+        .col-md-6
+          h2.resource-subheading #{__("Materials 0")}
+      .row
+        .col-md-6
+          p #{__("File 3D 1")}
+        .col-md-6
+          p #{__("Materials 1")}
+          br
+      .row.text-centered
+        .col-md-6
+          p
+            img(src="/images/resources/file3d.jpg")
+        .col-md-6
+          p
+            img(src="/images/resources/materiali.jpg")
+
+      .row.text-centered.res-btns
+        .col-md-6
+          a.btn.btn-xlg.btn-green(href='#') #{__("Learn More Button")}
+        .col-md-6
+          a.btn.btn-xlg.btn-green(href='#') #{__("Learn More Button")}
+    .container.resources
+      .row.text-centered
+        .col-md-6
+          h2.resource-subheading #{__("3D Printer 0")}
+        .col-md-6
+          h2.resource-subheading #{__("About Us 0")}
+      .row
+        .col-md-6
+          p #{__("3D Printer 1")}
+
+        .col-md-6
+          p #{__("About Us 1")}
+          br
+      .row.text-centered
+        .col-md-6
+          p
+            img(src="/images/resources/stampante3d.jpg")
+        .col-md-6
+          p
+            img(src="/images/resources/sudinoi.jpg")
+
+      .row.text-centered.res-btns
+        .col-md-6
+          a.btn.btn-xlg.btn-green(href='#') #{__("Learn More Button")}
+        .col-md-6
+          a.btn.btn-xlg.btn-green(href='#') #{__("Learn More Button")}
+
+          br
+          br
+
+    .container
+      br
+      .row
+        include /../includes/contact
+
+
+block scripts
+  script(src='/js/lib/jquery.js')
+  script(src='/vendor/bootstrap.min.js')
+
