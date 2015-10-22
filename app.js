@@ -19,6 +19,8 @@ var PrettyError = require('pretty-error');
 var raven = require('raven');
 var multer = require('multer');
 var Primus = require('primus');
+var locale = require('locale');
+var i18n = require('i18n-2');
 
 var config = require('./config/config');
 
@@ -55,6 +57,16 @@ var app = express();
 if (app.get('env') === 'development') {
   raven.middleware.express.requestHandler(nconf.get('sentry:DSN'));
 }
+
+// Setting up locale, so we can know what locale are using the user.
+app.use(locale(nconf.get('i18n:locales')));
+
+
+// Setup the i18n so we can use on views!
+i18n.expressBind(app, {
+  directory: nconf.get('i18n:express:translations'),
+  locales: nconf.get('i18n:locales')
+});
 
 
 // Old code
@@ -111,6 +123,8 @@ if (app.get('env') === 'development') {
   app.use(validator);
 
   app.use(function(req, res, next) {
+    req.i18n.setLocale(req.locale);
+
     // TODO: Refactor
     res.locals.user = req.user;
     res.locals.nav = req.path;

@@ -11,6 +11,7 @@ var babelify = require('babelify');
 var source = require('vinyl-source-stream');
 var streamify = require('gulp-streamify');
 var browserify = require('browserify');
+var notify = require('gulp-notify');
 
 
 // This gulp task will be only used production
@@ -48,12 +49,13 @@ gulp.task('watch', function() {
 gulp.task('develop', function () {
   livereload.listen();
   nodemon({
-    watch: ['app', 'app.js', 'config', 'lib'],
+    watch: ['app', 'app.js', 'config', 'libs'],
     script: 'app.js',
     ext: 'js jsx coffee html',
     env: { 'NODE_PATH': 'app:libs' }
   }).on('restart', function () {
     setTimeout(function () {
+      notify('Reloading page, please wait...');
       livereload.changed(__dirname);
     }, 5000);
   });

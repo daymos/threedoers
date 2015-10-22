@@ -24,6 +24,16 @@ defaults.logLevel = process.env.LOG_LEVEL || 'warn';
 // Site
 defaults.site = 'https://www.3doers.it';
 
+// i18n
+
+defaults.i18n = {
+  locales: ['en', 'it'],
+  express: {
+    translations: path.join((process.env.OPENSHIFT_DATA_DIR || ROOT_DIR),
+                            '/app/locales/')
+  }
+};
+
 // Host
 defaults.host = {
   ip: process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1',
@@ -113,7 +123,7 @@ defaults.static = {
 };
 
 defaults.paypal = {
-  primaryReceiver: process.env.PAYPAL_PRIMARY_RECEIVER || 'mattia@3doers.it',
+  primaryReceiver: process.env.PAYPAL_PRIMARY_RECEIVER || 'mattia@3doers.it',
   port: 5000,
   adaptive: {
     user: process.env.PAYPAL_USER,
