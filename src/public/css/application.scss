@@ -483,7 +483,9 @@ a.link-inverse:focus {
 }
 
 
-.container.walkthrough {
+.container.walkthrough,
+.container.file-3d,
+.container.printer-3d {
   h3 {
     color: #77B3D4;
     font-weight: 700;
@@ -550,4 +552,51 @@ a.link-inverse:focus {
 
 .resources .row.res-btns {
   margin-bottom: 35px;
+}
+
+.file-3d p img,
+.printer-3d p img.illustration {
+  height: auto;
+  width: 140px;
+}
+
+.file-3d p.legend,
+.printer-3d p.legend, {
+  font-size: 1.7em;
+}
+
+.container.file-3d .col-md-12,
+.container.printer-3d .col-md-12 {
+  margin-bottom: 30px;
+}
+
+.container.file-3d .row .col-md-10.col-md-offset-1,
+.container.printer-3d .row .col-md-10.col-md-offset-1 {
+  padding: 40px 0 30px 0;
+  border-bottom: #73b2d2 solid 6px;
+}
+
+.container.file-3d .row .col-md-10.col-md-offset-1.last,
+.container.printer-3d .row .col-md-10.col-md-offset-1.last {
+  border-bottom: none;
+}
+
+.printer-3d .round {
+  width: 130px;
+  height: 130px;
+  overflow: hidden;
+  border-radius: 50%;
+}
+
+.printer-3d .round img.picture {
+  display: inline-block;
+  height: 130px;
+}
+
+.printer-3d .pic-design {
+  padding-left: 35px;
+}
+
+.weighed {
+  font-weight: bold;
 }

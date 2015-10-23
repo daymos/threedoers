@@ -1363,6 +1363,14 @@ module.exports = (app, io) ->
   app.get '/resources', decorators.loginRequired, (req, res) ->
     res.render 'resources/resources'
 
+  app.get '/file3d', decorators.loginRequired, (req, res) ->
+    res.render 'resources/file_3d'
+
+  app.get '/3dprinter', decorators.loginRequired, (req, res) ->
+    res.render 'resources/3d_printer'
+
+
+
   ###############################################
   # Socket IO event handlers
   ###############################################
