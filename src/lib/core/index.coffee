@@ -1369,6 +1369,11 @@ module.exports = (app, io) ->
   app.get '/3dprinter', decorators.loginRequired, (req, res) ->
     res.render 'resources/3d_printer'
 
+  app.get '/materials', decorators.loginRequired, (req, res) ->
+    res.render 'resources/materials'
+
+  app.get '/about', decorators.loginRequired, (req, res) ->
+    res.render 'resources/about_us'
 
 
   ###############################################

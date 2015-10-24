@@ -1,0 +1,82 @@
+extends ../layouts/_app
+
+block title
+  | About Us
+
+block extra-headers
+  meta(name="csrf-token", content="#{csrfToken}")
+
+block content
+  .page
+    .container.about-us
+      .row
+        .col-md-12
+          h3 #{__("About Page 0")}
+          p.logo.text-centered
+            img(src="/images/about-us/3doers-logo-about.png")
+
+    .bg-3doers
+      .container.about-us
+        .row
+          .col-md-12
+            p #{__("About Page 1")}
+
+            p #{__("About Page 2")}
+
+            p #{__("About Page 3")}
+
+    .container.about-us
+      .row.who-are
+        .col-md-12
+          .subtitle.text-centered #{__("About Page 4a")}
+      .row
+        .col-md-4.col-md-offset-1
+          .round
+            img.founder(src="/images/about-us/founder-b.jpg")
+        .col-md-4.col-md-offset-2
+          .round.text-centered
+            img.founder(src="/images/about-us/founder-a.jpg")
+
+      .row
+        .col-md-4.col-md-offset-1
+          p.founder-title.text-centered Mattia Spinelli
+            br
+            em #{__("About Page 4")}
+        .col-md-4.col-md-offset-2
+          p.founder-title.text-centered Marco Zappia
+            br
+            em #{__("About Page 5")}
+
+      .row
+        .col-md-4.col-md-offset-1
+          p.founder-descr.text-centered #{__("About Page 6")}
+
+        .col-md-4.col-md-offset-2
+          p.founder-descr.text-centered #{__("About Page 7")}
+
+      .row.ruler-bottom
+        .col-md-10.col-md-offset-1
+          &nbsp;
+
+      .row.headquarters
+        .col-md-12
+          .subtitle #{__("About Page 8")}
+        .col-md-5
+          img(src="/images/about-us/headquarters.jpg")
+        .col-md-7
+          p #{__("About Page 9")}
+          p #{__("About Page 10")}
+
+      .row.our-goal
+        .col-md-12.last-block
+          .subtitle #{__("About Page 11")}
+          p #{__("About Page 12")}
+
+          p #{__("About Page 13")}
+
+          p #{__("About Page 14")}
+
+
+block scripts
+  script(src='/js/lib/jquery.js')
+  script(src='/vendor/bootstrap.min.js')

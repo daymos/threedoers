@@ -485,7 +485,9 @@ a.link-inverse:focus {
 
 .container.walkthrough,
 .container.file-3d,
-.container.printer-3d {
+.container.printer-3d,
+.container.materials,
+.container.about-us {
   h3 {
     color: #77B3D4;
     font-weight: 700;
@@ -600,3 +602,84 @@ a.link-inverse:focus {
 .weighed {
   font-weight: bold;
 }
+
+.container.materials {
+  p img {
+    width: 450px;
+  }
+
+  span.tbl-header {
+    font-size: 1.7em;
+  }
+
+  .header-ruler {
+    margin-top: 20px;
+    border-top: #77B3D4 solid 6px;
+  }
+
+  .row-ruler {
+    border-bottom: #77B3D4 solid 1px;
+    margin-bottom: 20px;
+  }
+
+  .row-ruler-last {
+    border-bottom: #77B3D4 solid 6px;
+    margin-bottom: 100px;
+  }
+
+}
+
+.container.about-us {
+  p.logo img {
+    width: 250px;
+  }
+
+  .round {
+    margin: 30px auto;
+    width: 150px;
+    height: 150px;
+    overflow: hidden;
+    border-radius: 50%;
+    img {
+      width: 180px;
+    }
+  }
+
+  .row.ruler-bottom .col-md-10 {
+    border-top: #77B3D4 solid 6px;
+    margin-bottom: 30px;
+  }
+
+  .row.who-are {
+    .subtitle {
+      font-size: 1.7em;
+      margin-top: 50px;
+    }
+    img {
+      width: 100%;
+    }
+  }
+
+  .row.headquarters {
+    .subtitle {
+      font-size: 1.7em;
+    margin-bottom: 20px;
+    }
+    img {
+      width: 100%;
+    }
+  }
+
+  .row.our-goal {
+    .subtitle {
+      margin-top: 40px;
+      font-size: 1.7em;
+    margin-bottom: 20px;
+    }
+
+    .col-md-12.last-block {
+      padding-bottom: 50px;
+    }
+  }
+}
+
