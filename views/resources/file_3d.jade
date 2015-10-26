@@ -1,0 +1,58 @@
+extends ../layouts/_app
+
+block title
+  | File 3D
+
+block extra-headers
+  meta(name="csrf-token", content="#{csrfToken}")
+
+block content
+  .page
+    .container.file-3d
+      .row
+        .col-md-12
+          h3 #{__("File 3D Page 0")}
+          p #{__("File 3D Page 1")}
+          p #{__("File 3D Page 2")}
+
+
+      .row
+        .col-md-10.col-md-offset-1
+          .col-md-5
+            p.text-centered
+              img(src="/images/file3d/stl-round.png", alt="stl file ilustration")
+            p.text-centered.legend #{__("File 3D Page 3")}
+
+          .col-md-7
+            p #{__("File 3D Page 4")}
+            p #{__("File 3D Page 5")}
+
+
+      .row
+        .col-md-10.col-md-offset-1
+          .col-md-5
+            p.text-centered
+              img(src="/images/file3d/gears-round.png", alt="Interlocked gears illustration")
+            p.text-centered.legend #{__("File 3D Page 6")}
+
+          .col-md-7
+            p #{__("File 3D Page 7")}
+            p #{__("File 3D Page 8")}
+            p #{__("File 3D Page 9")}
+            p #{__("File 3D Page 10")}
+
+
+      .row
+        .col-md-10.col-md-offset-1.last
+          .col-md-5
+            p.text-centered
+              img(src="/images/file3d/axis-round.png", alt="Illustration of a compass")
+            p.text-centered.legend #{__("File 3D Page 11")}
+
+          .col-md-7
+            p #{__("File 3D Page 12")}
+
+
+block scripts
+  script(src='/js/lib/jquery.js')
+  script(src='/vendor/bootstrap.min.js')

@@ -1,0 +1,91 @@
+extends ../layouts/_app
+
+block title
+  | 3D Printer
+
+block extra-headers
+  meta(name="csrf-token", content="#{csrfToken}")
+
+block content
+  .page
+    .container.printer-3d
+      .row
+        .col-md-12
+          h3 #{__("3D Printer Page 0")}
+          p #{__("3D Printer Page 1")}
+          p #{__("3D Printer Page 2")}
+          p #{__("3D Printer Page 3")}
+
+      .row
+        .col-md-10.col-md-offset-1
+          .col-md-5
+            p.text-centered
+              img.illustration(src="/images/3d-printer/3d-printer.png", alt="3d printer illustration")
+            p.text-centered.legend #{__("3D Printer Page 4")}
+
+          .col-md-7
+            p #{__("3D Printer Page 5")}
+            p #{__("3D Printer Page 6")}
+
+      .row
+        .col-md-10.col-md-offset-1
+          .col-md-5
+            p.text-centered
+              img.illustration(src="/images/3d-printer/3d-printer-action-round.png", alt="Illustration of 3d printer at work")
+            p.text-centered.legend #{__("3D Printer Page 7")}
+
+          .col-md-7
+            p #{__("3D Printer Page 8")}
+            p #{__("3D Printer Page 9")}
+
+
+      .row
+        .col-md-10.col-md-offset-1.last
+          .col-md-5
+            p.text-centered
+              img.illustration(src="/images/3d-printer/3d-shape.png", alt="Green 3d shape illustration")
+            p.text-centered.legend #{__("3D Printer Page 10")}
+
+          .col-md-7
+            p #{__("3D Printer Page 11")}
+            p #{__("3D Printer Page 12")}
+
+
+      .row
+        .col-md-6.col-md-offset-5
+          .col-md-4
+            .round.text-centered
+              img.picture(src="/images/3d-printer/crystal-3d-object.jpg", alt="Picture of a crystal object")
+
+          .col-md-8
+            p
+              span.weighed #{__("3D Printer Page 13")}
+              | #{__("3D Printer Page 14")}
+
+      .row
+        .col-md-6.col-md-offset-1
+          .col-md-8
+            p
+              span.weighed #{__("3D Printer Page 15")}
+              | #{__("3D Printer Page 16")}
+
+          .col-md-4.pic-design
+            .round.text-centered
+              img.picture(src="/images/3d-printer/3d-printed-shoes.jpg", alt="Picture of 3d-printed shoes")
+
+
+      .row
+        .col-md-6.col-md-offset-5
+          .col-md-4
+            .round.text-centered
+              img.picture(src="/images/3d-printer/3d-printed-rounded.jpg", alt="3d-printed rounded-design object")
+
+          .col-md-8
+            p
+              span.weighed #{__("3D Printer Page 17")}
+              | #{__("3D Printer Page 18")}
+            br
+
+block scripts
+  script(src='/js/lib/jquery.js')
+  script(src='/vendor/bootstrap.min.js')

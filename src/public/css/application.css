@@ -653,7 +653,11 @@ a.link-inverse:focus {
 
   #footer .nav-social {
     margin-top: 20px; } }
-.container.walkthrough h3 {
+.container.walkthrough h3,
+.container.file-3d h3,
+.container.printer-3d h3,
+.container.materials h3,
+.container.about-us h3 {
   color: #77B3D4;
   font-weight: 700; }
 
@@ -705,5 +709,87 @@ a.link-inverse:focus {
 
 .resources .row.res-btns {
   margin-bottom: 35px; }
+
+.file-3d p img,
+.printer-3d p img.illustration {
+  height: auto;
+  width: 140px; }
+
+.file-3d p.legend,
+.printer-3d p.legend {
+  font-size: 1.7em; }
+
+.container.file-3d .col-md-12,
+.container.printer-3d .col-md-12 {
+  margin-bottom: 30px; }
+
+.container.file-3d .row .col-md-10.col-md-offset-1,
+.container.printer-3d .row .col-md-10.col-md-offset-1 {
+  padding: 40px 0 30px 0;
+  border-bottom: #73b2d2 solid 6px; }
+
+.container.file-3d .row .col-md-10.col-md-offset-1.last,
+.container.printer-3d .row .col-md-10.col-md-offset-1.last {
+  border-bottom: none; }
+
+.printer-3d .round {
+  width: 130px;
+  height: 130px;
+  overflow: hidden;
+  border-radius: 50%; }
+
+.printer-3d .round img.picture {
+  display: inline-block;
+  height: 130px; }
+
+.printer-3d .pic-design {
+  padding-left: 35px; }
+
+.weighed {
+  font-weight: bold; }
+
+.container.materials p img {
+  width: 450px; }
+.container.materials span.tbl-header {
+  font-size: 1.7em; }
+.container.materials .header-ruler {
+  margin-top: 20px;
+  border-top: #77B3D4 solid 6px; }
+.container.materials .row-ruler {
+  border-bottom: #77B3D4 solid 1px;
+  margin-bottom: 20px; }
+.container.materials .row-ruler-last {
+  border-bottom: #77B3D4 solid 6px;
+  margin-bottom: 100px; }
+
+.container.about-us p.logo img {
+  width: 250px; }
+.container.about-us .round {
+  margin: 30px auto;
+  width: 150px;
+  height: 150px;
+  overflow: hidden;
+  border-radius: 50%; }
+  .container.about-us .round img {
+    width: 180px; }
+.container.about-us .row.ruler-bottom .col-md-10 {
+  border-top: #77B3D4 solid 6px;
+  margin-bottom: 30px; }
+.container.about-us .row.who-are .subtitle {
+  font-size: 1.7em;
+  margin-top: 50px; }
+.container.about-us .row.who-are img {
+  width: 100%; }
+.container.about-us .row.headquarters .subtitle {
+  font-size: 1.7em;
+  margin-bottom: 20px; }
+.container.about-us .row.headquarters img {
+  width: 100%; }
+.container.about-us .row.our-goal .subtitle {
+  margin-top: 40px;
+  font-size: 1.7em;
+  margin-bottom: 20px; }
+.container.about-us .row.our-goal .col-md-12.last-block {
+  padding-bottom: 50px; }
 
 /*# sourceMappingURL=application.css.map */
