@@ -66,4 +66,38 @@ block content
             .col-md-5.col-md-offset-7
               p.text.white #{__("Printing Continents")}
               p.text.green #{__("Worldwide Service")}
+
+  script(type='text/javascript').
+    /* <![CDATA[ */
+
+    goog_snippet_vars = function() {
+    var w = window;
+    w.google_conversion_id = 938100385;
+    w.google_conversion_label = "nBL8CJXYwGAQoY2pvwM";
+    w.google_remarketing_only = false;
+    }
+    // DO NOT CHANGE THE CODE BELOW.
+    goog_report_conversion = function(url) {
+    goog_snippet_vars();
+    window.google_conversion_format = "3";
+    window.google_is_call = true;
+    var opt = new Object();
+    opt.onload_callback = function() {
+    if (typeof(url) != 'undefined') {
+    window.location = url;
+    }
+    }
+    var conv_handler = window['google_trackConversion'];
+    if (typeof(conv_handler) == 'function') {
+    conv_handler(opt);
+    }
+    }
+    /* ]]> */
+
+  script(type='text/javascript', src='//www.googleadservices.com/pagead/conversion.js')
+  noscript
+    div(style='display:inline;')
+      img(height='1', width='1', style='border-style:none;', alt='', src='//www.googleadservices.com/pagead/conversion/938100385/?label=RnlyCKL_tGAQoY2pvwM&guid=ON&script=0')
+
+
   script(type='text/javascript', src='//www.googleadservices.com/pagead/conversion_async.js')
